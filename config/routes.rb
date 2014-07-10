@@ -89,6 +89,12 @@ Gluedb::Application.routes.draw do
 
   resources :policies, only: [:show]
 
+  namespace :api, :defaults => { :format => 'xml' }do
+    namespace :v1 do
+      resources :people, :only => [:show, :index] 
+    end
+  end
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
