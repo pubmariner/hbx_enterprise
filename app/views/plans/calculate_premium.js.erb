@@ -1,5 +1,5 @@
 <%- if @rate %>
-	$('#rate-result').text("Result: $" + "<%= escape_javascript(@rate.amount.to_s) %>")
+	$('#rate-result').text("Result: $" + parseFloat( "<%= escape_javascript(@rate.amount.to_s) %>" ).toFixed( 2 );
 <%- else %>
 	$('#rate-result').text("Premium Not Found")
 <%- end %>
