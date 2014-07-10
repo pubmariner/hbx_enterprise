@@ -1,6 +1,6 @@
 users = User.all
 
-users.each do |u|
+users.sort({:email => 1}).each do |u|
   puts <<-UTEMPLATE
   add_a_user(
     "#{u.email}",
