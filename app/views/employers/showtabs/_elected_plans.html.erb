@@ -9,25 +9,14 @@
         <div class="col-md-12">
           <ul class="nav nav-tabs nav-append-content">
             <% @employer.carriers.each_with_index do |carrier, index| %>
-              <% if index==0 %>
-                <li class="active"><a href="#<%= carrier.id %>"><%= carrier.name %></a></li>
-              <% else %>
-                <li class=""><a href="#<%= carrier.id %>"><%= carrier.name %></a></li>
-              <% end %>
+              <li class="<%= 'active' if index==0 %>"><a href="#<%= carrier.id %>"><%= carrier.name %></a></li>
             <% end %>
           </ul>
           <div class="tab-content">
             <% @employer.carriers.each_with_index do |carrier, index| %>
-              <% if index==0 %>
-                <div class="tab-pane active" id="<%= carrier.id %>">
-                  <%= render "employers/showtabs/elected_plans_table", elected_plans: @elected_plans.select { |p| p.carrier_id == carrier.id } %>
+              <div class="tab-pane <%= 'active' if index==0 %>" id="<%= carrier.id %>">
+                <%= render "employers/showtabs/elected_plans_table", elected_plans: @elected_plans.select { |p| p.carrier_id == carrier.id } %>
               </div>
-              <% else %>
-                <div class="tab-pane" id="<%= carrier.id %>">
-                  <%= render "employers/showtabs/elected_plans_table", elected_plans: @elected_plans.select { |p| p.carrier_id == carrier.id } %>
-              </div>
-              <% end %>
-              
             <% end %>
           </div>
         </div>
