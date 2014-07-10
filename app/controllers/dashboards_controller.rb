@@ -2,7 +2,7 @@ class DashboardsController < ApplicationController
 	# layout 'dashboard'
 
   def index
-  	@total_lives = Person.count
+  	#@total_lives = Person.count
   	@total_employers = Employer.count
   	@total_enrollments = Policy.count
   	@total_edi_transactions = Protocols::X12::TransactionSetEnrollment.count
@@ -14,7 +14,7 @@ class DashboardsController < ApplicationController
     };
 
     # This is the outline for what increments to create (the config)
-    @transactonIncrements = {
+    transactonIncrements = {
       "Last Week" => Time.now.weeks_ago( 1 ).all_week,
       "This Week" => Time.now.all_week,
       "This Month" => Time.now.all_month,
@@ -23,7 +23,7 @@ class DashboardsController < ApplicationController
     };
 
     # Loop through transaction increments and put them in the table to be displayed
-    @transactonIncrements.each_pair do |humanTime, timeObj|
+    transactonIncrements.each_pair do |humanTime, timeObj|
       numTransactions = Protocols::X12::TransactionSetEnrollment.where( submitted_at: timeObj ).count;
       @transactions[ :increments ][ humanTime ] = numTransactions;
     end
