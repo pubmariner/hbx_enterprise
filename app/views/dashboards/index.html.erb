@@ -23,20 +23,29 @@
   <div class="col-md-10 main">
   <h3 class="danger">EXPERIMENTAL - DO NOT use figures below, as they're likely WRONG</h3>
 
-  <h4>Enrollment transactions</h4>
-  <dl class="dl-horizontal">
-    <dt>Dec</dt>
-    <dd><%= @transactions[:dec] %></dd>
-    <dt>Jan</dt>
-    <dd><%= @transactions[:jan] %></dd>
-    <dt>Feb</dt>
-    <dd><%= @transactions[:feb] %></dd>
-    <dt>Mar</dt>
-    <dd><%= @transactions[:mar] %></dd>
-    <dt>Apr</dt>
-    <dd><%= @transactions[:apr] %></dd>
-  </dl>
+  <br />
 
+  <h4>Enrollment transactions</h4>
+
+  <div>
+    <div style="width: 40%;display: inline-block;margin-top: 0;">
+      <dl class="dl-horizontal" style="display: inline;">
+        <% @transactions[ :increments ].each_pair do |incrementName, numTransactions| %>
+        <dt><%= incrementName; %></dt><dd><%= numTransactions; %></dd>
+        <% end %>
+      </dl>
+    </div>
+
+    <div style="display: inline-block;margin-top: 0;float: left;">
+      <dl class="dl-horizontal" style="display: inline;">
+        <% @transactions[ :months ].each_pair do |monthName, numTransactions| %>
+        <dt><%= monthName; %></dt><dd><%= numTransactions; %></dd>
+        <% end %>
+      </dl>
+    </div>
+  </div>
+
+  <br />
 
     <%= render :partial => "dashboards/enrollments_metric", transaction: @transaction %>
     <%= render :partial => "dashboards/transmissions_metric" %>
