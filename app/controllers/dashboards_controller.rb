@@ -43,5 +43,6 @@ class DashboardsController < ApplicationController
 
     @response_metric = ResponseMetric.all
     @ambiguous_people_metric = AmbiguousPeopleMetric.all
+    render :index;
   end
 end
