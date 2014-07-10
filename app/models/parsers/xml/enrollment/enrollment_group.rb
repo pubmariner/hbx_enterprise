@@ -43,7 +43,7 @@ module Parsers::Xml::Enrollment
     def enrollee_premium_sum
       sum = 0
       enrollees.each { |e| sum += e.premium_amount}
-      sum
+      sum.round(2)
     end
   end
 end
