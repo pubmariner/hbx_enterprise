@@ -131,9 +131,11 @@ class Employer
   def self.search_hash(s_rex)
     search_rex = Regexp.compile(Regexp.escape(s_rex), true)
     {
-      "$or" => [
-        {"name" => search_rex}
-      ]
+      "$or" => ([
+        {"name" => search_rex},
+        {"fein" => search_rex},
+        {"hbx_id" => search_rex}
+      ])
     }
   end
 
