@@ -22,7 +22,8 @@ def import_spreadsheet(file_path, dates_by_sheet)
       {
         'Ages 0-18' => 0..18,
         'Ages 19-29' => 19..29,
-        'Ages 30-45' => 30..45
+        'Ages 30-45' => 30..45,
+        'Ages 46-99' => 46..99
       }.each_pair do |column_name, range|
         range.each do |age|
           cost = plan_details[column_name]
