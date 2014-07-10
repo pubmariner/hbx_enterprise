@@ -12,15 +12,11 @@
     <% premium_payments.each do |p| %>
       <tr>
         <td <%= "rowspan=#{p[1].length}" %>><span class="fui-credit-card">&nbsp;</span><%= p.first.strftime("%m-%d-%Y") %></td>
-        <td><%= p[1][0]["carrier_name"] %></td>
-        <td><%= number_to_currency (Rational( p[1][0]["payment_amount"] ) / Rational(100)) %></td>
-        <td width="250px"><% p[1][0]["transaction_set_premium_payment"].each do |t| %><%= link_to "View Details", edi_transaction_set_payment_path(t) %>,&nbsp;<%end%></td>
+        <%= render "employers/showtabs/payment_table_rows", p: p[1][0] %>
       </tr>
       <% p[1].drop(1).each do |pp|%>
         <tr>
-          <td><%= pp["carrier_name"] %></td>
-          <td><%= number_to_currency (Rational( pp["payment_amount"] ) / Rational(100)) %></td>
-          <td width="250px"><% pp["transaction_set_premium_payment"].each do |t| %><%= link_to "View Details", edi_transaction_set_payment_path(t) %>,&nbsp;<%end%></td>
+          <%= render "employers/showtabs/payment_table_rows", p: pp %>
         </tr>
       <% end %>
     <% end %>

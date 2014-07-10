@@ -1,0 +1,7 @@
+<td><%= p["carrier_name"] %></td>
+<td><%= number_to_currency (Rational( p["payment_amount"] ) / Rational(100)) %></td>
+<td width="250px">
+  <% p["transaction_set_premium_payment"].each do |t| %>
+    <%= link_to "View Details", edi_transaction_set_payment_path(t) %>,&nbsp;
+  <%end%>
+</td>
