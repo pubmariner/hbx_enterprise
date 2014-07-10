@@ -18,8 +18,12 @@
         <%= link_to "Back", :back, class: "btn" %>
       </div>
     <% end %>
-
-    <h4>Cancel my account</h4>
-    <p>Unhappy? <%= link_to "Cancel my account", user_registration_path(resource_name), :data => { :confirm => "Are you sure?" }, :method => :delete %>.</p>
   </div>
+
+  <br />
+
+    <div class="jumbotron">
+      <h4>Cancel my account</h4>
+      <p>Unhappy? <%= link_to "Cancel my account", user_registration_path(resource_name), :data => { :confirm => "Are you sure?" }, :method => :delete %>.</p>
+    </div>
 </div>
