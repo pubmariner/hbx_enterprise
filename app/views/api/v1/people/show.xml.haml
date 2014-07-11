@@ -1,19 +1,2 @@
 %n1:individual{"xmlns:n1" => "http://openhbx.org/api/terms/1.0", "xmlns:xsi" => "http://www.w3.org/2001/XMLSchema-instance", "xsi:schemaLocation" => "http://openhbx.org/api/terms/1.0 individual.xsd"}
-  %n1:authority_hbx_member_uri 
-  %n1:authority_hbx_member_id= @person.authority_member_id
-  %n1:person
-    = render 'shared/person', person: @person
-  %n1:member_roles
-    - @person.members.each do |member|
-      %n1:member_role
-        = render 'shared/member', member: member
-  - if @person.employer.present?
-    %n1:employee_role
-      = render 'shared/employee', employee: @person
-  - if @person.responsible_parties.count > 0
-    %n1:responsible_party_roles
-      - @person.responsible_parties.each do |party|
-        %n1:responsible_party_role
-          %n1:entity_identifier= party.entity_identifier
-          %n1:hbx_organization_uri
-          /%hbx_organization_uri= party.organization_name #?
+  = render 'individual', person: @person
