@@ -7,7 +7,7 @@ FactoryGirl.define do
     name_sfx 'Jr'
 
     after(:create) do |person, evaluator|
-      create_list(:member, 1, person: person)
+      create_list(:member, 2, person: person)
     end
 
     trait :without_first_name do
