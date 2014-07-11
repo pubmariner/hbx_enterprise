@@ -95,6 +95,9 @@ module Parsers
         def parse_demo
           demo_loop = @person_loop["L2100A"]["DMG"]
           @gender = demo_loop[3]
+          if demo_loop[3].blank?
+            raise demo_loop.inspect
+          end
           @dob = demo_loop[2]
         end
 
@@ -192,6 +195,7 @@ module Parsers
           parse_name
           parse_address
           parse_contact
+          parse_demo
         end
 
         private
