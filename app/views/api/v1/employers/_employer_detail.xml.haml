@@ -1,0 +1,12 @@
+%n1:name= employer.name
+%n1:fein= employer.fein
+%n1:hbx_uri= employer_url(employer)
+%n1:hbx_id= employer.hbx_id
+%n1:sic_code= employer.sic_code
+%n1:fte_count= employer.fte_count
+%n1:pte_count= employer.pte_count
+%n1:open_enrollment_start= employer.open_enrollment_start.try(:strftime,"%Y-%m-%d")
+%n1:open_enrollment_end= employer.open_enrollment_end.try(:strftime,"%Y-%m-%d")
+%n1:plan_year_start= employer.plan_year_start.try(:strftime,"%Y-%m-%d")
+- if employer.plan_year_end.present?
+  %n1:plan_year_end= employer.plan_year_end.try(:strftime,"%Y-%m-%d")

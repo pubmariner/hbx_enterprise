@@ -1,7 +1,15 @@
 FactoryGirl.define do
   factory :employer do
     name 'Das Coffee'
-    fein '111111111'
+    sequence(:hbx_id) { |n| "#{n}"} 
+    sequence(:fein, 111111111) {|n| "#{n}" }
+    sic_code '0100'
+    fte_count 1
+    pte_count 1
+    open_enrollment_start Date.new(2014,1,2) 
+    open_enrollment_end Date.new(2014,1,2) 
+    plan_year_start Date.new(2014,1,2) 
+    plan_year_end Date.new(2014,1,2) 
 
     trait :fein_too_short do
       fein '1'

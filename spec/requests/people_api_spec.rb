@@ -48,7 +48,7 @@ describe 'People API' do
     before { get "/api/v1/people/#{person.id}" }
 
     it 'is successful (200)' do
-      expect(response).to be_success # 200 status-code
+      expect(response).to be_success
     end
 
     it 'responds with CV XML in body' do
@@ -63,7 +63,7 @@ describe 'People API' do
 
     before { get "/api/v1/people?member_id=#{people.first.members.first.hbx_member_id}" }
     it 'is successful (200)' do
-      expect(response).to be_success # 200 status-code
+      expect(response).to be_success
     end
 
     it 'responds with CV XML in body' do
