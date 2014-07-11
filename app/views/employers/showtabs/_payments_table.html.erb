@@ -10,6 +10,7 @@
   <tbody>
     <%= table_empty_to_human if premium_payments.count < 1 %> 
     <% premium_payments.each do |p| %>
+      <% p[1] = p[1].sort_by{|v| v["carrier_name"]} %>
       <tr>
         <td <%= "rowspan=#{p[1].length}" %>><span class="fui-credit-card">&nbsp;</span><%= p.first.strftime("%m-%d-%Y") %></td>
         <%= render "employers/showtabs/payment_table_rows", p: p[1][0] %>
