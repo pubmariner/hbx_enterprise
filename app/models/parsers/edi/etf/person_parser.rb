@@ -192,7 +192,6 @@ module Parsers
           parse_name
           parse_address
           parse_contact
-          parse_demo
         end
 
         private
@@ -222,7 +221,8 @@ module Parsers
         end
 
         def merge_method(m_type)
-          (@change_type == "change") ? "update_#{m_type}".to_sym : "merge_#{m_type}".to_sym
+#          (@change_type == "change") ? "update_#{m_type}".to_sym : "merge_#{m_type}".to_sym
+          "update_#{m_type}"
         end
       end
     end
