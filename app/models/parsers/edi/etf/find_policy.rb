@@ -13,6 +13,7 @@ module Parsers
           policy
         else
           @listener.policy_not_found(subkeys)
+          nil
         end
       end
     end

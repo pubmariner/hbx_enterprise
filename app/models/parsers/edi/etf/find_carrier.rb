@@ -12,6 +12,7 @@ module Parsers
           carrier
         else
           @listener.carrier_not_found(fein)
+          nil
         end
       end
     end

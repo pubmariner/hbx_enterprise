@@ -12,6 +12,7 @@ module Parsers
           plan
         else
           @listener.plan_not_found(hios_id)
+          nil
         end
       end
     end
