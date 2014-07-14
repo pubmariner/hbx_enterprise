@@ -1,2 +1,3 @@
 --color
 --require ./spec/glue_formatter.rb
+--require ./spec/xunit_formatter.rb
