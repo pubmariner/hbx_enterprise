@@ -41,7 +41,7 @@ class GlueFormatter < RSpec::Core::Formatters::BaseFormatter
     super
     puts "Running #{example_count} tests"
     @passed_examples = []
-    @example_groupings = ExampleGrouping.new("", -1)
+    @example_groupings = ExampleGrouping.new("", 0)
   end
 
   def example_passed(example)
@@ -66,7 +66,7 @@ class GlueFormatter < RSpec::Core::Formatters::BaseFormatter
     @example_groupings.add(full_key, ex)
   end
 
-  def start_dump
+  def dump_summary(duration, example_count, failure_count, pending_count)
     @passed_examples.each do |ex|
       add_to_examples_hash(ex)
     end
@@ -76,10 +76,10 @@ class GlueFormatter < RSpec::Core::Formatters::BaseFormatter
     @failed_examples.each do |ex|
       add_to_examples_hash(ex)
     end
-    print_index_file
+    print_index_file(duration)
   end
 
-  def print_index_file
+  def print_index_file(duration)
     ifile = File.open(File.join(base_path_for_files, "index.html"), 'w')
     printer = RSpec::Core::Formatters::HtmlPrinter.new(ifile)
     printer.print_html_start
@@ -95,8 +95,19 @@ class GlueFormatter < RSpec::Core::Formatters::BaseFormatter
       div_for_group(ifile, printer, grp)
       ifile.print "</div>\n"
     end
-    ifile.print "</div></body>\n</html>\n"
+    print_summary(printer, duration)
     ifile.close
+  end
+
+  def print_summary(printer, duration)
+    printer.print_summary(
+      false,
+      duration,
+      @example_count,
+      @failed_examples.length,
+      @pending_examples.length
+    )
+    printer.flush
   end
 
   def base_path_for_files
@@ -105,7 +116,7 @@ class GlueFormatter < RSpec::Core::Formatters::BaseFormatter
 
   def div_for_group(f, printer, grp)
     printer.flush
-    printer.print_example_group_start(grp.guid, grp.name, grp.depth)
+    print_example_group_start(f, grp.guid, grp.name, grp.depth)
     grp.examples.each do |example|
       case example.execution_result[:status]
       when "passed"
@@ -154,6 +165,16 @@ class GlueFormatter < RSpec::Core::Formatters::BaseFormatter
     "    <pre class=\"ruby\"><code>#{@snippet_extractor.snippet(backtrace)}</code></pre>"
   end
 
+  def print_example_group_start(output, group_id, description, number_of_parents  )
+    output.puts "<div id=\"div_group_#{group_id}\" class=\"example_group passed\">"
+    output.puts "  <dl #{indentation_style(number_of_parents)}>"
+    output.puts "  <dt id=\"example_group_#{group_id}\" class=\"passed\"><pre>#{h(description)}</pre></dt>"
+  end
+
+  def indentation_style( number_of_parents )
+    "style=\"margin-left: #{(number_of_parents - 1) * 15}px;\""
+  end
+
   HIDE_SHOW_JS = <<-JSCODE
   <script type="text/javascript">
   // <![CDATA[
@@ -169,5 +190,5 @@ function showExample(eg_guid) {
 }
 // ]]>
 </script>
-      JSCODE
+  JSCODE
 end
