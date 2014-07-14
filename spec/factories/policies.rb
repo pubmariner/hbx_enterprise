@@ -9,6 +9,8 @@ FactoryGirl.define do
     elected_aptc '2.22'
     applied_aptc '3.33'
     broker
+    plan
+        
     after(:create) do |policy, evaluator|
       create_list(:enrollee, 2, policy: policy)
     end
