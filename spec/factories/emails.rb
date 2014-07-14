@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :email do
     email_type 'home'
-    email_address 'example@example.com'
+    sequence(:email_address) { |n| "example#{n}@example.com" }
 
     trait :without_email_type do
       email_type ' '

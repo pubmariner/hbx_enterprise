@@ -1,0 +1,43 @@
+%n1:policy{"xmlns:n1" => "http://openhbx.org/api/terms/1.0", "xmlns:xsi" => "http://www.w3.org/2001/XMLSchema-instance", "xsi:schemaLocation" => "http://openhbx.org/api/terms/1.0 policy.xsd"}
+  %n1:broker
+    %n1:npn_id= @policy.broker.npn
+    %n1:name= @policy.broker.name_full
+    = render 'shared/address', address: @policy.broker.addresses.first
+    = render 'shared/phone', phone: @policy.broker.phones.first
+    = render 'shared/email', email: @policy.broker.emails.first
+  /   %n1:website
+  /   %n1:hbx_uri
+  /   %n1:hbx_id
+  %n1:enrollees
+    - @policy.enrollees.each do |e|
+      %n1:enrollee
+        %n1:premium_amount= e.pre_amt
+        %n1:disabled= e.ds
+        %n1:benefit_status= e.ben_stat
+        %n1:employment_status= e.emp_stat
+        %n1:relationship= e.rel_code
+        %n1:carrier_assigned_member_id= e.c_id
+        %n1:carrier_assigned_policy_id= e.cp_id
+        %n1:coverage_start_date= e.coverage_start.try(:strftime,"%Y-%m-%d")
+        %n1:coverage_end_date= e.coverage_end.try(:strftime,"%Y-%m-%d")
+        %n1:coverage_status= e.coverage_status
+        %n1:member
+          = render 'shared/member', member: e.member
+  %n1:premium_amount_total= @policy.pre_amt_tot
+  %n1:total_responsible_amount= @policy.tot_res_amt
+  %n1:total_employer_responsible_amount= @policy.tot_emp_res_amt
+  %n1:carrier_to_bill= @policy.carrier_to_bill
+  / %n1:plan
+  /   %n1:hios_plan_id= @policy.plan.hios_plan_id
+  /   %n1:coverage_type= @policy.plan.coverage_type
+  /   %n1:hbx_uri= plan_url(@policy.plan) #xml format?
+  /   %n1:hbx_id= @policy.plan.hbx_plan_id
+  /   %n1:csr= @policy.csr_amt
+  /   %n1:ehb= @policy.plan.ehb
+  /   %n1:carrier
+  /     %n1:carrier_name= @policy.carrier.name
+  /     %n1:hbx_uri= carrier_url(@policy.carrier) #xml format?
+  /     %n1:hbx_id= @policy.carrier.hbx_carrier_id
+  %n1:allocated_aptc= @policy.allocated_aptc
+  %n1:elected_aptc_percent= @policy.elected_aptc
+  %n1:applied_aptc= @policy.applied_aptc
