@@ -33,6 +33,34 @@ class ExampleGrouping
      existing.add(rest, example)
     end
   end
+
+  def pendings?
+    pending_groups? || pending_examples?
+  end
+
+  def failures?
+    failed_groups? || failed_examples?
+  end
+
+  def failed_groups?
+    @groups.any?(&:failures?)
+  end
+
+  def pending_groups?
+    @groups.any?(&:pendings?)
+  end
+
+  def pending_examples?
+    @examples.any? do |example|
+      ["pending"].include?(example.execution_result[:status])
+    end
+  end
+
+  def failed_examples?
+    @examples.any? do |example|
+      !["passed", "pending"].include?(example.execution_result[:status])
+    end
+  end
 end
 
 class GlueFormatter < RSpec::Core::Formatters::BaseFormatter
@@ -87,7 +115,7 @@ class GlueFormatter < RSpec::Core::Formatters::BaseFormatter
     ifile.print HIDE_SHOW_JS
     ifile.print "<div id=\"nav_menu\" style=\"float: left; width: 25%;\">\n<ul>\n"
     @example_groupings.each_group do |grp|
-      ifile.print "<li><a href=\"#\" onclick=\"hideExamples(); showExample('#{grp.guid}'); return false;\">#{h(grp.name)}</a></li>\n"
+      print_group_link(ifile, grp)
     end
     ifile.print "</ul>\n</div>"
     @example_groupings.each_group do |grp|
@@ -97,6 +125,17 @@ class GlueFormatter < RSpec::Core::Formatters::BaseFormatter
     end
     print_summary(printer, duration)
     ifile.close
+  end
+
+  def print_group_link(f, grp)
+    example_indicators = ""
+    if grp.failures?
+      example_indicators << " F"
+    end
+    if grp.pendings?
+      example_indicators << " P"
+    end
+    f.print "<li><a href=\"#\" onclick=\"hideExamples(); showExample('#{grp.guid}'); return false;\">#{h(grp.name)}</a>#{example_indicators}</li>\n"
   end
 
   def print_summary(printer, duration)
@@ -116,7 +155,7 @@ class GlueFormatter < RSpec::Core::Formatters::BaseFormatter
 
   def div_for_group(f, printer, grp)
     printer.flush
-    print_example_group_start(f, grp.guid, grp.name, grp.depth)
+    print_example_group_start(f, grp)
     grp.examples.each do |example|
       case example.execution_result[:status]
       when "passed"
@@ -165,10 +204,12 @@ class GlueFormatter < RSpec::Core::Formatters::BaseFormatter
     "    <pre class=\"ruby\"><code>#{@snippet_extractor.snippet(backtrace)}</code></pre>"
   end
 
-  def print_example_group_start(output, group_id, description, number_of_parents  )
-    output.puts "<div id=\"div_group_#{group_id}\" class=\"example_group passed\">"
-    output.puts "  <dl #{indentation_style(number_of_parents)}>"
-    output.puts "  <dt id=\"example_group_#{group_id}\" class=\"passed\"><pre>#{h(description)}</pre></dt>"
+  def print_example_group_start(output, grp)
+    pending_class = (grp.pendings? ? "not_implemented" : "passed")
+    css_class = (grp.failures? ? "failed" : pending_class)
+    output.puts "<div id=\"div_group_#{grp.guid}\" class=\"example_group passed\">"
+    output.puts "  <dl #{indentation_style(grp.depth)}>"
+    output.puts "  <dt id=\"example_group_#{grp.guid}\" class=\"#{css_class}\"><pre>#{h(grp.name)}</pre></dt>"
   end
 
   def indentation_style( number_of_parents )
