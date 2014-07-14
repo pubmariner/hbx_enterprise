@@ -20,7 +20,5 @@ FactoryGirl.define do
 
     factory :invalid_person, traits: [:without_first_name, 
       :without_last_name]
-
-
   end
 end

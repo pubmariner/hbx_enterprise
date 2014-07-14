@@ -61,7 +61,7 @@ describe 'People API' do
   describe 'searching for individuals by hbx member id' do
     let(:people) { create_list(:person, 2) }
 
-    before { get "/api/v1/people?member_id=#{people.first.members.first.hbx_member_id}" }
+    before { get "/api/v1/people?hbx_id=#{people.first.members.first.hbx_member_id}" }
     it 'is successful (200)' do
       expect(response).to be_success
     end
@@ -69,9 +69,8 @@ describe 'People API' do
     it 'responds with CV XML in body' do
       xml = Hash.from_xml(response.body)
       individuals_xml = xml['individuals']
-      individuals_xml['individual'].each_with_index do |individual_xml, index|
-        expect_individual_cv_xml(individual_xml, people[index])
-      end
+      
+      expect_individual_cv_xml(individuals_xml['individual'], people.first)
     end
   end
 end
