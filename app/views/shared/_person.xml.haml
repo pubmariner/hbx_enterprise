@@ -5,30 +5,12 @@
 - unless person.addresses.empty?
   %n1:addresses
     - person.addresses.each do |address|
-      %n1:address
-        %n1:address_type= address.address_type
-        %n1:address_1= address.address_1
-        %n1:address_2= address.address_2
-        %n1:city= address.city
-        %n1:state= address.state
-        %n1:postal_code= address.zip
-        %n1:country_code= 'US'
-        - if false
-          %n1:coordinates
-            %n1:x
-            %n1:y
-            %n1:z
-            %n1:coordinate_system_reference
+      = render 'shared/address', address: address
 - unless person.emails.empty?
   %n1:emails
     - person.emails.each do |email|
-      %n1:email
-        %n1:email_type= email.email_type
-        %n1:email_address= email.email_address
+      = render 'shared/email', email: email
 - unless person.phones.empty?
   %n1:phones
     - person.phones.each do |phone|
-      %n1:phone
-        %n1:phone_type= phone.phone_type
-        %n1:phone_number= phone.phone_number
-        %n1:extension= phone.extension
+      = render 'shared/phone', phone: phone

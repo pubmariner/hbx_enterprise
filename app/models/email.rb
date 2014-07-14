@@ -14,6 +14,7 @@ class Email
 
   embedded_in :person, :inverse_of => :emails
   embedded_in :employer, :inverse_of => :emails
+  embedded_in :broker, :inverse_of => :emails
 
   def match(another_email)
     return false if another_email.nil?

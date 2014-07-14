@@ -20,7 +20,8 @@ class Address
 
   embedded_in :person, :inverse_of => :addresses
   embedded_in :employer, :inverse_of => :addresses
-
+  embedded_in :broker, :inverse_of => :addresses
+  
   before_save :clean_fields
 
   def clean_fields

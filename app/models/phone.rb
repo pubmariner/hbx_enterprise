@@ -15,6 +15,7 @@ class Phone
 
   embedded_in :person, :inverse_of => :phones
   embedded_in :employer, :inverse_of => :phones
+  embedded_in :broker, :inverse_of => :phones
 
   def match(another_phone)
     return(false) if another_phone.nil?
