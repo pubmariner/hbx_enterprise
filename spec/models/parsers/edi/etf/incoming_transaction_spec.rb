@@ -1,12 +1,11 @@
 require 'spec_helper'
 describe Parsers::Edi::IncomingTransaction do
-
   let(:enrollee) { Enrollee.new(m_id: '1', 
                                 relationship_status_code: 'self', 
                                 employment_status_code: 'active', 
                                 benefit_status_code: 'active',
-                                coverage_start: "20140501",
-                                coverage_end: "20140531" ) }
+                                coverage_start: coverage_start,
+                                coverage_end: coverage_end ) }
   let(:policy) do
     policy = Policy.new(eg_id: '1')
     policy.enrollees << enrollee
@@ -14,7 +13,10 @@ describe Parsers::Edi::IncomingTransaction do
     policy
   end
 
-  let(:policy_loop) { double(id: '4321', action: :stop) }
+  let(:coverage_start) { '20140501' }
+  let(:coverage_end) { '20140501' }
+
+  let(:policy_loop) { double(id: '4321', action: :stop, coverage_end: coverage_end) }
   let(:person_loop) { double(member_id: '1', carrier_member_id: '1234', policy_loops: [policy_loop]) }
   let(:etf) { double(people: [person_loop], is_shop?: false) }
   let(:incoming) do 
@@ -45,13 +47,16 @@ describe Parsers::Edi::IncomingTransaction do
       expect(enrollee.coverage_status).to eq 'inactive'
     end
 
+    it 'imports enrollee coverage-end date' do
+      incoming.import
+
+      enrollee.reload
+      expect(enrollee.coverage_end.strftime("%Y%m%d")).to eq policy_loop.coverage_end
+    end
+
     context 'when coverage start/end are different' do
-      let(:enrollee) { Enrollee.new(m_id: '1', 
-                                  relationship_status_code: 'self', 
-                                  employment_status_code: 'active', 
-                                  benefit_status_code: 'active',
-                                  coverage_start: "20140501",
-                                  coverage_end: "20140531" ) }
+      let(:coverage_start) { '20140501' }
+      let(:coverage_end) { '20140706' }
       it 'sets the policy to terminated' do
         incoming.import
 
@@ -61,12 +66,8 @@ describe Parsers::Edi::IncomingTransaction do
     end
 
     context 'when coverage start/end are the same' do 
-      let(:enrollee) { Enrollee.new(m_id: '1', 
-                                  relationship_status_code: 'self', 
-                                  employment_status_code: 'active', 
-                                  benefit_status_code: 'active',
-                                  coverage_start: "20140501",
-                                  coverage_end: "20140501" ) }
+      let(:coverage_start) { '20140501' }
+      let(:coverage_end) { '20140501' }
       it 'sets the policy to canceled' do
         incoming.import
 
