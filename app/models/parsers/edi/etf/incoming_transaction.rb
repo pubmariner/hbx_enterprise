@@ -54,6 +54,8 @@ module Parsers
 
           if(!@etf.is_shop? && policy_loop.action == :stop )
             enrollee.coverage_status = 'inactive'
+            enrollee.coverage_end = policy_loop.coverage_end
+            
             if enrollee.subscriber?
               if enrollee.coverage_start == enrollee.coverage_end
                 enrollee.policy.aasm_state = "canceled"
@@ -61,6 +63,7 @@ module Parsers
                 enrollee.policy.aasm_state = "terminated"
               end
             end
+
           end
         end  
         @policy.save
