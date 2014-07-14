@@ -59,4 +59,5 @@ RSpec.configure do |config|
   config.extend ControllerMacros, :type => :controller
   config.include FactoryGirl::Syntax::Methods
   config.include Features, type: :feature
+  config.include Requests, type: :request
 end
