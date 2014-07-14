@@ -1,13 +1,7 @@
 class Api::V1::PeopleController < ApplicationController
 
   def index
-    hbx_member_id = params[:hbx_id]
-
-    if(hbx_member_id)
-      @people = Person.where('members.hbx_member_id' => /#{hbx_member_id}/)
-    else
-      @people = Person.all
-    end
+    @people = Person.where('members.hbx_member_id' => /#{params[:hbx_id]}/)
 
     page_number = params[:page] 
     page_number ||= 1
