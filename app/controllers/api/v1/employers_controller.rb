@@ -1,12 +1,6 @@
 class Api::V1::EmployersController < ApplicationController
   def index
-    fein = params[:fein]
-
-    if(fein)
-      @employers = Employer.where('fein' => /#{fein}/)
-    else
-      @employers = Employer.all
-    end
+    @employers = Employer.where("hbx_id" => /#{params[:hbx_id]}/, "fein" => /#{params[:fein]}/)
 
     page_number = params[:page] 
     page_number ||= 1
