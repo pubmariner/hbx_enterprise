@@ -8,5 +8,7 @@ FactoryGirl.define do
     metal_level 'bronze'
     market_type 'individual'
     ehb 0.0
+    carrier
+    
   end
 end

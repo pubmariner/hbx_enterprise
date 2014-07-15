@@ -51,14 +51,28 @@ def expect_policy_cv_xml(policy_xml, policy)
   expect(policy_xml['total_responsible_amount']).to eq policy.tot_res_amt.to_s
   expect(policy_xml['total_employer_responsible_amount']).to eq policy.tot_emp_res_amt.to_s
   expect(policy_xml['carrier_to_bill']).to eq policy.carrier_to_bill.to_s  
-  # expect(policy_xml['plan']).to eq nil
+  
+  plan_xml = policy_xml['plan']
+  plan = policy.plan
+  expect(plan_xml['hios_plan_id']).to eq plan.hios_plan_id
+  expect(plan_xml['coverage_type']).to eq plan.coverage_type
+  # expect(plan_xml['hbx_uri']).to eq ''
+  # expect(plan_xml['hbx_id']).to eq ''
+  # expect(plan_xml['csr']).to eq ''
+  expect(plan_xml['ehb']).to eq plan.ehb.to_s
+
+  carrier = plan.carrier
+  expect(plan_xml['carrier']['carrier_name']).to eq carrier.name
+  # expect(plan_xml['carrier']['hbx_uri']).to eq ''
+  # expect(plan_xml['carrier']['hbx_id']).to eq ''
+
   expect(policy_xml['allocated_aptc']).to eq policy.allocated_aptc.to_s  
   expect(policy_xml['elected_aptc_percent']).to eq policy.elected_aptc.to_s 
   expect(policy_xml['applied_aptc']).to eq policy.applied_aptc.to_s  
 
 end
 
-describe 'Employers API' do
+describe 'Policy API' do
   before { sign_in_as_a_valid_user }
 
   describe 'retrieving a policy by primary key' do 
