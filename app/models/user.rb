@@ -31,6 +31,8 @@ class User
   field :current_sign_in_ip, :type => String
   field :last_sign_in_ip,    :type => String
 
+  field :authentication_token
+
   ## Confirmable
   # field :confirmation_token,   :type => String
   # field :confirmed_at,         :type => Time
@@ -45,6 +47,13 @@ class User
   ## Enable when 
   # after_create :send_admin_mail
 
+  before_save :ensure_authentication_token
+
+  def ensure_authentication_token
+    if authentication_token.blank?
+      self.authentication_token = generate_authentication_token
+    end
+  end
 
   def active_for_authentication? 
     super && approved? 
@@ -72,9 +81,22 @@ class User
     where(approved: appvd_status)
   end
 
+  def self.find_by_authentication_token(token)
+    where(authentication_token: token).first
+  end
+
 protected
   def send_admin_mail
     AdminMailer.new_user_waiting_for_approval(self).deliver
   end
+
+private
+  def generate_authentication_token
+    loop do
+      token = Devise.friendly_token
+      break token unless User.where(authentication_token: token).first
+    end
+  end
+
 
 end
