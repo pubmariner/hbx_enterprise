@@ -1,7 +1,9 @@
 class Api::V1::PeopleController < ApplicationController
 
   def index
-    @people = Person.where('members.hbx_member_id' => /#{params[:hbx_id]}/)
+    clean_hbx_member_id = Regexp.new(Regexp.escape(params[:hbx_id].to_s))
+
+    @people = Person.where('members.hbx_member_id' => clean_hbx_member_id)
 
     page_number = params[:page] 
     page_number ||= 1
