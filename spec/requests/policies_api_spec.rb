@@ -61,10 +61,11 @@ def expect_policy_cv_xml(policy_xml, policy)
   # expect(plan_xml['csr']).to eq ''
   expect(plan_xml['ehb']).to eq plan.ehb.to_s
 
+  carrier_xml = plan_xml['carrier']
   carrier = plan.carrier
-  expect(plan_xml['carrier']['carrier_name']).to eq carrier.name
+  expect(carrier_xml['carrier_name']).to eq carrier.name
   # expect(plan_xml['carrier']['hbx_uri']).to eq ''
-  # expect(plan_xml['carrier']['hbx_id']).to eq ''
+  expect(carrier_xml['hbx_id']).to eq carrier.hbx_carrier_id
 
   expect(policy_xml['allocated_aptc']).to eq policy.allocated_aptc.to_s  
   expect(policy_xml['elected_aptc_percent']).to eq policy.elected_aptc.to_s 
