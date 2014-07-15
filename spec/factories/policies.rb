@@ -11,8 +11,8 @@ FactoryGirl.define do
     broker
     plan
         
-    after(:create) do |policy, evaluator|
-      create_list(:enrollee, 2, policy: policy)
+    after(:create) do |p, evaluator|
+      create_list(:enrollee, 2, policy: p)
     end
   end
 end
