@@ -6,8 +6,11 @@ FactoryGirl.define do
     sequence(:name_last) {|n| "Smith\##{n}" }
     name_sfx 'Jr'
 
-    after(:create) do |person, evaluator|
-      create_list(:member, 2, person: person)
+    after(:create) do |p, evaluator|
+      create_list(:member, 2, person: p)
+      create_list(:address, 2, person: p)
+      create_list(:phone, 2, person: p)
+      create_list(:email, 2, person: p)
     end
 
     trait :without_first_name do

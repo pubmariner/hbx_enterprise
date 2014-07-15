@@ -12,12 +12,27 @@ def expect_individual_cv_xml(individual_xml, person)
   expect(name['name_full']).to eq(person.name_full)
   # expect(person_xml['job_title']).to eq(nil)
   # expect(person_xml['department']).to eq(nil)
+  
+  addresses_xml = person_xml['addresses']['address']
+  addresses_xml.each_with_index do |address_xml, index|
+    expect_address_xml(address_xml, person.addresses[index])
+  end
+
+  phones_xml = person_xml['phones']['phone']
+  phones_xml.each_with_index do |phone_xml, index|
+    expect_phone_xml(phone_xml, person.phones[index])
+  end
+
+  emails_xml = person_xml['emails']['email']
+  emails_xml.each_with_index do |email_xml, index|
+    expect_email_xml(email_xml, person.emails[index])
+  end
 
   member_roles = individual_xml['member_roles']['member_role']
   member_roles.each_with_index do |member_xml, index|
     member = person.members[index]
     
-    expect_member_in_cv_xml(member_xml, member)
+    expect_member_xml(member_xml, member)
   end
 end
 
