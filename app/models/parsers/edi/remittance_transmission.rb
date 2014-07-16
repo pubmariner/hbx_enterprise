@@ -66,19 +66,20 @@ module Parsers
           policy = Policy.find_by_sub_and_plan(eg_id, plan._id)
         end
         return(nil) if policy.nil?
-        l2300s = l2000["L2300s"]
-        l2300s.each do |l2300|
+
+        l2000["L2300s"].each do |l2300|
+          remittance_detail = Remittance::RemittanceDetail.new(l2100)
           p_payment = PremiumPayment.new({
             :policy_id => policy._id,
             :carrier_id => carrier._id,
             :transaction_set_premium_payment_id => transaction._id,
             :paid_at => transaction.bpr16,
             :employer => policy.employer,
-            :hbx_payment_type => l2300["RMR"][2],
-            :coverage_period => l2300["DTM"][6],
+            :hbx_payment_type => remittance_detail.payment_type,
+            :coverage_period => remittance_detail.coverage_period,
             :payment_amount_in_cents => 0
           })
-          p_payment.payment_amount_in_dollars = l2300["RMR"][4]
+          p_payment.payment_amount_in_dollars = remittance_detail.payment_amount
           p_payment.save!
         end
       end
