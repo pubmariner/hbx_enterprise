@@ -25,12 +25,8 @@ module Parsers
         end
 
         def get_street2
-          street2 = nil
-          info_loop = @person_loop["L2100A"]
-          if !info_loop["N3"][2].blank?
-            street2 = info_loop["N3"][2]
-          end
-          street2
+          street2 = PersonLoop.new(@person_loop).street2
+          street2.blank? ? nil : street2
         end
 
         def get_street1
