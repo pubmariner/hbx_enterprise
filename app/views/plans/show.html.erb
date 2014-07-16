@@ -1,63 +1,31 @@
+<%- model_class = Plan -%>
 <div class="page-header">
-  <%t '.title', :default => Plan.model_name.human.titleize.pluralize %>
+  <%t '.title', :default => model_class.model_name.human.titleize.pluralize %>
   <%= render 'shared/breadcrumb', crumbs: [
       link_to('Plans', plans_path),
       @plan.name
     ] 
   %>
 </div>
+<div class='col-md-offset-1 col-md-10'>
+  <dl class="dl-horizontal">
+    <dt><%= model_class.human_attribute_name(:name) %></dt>
+    <dd><%= @plan.name %></dd>
+    <dt><%= model_class.human_attribute_name(:abbrev) %></dt>
+    <dd><%= @plan.abbrev %></dd>
+    <dt><%= model_class.human_attribute_name(:hbx_plan_id) %></dt>
+    <dd><%= @plan.hbx_plan_id %></dd>
+    <dt><%= model_class.human_attribute_name(:hios_plan_id) %></dt>
+    <dd><%= @plan.hios_plan_id %></dd>
+    <dt><%= model_class.human_attribute_name(:coverage_type) %></dt>
+    <dd><%= @plan.coverage_type %></dd>
+    <dt><%= model_class.human_attribute_name(:metal_level) %></dt>
+    <dd><%= @plan.metal_level %></dd>
+    <dt><%= model_class.human_attribute_name(:market_type ) %></dt>
+    <dd><%= @plan.market_type  %></dd>
+    <dt><%= model_class.human_attribute_name(:ehb) %></dt>
+    <dd><%= @plan.ehb %></dd>
+  </dl>
 
-<div class='col-md-offset-2 col-md-10'>
-  <h4><%= @plan.name %></h4>
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <h3 class="panel-title">
-        <span class="fui-tag">&nbsp;</span>
-        Calculate Premium
-      </h3>
-    </div>
-
-    <div class="panel-body">
-
-      <%= form_tag calculate_premium_plan_path(@plan.id), method: :get, remote: true, class: 'form-horizontal' do %>
-        <div class="form-group">
-
-          <div class="row">
-            <div class="col-md-2 text-center">
-              <%= label_tag :rate_period_date %>
-            </div>
-            <div class="col-md-3">
-              <%= text_field_tag :rate_period_date, @rate_period_date, { class: 'date_picker'} %>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-md-2 text-center">
-              <%= label_tag :benefit_begin_date %>
-            </div>
-            <div class="col-md-3">
-              <%= text_field_tag :benefit_begin_date, @benefit_begin_date, { class: 'date_picker'} %>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-md-2 text-center">
-              <%= label_tag :birth_date %>
-            </div>
-            <div class="col-md-3">
-              <%= text_field_tag :birth_date, @birth_date, { class: 'date_picker' } %>
-            </div>
-          </div>
-
-          <div class="col-md-offset-1 col-md-2 text-center">
-            <%= submit_tag "Calculate", { :class => "btn btn-primary" } %>
-          </div>
-        </div>
-      <% end %>
-
-      <h5 id='rate-result'>Result: $0.00</h5>
-
-    </div>
-  </div>
-
+  <%= render 'premium_calculator', plan: @plan, rate_period_date: @rate_period_date, benefit_begin_date: @benefit_begin_date, birth_date: @birth_date %>
 </div>

@@ -1,0 +1,50 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">
+      <span class="fui-tag">&nbsp;</span>
+      Calculate Premium
+    </h3>
+  </div>
+
+  <div class="panel-body">
+
+    <%= form_tag calculate_premium_plan_path(plan.id), method: :get, remote: true, class: 'form-horizontal' do %>
+      <div class="form-group">
+
+        <div class="row">
+          <div class="col-md-2 text-center">
+            <%= label_tag :rate_period_date %>
+          </div>
+          <div class="col-md-3">
+            <%= text_field_tag :rate_period_date, rate_period_date, { class: 'date_picker'} %>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-2 text-center">
+            <%= label_tag :benefit_begin_date %>
+          </div>
+          <div class="col-md-3">
+            <%= text_field_tag :benefit_begin_date, benefit_begin_date, { class: 'date_picker'} %>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-2 text-center">
+            <%= label_tag :birth_date %>
+          </div>
+          <div class="col-md-3">
+            <%= text_field_tag :birth_date, birth_date, { class: 'date_picker' } %>
+          </div>
+        </div>
+
+        <div class="col-md-offset-1 col-md-2 text-center">
+          <%= submit_tag "Calculate", { :class => "btn btn-primary" } %>
+        </div>
+      </div>
+    <% end %>
+
+    <h5 id='rate-result'>Result: $0.00</h5>
+
+  </div>
+</div>
