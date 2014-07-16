@@ -20,7 +20,7 @@ class CarriersController < ApplicationController
 
   def show_plans
     @carrier = Carrier.find(params[:carrier_id])
-    @plans = @carrier.plans.only(:name).ascending(:name, :hios_plan_id)
+    @plans = @carrier.plans.only(:name,:hios_plan_id).ascending(:name, :hios_plan_id)
 
     render json: @plans
   end
