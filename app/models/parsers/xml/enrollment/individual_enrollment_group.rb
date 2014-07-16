@@ -1,7 +1,7 @@
 module Parsers::Xml::Enrollment
   class IndividualEnrollmentGroup < EnrollmentGroup
     def credit
-      @plan.at_xpath('./ins:aptc_amount', NAMESPACES).text.to_f
+      @plan.at_xpath('./ins:aptc_amount', NAMESPACES).text.to_f.round(2)
     end
     
     def enrollees
