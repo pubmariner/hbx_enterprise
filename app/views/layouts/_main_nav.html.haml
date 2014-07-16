@@ -9,11 +9,11 @@
     .collapse.navbar-collapse#navbar-collapse-02
       %ul.nav.navbar-nav
         != active_menu_item("Dashboard", root_path, :dashboards)
+        != active_menu_item("Application Groups", application_groups_path, :application_groups)
         != active_menu_item("People", people_path, :people)
         != active_menu_item("Employers", employers_path, :employers)
         != active_menu_item("Brokers", brokers_path, :brokers)
         != active_menu_item("Carriers", carriers_path, :carriers)
-        != active_menu_item("Application Groups", application_groups_path, :application_groups)
         != active_menu_item("Tools", tools_premium_calc_path) 
         - if current_user 
           %li.dropdown
