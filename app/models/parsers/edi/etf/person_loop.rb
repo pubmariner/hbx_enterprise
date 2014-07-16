@@ -76,6 +76,10 @@ module Parsers
           @loop["L2100A"]["N3"][1]
         end
 
+        def street2
+          @loop["L2100A"]["N3"][2]
+        end
+
         def city
           @loop["L2100A"]["N4"][1]
         end
