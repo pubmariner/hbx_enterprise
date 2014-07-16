@@ -6,7 +6,7 @@ module Parsers::Xml::Enrollment
     end
 
     def rate_period_date
-      @employer.open_enrollment_start
+      @employer.plan_year_start
     end
   end
 end
