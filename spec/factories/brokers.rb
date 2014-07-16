@@ -13,5 +13,9 @@ FactoryGirl.define do
       create_list(:phone, 2, broker: b)
       create_list(:email, 2, broker: b)
     end
+
+    trait :with_invalid_b_type do
+      b_type ' '
+    end
   end
 end
