@@ -68,7 +68,7 @@ module Parsers
         return(nil) if policy.nil?
 
         l2000["L2300s"].each do |l2300|
-          remittance_detail = Remittance::RemittanceDetail.new(l2100)
+          remittance_detail = Remittance::RemittanceDetail.new(l2300)
           p_payment = PremiumPayment.new({
             :policy_id => policy._id,
             :carrier_id => carrier._id,
