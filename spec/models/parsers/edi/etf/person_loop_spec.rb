@@ -148,10 +148,10 @@ describe Parsers::Edi::Etf::PersonLoop do
 
   describe '#state' do
     it 'exposes the state' do
-      city = 'Atlanta'
-      raw_loop = { 'L2100A' => { 'N4' => ['', city, '', ''] } }
+      state = 'AL'
+      raw_loop = { 'L2100A' => { 'N4' => ['', '', state, ''] } }
       person_loop = Parsers::Edi::Etf::PersonLoop.new(raw_loop)
-      expect(person_loop.city).to eq city
+      expect(person_loop.state).to eq state
     end
   end
 
