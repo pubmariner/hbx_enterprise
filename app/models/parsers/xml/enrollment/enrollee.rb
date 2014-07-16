@@ -19,7 +19,7 @@ module Parsers::Xml::Enrollment
     end
 
     def premium_amount
-      @coverage.at_xpath('./ins:premium_amount', NAMESPACES).text.to_f
+      @coverage.at_xpath('./ins:premium_amount', NAMESPACES).text.to_f.round(2)
     end
 
     def premium_amount=(amt)
