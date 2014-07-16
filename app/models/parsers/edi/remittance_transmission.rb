@@ -52,18 +52,12 @@ module Parsers
       end
 
       def persist_payment_entry(l2000, carrier, transaction)
-        l2100 = l2000["L2100"]
-        refs = l2100["REFs"]
-        eg_id = refs.detect do |ref|
-          ref[1] == "POL"
-        end[2]
-        hios_id = refs.detect do |ref|
-          ref[1] == "TV"
-        end[2]
-        plan = Plan.find_by_hios_id(hios_id)
-        policy = Policy.find_by_subkeys(eg_id, carrier._id, plan._id)
+        individual_name = Remittance::IndividualName.new(l2000["L2100"])
+
+        plan = Plan.find_by_hios_id(individual_name.hios_plan_id)
+        policy = Policy.find_by_subkeys(individual_name.enrollment_group_id, carrier._id, plan._id)
         unless policy
-          policy = Policy.find_by_sub_and_plan(eg_id, plan._id)
+          policy = Policy.find_by_sub_and_plan(individual_name.enrollment_group_id, plan._id)
         end
         return(nil) if policy.nil?
 
