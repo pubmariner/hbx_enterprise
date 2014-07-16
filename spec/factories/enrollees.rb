@@ -11,5 +11,11 @@ FactoryGirl.define do
     coverage_start Date.new(2014,1,2)
     coverage_end Date.new(2014,3,4)
     coverage_status 'active'
+
+    trait :self_relationship do
+      rel_code 'self'
+    end
+
+    factory :subscriber_enrollee, traits: [:self_relationship]
   end
 end

@@ -41,15 +41,7 @@ describe Address do
   end
 
   describe 'view helpers/presenters' do 
-    let(:address) do
-        address = Address.new
-        address.address_1 = '4321 Awesome Drive'
-        address.address_2 = '#321'
-        address.city = 'Washington'
-        address.state = 'DC'
-        address.zip = 20002
-        address
-    end
+    let(:address) { build :address }
     describe '#formatted_address' do
       it 'returns a string with a formated address' do
         line_one = address.address_1
@@ -104,15 +96,7 @@ describe Address do
   end
 
   describe '#match' do
-    let(:address) do
-      a = Address.new
-      a.address_1 = '4321 Awesome Drive'
-      a.address_2 = '#321'
-      a.city = 'Washington'
-      a.state = 'DC'
-      a.zip = 20002
-      a
-    end
+    let(:address) { build :address }
 
     context 'addresses are the same' do 
       let(:second_address) { address.clone }
