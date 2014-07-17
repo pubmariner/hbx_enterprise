@@ -6,8 +6,8 @@ module Validators
     end
 
     def validate
-      provided = @enrollment_group.total_responsible_amount
-      expected = adjusted_amount
+      provided = @enrollment_group.total_responsible_amount.round(2)
+      expected = adjusted_amount.round(2)
       if(provided != expected)
         @listener.group_has_incorrect_responsible_amount({provided: provided, expected: expected})
         return false
