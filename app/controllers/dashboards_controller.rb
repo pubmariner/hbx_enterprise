@@ -6,8 +6,8 @@ class DashboardsController < ApplicationController
   	@total_edi_transactions = Protocols::X12::TransactionSetEnrollment.count
 
     @transactions = {
-      :increments => {},
-      :months => {}
+      increments: {},
+      months: {}
     }
 
     transactonIncrements = {
