@@ -2,7 +2,8 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
   before_filter :authenticate_user_from_token!
   before_filter :authenticate_me!
-
+  rescue_from Mongoid::Errors::DocumentNotFound, :with => :id_not_found
+  
   def authenticate_me!
     # Skip auth if you are trying to log in
     if controller_name.downcase == "accounts"
@@ -14,6 +15,10 @@ class ApplicationController < ActionController::Base
   def flash_message(type, text)
     flash[type] ||= []
     flash[type] << text
+  end
+
+  def id_not_found
+    render :file => 'public/404.html', :status => 404
   end
 
   private

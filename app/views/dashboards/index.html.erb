@@ -21,38 +21,36 @@
   </div>
 
   <div class="col-md-10 main">
-  <h3 class="alert-danger" style="font-size: 18px;padding: 14px;border-radius:  4px;border: 1px solid #BBB;">NOTICE: Do <b>not</b> use figures below, as they're likely incorrect!</h3>
+    <h3 class="alert-danger" style="font-size: 18px;padding: 14px;border-radius:  4px;border: 1px solid #BBB;">NOTICE: Do <b>not</b> use figures below, as they're likely incorrect!</h3>
 
-  <br />
+    <h4>Enrollment transactions</h4>
 
-  <h4>Enrollment transactions</h4>
+    <div>
+      <div style="width: 40%;display: inline-block;margin-top: 0;">
+        <dl class="dl-horizontal" style="display: inline;">
+          <% @transactions[ :increments ].each_pair do |incrementName, numTransactions| %>
+            <dt><%= incrementName; %></dt>
+            <dd><%= numTransactions; %></dd>
+          <% end %>
+        </dl>
+      </div>
 
-  <div>
-    <div style="width: 40%;display: inline-block;margin-top: 0;">
-      <dl class="dl-horizontal" style="display: inline;">
-        <% @transactions[ :increments ].each_pair do |incrementName, numTransactions| %>
-        <dt><%= incrementName; %></dt><dd><%= numTransactions; %></dd>
-        <% end %>
-      </dl>
+      <div style="display: inline-block;margin-top: 0;float: left;">
+        <dl class="dl-horizontal" style="display: inline;">
+          <% @transactions[ :months ].each_pair do |monthName, numTransactions| %>
+            <dt><%= monthName; %></dt>
+            <dd><%= numTransactions; %></dd>
+          <% end %>
+        </dl>
+      </div>
     </div>
 
-    <div style="display: inline-block;margin-top: 0;float: left;">
-      <dl class="dl-horizontal" style="display: inline;">
-        <% @transactions[ :months ].each_pair do |monthName, numTransactions| %>
-        <dt><%= monthName; %></dt><dd><%= numTransactions; %></dd>
-        <% end %>
-      </dl>
-    </div>
-  </div>
+    <%= render "dashboards/enrollments_metric", transaction: @transaction %>
+    <%= render "dashboards/transmissions_metric" %>
 
-  <br />
+    <%= render "dashboards/response_metric", response_metric: @response_metric %>
 
-    <%= render :partial => "dashboards/enrollments_metric", transaction: @transaction %>
-    <%= render :partial => "dashboards/transmissions_metric" %>
-
-    <%= render :partial => "dashboards/response_metric", :object => @response_metric %>
-
-    <%= render :partial => "dashboards/ambiguous_people_metric", :object => @ambiguous_people_metric %>
+    <%= render "dashboards/ambiguous_people_metric", ambiguous_people_metric: @ambiguous_people_metric %>
 
     <h4 class="sub-header">Enrollment</h4>
     <div class="table-responsive">
@@ -65,14 +63,19 @@
           </thead>
           <tbody>
             <tr>
-              <td><%= number_with_delimiter(@total_lives) %></td>
-              <td><%= number_with_delimiter(@total_employers) %></td>
+              <td><%= number_with_delimiter @total_lives %></td>
+              <td><%= number_with_delimiter @total_employers %></td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
   </div>
-  <% unless Rails.env.test? %> 
-    <p class="text-right"><small><%= "updated: #{Person.first.updated_at.strftime('%m-%d-%Y') if Person.first.updated_at.present?}" %></small></p>
-  <% end %>
+
+<% unless Rails.env.test? %> 
+  <p class="text-right">
+    <small>
+      <%= "updated: #{Person.first.updated_at.strftime('%m-%d-%Y') if Person.first.updated_at.present?}" %>
+    </small>
+  </p>
+<% end %>
