@@ -1,10 +1,11 @@
 require 'spec_helper'
 
 describe Validators::PremiumValidator do
+  subject(:validator) { Validators::PremiumValidator.new(enrollment_group, plan, listener) }
+  
   let(:enrollment_group) { double }
   let(:plan) { double }
   let(:listener) { double }
-  let(:validator) { Validators::PremiumValidator.new(enrollment_group, plan, listener) }
 
   context 'premium does not match plan premium' do
     before do

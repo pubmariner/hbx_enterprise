@@ -28,6 +28,10 @@ class VocabUploadsController < ApplicationController
     flash_message(:error, "#{details[:name]}'s premium_amount is incorrect. " + details_text(details))
   end
 
+  def premium_not_found
+    flash_message(:error, "Premium was not found in the system.")
+  end
+
   def details_text(details)
     "Expected $#{sprintf "%.2f", details[:expected]} but got $#{sprintf "%.2f", details[:provided]}."
   end

@@ -23,8 +23,13 @@ module Validators
       end
 
       enrollees.each do |e|
+        found_premium = @plan.premium_for_enrollee(e)
+        if(found_premium.nil?)
+          @listener.premium_not_found
+          return false
+        end
         provided = e.premium_amount
-        expected = @plan.premium_for_enrollee(e).amount.to_f.round(2)
+        expected = found_premium.amount.to_f
         if(provided != expected)
           @listener.enrollee_has_incorrect_premium({name: e.name, provided: provided, expected: expected})
           valid = false
