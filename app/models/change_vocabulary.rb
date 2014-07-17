@@ -83,6 +83,7 @@ class ChangeVocabulary
       ["change_in_identifying_data_elements", "change_in_identifying_data_elements"],
       ["reenrollment", "reenrollment"],
       ["non_payment", "non_payment"],
+      ["relationship_change", "relationship_change"],
       ["notification_only", "notification_only"]
     ]
   end
