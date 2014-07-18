@@ -9,7 +9,8 @@ describe Parsers::Edi::Etf::PersonParser do
       'L2100A' => { 
         "N3" => ['', street1, street2, ''],
         'N4' => ['', city, state, zip]
-      } 
+      },
+      'REFs' => [['', '17', member_id ]]
     }
   end
   let(:street2) { 'something' }
@@ -17,47 +18,6 @@ describe Parsers::Edi::Etf::PersonParser do
   let(:city) { 'Atlanta' }
   let(:state) { 'GA' }
   let(:zip) { '20002' }
+  let(:member_id) { '666' }
 
-  describe '#get_street2' do
-    context 'present' do
-      let(:street2) { 'something' }
-
-      its 'street2 is set' do
-        street2 = 'something'
-        expect(parser.get_street2).to eq street2
-      end
-    end
-
-    context 'absent' do
-      let(:street2) { ' ' }
-
-      its 'street2 is nil' do
-        expect(parser.get_street2).to eq nil
-      end
-    end
-  end
-
-  describe '#get_street1' do
-    it 'returns the street first line' do
-      expect(parser.get_street1).to eq street1
-    end
-  end
-
-  describe '#get_city' do
-    it 'returns the city' do
-      expect(parser.get_city).to eq city
-    end
-  end
-
-  describe '#get_state' do
-    it 'returns the state' do
-      expect(parser.get_state).to eq state
-    end
-  end
-
-  describe '#get_zip' do
-    it 'returns the zip' do
-      expect(parser.get_zip).to eq zip
-    end
-  end
 end

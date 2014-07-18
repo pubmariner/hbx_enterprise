@@ -7,46 +7,29 @@ module Parsers
       class PersonParser
         attr_accessor :address
         def initialize(l2000, emp_id = nil)
-          @person_loop = l2000
+          @raw_loop = l2000
+          @person_loop = PersonLoop.new(l2000)
           @employer_id = emp_id
         end
 
         def parse_member_id
-          @member_id = (@person_loop["REFs"].detect do |r|
-            r[1] == "17"
-          end)[2]
+          @member_id = @person_loop.member_id
         end
 
         def parse_address
-          info_loop = @person_loop["L2100A"]
+          info_loop = @raw_loop["L2100A"]
           if !info_loop["N3"].blank?
-            @address = ParsedAddress.new(get_street1, get_street2, get_city, get_state, get_zip)
+            @address = ParsedAddress.new(@person_loop.street1, get_street2, @person_loop.city,  @person_loop.state, @person_loop.zip)
           end
         end
 
         def get_street2
-          street2 = PersonLoop.new(@person_loop).street2
+          street2 = @person_loop.street2
           street2.blank? ? nil : street2
         end
-
-        def get_street1
-          PersonLoop.new(@person_loop).street1
-        end
-
-        def get_city
-          PersonLoop.new(@person_loop).city
-        end
-
-        def get_state
-          PersonLoop.new(@person_loop).state
-        end
-
-        def get_zip
-          @person_loop["L2100A"]["N4"][3]
-        end
-
+        
         def parse_contact
-          contact_seg = @person_loop["L2100A"]["PER"]
+          contact_seg = @raw_loop["L2100A"]["PER"]
           if !contact_seg.blank?
             if contact_seg[3]
               interpret_contact_info(contact_seg[3], contact_seg[4])
@@ -69,17 +52,20 @@ module Parsers
         end
 
         def parse_name
-          name_loop = @person_loop["L2100A"]["NM1"]
-          @name_first = name_loop[4]
-          @name_last = name_loop[3]
-          if !name_loop[5].blank?
-            @name_middle = name_loop[5]
+          @name_first = @person_loop.name_first
+          @name_last = @person_loop.name_last
+          mid = @person_loop.name_middle
+          if !mid.blank?
+            @name_middle = mid
           end
-          if !name_loop[6].blank?
-            @name_pfx = name_loop[6]
+          prefix = @person_loop.name_prefix
+          if !prefix.blank?
+            @name_pfx = prefix
           end
-          if !name_loop[7].blank?
-            @name_sfx = name_loop[7]
+
+          suffix = @person_loop.name_suffix
+          if !suffix.blank?
+            @name_sfx = suffix
           end
           if !name_loop[9].blank?
             if name_loop[9].length > 8
@@ -89,7 +75,7 @@ module Parsers
         end
 
         def parse_demo
-          demo_loop = @person_loop["L2100A"]["DMG"]
+          demo_loop = @raw_loop["L2100A"]["DMG"]
           @gender = demo_loop[3]
           if demo_loop[3].blank?
             raise demo_loop.inspect
@@ -149,7 +135,9 @@ module Parsers
             )
             new_person.send(merge_method(:phone), new_phone)
           end
-          if subscriber?
+
+
+          if @person_loop.subscriber?
             if !@employer_id.blank?
               employer = Employer.find(@employer_id)
               employer.employees << new_person
@@ -166,7 +154,7 @@ module Parsers
         end
 
         def parse_employment_status
-          @person_loop["INS"][8]
+          @raw_loop["INS"][8]
         end
 
         def check_for_person
@@ -186,7 +174,7 @@ module Parsers
         end
 
         def parse_all
-          @change_type = determine_change_type(@person_loop)
+          @change_type = determine_change_type(@raw_loop)
           parse_member_id
           parse_name
           parse_address
@@ -195,10 +183,6 @@ module Parsers
         end
 
         private
-
-        def subscriber?
-          @person_loop["INS"][2]== "18"
-        end
 
         def map_gender_code
           gender_codes = {

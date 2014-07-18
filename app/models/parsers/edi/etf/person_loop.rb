@@ -7,9 +7,10 @@ module Parsers
         end
 
         def member_id
-          @member_id ||= (@loop["REFs"].detect do |r|
+          id = @loop["REFs"].detect do |r|
               r[1] == "17"
-            end)[2]            
+            end
+          id[2]            
         end
 
         def carrier_member_id
@@ -86,6 +87,30 @@ module Parsers
 
         def state
           @loop["L2100A"]["N4"][2]
+        end
+
+        def zip
+          @loop["L2100A"]["N4"][3]
+        end
+
+        def name_prefix
+          @loop["L2100A"]["NM1"][6]
+        end
+
+        def name_first
+          @loop["L2100A"]["NM1"][4]
+        end
+
+        def name_last
+          @loop["L2100A"]["NM1"][3]
+        end
+
+        def name_middle
+          @loop["L2100A"]["NM1"][5]
+        end
+
+        def name_suffix
+          @loop["L2100A"]["NM1"][7]
         end
 
         def reporting_catergories
