@@ -118,7 +118,7 @@ feature 'uploading individual CV' do
 
       choose 'Initial Enrollment'
 
-      file_path = Rails.root + "spec/support/fixtures/shop_enrollment/correct.xml"
+      file_path = Rails.root + "spec/support/fixtures/individual_enrollment/correct.xml"
       attach_file('vocab_upload_vocab', file_path)
       
       click_button "Upload"
