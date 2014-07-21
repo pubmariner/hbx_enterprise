@@ -67,9 +67,9 @@ module Parsers
           if !suffix.blank?
             @name_sfx = suffix
           end
-          if !name_loop[9].blank?
-            if name_loop[9].length > 8
-              @ssn = name_loop[9]
+          if !@person_loop.name_loop[9].blank?
+            if @person_loop.name_loop[9].length > 8
+              @ssn = @person_loop.name_loop[9]
             end
           end
         end

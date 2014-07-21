@@ -113,6 +113,10 @@ module Parsers
           @loop["L2100A"]["NM1"][7]
         end
 
+        def name_loop
+          @loop["L2100A"]["NM1"]
+        end
+
         def reporting_catergories
           Etf::ReportingCatergories.new(@loop["L2700s"])
         end
