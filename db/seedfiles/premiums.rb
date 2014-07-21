@@ -1,6 +1,10 @@
 require 'roo'
 require 'spreadsheet'
 
+def clean_old_premiums
+  Plan.collection.where.update({"$set" => {"premium_tables"=> []}}, {:multi => true})
+end
+
 puts "Loading: Premiums"
 
 dates_by_sheet = [
@@ -70,4 +74,5 @@ files = [
   "./db/seedfiles/premium_tables/2014_DCHL_Rates_IVL_and_SHOP_Q1_thru_Q3.xlsx"
 ]
 
+clean_old_premiums
 files.each { |f| import_spreadsheet(f, dates_by_sheet) }
