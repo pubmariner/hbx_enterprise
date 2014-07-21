@@ -55,7 +55,7 @@ def import_spreadsheet(file_path, dates_by_sheet)
         premiums_to_add << premium
       end
 
-      hios_id = plan_details['Standard Component ID'].strip
+      hios_id = plan_details['Standard Component ID'].gsub(/[[:space:]]/,'')
       plans = Plan.where({:hios_plan_id => /#{hios_id}/})
       plans.to_a.each do |plan|
         plan.premium_tables.concat(premiums_to_add)
