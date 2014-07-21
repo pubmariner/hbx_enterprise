@@ -60,7 +60,7 @@ class EmployerFactory
   end
 
   def carriers_for_plans(elected_plans)
-    elected_plans.collect { |p| p.carrier }.uniq
+    Carrier.find(elected_plans.collect { |p| p.carrier_id }.uniq)
   end
 
   def create_address(contact_data)
@@ -93,7 +93,7 @@ class EmployerFactory
     raise self.hios_id.inspect if plan.nil?
 
     ElectedPlan.new(
-      :carrier => plan.carrier,
+      :carrier_id => plan.carrier_id,
       :qhp_id => plan_data.qhp_id,
       :coverage_type => plan_data.coverage_type,
       :metal_level => plan.metal_level,

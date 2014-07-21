@@ -3,13 +3,16 @@ puts "Loading Employers"
 # Employer.collection.drop
 require 'csv'
 
+Employer.collection.where.update_all({"$set" => {"elected_plans"=> []}})
 glob_pat = File.join(File.dirname(__FILE__), "employer_groups", "*.xml")
 
 Dir.glob(glob_pat).each do |f|
+  puts f
   f_in = File.open(f, 'r')
   import = ImportEmployerDemographics.new
   import.execute(f_in)
   f_in.close
+  puts f
 end
 
 c_hash = Hash[(Carrier.all.map { |c| [c.abbrev, c]}) ]
