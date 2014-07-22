@@ -6,6 +6,7 @@ class VocabUploadsController < ApplicationController
 
   def create
     @vocab_upload = VocabUpload.new(params[:vocab_upload])
+    @vocab_upload.bypass_validation = params[:vocab_upload][:bypass_validation] == "1"
 
     if @vocab_upload.save(self)
       flash_message(:success, "Upload successful.")
