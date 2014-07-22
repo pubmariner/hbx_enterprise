@@ -1,4 +1,5 @@
-<%t '.title', :default => Protocols::X12::TransactionSetPremiumPayment.model_name.human.titleize.pluralize %>
+<%- model_class = Protocols::X12::TransactionSetPremiumPayment -%>
+<%t '.title', :default => model_class.model_name.human.titleize.pluralize %>
 <div class="page-header">
   <%= render 'shared/breadcrumb', crumbs: [@edi_transaction_set_payment.id] %>
 </div>
@@ -6,40 +7,13 @@
 <div class="row">
   <div class="col-md-5">
     <dl class="dl-horizontal">
-      <dt>Transaction type</dt>
-      <dd><%= @edi_transaction_set_payment.st01 %></dd>
-      <dt>Control number</dt>
-      <dd><%= @edi_transaction_set_payment.st02 %></dd>
-      <dt>Reference standard</dt>
-      <dd><%= @edi_transaction_set_payment.st03 %></dd>
-      <% if @edi_transaction_set_payment %>
-        <dt>Transaction handling code</dt>
-        <dd><%= @edi_transaction_set_payment.bpr01 %></dd>
-        <dt>Total payment amount</dt>
-        <dd><%= @edi_transaction_set_payment.bpr02 %></dd>
-        <dt>Credit or debit flag code</dt>
-        <dd><%= @edi_transaction_set_payment.bpr03 %></dd>
-        <dt>Payment method code</dt>
-        <dd><%= @edi_transaction_set_payment.bpr04 %></dd>
-        <dt>Payment format code</dt>
-        <dd><%= @edi_transaction_set_payment.bpr05 %></dd>
-        <dt>Depository financial institution dfi identifier</dt>
-        <dd><%= @edi_transaction_set_payment.bpr12 %></dd>
-        <dt>Recieving depository financial institution dfi identifier</dt>
-        <dd><%= @edi_transaction_set_payment.bpr13 %></dd>
-        <dt>Account number qualifier</dt>
-        <dd><%= @edi_transaction_set_payment.bpr14 %></dd>
-        <dt>Reciever bank account number</dt>
-        <dd><%= @edi_transaction_set_payment.bpr15 %></dd>
-        <dt>Check_issue or eft effective date</dt>
-        <dd><%= @edi_transaction_set_payment.bpr16 %></dd>
-        <dt>Trace type code</dt>
-        <dd><%= @edi_transaction_set_payment.trn01 %></dd>
-        <dt>Check or eft trace number</dt>
-        <dd><%= @edi_transaction_set_payment.trn02 %></dd>
-      <% end %>
-      <dt>Transaction kind</dt>
-      <dd><%= @edi_transaction_set_payment.transaction_kind.humanize %></dd>
+    <%= display_aliased_fields(model_class, @edi_transaction_set_payment,{
+      remove: ["id","carrier","transmission"], 
+      add: ["transaction_kind","payment_at"],
+      replace:{"ts_id" => "Transaction type", 
+               "ts_control_number" => "Control number", 
+               "ts_implementation_convention_reference"=>"Reference standard"}
+               }) %>
     </dl>
   </div>
 
