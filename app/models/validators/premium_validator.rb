@@ -1,15 +1,15 @@
 module Validators
 
   class PremiumValidator
-    def initialize(enrollment_group, plan, listener)
-      @enrollment_group = enrollment_group
+    def initialize(change_request, plan, listener)
+      @change_request = change_request
       @plan = plan
       @listener = listener
     end
 
     def validate
       valid = true
-      enrollees = @enrollment_group.enrollees
+      enrollees = @change_request.enrollees
       
       extractor = FreeEnrolleeExtractor.new(5)
       free_enrollees = extractor.extract_from!(enrollees)

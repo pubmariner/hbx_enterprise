@@ -1,9 +1,9 @@
 require 'spec_helper'
 
 describe Validators::PremiumValidator do
-  subject(:validator) { Validators::PremiumValidator.new(enrollment_group, plan, listener) }
+  subject(:validator) { Validators::PremiumValidator.new(change_request, plan, listener) }
   
-  let(:enrollment_group) { double }
+  let(:change_request) { double }
   let(:plan) { double }
   let(:listener) { double }
 
@@ -11,7 +11,7 @@ describe Validators::PremiumValidator do
     before do
       plan.stub(:premium_for_enrollee) { double(amount: 22.0) }
 
-      enrollment_group.stub(:enrollees) do
+      change_request.stub(:enrollees) do
         [ double(premium_amount: 666.66, name: 'Name') ]
       end
     end
@@ -24,7 +24,7 @@ describe Validators::PremiumValidator do
   context 'premium matches plan premium' do
     before do
       plan.stub(:premium_for_enrollee) { double(amount: 22.0) }
-      enrollment_group.stub(:enrollees) do
+      change_request.stub(:enrollees) do
         [ double(premium_amount: 22.0, name: 'Name') ]
       end
     end
@@ -41,7 +41,7 @@ describe Validators::PremiumValidator do
       enrollees << youngest
 
       plan.stub(:premium_for_enrollee) { double(amount: 22.0) }
-      enrollment_group.stub(:enrollees) { enrollees }
+      change_request.stub(:enrollees) { enrollees }
     end 
 
     context 'and youngest isnt free' do
