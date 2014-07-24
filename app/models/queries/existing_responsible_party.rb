@@ -13,7 +13,7 @@ module Queries
     private
     def name_match_expression
       match_expr = {
-        :name_first => Regexp.new(Regexp.escape(@person.name_first), true), 
+        :name_first => Regexp.new(Regexp.escape(@person.name_first), true),
         :name_last => Regexp.new(Regexp.escape(@person.name_last), true)
       }
       unless @person.name_middle.blank?

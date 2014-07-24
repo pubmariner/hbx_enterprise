@@ -9,11 +9,11 @@ module Parsers::Xml::Enrollment
     def hios_plan_id
       @plan.at_xpath('./pln:plan/pln:hios_plan_id').text
     end
-    
+
     def premium_amount_total
       @plan.at_xpath('./ins:premium_amount_total', @namespaces).text.to_f
     end
-    
+
     def enrollees
       enrollees = @enrollment_group.xpath('./ins:subscriber | ./ins:member', @namespaces)
       enrollees.collect { |e| Parsers::Xml::Enrollment::IndividualEnrollee.new(e) }

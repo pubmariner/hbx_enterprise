@@ -10,10 +10,10 @@ class PlanMetric
   def self.ind_market_top_plans
     #db.policies.aggregate({$match : {employer_id: null}}, {$unwind : "$enrollees"}, {$group : {_id: "$plan_id", enrollees: {$sum: 1}}}, {$sort : {enrollees : -1}}, {$limit : 5})
     Policy.collection.aggregate(
-      {"$match" => {"employer_id" => nil, "aasm_state" => {"$nin" => ["cancelled", "terminated"]}}}, 
-      {"$unwind" => "$enrollees"}, 
-      {"$group" => {"_id" => "$plan_id", "enrollees" => {"$sum" => 1}}}, 
-      {"$sort" => {"enrollees" => -1}}, 
+      {"$match" => {"employer_id" => nil, "aasm_state" => {"$nin" => ["cancelled", "terminated"]}}},
+      {"$unwind" => "$enrollees"},
+      {"$group" => {"_id" => "$plan_id", "enrollees" => {"$sum" => 1}}},
+      {"$sort" => {"enrollees" => -1}},
       {"$limit" => 10}).map {
         |res|
         self.new(res["_id"], res["enrollees"])
@@ -23,10 +23,10 @@ class PlanMetric
   def self.shop_market_top_plans
     #db.policies.aggregate({$match : {employer_id: null}}, {$unwind : "$enrollees"}, {$group : {_id: "$plan_id", enrollees: {$sum: 1}}}, {$sort : {enrollees : -1}}, {$limit : 5})
     Policy.collection.aggregate(
-      {"$match" => {"employer_id" => {"$ne" => nil}, "aasm_state" => {"$nin" => ["cancelled", "terminated"]}}}, 
-      {"$unwind" => "$enrollees"}, 
-      {"$group" => {"_id" => "$plan_id", "enrollees" => {"$sum" => 1}}}, 
-      {"$sort" => {"enrollees" => -1}}, 
+      {"$match" => {"employer_id" => {"$ne" => nil}, "aasm_state" => {"$nin" => ["cancelled", "terminated"]}}},
+      {"$unwind" => "$enrollees"},
+      {"$group" => {"_id" => "$plan_id", "enrollees" => {"$sum" => 1}}},
+      {"$sort" => {"enrollees" => -1}},
       {"$limit" => 10}).map {
         |res|
         self.new(res["_id"], res["enrollees"])

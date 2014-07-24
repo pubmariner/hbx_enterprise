@@ -3,7 +3,7 @@ require 'spec_helper'
 describe 'People API' do
   before { sign_in_as_a_valid_user }
 
-  describe 'retrieving an individual by primary key' do 
+  describe 'retrieving an individual by primary key' do
     let(:person) { create :person }
     before { get "/api/v1/people/#{person.id}" }
 
@@ -29,7 +29,7 @@ describe 'People API' do
     it 'responds with CV XML in body' do
       xml = Hash.from_xml(response.body)
       individuals_xml = xml['individuals']
-      
+
       expect_person_xml(individuals_xml['individual'], people.first)
     end
   end

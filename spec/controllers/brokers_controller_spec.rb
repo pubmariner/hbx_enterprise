@@ -19,7 +19,7 @@ describe BrokersController do
   describe 'GET show' do
     let(:broker) { create :broker }
     before { get :show, id: broker.id }
-    
+
     it 'finds and assign broker for view' do
       expect(assigns(:broker)).to eq broker
     end

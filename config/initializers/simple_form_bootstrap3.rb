@@ -13,13 +13,13 @@ inputs = %w[
 
 inputs.each do |input_type|
   superclass = "SimpleForm::Inputs::#{input_type}".constantize
- 
+
   new_class = Class.new(superclass) do
     def input_html_classes
       super.push('form-control')
     end
   end
- 
+
   Object.const_set(input_type, new_class)
 end
 
@@ -37,7 +37,7 @@ SimpleForm.setup do |config|
     b.use :error, wrap_with: { tag: 'span', class: 'help-inline' }
     b.use :hint,  wrap_with: { tag: 'p', class: 'help-block' }
   end
- 
+
    config.wrappers :bstrap_hz_large_xx, tag: 'div', class: 'form-group', error_class: 'error' do |b|
     b.use :html5
     b.use :placeholder
@@ -55,7 +55,7 @@ SimpleForm.setup do |config|
     b.use :error, wrap_with: { tag: 'span', class: 'help-inline' }
     b.use :hint,  wrap_with: { tag: 'p', class: 'help-block' }
   end
- 
+
    config.wrappers :bstrap_hz_medium, tag: 'div', class: 'form-group', error_class: 'error' do |b|
     b.use :html5
     b.use :placeholder
@@ -64,7 +64,7 @@ SimpleForm.setup do |config|
     b.use :error, wrap_with: { tag: 'span', class: 'help-inline' }
     b.use :hint,  wrap_with: { tag: 'p', class: 'help-block' }
   end
- 
+
    config.wrappers :bstrap_hz_small, tag: 'div', class: 'form-group', error_class: 'error' do |b|
     b.use :html5
     b.use :placeholder
@@ -73,7 +73,7 @@ SimpleForm.setup do |config|
     b.use :error, wrap_with: { tag: 'span', class: 'help-inline' }
     b.use :hint,  wrap_with: { tag: 'p', class: 'help-block' }
   end
- 
+
    config.wrappers :bstrap_hz_small_xx, tag: 'div', class: 'form-group', error_class: 'error' do |b|
     b.use :html5
     b.use :placeholder
@@ -82,7 +82,7 @@ SimpleForm.setup do |config|
     b.use :error, wrap_with: { tag: 'span', class: 'help-inline' }
     b.use :hint,  wrap_with: { tag: 'p', class: 'help-block' }
   end
- 
+
   config.wrappers :group, tag: 'div', class: "form-group", error_class: 'error' do |b|
     b.use :html5
     b.use :placeholder
@@ -91,18 +91,18 @@ SimpleForm.setup do |config|
     b.use :hint,  wrap_with: { tag: 'span', class: 'help-block' }
     b.use :error, wrap_with: { tag: 'span', class: 'help-inline' }
   end
- 
+
   config.wrappers :input_horizontal, tag: 'div', class: 'form-group', error_class: 'has-error',
       defaults: { input_html: { class: 'default_class' } } do |b|
-    
+
     b.use :html5
     b.use :min_max
     b.use :maxlength
     b.use :placeholder
-    
+
     b.optional :pattern
     b.optional :readonly
-    
+
     b.optional :label, wrap_with: { class: 'col-sm-2 control-label' }
     b.use :input, wrap_with: { tag: 'div', class: 'col-sm-10' }
     b.use :hint,  wrap_with: { tag: 'span', class: 'help-block' }
@@ -124,7 +124,7 @@ SimpleForm.setup do |config|
       ba.use :hint,  :wrap_with => { :tag => 'p', :class => 'help-block' }
     end
   end
- 
+
   config.wrappers :inline_checkbox, :tag => 'div', :class => 'form-group', :error_class => 'error' do |b|
     b.use :html5
     b.optional :readonly
@@ -138,7 +138,7 @@ SimpleForm.setup do |config|
     b.use :error, :wrap_with => { :tag => 'span', :class => 'help-inline' }
     b.use :hint,  :wrap_with => { :tag => 'p', :class => 'help-block' }
   end
- 
+
 
   config.wrappers :checkbox, :tag => 'div', wrap_with: { tag: :div, :class => 'form-group'}, :error_class => 'error' do |b|
     b.wrapper tag: :div do |ba|
@@ -164,7 +164,7 @@ SimpleForm.setup do |config|
       input.use :error, wrap_with: { tag: 'span', class: 'help-block has-error' }
     end
   end
- 
+
   config.wrappers :append, tag: 'div', class: 'form-group', error_class: 'has-error' do |b|
     b.use :html5
     b.use :placeholder
@@ -177,22 +177,22 @@ SimpleForm.setup do |config|
       input.use :error, wrap_with: { tag: 'span', class: 'help-block has-error' }
     end
   end
- 
+
   config.wrappers :checkbox, tag: :div, class: "checkbox", error_class: "has-error" do |b|
- 
+
     # Form extensions
     b.use :html5
- 
+
     # Form components
     b.wrapper tag: :label do |ba|
       ba.use :input
       ba.use :label_text
     end
- 
+
     b.use :hint,  wrap_with: { tag: :p, class: "help-block" }
     b.use :error, wrap_with: { tag: :span, class: "help-block text-danger" }
   end
- 
+
   # Wrappers for forms and inputs using the Twitter Bootstrap toolkit.
   # Check the Bootstrap docs (http://getbootstrap.com/)
   # to learn about the different styles for forms and inputs,

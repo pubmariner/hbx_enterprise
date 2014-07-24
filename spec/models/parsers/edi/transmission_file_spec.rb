@@ -54,7 +54,7 @@ describe Parsers::Edi::TransmissionFile do
           etf = Parsers::Edi::Etf::EtfLoop.new({'L2000s' => [ { "INS" => ['', '', '', 'xxx'] } ]})
           expect(transmission_file.transaction_set_kind(etf)).to eq kind
         end
-      end  
+      end
     end
   end
 

@@ -2,7 +2,7 @@
 require 'spec_helper'
 
 describe Parsers::Edi::FindCarrier do
-  context 'carrier doesn\'t exist' do 
+  context 'carrier doesn\'t exist' do
     it 'notifies listener of carrier not found by fein' do
       listener = double
       find_carrier = Parsers::Edi::FindCarrier.new(listener)
@@ -25,5 +25,5 @@ describe Parsers::Edi::FindCarrier do
       expect(find_carrier.by_fein('1234')).to eq carrier
     end
   end
-  
+
 end

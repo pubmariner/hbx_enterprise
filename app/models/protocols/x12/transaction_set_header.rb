@@ -12,7 +12,7 @@ class Protocols::X12::TransactionSetHeader
   field :aasm_state, type: String
   field :ack_nak_processed_at, type: Time
 
-# FIX: this should reference self.transmission.isa08 
+# FIX: this should reference self.transmission.isa08
   field :receiver_id, type: String
   index({receiver_id: 1})
 

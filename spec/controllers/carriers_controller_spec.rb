@@ -19,7 +19,7 @@ describe CarriersController do
   describe 'GET show' do
     let(:carrier) { create :carrier }
     before { get :show, id: carrier.id }
-    
+
     it 'finds and assign carrier for view' do
       expect(assigns(:carrier)).to eq carrier
     end

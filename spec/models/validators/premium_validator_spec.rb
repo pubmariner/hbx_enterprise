@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Validators::PremiumValidator do
   subject(:validator) { Validators::PremiumValidator.new(change_request, plan, listener) }
-  
+
   let(:change_request) { double }
   let(:plan) { double }
   let(:listener) { double }
@@ -42,7 +42,7 @@ describe Validators::PremiumValidator do
 
       plan.stub(:premium_for_enrollee) { double(amount: 22.0) }
       change_request.stub(:enrollees) { enrollees }
-    end 
+    end
 
     context 'and youngest isnt free' do
       let(:youngest) { double(age: 1, premium_amount: 22.0, name: 'Name') }

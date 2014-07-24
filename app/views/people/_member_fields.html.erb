@@ -15,8 +15,8 @@
           <button class="btn" type="button"><span class="fui-calendar"></span></button>
         </span>
         <%= m.input_field :dob, as: :string,
-          start_year: Date.today.year - 110, 
-          end_year: Date.today.year, 
+          start_year: Date.today.year - 110,
+          end_year: Date.today.year,
           placeholder: "mm/dd/yyyy",
           class: "date_picker",
           value: m.object.dob.try(:strftime, "%m/%d/%Y")

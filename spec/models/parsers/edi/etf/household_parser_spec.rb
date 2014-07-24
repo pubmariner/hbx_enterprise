@@ -16,7 +16,7 @@ describe Parsers::Edi::Etf::HouseholdParser do
         {
           "REFs" => [
             member_id_ref_segment(the_first_member_id)
-          ] 
+          ]
         },
         {
           "REFs" => [
@@ -32,7 +32,7 @@ describe Parsers::Edi::Etf::HouseholdParser do
   its(:member_ids) { should include(the_first_member_id) }
   its(:member_ids) { should include(another_member_id) }
 
-  it "should tell the household to create itself when persisted" do 
+  it "should tell the household to create itself when persisted" do
     expect(Person).to receive(:find_for_members).with([the_first_member_id, another_member_id]).and_return(people)
     expect(Household).to receive(:create_for_people).with(people)
     subject.persist!

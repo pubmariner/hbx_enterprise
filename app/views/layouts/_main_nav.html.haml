@@ -14,8 +14,8 @@
         != active_menu_item("Employers", employers_path, :employers)
         != active_menu_item("Brokers", brokers_path, :brokers)
         != active_menu_item("Carriers", carriers_path, :carriers)
-        != active_menu_item("Tools", tools_premium_calc_path) 
-        - if current_user 
+        != active_menu_item("Tools", tools_premium_calc_path)
+        - if current_user
           %li.dropdown
             %a.dropdown-toggle{"data-toggle" => "dropdown", href: "#"}
               %span.visible-sm.visible-xs
@@ -23,12 +23,12 @@
                 %span.fui-gear
                 %b.caret
               %span.visible-md.visible-lg
-                %span.fui-gear 
+                %span.fui-gear
                 #{current_user.email}
                 %b.caret
               %span.dropdown-arrow
             %ul.dropdown-menu
               %li
                 = link_to "Sign out", destroy_user_session_path, :method => "delete"
-              %li 
+              %li
                 = link_to "Change Password", edit_user_registration_path

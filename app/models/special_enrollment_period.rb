@@ -9,8 +9,8 @@ class SpecialEnrollmentPeriod
 	validates_presence_of :start_date, :end_date
 	validate :end_date_follows_start_date
 
-  validates :reason, presence: true, 
-  					allow_blank: false, 
+  validates :reason, presence: true,
+  					allow_blank: false,
   					allow_nil:   false,
   					inclusion: {in: %w( birth death adoption marriage legal_separation divorce retirement employment_termination reenrollment location_change open_enrollment_start )}
 
@@ -35,7 +35,7 @@ private
 		return unless sep_period.include?(Date.today)
 		return if household.special_enrollment_periods.any? { |sep| sep.end_date > self.end_date }
 
-		self.reason == "open_enrollment_start" ? household.open_enrollment : household.special_enrollment 
+		self.reason == "open_enrollment_start" ? household.open_enrollment : household.special_enrollment
 	end
 
 end

@@ -7,10 +7,10 @@ feature 'viewing list of plans' do
     sign_in_with(user.email, user.password)
 
     plan = create :plan
-    
+
     click_link 'Plans'
 
-    expect(page).to have_content(plan.name)  
+    expect(page).to have_content(plan.name)
   end
 end
 

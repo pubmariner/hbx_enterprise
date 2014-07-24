@@ -74,5 +74,5 @@ describe Parsers::Edi::Etf::ReportingCatergories do
       end
     end
   end
-  
+
 end

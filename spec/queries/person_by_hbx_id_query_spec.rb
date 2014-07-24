@@ -27,5 +27,5 @@ describe Queries::PersonByHbxIdQuery do
     it 'returns the person' do
       expect(query.execute).to eq person
     end
-  end  
+  end
 end

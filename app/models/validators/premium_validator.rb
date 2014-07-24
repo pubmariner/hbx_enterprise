@@ -10,7 +10,6 @@ module Validators
     def validate
       valid = true
       enrollees = @change_request.enrollees
-      
       extractor = FreeEnrolleeExtractor.new(5)
       free_enrollees = extractor.extract_from!(enrollees)
       free_enrollees.each do |e|
@@ -39,7 +38,7 @@ module Validators
       return valid
     end
 
-    # private 
+    # private
     # def name(enrollee)
     #   enrollee.first_name + ' ' + enrollee.last_name
     # end

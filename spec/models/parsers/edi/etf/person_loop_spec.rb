@@ -5,7 +5,7 @@ describe Parsers::Edi::Etf::PersonLoop do
 
   let(:raw_loop) do
     {
-      'L2100A' => { 
+      'L2100A' => {
         "N3" => ['', street1, street2, ''],
         'N4' => ['', city, state, zip],
         'NM1' => ['', '', '', name_last, name_first, name_middle, name_prefix, name_suffix]
@@ -82,21 +82,21 @@ describe Parsers::Edi::Etf::PersonLoop do
   describe '#cancellation_or_termination?' do
     context 'given no member level detail(INS)' do
       let(:raw_loop) { { "INS" => [] } }
-      it 'returns false' do 
+      it 'returns false' do
         expect(person_loop.cancellation_or_termination?).to eq false
       end
     end
 
     context 'given member level detail stating cancellation or termination' do
       let(:raw_loop) { { "INS" => ['', '', '', '024'] } }
-      it 'returns true' do 
+      it 'returns true' do
         expect(person_loop.cancellation_or_termination?).to eq true
       end
     end
 
     context 'given some other maintainance type code' do
       let(:raw_loop) { { "INS" => ['', '', '', '666'] } }
-      it 'returns false' do 
+      it 'returns false' do
         expect(person_loop.cancellation_or_termination?).to eq false
       end
     end

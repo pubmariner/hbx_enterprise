@@ -7,7 +7,7 @@ String.prototype.repeat = function(num) {
 (function($) {
 
   // Add segments to a slider
-  $.fn.addSliderSegments = function (amount, orientation) {    
+  $.fn.addSliderSegments = function (amount, orientation) {
     return this.each(function () {
       if (orientation == "vertical") {
         var output = ''

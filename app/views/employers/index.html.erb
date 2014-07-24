@@ -31,9 +31,9 @@
         <td><%= number_with_delimiter(employer.employees.count) %></td>
         <td><%= employer.open_enrollment_start %></td>
         <td><%= employer.plan_year_start %></td>
-        <td><%= employer.premium_payments.last.paid_at unless 
+        <td><%= employer.premium_payments.last.paid_at unless
                 employer.premium_payments.last.nil? %></td>
-        <td><%= employer.premium_payments.last.end_date unless 
+        <td><%= employer.premium_payments.last.end_date unless
                 employer.premium_payments.last.nil? %></td>
        </tr>
     <% end %>

@@ -12,7 +12,7 @@ class EmployerFactory
     employers
   end
 
-  private 
+  private
 
   def create_employer(employer_data)
     employer = Employer.new(
@@ -39,7 +39,7 @@ class EmployerFactory
     if !employer_data.contact.street1.blank?
       employer.addresses << create_address(employer_data.contact)
     end
-    
+
     if !employer_data.contact.phone_number.blank?
       employer.phones << create_phone(employer_data.contact)
     end
@@ -55,7 +55,7 @@ class EmployerFactory
     employer.broker = Broker.find_by_npn(employer_data.broker_npn_id)
 
     employer.carriers = carriers_for_plans(employer.elected_plans)
-    
+
     employer
   end
 

@@ -21,7 +21,7 @@ module Parsers::Xml::Enrollment
     def reason
       @xml.at_xpath('/proc:Operation/proc:operation/proc:reason', @namespaces)
     end
-    
+
     def market
       @payload.first_element_child.name.split('_').first #individual or shop
     end
@@ -36,21 +36,21 @@ module Parsers::Xml::Enrollment
       end
       member_ids
     end
-      
+
     def hios_plan_id
-      raise NotImplementedError 
+      raise NotImplementedError
     end
-    
+
     def premium_amount_total
       raise NotImplementedError
     end
-    
+
     def enrollees
       raise NotImplementedError
     end
 
     def credit
-      raise NotImplementedError 
+      raise NotImplementedError
     end
 
     def total_responsible_amount

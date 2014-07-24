@@ -32,7 +32,7 @@ class CarriersController < ApplicationController
     birth_date = DateTime.strptime(params[:birth_date], '%m/%d/%Y')
 
     @rate = plan.rate(rate_period_date, benefit_begin_date, birth_date)
-    
+
     respond_to do |format|
       format.js
     end

@@ -24,7 +24,7 @@ module Queries
       end.flatten(1)
 
       filters = member_filters(@birth_date, @first_name)
-      members.select! do |mm| 
+      members.select! do |mm|
         filters.all? { |s| s.call(mm) }
       end
       members

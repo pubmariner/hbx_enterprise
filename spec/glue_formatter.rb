@@ -12,7 +12,7 @@ class ExampleGrouping
   end
 
   def initialize(n, d)
-    @guid = SecureRandom.hex 
+    @guid = SecureRandom.hex
     @depth = d
     @name = n
     @examples = []

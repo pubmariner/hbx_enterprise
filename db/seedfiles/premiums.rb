@@ -25,7 +25,7 @@ def import_spreadsheet(file_path, dates_by_sheet)
     (2..current_sheet.last_row).each do |i|
       plan_details = Hash[[header, current_sheet.row(i)].transpose]
       premiums_to_add = []
-      
+
       (0..20).each do |age|
         cost = plan_details['0-20']
         premium = PremiumTable.new

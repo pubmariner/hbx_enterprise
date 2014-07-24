@@ -24,7 +24,7 @@ class Household
 
   def self.create_for_people(the_people)
     found = self.where({
-      "person_ids" => { 
+      "person_ids" => {
         "$all" => the_people.map(&:id),
         "$size" => the_people.length
        }
@@ -51,7 +51,7 @@ class Household
     #TODO - correct when household has policy association
     people.detect do |person|
       person.members.detect do |member|
-        member.enrollees.detect(&:subscriber?) 
+        member.enrollees.detect(&:subscriber?)
       end
     end
   end

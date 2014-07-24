@@ -14,12 +14,12 @@ describe Ager do
     # days before birthday
     expect(ager.age_as_of(Date.new(1990,2,24))).to eq 9
     expect(ager.age_as_of(Date.new(1991,2,23))).to eq 10
-    
+
     # months before birthday
     expect(ager.age_as_of(Date.new(1990,1,25))).to eq 9
     expect(ager.age_as_of(Date.new(1991,1,25))).to eq 10
 
-    # month after birthday 
+    # month after birthday
     expect(ager.age_as_of(Date.new(1990,3,1))).to eq 10
   end
 end

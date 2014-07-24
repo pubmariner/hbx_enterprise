@@ -3,5 +3,4 @@ class HbxOperations::AddMember < HbxOperations::BusinessProcess
 
   def initialize
 	end
-	
 end

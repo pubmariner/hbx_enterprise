@@ -26,11 +26,11 @@ feature 'Creating a new person' do
 
     select 'District Of Columbia', from: 'person_addresses_attributes_0_state'
     fill_in 'Zip code', with: '20012'
-    
+
     select 'home', from: 'person_phones_attributes_0_phone_type'
-    fill_in 'person_phones_attributes_0_phone_number', with: '222-222-2222' 
+    fill_in 'person_phones_attributes_0_phone_number', with: '222-222-2222'
     fill_in 'person_phones_attributes_0_extension', with: '1234'
-    
+
     select 'home', from: 'person_emails_attributes_0_email_type'
     fill_in 'person_emails_attributes_0_email_address', with: 'example@dc.gov'
 

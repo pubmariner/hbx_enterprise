@@ -40,18 +40,18 @@ class Policy
   index({ "enrollees.coverage_start" => 1})
   index({ "enrollees.coverage_end" => 1})
 
-  belongs_to :carrier, counter_cache: true, index: true 
+  belongs_to :carrier, counter_cache: true, index: true
   belongs_to :broker, counter_cache: true, index: true # Assumes that broker change triggers new enrollment group
   belongs_to :plan, counter_cache: true, index: true
   belongs_to :employer, counter_cache: true, index: true
   belongs_to :responsible_party
 
-  has_many :transaction_set_enrollments, 
-              class_name: "Protocols::X12::TransactionSetEnrollment", 
+  has_many :transaction_set_enrollments,
+              class_name: "Protocols::X12::TransactionSetEnrollment",
               order: { submitted_at: :desc }
   has_many :premium_payments, order: { paid_at: 1 }
 
-  before_create :generate_enrollment_group_id 
+  before_create :generate_enrollment_group_id
   before_save :invalidate_find_cache
   before_save :check_for_cancel_or_term
 
@@ -320,7 +320,7 @@ class Policy
   end
 
   def self.active_as_of_expression(target_date)
-    { 
+    {
       "$or" => [
         { :aasm_state => { "$ne" => "canceled"},
           :eg_id => { "$not" => /DC0.{32}/ },
@@ -349,7 +349,7 @@ class Policy
 
 protected
   def generate_enrollment_group_id
-    self.eg_id = self.eg_id || self._id.to_s 
+    self.eg_id = self.eg_id || self._id.to_s
   end
 
 private

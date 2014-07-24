@@ -72,7 +72,7 @@ class Broker
       m_broker.save!
       return m_broker
     else
-      found_broker.merge_without_blanking(m_broker, 
+      found_broker.merge_without_blanking(m_broker,
         :b_type,
         :name_pfx,
         :name_first,
@@ -88,7 +88,7 @@ class Broker
       m_broker.phones.each { |p| found_broker.merge_phone(p) }
 
       found_broker.save!
-      
+
       return found_broker
     end
   end

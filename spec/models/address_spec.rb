@@ -11,7 +11,7 @@ describe Address do
   end
 
   describe 'validations' do
-    describe 'presence' do 
+    describe 'presence' do
       [:address_1, :city, :state, :zip].each do |missing|
         its('invalid without ' + missing.to_s) do
           trait = 'without_' + missing.to_s
@@ -24,7 +24,7 @@ describe Address do
     describe 'address type' do
       let(:address) { build(:address, :with_invalid_address_type) }
       context 'when invalid' do
-        its 'invalid' do 
+        its 'invalid' do
           expect(address).to be_invalid
         end
       end
@@ -34,13 +34,13 @@ describe Address do
           before { address.address_type = type}
           its 'valid' do
             expect(address).to be_valid
-          end 
+          end
         end
       end
     end
   end
 
-  describe 'view helpers/presenters' do 
+  describe 'view helpers/presenters' do
     let(:address) { build :address }
     describe '#formatted_address' do
       it 'returns a string with a formated address' do
@@ -61,14 +61,14 @@ describe Address do
   end
 
   describe '#home?' do
-    context 'when not a home address' do 
+    context 'when not a home address' do
       it 'returns false' do
         address = Address.new(address_type: 'work')
         expect(address.home?).to be_false
       end
     end
 
-    context 'when a home address' do 
+    context 'when a home address' do
       it 'returns true' do
         address = Address.new(address_type: 'home')
         expect(address.home?).to be_true
@@ -92,13 +92,13 @@ describe Address do
       expect(address.city).to eq 'Washington'
       expect(address.state).to eq 'DC'
       expect(address.zip).to eq '20002'
-    end  
+    end
   end
 
   describe '#match' do
     let(:address) { build :address }
 
-    context 'addresses are the same' do 
+    context 'addresses are the same' do
       let(:second_address) { address.clone }
       it 'returns true' do
         expect(address.match(second_address)).to be_true
@@ -112,9 +112,9 @@ describe Address do
       end
     end
 
-    context 'addresses differ' do 
-      let(:second_address) do 
-        a = address.clone 
+    context 'addresses differ' do
+      let(:second_address) do
+        a = address.clone
         a.state = 'AL'
         a
       end

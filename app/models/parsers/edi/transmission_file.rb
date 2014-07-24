@@ -3,7 +3,7 @@ module Parsers
     class TransmissionFile
       attr_reader :result
       attr_accessor :transmission_kind
-      
+
       def initialize(path, t_kind, r_data, blist = [])
         @raw = r_data
         @result = Oj.load(r_data)
@@ -100,20 +100,20 @@ module Parsers
 
         if etf.is_shop? && is_carrier_maintenance?(etf, edi_transmission)
           policy = Policy.find_by_subkeys(policy_loop.eg_id, carrier._id, plan._id)
-          
+
           if policy
             edi_transmission.save!
           end
         else
           responsible_party_id = persist_responsible_party_get_id(etf_loop)
           broker_id = persist_broker_get_id(etf_loop)
-          
+
           if(plan)
             policy = persist_policy(etf, carrier._id, plan._id, policy_loop.eg_id, employer_id, responsible_party_id, broker_id)
-            
+
             if policy
               edi_transmission.save!
-              
+
               persist_people(etf_loop, employer_id)
               Etf::ApplicationGroupParser.new(etf.people).persist!
             end
@@ -202,7 +202,7 @@ module Parsers
         broker._id
       end
 
-      def persist_employer_get_id(employer_loop, carrier_id)        
+      def persist_employer_get_id(employer_loop, carrier_id)
         employer = nil
 
         if employer_loop.specified_as_group?
@@ -261,7 +261,7 @@ module Parsers
             if @inbound
               etf = Etf::EtfLoop.new(l834)
               incoming = IncomingTransaction.from_etf(etf)
-              incoming.import 
+              incoming.import
               persist_edi_transactions(
                 l834,
                 incoming.policy_id,

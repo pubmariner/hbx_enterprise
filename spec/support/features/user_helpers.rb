@@ -11,6 +11,6 @@ module Features
   def sign_in_with(email, password)
     fill_in 'Email address', with: email
     fill_in 'Password', with: password
-    click_button 'Sign in'  
+    click_button 'Sign in'
   end
 end

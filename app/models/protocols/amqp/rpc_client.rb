@@ -6,7 +6,7 @@ module Protocols
       def initialize(ex, chan, q_name = "")
         @exchange = ex
         @channel = chan
-        @queue = @channel.queue(q_name, :auto_delete => true) 
+        @queue = @channel.queue(q_name, :auto_delete => true)
       end
 
       def request(msg, headers, time)

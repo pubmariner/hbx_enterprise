@@ -44,11 +44,11 @@ Gluedb::Application.routes.draw do
     resources :households
     get 'page/:page', :action => :index, :on => :collection
   end
-    
+
   resources :users
   resources :policies
 
-  resources :individuals 
+  resources :individuals
   resources :people do
     get 'page/:page', :action => :index, :on => :collection
     member do
@@ -78,7 +78,7 @@ Gluedb::Application.routes.draw do
   resources :carriers do
     resources :plans
     get :show_plans
-    post :calculate_premium, on: :collection  
+    post :calculate_premium, on: :collection
   end
 
   resources :plans, only: [:index, :show] do

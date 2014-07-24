@@ -60,7 +60,7 @@ class Person
   scope :all_with_multiple_members, exists({ :'members.1' => true })
 
   default_scope order_by(name_last: 1, name_first: 1)
-  # 
+  #
   def update_attributes_with_delta(props = {})
     old_record = self.find(self.id)
     self.assign_attributes(props)
@@ -81,7 +81,7 @@ class Person
 
   def associate_all_policies_and_employers_and_brokers
     self.members.each do |m|
-      Policy.find_all_policies_for_member_id(m.hbx_member_id).each do |pol| 
+      Policy.find_all_policies_for_member_id(m.hbx_member_id).each do |pol|
         self.policies  << pol
         self.employers << pol.employer
         self.brokers   << pol.broker
@@ -190,7 +190,7 @@ class Person
   def update_address(m_address)
     existing_address = self.addresses.select { |p| p.address_type == m_address.address_type }
     existing_address.each do |ep|
-      self.addresses.delete(ep) 
+      self.addresses.delete(ep)
     end
     self.addresses << m_address
     self.touch
@@ -205,7 +205,7 @@ class Person
   def update_email(m_email)
     existing_email = self.emails.select { |p| p.email_type == m_email.email_type }
     existing_email.each do |ep|
-      self.emails.delete(ep) 
+      self.emails.delete(ep)
     end
     self.emails << m_email
     self.touch
@@ -220,7 +220,7 @@ class Person
   def update_phone(m_phone)
     existing_phones = self.phones.select { |p| p.phone_type == m_phone.phone_type }
     existing_phones.each do |ep|
-      self.phones.delete(ep) 
+      self.phones.delete(ep)
     end
     self.phones << m_phone
     self.touch

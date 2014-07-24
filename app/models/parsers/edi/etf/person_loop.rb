@@ -10,7 +10,7 @@ module Parsers
           id = @loop["REFs"].detect do |r|
               r[1] == "17"
             end
-          id[2]            
+          id[2]
         end
 
         def carrier_member_id
@@ -70,7 +70,7 @@ module Parsers
         end
 
         def responsible_party?
-          @responsible_party ||= !(@loop["L2100F"].blank? && @loop["L2100G"].blank?) 
+          @responsible_party ||= !(@loop["L2100F"].blank? && @loop["L2100G"].blank?)
         end
 
         def street1

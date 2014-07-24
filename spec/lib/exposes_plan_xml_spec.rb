@@ -67,7 +67,6 @@ describe ExposesPlanXml do
       expect(plan.group_id).to eq ''
     end
   end
-  
 
   it 'exposes the metal level code' do
     metal_level_code = 'silver'
@@ -90,5 +89,5 @@ describe ExposesPlanXml do
       expect(plan.policy_number).to eq ''
     end
   end
-  
+
 end

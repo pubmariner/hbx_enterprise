@@ -4,7 +4,7 @@
   <%= render 'shared/breadcrumb', crumbs: [
       link_to('Transmissions', edi_transmissions_path),
       @edi_transmission.id
-    ] 
+    ]
   %>
 </div>
 
@@ -12,12 +12,12 @@
 <div class="panel panel-default">
   <div class="panel-heading">
     <h3 class="panel-title">
-    <span class="fui-exit">&nbsp;</span> 
+    <span class="fui-exit">&nbsp;</span>
       EDI Transmission Envelope and Header
       <span class="label label-primary pull-right"><%= shop_market ? "SHOP Market" : "Individual Market" %></span>
     </h3>
   </div>
-  <div class="panel-body">  
+  <div class="panel-body">
     <div class="row">
     <div class="col-md-6">
     <dl class="dl-horizontal">

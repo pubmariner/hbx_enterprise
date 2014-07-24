@@ -48,7 +48,7 @@ class Protocols::X12::TransactionSetEnrollment < Protocols::X12::TransactionSetH
   def find_for_submitted_date_range(start_date = 1, end_date = 1)
 
     trans_by_date = Hash.new(0)
-    EdiTransactionSet.where(:submitted_at.gte => (Date.today - end_day), 
+    EdiTransactionSet.where(:submitted_at.gte => (Date.today - end_day),
                             :submitted_at.lte => (Date.today - start_day)).each do |ts|
       trans_by_date[ts.submitted_at.strftime("%m-%d")] += 1
     end

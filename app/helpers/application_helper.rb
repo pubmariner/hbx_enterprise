@@ -13,7 +13,7 @@ module ApplicationHelper
     content_tag(:tr, (content_tag(:td, "None given")))
   end
 
-  # Formats a Bootstrap label indicating Authority Member status 
+  # Formats a Bootstrap label indicating Authority Member status
   def member_authority_to_label(test)
     test ? content_tag(:span, "Authority Member", class: "label label-success") : content_tag(:span, "Non-Authority Member", class: "label label-warning")
   end
@@ -29,24 +29,24 @@ module ApplicationHelper
 	def mixed_case(str)
     (str.downcase.gsub(/\b\w/) {|first| first.upcase }) unless str.nil?
   end
-  
+
   # Formats a boolean value into 'Yes' or 'No' string
   def boolean_to_human(test)
     test ? "Yes" : "No"
   end
-  
+
   # Uses a boolean value to return an HTML checked/unchecked glyph
   def boolean_to_glyph(test)
     test ? content_tag(:span, "", class: "fui-checkbox-checked") : content_tag(:span, "", class: "fui-checkbox-unchecked")
   end
-  
+
   # Formats a number into a 9-digit US Social Security Number string (nnn-nn-nnnn)
   def number_to_ssn(number)
     return unless number
     delimiter = "-"
     number.to_s.gsub!(/(\d{0,3})(\d{2})(\d{4})$/,"\\1#{delimiter}\\2#{delimiter}\\3")
   end
-  
+
   # Formats a number into a nine-digit US Federal Entity Identification Number string (nn-nnnnnnn)
   def number_to_fein(number)
     return unless number
@@ -58,14 +58,14 @@ module ApplicationHelper
   def prepend_glyph_to_name(name)
     content_tag(:span, raw("&nbsp;"), class: "fui-user") + name
   end
-  
+
   def active_menu_item(label, path, controller = nil)
     li_start = (params[:controller] == controller.to_s) ? "<li class=\"active\">" : "<li>"
     li_start + link_to(label, path) + "</li>"
   end
 
   def active_dropdown_classes(*args)
-    args.map(&:to_s).include?(params[:controller].to_s) ? "dropdown active" : "dropdown" 
+    args.map(&:to_s).include?(params[:controller].to_s) ? "dropdown active" : "dropdown"
   end
 
   def link_to_add_fields(name, f, association)
@@ -74,7 +74,7 @@ module ApplicationHelper
     fields = f.fields_for(association, new_object, child_index: id) do |builder|
       render(association.to_s.singularize + "_fields", f: builder)
     end
-    link_to(content_tag(:span, raw("&nbsp;"), class: 'fui-plus-inverted') + name, 
+    link_to(content_tag(:span, raw("&nbsp;"), class: 'fui-plus-inverted') + name,
             '#', class: "add_fields", data: {id: id, fields: fields.gsub("\n", "")})
 
   end

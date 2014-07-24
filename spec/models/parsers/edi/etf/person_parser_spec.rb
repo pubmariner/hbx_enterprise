@@ -6,7 +6,7 @@ describe Parsers::Edi::Etf::PersonParser do
 
   let(:l2000) do
     {
-      'L2100A' => { 
+      'L2100A' => {
         "N3" => ['', street1, street2, ''],
         'N4' => ['', city, state, zip]
       },

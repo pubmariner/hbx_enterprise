@@ -81,8 +81,8 @@ given a person with:
   }
 
   let(:additional_query_info) {
-    { 
-      :name_middle => Regexp.compile(Regexp.escape(middle_name), true), 
+    {
+      :name_middle => Regexp.compile(Regexp.escape(middle_name), true),
       "$or" => [
         {"phones" => { "$elemMatch" => {
           "phone_type" => phone_type_one,
@@ -91,8 +91,8 @@ given a person with:
         {"phones" => { "$elemMatch" => {
           "phone_type" => phone_type_two,
           "phone_number" => phone_number_two
-        }}} 
-      ] 
+        }}}
+      ]
     }
   }
 
@@ -130,7 +130,7 @@ given a person with:
   }
 
   let(:additional_query_info) {
-    { 
+    {
       "$or" => [
         {"emails" => { "$elemMatch" => {
           "email_type" => email_type_one,
@@ -139,8 +139,8 @@ given a person with:
         {"emails" => { "$elemMatch" => {
           "email_type" => email_type_two,
           "email_address" => email_address_two
-        }}} 
-      ] 
+        }}}
+      ]
     }
   }
 
@@ -191,7 +191,7 @@ given a person with:
   }
 
   let(:additional_query_info) {
-    { 
+    {
       "$or" => [
         {"addresses" => { "$elemMatch" => {
           "address_type" => address_type_one,
@@ -208,7 +208,7 @@ given a person with:
           "state" => address_two_state,
           "zip" => address_two_zip
         }}}
-      ] 
+      ]
     }
   }
 

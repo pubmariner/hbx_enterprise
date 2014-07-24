@@ -1,5 +1,5 @@
-class TransactionSetEnrollmentMetric 
-  
+class TransactionSetEnrollmentMetric
+
   EmployerTSEnrollmentMetric = Struct.new(:employer, :sent, :unacknowledged, :acknowledged, :rejected)
 
   TSEnrollmentTotalsMetric = Struct.new(:transaction_kinds, :sent, :unacknowledged, :acknowledged, :rejected)
@@ -63,7 +63,7 @@ class TransactionSetEnrollmentMetric
         "reciever_id" => { "$ne" => ExchangeInformation.receiver_id },
         "employer_id" => nil,
         "transaction_kind" => { "$ne" => "effectuation" },
-        "bgn03" => { "$gte" => start_d, "$lte" => end_d } 
+        "bgn03" => { "$gte" => start_d, "$lte" => end_d }
       }},
       {"$group" => { "_id" => { "kind" => "$transaction_kind", "status" => "$aasm_state"}, "total" => { "$sum" => 1 } }}
     ]

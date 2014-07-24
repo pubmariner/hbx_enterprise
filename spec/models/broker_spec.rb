@@ -32,7 +32,7 @@ describe Broker do
 
     it 'creates new broker if existing broker is not found' do
       new_broker = build :broker
-      expect(Broker.find_or_create(new_broker)).to eq new_broker 
+      expect(Broker.find_or_create(new_broker)).to eq new_broker
     end
   end
 
@@ -40,7 +40,7 @@ describe Broker do
     describe 'b_type' do
       let(:broker) { build(:broker, :with_invalid_b_type) }
       context 'when invalid' do
-        its 'invalid' do 
+        its 'invalid' do
           expect(broker).to be_invalid
         end
       end
@@ -50,7 +50,7 @@ describe Broker do
           before { broker.b_type = type}
           its 'valid' do
             expect(broker).to be_valid
-          end 
+          end
         end
       end
     end

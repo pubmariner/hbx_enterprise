@@ -3,7 +3,7 @@ module Parsers
     module Etf
       class Category
         def initialize(category)
-          @loop = category    
+          @loop = category
         end
 
         def name

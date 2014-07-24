@@ -22,14 +22,14 @@ class PlansController < ApplicationController
     birth_date = extract_date(params[:birth_date])
 
     @rate = plan.rate(rate_period_date, benefit_begin_date, birth_date)
-    
+
     respond_to do |format|
       format.js
     end
   end
 
   private
-  
+
   def extract_date(raw_date)
     DateTime.strptime(raw_date, '%m/%d/%Y')
   end

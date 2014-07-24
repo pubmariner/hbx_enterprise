@@ -25,7 +25,7 @@ class EnrollmentAddress
 
   def save
     if self.valid?
-      save_each_address 
+      save_each_address
     else
       false
     end

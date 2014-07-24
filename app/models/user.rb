@@ -1,6 +1,6 @@
 class User
   include Mongoid::Document
-  
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable,
@@ -44,7 +44,7 @@ class User
   # field :unlock_token,    :type => String # Only if unlock strategy is :email or :both
   # field :locked_at,       :type => Time
 
-  ## Enable when 
+  ## Enable when
   # after_create :send_admin_mail
 
   before_save :ensure_authentication_token
@@ -55,15 +55,15 @@ class User
     end
   end
 
-  def active_for_authentication? 
-    super && approved? 
-  end 
+  def active_for_authentication?
+    super && approved?
+  end
 
-  def inactive_message 
-    if !approved? 
-      :not_approved 
-    else 
-      super # Use whatever other message 
+  def inactive_message
+    if !approved?
+      :not_approved
+    else
+      super # Use whatever other message
     end
   end
 

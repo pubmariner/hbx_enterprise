@@ -16,7 +16,7 @@ module Stats
     # Holidays listed from DCHBX go-live to end of 2015
     def dchbx_holidays
       return [] if Time.now.year > 2015
-      @holiday_list ||= ["11/11/2013", "11/28/2013, 12/25/2013", 
+      @holiday_list ||= ["11/11/2013", "11/28/2013, 12/25/2013",
                          "01/01/2014", "01/20/2014", "02/17/2014", "04/16/2014", "05/26/2014", "07/04/2014",
                          "09/01/2014", "10/13/2014", "11/11/2014", "11/27/2014", "12/25/2014",
                          "01/01/2015", "01/19/2015", "02/16/2015", "04/16/2015", "05/25/2015", "07/03/2015",
@@ -43,7 +43,7 @@ module Stats
 
   protected
 
-    # Returns a hash representing a date range in the dimension. The values for each range are 
+    # Returns a hash representing a date range in the dimension. The values for each range are
     # accessed by name
     def range_from_date(date)
       time = date.to_time # need methods only available in Time

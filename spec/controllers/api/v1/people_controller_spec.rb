@@ -6,7 +6,7 @@ describe Api::V1::PeopleController do
   describe 'GET show' do
     let(:person) { create :person }
     before { get :show, id: person.id, format: 'xml' }
-    
+
     it 'finds and assign person for view' do
       expect(assigns(:person)).to eq person
     end

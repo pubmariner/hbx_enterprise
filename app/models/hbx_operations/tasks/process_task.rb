@@ -6,7 +6,7 @@ class HbxOperations::Tasks::ProcessTask
 
   field :name, type: String
   field :kind, type: String
-  field :sla, as: :service_level_agreement_in_days, type: Integer 
+  field :sla, as: :service_level_agreement_in_days, type: Integer
 
   embedded_in :business_process, :class_name => 'HbxOperations::BusinessProcess'
 

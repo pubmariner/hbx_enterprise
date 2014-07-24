@@ -13,8 +13,8 @@ module Parsers
           end
           if !c_pol_node.blank?
             c_policy_id = c_pol_node[2]
-          end 
-          c_policy_id 
+          end
+          c_policy_id
         end
 
         def coverage_start
@@ -24,8 +24,8 @@ module Parsers
           end
           if bgn_node
             bgn_date = bgn_node[3]
-          end  
-          bgn_date 
+          end
+          bgn_date
         end
 
         def coverage_end

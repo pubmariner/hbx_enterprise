@@ -9,8 +9,8 @@
           <button class="btn" type="button"><span class="fui-calendar"></span></button>
         </span>
         <%= f.input_field :start_date, as: :string,
-          start_year: Date.today.year - 1, 
-          end_year: Date.today.year + 1, 
+          start_year: Date.today.year - 1,
+          end_year: Date.today.year + 1,
           placeholder: "mm/dd/yyyy",
           class: "date_picker",
           value: f.object.start_date.try(:strftime, "%m/%d/%Y")
@@ -23,8 +23,8 @@
           <button class="btn" type="button"><span class="fui-calendar"></span></button>
         </span>
         <%= f.input_field :end_date, as: :string,
-          start_year: Date.today.year - 1, 
-          end_year: Date.today.year + 1, 
+          start_year: Date.today.year - 1,
+          end_year: Date.today.year + 1,
           placeholder: "mm/dd/yyyy",
           class: "date_picker",
           value: f.object.end_date.try(:strftime, "%m/%d/%Y")

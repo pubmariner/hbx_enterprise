@@ -78,7 +78,7 @@ class EmployeesController < ApplicationController
     @person = Person.find(params[:id])
     @updated_person = Person.new(params[:person])
 
-    # @person.members 
+    # @person.members
     # assoc_attributes = anything ending with an _id
 
     admin_attributes = %w[_id created_at deleted_at updated_at updated_by]

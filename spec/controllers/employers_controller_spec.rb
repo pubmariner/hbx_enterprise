@@ -5,7 +5,7 @@ describe EmployersController do
 
   describe 'GET new' do
     before { get :new, format: 'html' }
-    it 'assigns a new instance for the view' do 
+    it 'assigns a new instance for the view' do
       expect(assigns(:employer)).not_to be_nil
     end
 
@@ -32,7 +32,7 @@ describe EmployersController do
     context 'with invalid attributes' do
       let(:invalid_attributes) { attributes_for :invalid_employer }
       it 'does not save' do
-        expect { 
+        expect {
           post :create, employer: invalid_attributes
         }.not_to change(Employer, :count).by 1
       end
@@ -61,7 +61,7 @@ describe EmployersController do
   describe 'GET show' do
     let(:employer) { create :employer }
     before { get :show, id: employer.id }
-    
+
     it 'finds and assign employer for view' do
       expect(assigns(:employer)).to eq employer
     end
@@ -91,7 +91,7 @@ describe EmployersController do
       before do
         put :update, format: 'html', id: employer.id, employer: { name: 'Changed' }
       end
-      
+
       it 'finds the requested employer' do
         expect(assigns(:employer)).to eq employer
       end
@@ -126,7 +126,7 @@ describe EmployersController do
     before { @employer = create :employer }
 
     it 'deletes the employer' do
-      expect { delete :destroy, id: @employer.id 
+      expect { delete :destroy, id: @employer.id
         }.to change(Employer, :count).by -1
     end
 
@@ -139,7 +139,7 @@ describe EmployersController do
   describe 'GET group' do
     let(:employer) { create :employer }
     before { get :group, id: employer.id, format: :xml}
-    
+
     it 'finds and assign employer for view' do
       expect(assigns(:employer)).to eq employer
     end

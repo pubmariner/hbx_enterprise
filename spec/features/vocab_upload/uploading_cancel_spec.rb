@@ -1,9 +1,9 @@
 require 'spec_helper'
 
 feature 'uploading a cancel/term CV' do
-  given(:premium) do 
+  given(:premium) do
     PremiumTable.new(
-      rate_start_date: Date.new(2014, 1, 1), 
+      rate_start_date: Date.new(2014, 1, 1),
       rate_end_date: Date.new(2014, 12, 31),
       age: 53,
       amount: 398.24
@@ -27,7 +27,7 @@ feature 'uploading a cancel/term CV' do
 
     file_path = Rails.root + "spec/support/fixtures/cancel/nonsubscriber_cancel.xml"
     attach_file('vocab_upload_vocab', file_path)
-    
+
     click_button "Upload"
 
     expect(page).to have_content 'Upload successful.'
@@ -40,7 +40,7 @@ feature 'uploading a cancel/term CV' do
 
     file_path = Rails.root + "spec/support/fixtures/cancel/subscriber_cancel.xml"
     attach_file('vocab_upload_vocab', file_path)
-    
+
     click_button "Upload"
 
     expect(page).to have_content 'Upload successful.'
@@ -53,7 +53,7 @@ feature 'uploading a cancel/term CV' do
 
     file_path = Rails.root + "spec/support/fixtures/cancel/incorrect_premium_total.xml"
     attach_file('vocab_upload_vocab', file_path)
-    
+
     click_button "Upload"
 
     expect(page).to have_content 'Upload failed.'

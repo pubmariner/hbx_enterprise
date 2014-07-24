@@ -5,7 +5,7 @@ describe Parsers::Edi::Etf::PolicyLoop do
     let(:id) { '1234' }
     let(:raw_loop) { {"REFs" => [['', qualifier, id]]} }
     let(:policy_loop) { Parsers::Edi::Etf::PolicyLoop.new(raw_loop) }
-    
+
     context 'qualified as carrier assigned policy ID' do
       let(:qualifier) { 'X9' }
       it 'returns the id in REF02' do
@@ -25,7 +25,7 @@ describe Parsers::Edi::Etf::PolicyLoop do
     let(:date) { '19800101'}
     let(:raw_loop) { {"DTPs" => [['', qualifier, '', date]]} }
     let(:policy_loop) { Parsers::Edi::Etf::PolicyLoop.new(raw_loop) }
-    
+
     context 'qualified as "Benefit Begin"' do
       let(:qualifier) { '348' }
       it 'returns the date from dtp03' do
@@ -45,7 +45,7 @@ describe Parsers::Edi::Etf::PolicyLoop do
     let(:date) { '19800101'}
     let(:raw_loop) { {"DTPs" => [['', qualifier, '', date]]} }
     let(:policy_loop) { Parsers::Edi::Etf::PolicyLoop.new(raw_loop) }
-    
+
     context 'qualified as "Benefit End"' do
       let(:qualifier) { '349' }
       it 'returns the date from dtp03' do
@@ -64,7 +64,7 @@ describe Parsers::Edi::Etf::PolicyLoop do
   describe 'action' do
     let(:raw_loop) { {"HD" => ['', type_code]} }
     let(:policy_loop) { Parsers::Edi::Etf::PolicyLoop.new(raw_loop) }
-    
+
     context 'given Change type code' do
       let(:type_code) { '001' }
       it 'returns change symbol' do
@@ -100,7 +100,7 @@ describe Parsers::Edi::Etf::PolicyLoop do
       end
 
     end
-    
+
   end
 
   describe '#eg_id' do

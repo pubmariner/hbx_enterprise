@@ -12,8 +12,8 @@ class Ager
   private
 
   def before_birthday_this_year?(date)
-    date.month < @birth_date.month || 
-    (date.month <= @birth_date.month && 
+    date.month < @birth_date.month ||
+    (date.month <= @birth_date.month &&
     date.day < @birth_date.day)
   end
 end

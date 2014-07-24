@@ -1,5 +1,4 @@
 class PeopleController < ApplicationController
-  
   def index
     @q = params[:q]
     @qf = params[:qf]
@@ -73,10 +72,10 @@ class PeopleController < ApplicationController
     render action: "edit" unless @person.valid? && @person.all_embedded_documents_valid?
 
     @updates = params[:person] || {}
-    
+
     @delta = @person.changes_with_embedded || {}
     deletion_deltas = DeletionDeltaExtractor.new(params[:person]).extract
-    
+
     @delta.deep_merge!(deletion_deltas)
   end
 

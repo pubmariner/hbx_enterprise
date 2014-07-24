@@ -72,7 +72,7 @@
     </div>
   </div>
 
-<% unless Rails.env.test? %> 
+<% unless Rails.env.test? %>
   <p class="text-right">
     <small>
       <%= "updated: #{Person.first.updated_at.strftime('%m-%d-%Y') if Person.first.updated_at.present?}" %>

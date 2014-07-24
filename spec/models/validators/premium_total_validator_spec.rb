@@ -6,7 +6,7 @@ describe Validators::PremiumTotalValidator do
   let(:listener) { double }
 
   context 'when total premium is incorrect' do
-    before do 
+    before do
       change_request.stub(:enrollee_premium_sum ) { 325.251 }
       change_request.stub(:premium_amount_total) { 666.66 }
     end
@@ -17,7 +17,7 @@ describe Validators::PremiumTotalValidator do
   end
 
   context 'when total premium is correct' do
-    before do 
+    before do
       change_request.stub(:enrollee_premium_sum ) { 325.251 }
       change_request.stub(:premium_amount_total) { 325.25 }
     end

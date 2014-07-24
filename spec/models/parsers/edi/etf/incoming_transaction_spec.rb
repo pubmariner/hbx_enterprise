@@ -1,8 +1,8 @@
 require 'spec_helper'
 describe Parsers::Edi::IncomingTransaction do
-  let(:enrollee) { Enrollee.new(m_id: '1', 
-                                relationship_status_code: 'self', 
-                                employment_status_code: 'active', 
+  let(:enrollee) { Enrollee.new(m_id: '1',
+                                relationship_status_code: 'self',
+                                employment_status_code: 'active',
                                 benefit_status_code: 'active',
                                 coverage_start: coverage_start,
                                 coverage_end: coverage_end ) }
@@ -19,7 +19,7 @@ describe Parsers::Edi::IncomingTransaction do
   let(:policy_loop) { double(id: '4321', action: :stop, coverage_end: coverage_end) }
   let(:person_loop) { double(member_id: '1', carrier_member_id: '1234', policy_loops: [policy_loop]) }
   let(:etf) { double(people: [person_loop], is_shop?: false) }
-  let(:incoming) do 
+  let(:incoming) do
     incoming = Parsers::Edi::IncomingTransaction.new(etf)
     incoming.policy_found(policy)
     incoming
@@ -39,7 +39,7 @@ describe Parsers::Edi::IncomingTransaction do
     expect(enrollee.cp_id).to eq policy_loop.id
   end
 
-  context 'when action policy action is stop' do 
+  context 'when action policy action is stop' do
     it 'sets enrollee coverage status to inactive' do
       incoming.import
 
@@ -65,7 +65,7 @@ describe Parsers::Edi::IncomingTransaction do
       end
     end
 
-    context 'when coverage start/end are the same' do 
+    context 'when coverage start/end are the same' do
       let(:coverage_start) { '20140501' }
       let(:coverage_end) { '20140501' }
       it 'sets the policy to canceled' do

@@ -33,7 +33,7 @@
     <% end %>
   </tbody>
 </table>
- 
+
 <div class="row">
   <div class="col-md-8">
     <%= paginate @brokers, theme: "twitter-bootstrap", pagination_class: "pagination-plain" %>
@@ -42,4 +42,4 @@
     <p><%= "#{number_with_delimiter(@brokers.count)} / #{number_with_delimiter(Broker.count)} " %><small>(brokers selected / total)</small></p>
   </div>
 </div>
- 
+

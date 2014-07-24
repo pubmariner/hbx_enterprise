@@ -7,7 +7,7 @@ describe Validators::CancelTermPremiumTotalValidator do
 
   describe 'expected total amount' do
     context 'when subscriber is affected' do
-      before do 
+      before do
         change_request.stub(:subscriber_affected?) { true }
         change_request.stub(:enrollee_premium_sum) { 222.22 }
       end
@@ -17,7 +17,7 @@ describe Validators::CancelTermPremiumTotalValidator do
     end
   end
   context 'when subscriber is not affected' do
-    before do 
+    before do
         change_request.stub(:subscriber_affected?) { false }
         change_request.stub(:enrollee_premium_sum) { 222.22 }
         change_request.stub(:affected_enrollees_sum) { 22.22 }
@@ -28,7 +28,7 @@ describe Validators::CancelTermPremiumTotalValidator do
     end
   end
   context 'when total premium is incorrect' do
-    before do 
+    before do
       change_request.stub(:subscriber_affected?) { true }
       change_request.stub(:enrollee_premium_sum ) { 325.251 }
       change_request.stub(:premium_amount_total) { 666.66 }
@@ -40,7 +40,7 @@ describe Validators::CancelTermPremiumTotalValidator do
   end
 
   context 'when total premium is correct' do
-    before do 
+    before do
       change_request.stub(:subscriber_affected?) { true }
       change_request.stub(:enrollee_premium_sum ) { 325.251 }
       change_request.stub(:premium_amount_total) { 325.25 }

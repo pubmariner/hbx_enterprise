@@ -5,7 +5,7 @@ describe PeopleController do
 
   describe 'GET new' do
     before { get :new, format: 'html' }
-    it 'assigns a new instance for the view' do 
+    it 'assigns a new instance for the view' do
       expect(assigns(:person)).not_to be_nil
     end
 
@@ -32,7 +32,7 @@ describe PeopleController do
     context 'with invalid attributes' do
       let(:invalid_attributes) { attributes_for :invalid_person }
       it 'does not save' do
-        expect { 
+        expect {
           post :create, person: invalid_attributes
         }.not_to change(Person, :count).by 1
       end
@@ -47,7 +47,7 @@ describe PeopleController do
   describe 'GET show' do
     let(:person) { create :person }
     before { get :show, id: person.id }
-    
+
     it 'finds and assign person for view' do
       expect(assigns(:person)).to eq person
     end
@@ -78,10 +78,10 @@ describe PeopleController do
         notifier = double('Protocols::Notifier')
         stub_const('Protocols::Notifier', notifier)
         notifier.should_receive(:update_notification)
-        
+
         put :update, format: 'html', id: person.id, person: { name_first: 'Changed' }
       end
-      
+
       it 'finds the requested person' do
         expect(assigns(:person)).to eq person
       end
@@ -115,15 +115,15 @@ describe PeopleController do
   describe 'PUT compare' do
     let(:person) { create :person }
     let(:new_attributes) { attributes_for :person }
-      
+
     context 'with valid attributes' do
       before { put :compare, format: 'html', id: person.id, person: new_attributes }
-      
+
       it 'finds the requested person' do
         expect(assigns(:person)).to eq person
       end
 
-      it 'stores the updates for later submission' do 
+      it 'stores the updates for later submission' do
         expect(assigns(:updates)).to include(new_attributes)
       end
 
@@ -135,7 +135,7 @@ describe PeopleController do
     context 'with invalid attributes' do
       let(:invalid_attributes) { attributes_for :invalid_person }
       before { put :update, id: person.id, person: invalid_attributes }
-      
+
       it 'finds the requested person' do
         expect(assigns(:person)).to eq person
       end
@@ -151,7 +151,7 @@ describe PeopleController do
     before { @person = create :person }
 
     it 'deletes the person' do
-      expect { delete :destroy, id: @person.id 
+      expect { delete :destroy, id: @person.id
         }.to change(Person, :count).by -1
     end
 

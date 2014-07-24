@@ -30,11 +30,11 @@ class Phone
   def phone_number=(value)
     super filter_non_numbers(value)
   end
-  
+
   def extension=(value)
     super filter_non_numbers(value)
   end
-  
+
 private
   def filter_non_numbers(str)
     str.gsub(/\D/,'') if str.present?
@@ -47,5 +47,5 @@ private
       :extension
     )
   end
-  
+
 end
