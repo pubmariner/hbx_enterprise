@@ -9,9 +9,9 @@ class DeletionDeltaExtractor
     @form_params.each do |key, value|
       next unless(key.include? '_attributes')
       nested_attrs = value
-      
+
       deleted = nested_attrs.select do |key, value|
-        is_deletion?(value) && is_persisted_document?(value) 
+        is_deletion?(value) && is_persisted_document?(value)
       end
 
       deleted.each_value do |item|
@@ -24,19 +24,19 @@ class DeletionDeltaExtractor
           end
           delta[key.to_sym] = { :from => value, :to => nil}
         end
-        
+
         association = key.split('_').first
         association = association.chomp('"').reverse.chomp('"').reverse
 
         collection_deltas[association.to_sym] ||= []
         collection_deltas[association.to_sym] << delta
       end
-    end  
+    end
     collection_deltas
   end
 
   private
-  
+
   def is_deletion?(field)
     field[:_destroy] == '1'
   end

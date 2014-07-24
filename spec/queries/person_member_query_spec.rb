@@ -6,11 +6,11 @@ describe Queries::PersonMemberQuery do
 
   subject { Queries::PersonMemberQuery.new(member_ids) }
 
-  its(:query) { should eq({   
+  its(:query) { should eq({
     "members" => {
-      "$elemMatch" => {         
+      "$elemMatch" => {
         "hbx_member_id" => { "$in" => member_ids }
-      }                                                     
-    }                                     
+      }
+    }
   }) }
 end

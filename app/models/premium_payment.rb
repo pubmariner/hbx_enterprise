@@ -10,12 +10,12 @@ class PremiumPayment
   field :end_date, as: :coverage_end_date, type: Date
 
 	belongs_to :employer, index: true  # Carrier-assigned Group ID or FEIN
-  belongs_to :policy, index: true 
+  belongs_to :policy, index: true
 	belongs_to :carrier, index: true
   belongs_to :transaction_set_premium_payment, :class_name => "Protocols::X12::TransactionSetPremiumPayment", index: true
 
   validates_presence_of :payment_amount_in_cents, :paid_at, :coverage_period, :policy_id, :carrier_id
-  validates_inclusion_of :hbx_payment_type, in: ["BAL", "INTPREM", "PREM", "MISC", "NONPAYADJ", "PREMADJ", 
+  validates_inclusion_of :hbx_payment_type, in: ["BAL", "INTPREM", "PREM", "MISC", "NONPAYADJ", "PREMADJ",
 "REFUND"]
 
   index({paid_at: 1})

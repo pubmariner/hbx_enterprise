@@ -1,4 +1,4 @@
-module Parsers::Xml::Enrollment 
+module Parsers::Xml::Enrollment
   class ShopEnrollee < Enrollee
     def initialize(parser, employer)
       @employer = employer

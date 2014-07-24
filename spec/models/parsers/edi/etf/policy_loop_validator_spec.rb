@@ -4,7 +4,7 @@ describe PolicyLoopValidator do
   let(:policy) { double(id: carrier_policy_id)}
   let(:listener) { double }
   let(:validator) { PolicyLoopValidator.new }
-  
+
   context ' carrier policy id is missing' do
     let(:carrier_policy_id) { ' ' }
     it 'notifies listener of missing carrier policy id' do
@@ -13,7 +13,7 @@ describe PolicyLoopValidator do
     end
 
   end
-  
+
   context 'carrier policy id is present' do
     let(:carrier_policy_id) { '1234' }
 

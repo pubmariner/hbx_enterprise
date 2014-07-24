@@ -27,7 +27,7 @@ class Protocols::X12::Transmission
 
   field :aasm_state, type: String
   field :ack_nak_processed_at, type: DateTime
-  
+
   index({"isa06" => 1})
   index({"isa08" => 1})
   index({"isa13" => 1})
@@ -83,7 +83,6 @@ class Protocols::X12::Transmission
     end
   end
 
-  
   def sender
     Carrier.elem_match(carrier_profiles: {fein: ic_sender_id.strip }).first
   end

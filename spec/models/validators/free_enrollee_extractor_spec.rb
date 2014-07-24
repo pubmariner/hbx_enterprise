@@ -21,5 +21,5 @@ describe Validators::FreeEnrolleeExtractor do
       expect(enrollees.count).to eq 5
     end
   end
-  
+
 end

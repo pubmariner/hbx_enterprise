@@ -24,7 +24,7 @@ describe ExposesEmployerXml do
     expect(employer.employer_exchange_id).to eq employer_exchange_id
   end
 
-  describe 'sic code' do 
+  describe 'sic code' do
     it 'returns code when present' do
       sic_code = '4321'
       parser = Nokogiri::XML("<employer><sic_code>#{sic_code}</sic_code></employer>")
@@ -38,7 +38,6 @@ describe ExposesEmployerXml do
       expect(employer.sic_code).to eq ''
     end
   end
-  
 
   it 'exposes fte_count' do
     fte_count = '1'
@@ -96,16 +95,16 @@ describe ExposesEmployerXml do
       plan_year_end = '2010-02-01'
       parser = Nokogiri::XML("<employer><plan_year_end>#{plan_year_end}</plan_year_end></employer>")
       employer = ExposesEmployerXml.new(parser)
-      expect(employer.plan_year_end).to eq plan_year_end 
+      expect(employer.plan_year_end).to eq plan_year_end
     end
 
     it 'returns blank when absent' do
       parser = Nokogiri::XML("<employer></employer>")
       employer = ExposesEmployerXml.new(parser)
-      expect(employer.plan_year_end).to eq ''   
+      expect(employer.plan_year_end).to eq ''
     end
   end
-  
+
 
   it 'exposes plans' do
     parser = Nokogiri::XML("<employer><plans><plan>yoo</plan></plans></employer>")

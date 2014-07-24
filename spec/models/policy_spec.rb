@@ -40,7 +40,7 @@ describe Policy do
   describe '#subscriber' do
     let(:enrollee) { build(:enrollee, relationship_status_code: relationship) }
     before { policy.enrollees = [ enrollee ] }
-    
+
     context 'given no enrollees with relationship of self' do
       let(:relationship) { 'child' }
       it 'returns nil' do
@@ -95,19 +95,19 @@ describe Policy do
     let(:member) { build(:member, hbx_member_id: lookup_id) }
     before do
       policy.enrollees = [ enrollee ]
-      person.members = [ member ] 
+      person.members = [ member ]
       person.save!
     end
 
     it 'returns people whose members ids match the policy enrollees ids' do
-      expect(policy.people).to eq [person] 
+      expect(policy.people).to eq [person]
     end
   end
 
   describe '#edi_transaction_sets' do
     let(:transation_set_enrollment) { Protocols::X12::TransactionSetEnrollment.new(ts_purpose_code: '00', ts_action_code: '2', ts_reference_number: '1', ts_date: '1', ts_time: '1', ts_id: '1', ts_control_number: '1', ts_implementation_convention_reference: '1', transaction_kind: 'initial_enrollment') }
     context 'transaction set enrollment policy id matches policys id' do
-      before do 
+      before do
         transation_set_enrollment.policy_id = policy._id
         transation_set_enrollment.save
       end
@@ -117,7 +117,7 @@ describe Policy do
     end
 
     context 'transaction set enrollment policy id does not matche policys id' do
-      before do 
+      before do
         transation_set_enrollment.policy_id = '444'
         transation_set_enrollment.save
       end
@@ -133,7 +133,7 @@ describe Policy do
     context 'no enrollee with member id exists' do
       before { policy.merge_enrollee(enrollee, :stop) }
 
-      context 'action is stop' do 
+      context 'action is stop' do
         it 'coverage_status changes to inactive' do
           expect(enrollee.coverage_status).to eq 'inactive'
         end
@@ -157,7 +157,7 @@ describe Policy do
   describe '#hios_plan_id' do
     let(:plan) { build(:plan, hbx_plan_id: '666')}
     let(:policy) { build(:policy, plan: plan) }
-    
+
     it 'returns the policys plan hios id' do
       expect(policy.hios_plan_id).to eq plan.hios_plan_id
     end
@@ -166,7 +166,7 @@ describe Policy do
   describe '#coverage_type' do
     let(:plan) { build(:plan, coverage_type: 'health') }
     let(:policy) { build(:policy, plan: plan) }
-    
+
     it 'returns the policys plan coverage type' do
       expect(policy.coverage_type).to eq plan.coverage_type
     end
@@ -182,7 +182,7 @@ describe Policy do
     context 'given a policy enrollee with the member id' do
       let(:member_id) { '666' }
       let(:enrollee) { build(:enrollee, m_id: member_id) }
-      
+
       before { policy.enrollees = [ enrollee ] }
 
       it 'returns the enrollee' do
@@ -260,7 +260,7 @@ describe Policy do
         found_policy = Policy.find_or_update_policy(policy)
 
         expect(found_policy).to eq existing_policy
-        
+
         expect(found_policy.responsible_party_id).to eq responsible_party_id
         expect(found_policy.employer_id).to eq employer_id
         expect(found_policy.broker_id).to eq broker_id
@@ -306,21 +306,21 @@ describe Policy do
     let(:end_date) { Date.new(2014, 1, 31) }
 
     let(:enrollee) { build(:subscriber_enrollee, coverage_start: coverage_start, coverage_end: coverage_end) }
-    
+
     let(:policy) { build(:policy, enrollees: [ enrollee ]) }
 
     before { policy.save! }
-    context 'when subscriber coverage is in range' do 
+    context 'when subscriber coverage is in range' do
       let(:coverage_start) { start_date.next_day }
       let(:coverage_end) { end_date.prev_day }
       it 'finds the policy' do
         policies = Policy.find_covered_in_range(start_date, end_date)
         expect(policies).to include policy
       end
-      
+
     end
 
-    context 'when subscriber coverage is out of range' do 
+    context 'when subscriber coverage is out of range' do
       let(:coverage_start) { start_date.prev_year }
       let(:coverage_end) { end_date.prev_year }
       it 'does not find the policys' do

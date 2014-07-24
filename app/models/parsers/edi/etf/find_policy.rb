@@ -7,7 +7,7 @@ module Parsers
 
       def by_subkeys(subkeys)
         policy = Policy.find_by_subkeys(subkeys[:eg_id], subkeys[:carrier_id], subkeys[:plan_id])
-        
+
         if(policy)
           @listener.policy_found(policy)
           policy

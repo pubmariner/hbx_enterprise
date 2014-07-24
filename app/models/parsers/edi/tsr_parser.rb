@@ -1,6 +1,6 @@
 module Parsers
   module Edi
-    class TsrParser 
+    class TsrParser
       include Singleton
 
       attr_reader :parser

@@ -15,7 +15,7 @@ describe EnrollmentTransmissionUpdatesController do
     before :each do
        user = double('user')
        request.env['warden'].stub :authenticate! => user
-       controller.stub :current_user => user 
+       controller.stub :current_user => user
        EnrollmentTransmissionUpdate.stub(:new).and_return(etu_double)
        etu_double.stub(:save)
     end

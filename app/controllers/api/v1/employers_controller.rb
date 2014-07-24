@@ -4,7 +4,7 @@ class Api::V1::EmployersController < ApplicationController
     clean_fein = Regexp.new(Regexp.escape(params[:fein].to_s))
 
     @employers = Employer.where("hbx_id" => clean_hbx_id, "fein" => clean_fein)
-    page_number = params[:page] 
+    page_number = params[:page]
     page_number ||= 1
     @employers = @employers.page(page_number).per(15)
   end

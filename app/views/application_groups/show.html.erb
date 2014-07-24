@@ -13,7 +13,7 @@
   <dl class="dl-horizontal">
     <dt><%= model_class.human_attribute_name(:aasm_state) %></dt>
     <dd><%= @application_group.aasm_state.humanize %></dd>
-    
+
     <dt><%= "Household(s)" %></dt>
     <% if @application_group.households.count == 0 %>
       <dd></dd>

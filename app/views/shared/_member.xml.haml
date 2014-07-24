@@ -1,10 +1,10 @@
 %n1:gender= "urn:dc0:terms:gender##{member.gender}"
 %n1:dob= member.dob.try(:strftime,"%Y%m%d")
-%n1:ssn= member.ssn 
+%n1:ssn= member.ssn
 %n1:tobacco_user= member.hlh.downcase
 %n1:language= member.lui
 %n1:hbx_uri
-%n1:hbx_id= member.hbx_member_id 
+%n1:hbx_id= member.hbx_member_id
 %n1:person
   = render 'shared/person', person: member.person
-%n1:relationship 
+%n1:relationship

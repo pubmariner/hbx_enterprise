@@ -67,7 +67,7 @@ module Parsers
       def parse_enrollment_group_id(doc)
         xpath(doc, "//etf:Loop_2300/etf:REF_HealthCoveragePolicyNumber_2300[etf:REF01__ReferenceIdentificationQualifier='1L']/etf:REF02__MemberGroupOrPolicyNumber").first.text
       end
-      
+
       def parse_members(doc)
         xpath(doc, "//etf:Loop_2000").map { |n| RawMember.new(n) }
       end
@@ -96,13 +96,13 @@ module Parsers
           employer_result = RawEmployer.new
           employer_result.name = xpath(node, "etf:N102__PlanSponsorName").first.text
           employer_result.exchange_employer_id = xpath(node, "etf:N104__SponsorIdentifier").first.text
-          if employer_result.name.strip == "DC0" 
+          if employer_result.name.strip == "DC0"
             employer_result = nil
           end
         end
         employer_result
       end
-      
+
       def parse_carrier_id(doc)
         xpath(doc, "//etf:Loop_1000B/etf:N1_Payer_1000B/etf:N104__InsurerIdentificationCode").first.text
       end
@@ -120,7 +120,7 @@ module Parsers
         msg = EdiTransmission.find_or_create_by(file_name: @file_name)
         msg.edi_transaction_sets.push ts
 
-  
+
         # Enrollment.new(
         #   :carrier_to_bill => @carrier_to_bill,
         #   :hios_plan_id => @hios_id,
@@ -140,7 +140,7 @@ module Parsers
           enrollment_group.merge_enrollee(m.to_model(@carrier_id))
           enrollment.merge_enrollment_member(m.to_enrollment_member)
         end
-        
+
         members.each do |m|
           m.try_to_persist
         end

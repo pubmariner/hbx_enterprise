@@ -14,20 +14,20 @@ describe Phone do
     describe 'phone type' do
       let(:phone) { Phone.new(phone_type: 'invalid', phone_number: "12345") }
       context 'when invalid' do
-        its 'invalid' do 
+        its 'invalid' do
           expect(phone).to be_invalid
         end
       end
       valid_types = ['home', 'work', 'mobile']
       valid_types.each do |type|
         context('when ' + type) do
-          before { 
+          before {
             phone.phone_number = "12345"
             phone.phone_type = type
           }
           its 'valid' do
             expect(phone).to be_valid
-          end 
+          end
         end
       end
     end
@@ -42,17 +42,17 @@ describe Phone do
       p
     end
 
-    context 'phones are the same' do 
+    context 'phones are the same' do
       let(:other_phone) { phone.clone }
       it 'returns true' do
         expect(phone.match(other_phone)).to be_true
       end
     end
 
-    context 'phones differ' do 
-      context 'by type' do 
-        let(:other_phone) do 
-          p = phone.clone 
+    context 'phones differ' do
+      context 'by type' do
+        let(:other_phone) do
+          p = phone.clone
           p.phone_type = 'work'
           p
         end
@@ -60,9 +60,9 @@ describe Phone do
           expect(phone.match(other_phone)).to be_false
         end
       end
-      context 'by number' do 
-        let(:other_phone) do 
-          p = phone.clone 
+      context 'by number' do
+        let(:other_phone) do
+          p = phone.clone
           p.phone_number = '666-666-6666'
           p
         end

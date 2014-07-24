@@ -21,7 +21,7 @@ class Address
   embedded_in :person, :inverse_of => :addresses
   embedded_in :employer, :inverse_of => :addresses
   embedded_in :broker, :inverse_of => :addresses
-  
+
   before_save :clean_fields
 
   def clean_fields
@@ -46,7 +46,7 @@ class Address
     line3 = [city_delim, state, zip].reject(&:nil? || empty?).join(' ')
     [address_1, address_2, line3].reject(&:nil? || empty?).join('<br/>').html_safe
   end
-  
+
   def full_address
     city.present? ? city_delim = city + "," : city_delim = city
     [address_1, address_2, city_delim, state, zip].reject(&:nil? || empty?).join(' ')
@@ -66,7 +66,7 @@ class Address
   def home?
     "home" == self.address_type.downcase
   end
-  
+
   private
 
   def safe_downcase(val)

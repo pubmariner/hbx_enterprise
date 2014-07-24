@@ -41,7 +41,7 @@ module Parsers
           category_by_name('CARRIER TO BILL').present?
         end
 
-        private 
+        private
 
         def category_by_name(name)
           @categories.detect { |c| c.name == name }

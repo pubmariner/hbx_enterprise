@@ -6,7 +6,7 @@ describe Api::V1::PoliciesController do
   describe 'GET show' do
     let(:policy) { create :policy }
     before { get :show, id: policy.id, format: 'xml' }
-    
+
     it 'finds and assign policy for view' do
       expect(assigns(:policy)).to eq policy
     end

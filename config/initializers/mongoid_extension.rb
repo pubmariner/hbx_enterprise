@@ -29,7 +29,7 @@ module Mongoid
       end
     end
 
-    # 
+    #
     def all_embedded_document_changes
       data = {}
       self.embedded_populated_model_names.each do |name|
@@ -38,11 +38,10 @@ module Mongoid
         next unless model_data.any?
         data[name.to_sym] = model_data
       end
- 
+
       data
     end
 
-    # 
     def changes_with_embedded
       embedded_data = self.all_embedded_document_changes
       self_changes = self.changes_for_document
@@ -51,8 +50,7 @@ module Mongoid
       field_data.merge!(embedded_data) unless embedded_data.empty?
       field_data
     end
- 
-    # 
+
     def changes_for_document
       data = {_id: self._id}
       self.changes.each do |key, change|

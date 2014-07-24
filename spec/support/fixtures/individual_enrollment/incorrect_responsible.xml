@@ -1,5 +1,8 @@
 <?xml version="1.0"?>
 <proc:Operation xmlns:pln="http://dchealthlink.com/vocabularies/1/plan" xmlns:ins="http://dchealthlink.com/vocabularies/1/insured" xmlns:car="http://dchealthlink.com/vocabularies/1/carrier" xmlns:con="http://dchealthlink.com/vocabularies/1/contact" xmlns:bt="http://dchealthlink.com/vocabularies/1/base_types" xmlns:emp="http://dchealthlink.com/vocabularies/1/employer" xmlns:proc="http://dchealthlink.com/vocabularies/1/process" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://dchealthlink.com/vocabularies/1/process process.xsd      http://dchealthlink.com/vocabularies/1/insured insured.xsd      http://dchealthlink.com/vocabularies/1/plan plan.xsd      http://dchealthlink.com/vocabularies/1/employer employer.xsd     http://dchealthlink.com/vocabularies/1/carrier carrier.xsd     http://dchealthlink.com/vocabularies/1/contact contacts.xsd     http://dchealthlink.com/vocabularies/1/base_types.xsd base_types.xsd">
+	<proc:operation>
+		<proc:type>add</proc:type>
+	</proc:operation>
 	<proc:payload>
 		<ins:individual_market_enrollment_group>
 			<ins:subscriber>

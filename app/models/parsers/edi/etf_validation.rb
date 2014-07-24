@@ -73,7 +73,7 @@ module Parsers
         end
       end
     end
-=end    
+=end
       end
 
       def has_pre_amt_tot

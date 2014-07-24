@@ -1,7 +1,7 @@
 module Parsers
   module Edi
     class IncomingTransaction
-      attr_reader :errors  
+      attr_reader :errors
 
       def self.from_etf(etf)
         incoming_transaction = new(etf)
@@ -16,12 +16,12 @@ module Parsers
         if(carrier && plan)
           find_policy = FindPolicy.new(incoming_transaction)
           policy = find_policy.by_subkeys({
-            :eg_id => subscriber_policy_loop.eg_id, 
-            :carrier_id => carrier._id, 
+            :eg_id => subscriber_policy_loop.eg_id,
+            :carrier_id => carrier._id,
             :plan_id => plan._id
           })
         end
-          
+
         person_loop_validator = PersonLoopValidator.new
         etf.people.each do |person_loop|
           person_loop_validator.validate(person_loop, incoming_transaction)
@@ -55,7 +55,7 @@ module Parsers
           if(!@etf.is_shop? && policy_loop.action == :stop )
             enrollee.coverage_status = 'inactive'
             enrollee.coverage_end = policy_loop.coverage_end
-            
+
             if enrollee.subscriber?
               if enrollee.coverage_start == enrollee.coverage_end
                 enrollee.policy.aasm_state = "canceled"
@@ -65,7 +65,7 @@ module Parsers
             end
 
           end
-        end  
+        end
         @policy.save
       end
 

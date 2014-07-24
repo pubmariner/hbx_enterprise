@@ -42,5 +42,9 @@ module Parsers::Xml::Enrollment
     def age
       Ager.new(birth_date).age_as_of(benefit_begin_date)
     end
+
+    def hbx_member_id
+      @parser.at_xpath('./ins:exchange_member_id', NAMESPACES).text
+    end
   end
 end

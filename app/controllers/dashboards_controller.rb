@@ -31,7 +31,7 @@ class DashboardsController < ApplicationController
       timeObj = Time.now.months_ago( @monthsToDisplay - monthsAgo + 1 )
       numTransactions = Protocols::X12::TransactionSetEnrollment.where( submitted_at: timeObj.all_month ).count
       @transactions[ :months ][ timeObj.strftime( "%B" ) ] = numTransactions
-    end  
+    end
 
     @response_metric = ResponseMetric.all
     @ambiguous_people_metric = AmbiguousPeopleMetric.all

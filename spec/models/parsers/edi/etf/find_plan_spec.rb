@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Parsers::Edi::FindPlan do
-  context 'plan doesn\'t exist' do 
+  context 'plan doesn\'t exist' do
     it 'notifies listener of plan not found by fein' do
       listener = double
       find_plan = Parsers::Edi::FindPlan.new(listener)
@@ -22,5 +22,5 @@ describe Parsers::Edi::FindPlan do
       expect(find_plan.by_hios_id(plan.hios_plan_id)).to eq plan
     end
   end
-  
+
 end

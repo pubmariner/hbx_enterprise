@@ -27,7 +27,7 @@ module Parsers
           street2 = @person_loop.street2
           street2.blank? ? nil : street2
         end
-        
+
         def parse_contact
           contact_seg = @raw_loop["L2100A"]["PER"]
           if !contact_seg.blank?
@@ -143,7 +143,7 @@ module Parsers
               employer.employees << new_person
               employer.save
             end
-          end 
+          end
           begin
             new_person.initialize_name_full
             new_person.invalidate_find_caches

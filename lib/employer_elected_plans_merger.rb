@@ -10,7 +10,7 @@ module EmployerElectedPlansMerger
     existing_plans.each do |plan|
       existing_plan = existing_hash[plan.qhp_id]
       if !existing_plan.nil?
-        existing_plan.merge_without_blanking(plan, 
+        existing_plan.merge_without_blanking(plan,
           :carrier_employer_group_id,
           :carrier_policy_number,
           :coverage_type,

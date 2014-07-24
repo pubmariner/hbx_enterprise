@@ -4,7 +4,7 @@ module Stats
 		attr_accessor	:holiday_list
 
     def initialize(args = {})
-	    args.each {|k,v| 
+	    args.each {|k,v|
 	    	instance_variable_set("@#{k}", v) unless v.nil?} if args.is_a? Hash
 
 	    dchbx_holidays
@@ -15,7 +15,7 @@ module Stats
       # time = super(object)
       time = object
       local_time = object.in_time_zone(::Time.zone)
-      { 
+      {
         time:         time,
         normalized:   normalized_time(local_time),
         year:         local_time.year,
@@ -49,7 +49,7 @@ module Stats
     end
 
     def dchbx_holidays
-      @holiday_list ||= ["11/11/2013", "11/28/2013, 12/25/2013", 
+      @holiday_list ||= ["11/11/2013", "11/28/2013, 12/25/2013",
                          "01/01/2014", "01/20/2014", "02/17/2014", "04/16/2014", "05/26/2014", "07/04/2014",
                          "09/01/2014", "10/13/2014", "11/11/2014", "11/27/2014", "12/25/2014",
                          "01/01/2015", "01/19/2015", "02/16/2015", "04/16/2015", "05/25/2015", "07/03/2015",

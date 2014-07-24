@@ -35,7 +35,7 @@ module Parsers
       def persist!
         transmission = Protocols::X12::Transmission.where(
           :isa13 => @isa13,
-          :isa08 => @sender_id 
+          :isa08 => @sender_id
         ).first
         if !transmission.nil?
           if accepted?

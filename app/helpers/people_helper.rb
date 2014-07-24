@@ -14,7 +14,7 @@ module PeopleHelper
 
 	def policy_status(policy)
 		status = policy.aasm_state.capitalize
-		# raw(<span class="label label-warning">status</span>) if ["Canceled", "Terminated"].include?(status) 
+		# raw(<span class="label label-warning">status</span>) if ["Canceled", "Terminated"].include?(status)
 	end
 
 	def format_date(date_value)

@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-md-12">
     <h4>Contact</h4>
-    <% obj.emails.each do |email| %> 
+    <% obj.emails.each do |email| %>
       <dl class="dl-horizontal">
         <dt><%= "#{mixed_case(email.email_type)} email" %></dt>
         <dd><%= link_to email.email_address, "mailto:#{email.email_address}" %></dd>
@@ -20,7 +20,7 @@
       </dl>
     <% end %>
 
-    <% obj.addresses.each do |address| %> 
+    <% obj.addresses.each do |address| %>
       <dl class="dl-horizontal">
         <dt><%= "#{mixed_case(address.address_type)} address" %></dt>
         <dd><%= address.formatted_address %></dd>

@@ -104,7 +104,7 @@ class Employer
     value = Policy.collection.aggregate(
       { "$match" => {
         "employer_id" => e_id,
-        "enrollment_members" => 
+        "enrollment_members" =>
         {
           "$elemMatch" => {"$or" => [{
             "coverage_end" => nil
@@ -118,7 +118,7 @@ class Employer
         "_id" => "$employer_id",
         "total" => { "$addToSet" => "$pre_amt_tot" }
       }}
-    ).first["total"].inject(0.00) { |acc, item| 
+    ).first["total"].inject(0.00) { |acc, item|
       acc + BigDecimal.new(item)
     }
     "%.2f" % value
@@ -148,7 +148,7 @@ class Employer
   def self.find_for_carrier_and_group_id(carrier_id, group_id)
     Rails.cache.fetch("Employer/find/employer_group_ids.#{carrier_id}.#{group_id}") do
       Employer.where({ :elected_plans => {
-        "$elemMatch" => { 
+        "$elemMatch" => {
           "carrier_id" => carrier_id,
           "carrier_employer_group_id" => group_id
         }
@@ -162,7 +162,7 @@ class Employer
     if found_employer.nil?
       m_employer.save!
     else
-      found_employer.merge_without_blanking(m_employer, 
+      found_employer.merge_without_blanking(m_employer,
         :name,
         :hbx_id,
         :fein,

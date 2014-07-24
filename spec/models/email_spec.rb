@@ -14,7 +14,7 @@ describe Email do
     describe 'email type' do
       let(:email) { Email.new(email_type: 'invalid', email_address: 'example@example.com') }
       context 'when invalid' do
-        its 'invalid' do 
+        its 'invalid' do
           expect(email).to be_invalid
         end
       end
@@ -24,12 +24,12 @@ describe Email do
           before { email.email_type = type}
           its 'valid' do
             expect(email).to be_valid
-          end 
+          end
         end
       end
     end
 
-    describe 'presence' do 
+    describe 'presence' do
       [:email_address].each do |missing|
         its('invalid without ' + missing.to_s) do
           trait = 'without_' + missing.to_s
@@ -42,17 +42,17 @@ describe Email do
 
   describe '#match' do
     let(:email) { Email.new(email_type: 'home', email_address: 'example@example.com') }
-    context 'emails are the same' do 
+    context 'emails are the same' do
       let(:other_email) { email.clone }
       it 'returns true' do
         expect(email.match(other_email)).to be_true
       end
     end
 
-    context 'emails differ' do 
-      context 'by type' do 
-        let(:other_email) do 
-          e = email.clone 
+    context 'emails differ' do
+      context 'by type' do
+        let(:other_email) do
+          e = email.clone
           e.email_type = 'work'
           e
         end
@@ -61,9 +61,9 @@ describe Email do
         end
       end
 
-      context 'by address' do 
-        let(:other_email) do 
-          e = email.clone 
+      context 'by address' do
+        let(:other_email) do
+          e = email.clone
           e.email_address = 'something@different.com'
           e
         end
@@ -71,6 +71,6 @@ describe Email do
           expect(email.match(other_email)).to be_false
         end
       end
-    end  
+    end
   end
 end

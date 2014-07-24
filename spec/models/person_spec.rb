@@ -12,12 +12,12 @@ describe Person do
 	  it { should accept_nested_attributes_for(:addresses) }
   end
 
- 
+
   describe "instantiates object." do
 		it "sets and gets all basic model fields" do
       psn = Person.new(
         name_pfx: "Mr",
-        name_first: "John", 
+        name_first: "John",
         name_middle: "Jacob",
         name_last: "Jingle-Himer",
         name_sfx: "Sr"
@@ -75,7 +75,7 @@ describe Person do
     it "appends multiple members" do
       psn = Person.new
       psn.members << Member.new(
-        hbx_member_id: mbr_id, 
+        hbx_member_id: mbr_id,
         dob: @date1,
         ssn: @mbr_ssn,
         gender: @mbr_sex,
@@ -83,7 +83,7 @@ describe Person do
         lui: @mbr_language
       )
       psn.members << Member.new(
-        hbx_member_id: (mbr_id.to_i + 100).to_s, 
+        hbx_member_id: (mbr_id.to_i + 100).to_s,
         dob: @date1,
         ssn: @mbr_ssn,
         gender: @mbr_sex,
@@ -105,7 +105,7 @@ describe Person do
     # 	psn = Person.first
     # 	psn.member_enrollments << MemberEnrollment.new(
     # 			enrollment_id: 343434,
-    # 			subscriber_id: 4545, 
+    # 			subscriber_id: 4545,
     # 			disability_status: false,
     # 			carrier_id: 5656,
     # 			benefit_status_code: "active",
@@ -124,7 +124,7 @@ describe Person do
 
       p =	Person.create!({
         name_pfx: "Dr",
-        name_first: "Leonard", 
+        name_first: "Leonard",
         name_middle: "H",
         name_last: "McCoy",
         members: [
@@ -162,7 +162,7 @@ describe Person do
         person.assign_authority_member_id
         expect(person.authority_member_id).to eq member.hbx_member_id
       end
-    end 
+    end
     context 'more than one member' do
       its 'authority member id is nil' do
         2.times { |i| person.members << Member.new(hbx_member_id: i) }

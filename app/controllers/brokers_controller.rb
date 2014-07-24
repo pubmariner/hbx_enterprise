@@ -7,7 +7,7 @@ class BrokersController < ApplicationController
     else
       @brokers = Broker.page(params[:page]).per(12)
     end
-    
+
     respond_to do |format|
 	    format.html # index.html.erb
 	    format.json { render json: @brokers }

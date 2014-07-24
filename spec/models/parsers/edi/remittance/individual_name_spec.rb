@@ -6,8 +6,8 @@ describe Parsers::Edi::Remittance::IndividualName do
   let(:enrollment_group_id) { '6666666' }
   let(:hios_plan_id) { '7777777' }
 
-  let(:raw_loop) do  
-    { 
+  let(:raw_loop) do
+    {
       "REFs" => [
         ['', 'POL', enrollment_group_id],
         ['', 'TV', hios_plan_id]

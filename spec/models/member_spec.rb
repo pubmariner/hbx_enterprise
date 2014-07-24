@@ -4,13 +4,13 @@ describe Member do
   before(:each) do
     @p1 = Person.create!(
           name_pfx: "Mrs",
-          name_first: "Jane", 
+          name_first: "Jane",
           name_middle: "Jacob",
           name_last: "Jingle-Himer"
           )
 
     @p2 = Person.create!(
-          name_first: "Sam", 
+          name_first: "Sam",
           name_last: "Spade"
           )
   end
@@ -96,15 +96,15 @@ describe Member do
     subject.should be_valid
   end
 
-  [ :hbx_member_id, 
-    :concern_role_id, 
-    :import_source, 
-    :imported_at, 
-    :dob, 
-    :ssn, 
-    :gender, 
-    :hlh, 
-    :lui, 
+  [ :hbx_member_id,
+    :concern_role_id,
+    :import_source,
+    :imported_at,
+    :dob,
+    :ssn,
+    :gender,
+    :hlh,
+    :lui,
     :person
   ].each do |attribute|
     it { should respond_to attribute }
@@ -138,7 +138,7 @@ describe Member do
       it 'finds policies who has an enrollee with a matching hbx_member_id' do
         member.hbx_member_id = id_to_lookup
         enrollee.m_id = id_to_lookup
-        
+
         policy.enrollees << enrollee
         policy.save!
 
@@ -155,7 +155,7 @@ describe Member do
       it 'finds enrollees with matching hbx_member_ids' do
         member.hbx_member_id = id_to_lookup
         enrollee.m_id = id_to_lookup
-        
+
         policy.enrollees << enrollee
         policy.save!
 
@@ -175,7 +175,7 @@ describe Member do
     before { person.members << member }
 
     context 'members hbx id equals the person authority member id' do
-      before do 
+      before do
         person.authority_member_id = '666'
         member.hbx_member_id = '666'
       end
@@ -193,15 +193,15 @@ describe Member do
         expect(member.authority?).to eq false
       end
     end
-  end 
+  end
 
   describe '.find_for_member_id' do
     let(:id_to_lookup) { '666' }
     let(:person) { Person.new(name_first: 'Joe', name_last: 'Dirt') }
     let(:member) { Member.new(gender: 'male') }
-    
+
     context 'a person has a member with matching hbx_member_id' do
-      before do 
+      before do
         member.hbx_member_id = id_to_lookup
         person.members << member
         person.save!
@@ -212,7 +212,7 @@ describe Member do
     end
 
     context 'no person has a member with matching hbx_member_id' do
-      before do 
+      before do
         member.hbx_member_id = id_to_lookup.next
         person.members << member
         person.save!

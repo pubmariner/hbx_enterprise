@@ -2,7 +2,7 @@ class Plan
   include Mongoid::Document
   include Mongoid::Timestamps
   include Mongoid::Paranoia
-  
+
   extend Mongorder
 
   field :name, type: String
@@ -11,7 +11,7 @@ class Plan
   field :hios_plan_id, type: String
   field :coverage_type, type: String
   field :metal_level, type: String
-  field :market_type, type: String 
+  field :market_type, type: String
   field :ehb, as: :ehb_max_as_percent, type: BigDecimal, default: 0.0
 
   index({ hbx_plan_id: 1 }, { unique: true, name: "exchange_plan_id_index" })
@@ -54,7 +54,7 @@ class Plan
   end
 
   def premium_for_enrollee(enrollee)
-    rate(enrollee.rate_period_date, enrollee.benefit_begin_date, enrollee.birth_date) 
+    rate(enrollee.rate_period_date, enrollee.benefit_begin_date, enrollee.birth_date)
   end
 
   def self.default_search_order

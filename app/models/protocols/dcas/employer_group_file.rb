@@ -59,7 +59,7 @@ module Protocols
               pnode.xpath("de:qhp_id", XML_NSES).first.text,
               pnode.xpath("de:coverage_type", XML_NSES).first.text,
               pnode.xpath("de:original_effective_date", XML_NSES).first.text,
-            )            
+            )
           end
           rec.plan_groups = pgs
           rec

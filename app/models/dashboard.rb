@@ -16,7 +16,7 @@ class Dashboard
 
 # Enrollment.map_reduce(m, r).out(inline: 1).counts
 
-# results = Enrollment.collection.aggregate([{"$group" => 
+# results = Enrollment.collection.aggregate([{"$group" =>
 # 																					 { "_id" => {"bgn_date" => "$bgn_date"}, "ct_of_coverage" => {"$sum" : "$age"}}}])
 
 

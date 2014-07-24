@@ -6,7 +6,7 @@ describe Api::V1::EmployersController do
   describe 'GET show' do
     let(:employer) { create :employer }
     before { get :show, id: employer.id, format: 'xml' }
-    
+
     it 'finds and assign employer for view' do
       expect(assigns(:employer)).to eq employer
     end

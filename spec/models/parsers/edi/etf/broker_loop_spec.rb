@@ -4,7 +4,7 @@ describe Parsers::Edi::Etf::BrokerLoop do
   let(:npn) { 'npn' }
   let(:raw_loop) {  { 'N1' => ['','', name, '', npn] } }
   let(:broker_loop) { Parsers::Edi::Etf::BrokerLoop.new(raw_loop) }
-  
+
   it 'exposes broker name' do
     expect(broker_loop.name).to eq name
   end
@@ -25,15 +25,15 @@ describe Parsers::Edi::Etf::BrokerLoop do
       it 'returns true' do
         expect(broker_loop.valid?).to eq true
       end
-    end  
+    end
 
     context 'loop is blank' do
       let(:raw_loop) { Hash.new }
       it 'returns false' do
         expect(broker_loop.valid?).to eq false
       end
-    end 
+    end
   end
 
-  
+
 end

@@ -18,7 +18,7 @@ jQuery ->
       style: 'btn-info',
       menuStyle: 'dropdown-inverse'
       # size: 5
-  
+
   update_delete_buttons()
   $('#setAuthorityLink').click ->
     $('#authorityIDModal').modal({})

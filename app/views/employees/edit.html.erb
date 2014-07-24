@@ -6,7 +6,7 @@
     <li><%= link_to @person.full_name, person_path(@person) %></li>
     <li class="active">Edit</li>
   </ul>
-</div>																																								
+</div>
 
 <%= simple_form_for(@person, url: employer_employees_path, html: { action: :compare, class: 'form-horizontal' }) do |f| %>
 	<%= render :partial => 'form', :locals=> {f: f} %>

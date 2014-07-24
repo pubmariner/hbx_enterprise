@@ -9,6 +9,6 @@ FactoryGirl.define do
     market_type 'individual'
     ehb 0.0
     carrier
-    
+
   end
 end

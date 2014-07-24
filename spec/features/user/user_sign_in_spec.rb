@@ -6,7 +6,7 @@ feature 'user sign in' do
     visit root_path
 
     sign_in_with(user.email, user.password)
-    
+
     expect(page).to have_content('Signed in successfully.')
   end
 
@@ -15,14 +15,14 @@ feature 'user sign in' do
 
     sign_in_with(user.email, 'invalid')
 
-    expect(page).to have_content("Invalid email or password.")  
+    expect(page).to have_content("Invalid email or password.")
   end
 
   scenario 'with invalid email' do
     visit root_path
-    
+
     sign_in_with('invalid@email.com', user.password)
-    
-    expect(page).to have_content("Invalid email or password.")  
+
+    expect(page).to have_content("Invalid email or password.")
   end
 end

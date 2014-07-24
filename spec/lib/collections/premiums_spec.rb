@@ -11,10 +11,10 @@ describe Collections::Premiums do
     let(:ineligible_premium) { double(rate_start_date: date.prev_year.prev_day, rate_end_date: date.prev_year) }
 
     it 'exposes only premiums that include date' do
-      expect(premium_collection.for_date(date).to_a).to eq [eligible_premium] 
+      expect(premium_collection.for_date(date).to_a).to eq [eligible_premium]
     end
 
-    describe 'selecting premiums' do 
+    describe 'selecting premiums' do
       let(:age) { 0 }
       let(:eligible_premium) { double(age: 0) }
       let(:ineligible_premium) { double(age: age+20) }

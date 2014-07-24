@@ -1,11 +1,11 @@
 <%- model_class = User -%>
 <div class="page-header">
   <h1><%t '.title', :default => [:'helpers.titles.edit', 'Edit %{model}'], :model => model_class.model_name.human.titleize %></h1>
-  
+
   <%= render 'shared/breadcrumb', crumbs: [
       link_to('Users', users_path),
       @user.email
-    ] 
+    ]
   %>
 </div>
 <%= render :partial => 'form' %>

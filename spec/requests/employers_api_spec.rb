@@ -3,7 +3,7 @@ require 'spec_helper'
 describe 'Employers API' do
   before { sign_in_as_a_valid_user }
 
-  describe 'retrieving an employer by primary key' do 
+  describe 'retrieving an employer by primary key' do
     let(:employer) { create :employer }
     before { get "/api/v1/employers/#{employer.id}" }
 

@@ -1,12 +1,8 @@
 <%- model_class = Broker -%>
 <%t '.title', :default => model_class.model_name.human.titleize.pluralize %>
-<div class="page-header">
 
- <%= render 'shared/breadcrumb', crumbs: [
-      link_to('Brokers', brokers_path),
-      @broker.name_full
-    ] 
-  %>
+<div class="page-header">
+  <%= render 'shared/breadcrumb', crumbs: [ link_to('Brokers', brokers_path), @broker.name_full ] %>
 </div>
 
 <dl class="dl-horizontal">
@@ -23,11 +19,11 @@
 </dl>
 
 <%= render 'shared/contact', obj: @broker %>
-   
+
 <p class="text-right"><small><%= "version: #{@broker.version} | updated: #{@broker.updated_at.strftime('%m-%d-%Y') if @broker.updated_at.present?}" %></small></p>
 
 <div class="well well-sm default">
-<div class="form-actions">
-  <%= link_to t('.back', :default => t("helpers.links.back")), brokers_path, :class => 'btn btn-primary'  %>
-</div>
+  <div class="form-actions">
+    <%= link_to t('.back', :default => t("helpers.links.back")), brokers_path, :class => 'btn btn-primary'  %>
+  </div>
 </div>

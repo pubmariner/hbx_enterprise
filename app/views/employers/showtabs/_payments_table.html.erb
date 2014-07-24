@@ -8,7 +8,7 @@
     </tr>
   </thead>
   <tbody>
-    <%= table_empty_to_human if premium_payments.count < 1 %> 
+    <%= table_empty_to_human if premium_payments.count < 1 %>
     <% premium_payments.each do |p| %>
       <% p[1] = p[1].sort_by{|v| v["carrier_name"]} %>
       <tr>

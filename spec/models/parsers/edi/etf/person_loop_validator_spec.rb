@@ -14,7 +14,7 @@ describe Parsers::Edi::PersonLoopValidator do
     end
 
   end
-  
+
   context 'carrier member id is present' do
     let(:carrier_member_id) { '1234' }
 

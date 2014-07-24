@@ -1,6 +1,6 @@
 !!! XML
 %person_changes{"xmlns" => "uri:gluedb:v0.1.0:person" }
-  %url 
+  %url
     = person_url(person._id)
   %person
     =render template: 'people/xml/person.xml.haml', locals:{person: person}

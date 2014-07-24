@@ -6,10 +6,10 @@ describe Parsers::Edi::Remittance::RemittanceDetail do
   let(:payment_type) { 'PREM' }
   let(:coverage_period) { '20140701-20140731' }
   let(:amount) { '666.66' }
-  let(:raw_loop) do  
-    { 
+  let(:raw_loop) do
+    {
       'RMR' => ['','', payment_type, '', amount],
-      'DTM' => ['', '', '', '', '', '', coverage_period] 
+      'DTM' => ['', '', '', '', '', '', coverage_period]
     }
   end
 

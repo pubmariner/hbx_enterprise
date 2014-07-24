@@ -1,5 +1,5 @@
 class ChangeVocabulariesController < ApplicationController
-  
+
   def new
     @change_vocabulary = ChangeVocabulary.new(params[:change_vocabulary])
   end
