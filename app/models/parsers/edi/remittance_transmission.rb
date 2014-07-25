@@ -2,9 +2,10 @@ module Parsers
   module Edi
     class RemittanceTransmission
       attr_reader :result
-      def initialize(path, r_data)
+      def initialize(path, r_data, i_cache)
         @result = Oj.load(r_data)
         @file_name = File.basename(path)
+        @import_cache = i_cache
       end
 
       def persist!
@@ -54,7 +55,7 @@ module Parsers
       def persist_payment_entry(l2000, carrier, transaction)
         individual_name = Remittance::IndividualName.new(l2000["L2100"])
 
-        plan = Plan.find_by_hios_id(individual_name.hios_plan_id)
+        plan = @import_cache.lookup_hios(individual_name.hios_plan_id)
         policy = Policy.find_by_subkeys(individual_name.enrollment_group_id, carrier._id, plan._id)
         unless policy
           policy = Policy.find_by_sub_and_plan(individual_name.enrollment_group_id, plan._id)

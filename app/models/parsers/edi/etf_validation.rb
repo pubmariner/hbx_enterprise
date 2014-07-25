@@ -16,11 +16,12 @@ module Parsers
       validate :no_bogus_broker
       validate :on_blacklist
 
-      def initialize(f_name, mt, el, blist = [])
+      def initialize(f_name, mt, el, blist = [], i_cache)
         @file_name = f_name
         @message_type = mt
         @etf_loop = el
         @blacklisted_bgns = blist
+        @import_cache = i_cache
       end
 
       def on_blacklist
@@ -107,7 +108,7 @@ module Parsers
           if pol_loop.empty?
             log_error(:etf_loop, "has no valid plan")
           else
-            plan = Plan.find_by_hios_id(pol_loop.hios_id)
+            plan = @import_cache.lookup_hios(pol_loop.hios_id)
             if plan.blank?
               log_error(:etf_loop, "has no valid plan")
             end

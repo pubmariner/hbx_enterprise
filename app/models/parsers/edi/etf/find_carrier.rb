@@ -1,12 +1,13 @@
 module Parsers
   module Edi
     class FindCarrier
-      def initialize(listener)
+      def initialize(listener, i_cache)
         @listener = listener
+        @import_cache = i_cache
       end
 
       def by_fein(fein)
-        carrier = Carrier.for_fein(fein)
+        carrier = @import_cache.lookup_carrier_fein(fein)
         if(carrier)
           @listener.carrier_found(carrier)
           carrier
