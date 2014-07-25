@@ -1,5 +1,5 @@
 require 'csv'
-require 'ruby-prof'
+#require 'ruby-prof'
 
 namespace :edi do
   namespace :import do
@@ -49,7 +49,7 @@ namespace :edi do
       bgn_blacklist = import_bgn_blacklist
       f = File.join(Rails.root, "db", "data", "all_json.csv")
       ic = Parsers::Edi::ImportCache.new
-      RubyProf.start
+#     RubyProf.start
       with_progress_bar(f, "ie 834s") do |row|
         record = row.to_hash
         f_name = record['PROTOCOLMESSAGEID']
@@ -69,11 +69,11 @@ namespace :edi do
           p.persist!
         end
       end
-      result = RubyProf.stop
-      printer = RubyProf::GraphHtmlPrinter.new(result)
-      r_file = File.open('profile.html', 'w')
-      printer.print(r_file)
-      r_file.close
+#      result = RubyProf.stop
+#      printer = RubyProf::GraphHtmlPrinter.new(result)
+#      r_file = File.open('profile.html', 'w')
+#      printer.print(r_file)
+#      r_file.close
     end
   end
 end
