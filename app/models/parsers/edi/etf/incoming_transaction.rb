@@ -3,10 +3,10 @@ module Parsers
     class IncomingTransaction
       attr_reader :errors
 
-      def self.from_etf(etf)
+      def self.from_etf(etf, i_cache)
         incoming_transaction = new(etf)
 
-        find_carrier = FindCarrier.new(incoming_transaction)
+        find_carrier = FindCarrier.new(incoming_transaction, i_cache)
         carrier = find_carrier.by_fein(etf.carrier_fein)
 
         subscriber_policy_loop = etf.subscriber_loop.policy_loops.first

@@ -3,14 +3,15 @@ module Parsers
     class TransmissionFile
       attr_reader :result
       attr_accessor :transmission_kind
-
-      def initialize(path, t_kind, r_data, blist = [])
+      
+      def initialize(path, t_kind, r_data, blist = [], i_cache)
         @raw = r_data
         @result = Oj.load(r_data)
         @file_name = File.basename(path)
         @transmission_kind = t_kind
         @inbound = (t_kind == "effectuation")
         @bgn_blacklist = blist
+        @import_cache = i_cache
       end
 
       def transaction_set_kind(etf)
@@ -57,7 +58,7 @@ module Parsers
         isa = top_doc["ISA"]
         gs = top_doc["GS"]
         sender_id = isa[6].strip
-        @carrier = Carrier.for_fein(sender_id)
+        @carrier = @import_cache.lookup_carrier_fein(sender_id)
         Protocols::X12::Transmission.create!({
           :isa06 => sender_id,
           :isa08 => isa[8].strip,
@@ -82,7 +83,7 @@ module Parsers
         etf = Etf::EtfLoop.new(etf_loop)
 
         # Carrier
-        carrier = Carrier.for_fein(etf.carrier_fein)
+        carrier = @import_cache.lookup_carrier_fein(etf.carrier_fein)
         carrier ||= @carrier
 
         # Employer
@@ -94,7 +95,7 @@ module Parsers
 
         #Policy
         policy_loop = etf.subscriber_loop.policy_loops.first
-        plan = Plan.find_by_hios_id(policy_loop.hios_id)
+        plan = @import_cache.lookup_hios(policy_loop.hios_id)
 
         policy = nil
 
@@ -234,7 +235,8 @@ module Parsers
           @file_name,
           transaction_set_kind(etf),
           etf_loop,
-          @bgn_blacklist
+          @bgn_blacklist,
+          @import_cache
         )
       end
 
@@ -260,8 +262,8 @@ module Parsers
 
             if @inbound
               etf = Etf::EtfLoop.new(l834)
-              incoming = IncomingTransaction.from_etf(etf)
-              incoming.import
+              incoming = IncomingTransaction.from_etf(etf, @import_cache)
+              incoming.import 
               persist_edi_transactions(
                 l834,
                 incoming.policy_id,
