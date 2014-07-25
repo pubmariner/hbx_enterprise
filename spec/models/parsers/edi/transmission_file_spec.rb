@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Parsers::Edi::TransmissionFile do
-  let(:transmission_file) { Parsers::Edi::TransmissionFile.new(' ', ' ', ' ') }
+  let(:transmission_file) { Parsers::Edi::TransmissionFile.new(' ', ' ', ' ', nil) }
   describe '#persist_broker_get_id' do
     context 'transmission has no broker loop' do
       let(:etf_loop) { {"L1000C" => Hash.new } }

@@ -5,7 +5,7 @@ describe Parsers::Edi::FindCarrier do
   context 'carrier doesn\'t exist' do
     it 'notifies listener of carrier not found by fein' do
       listener = double
-      find_carrier = Parsers::Edi::FindCarrier.new(listener)
+      find_carrier = Parsers::Edi::FindCarrier.new(listener, Parsers::Edi::ImportCache.new)
 
       expect(listener).to receive(:carrier_not_found)
       expect(find_carrier.by_fein('4321')).to be_nil
@@ -19,11 +19,10 @@ describe Parsers::Edi::FindCarrier do
       carrier.save!
 
       listener = double
-      find_carrier = Parsers::Edi::FindCarrier.new(listener)
+      find_carrier = Parsers::Edi::FindCarrier.new(listener, Parsers::Edi::ImportCache.new)
 
       expect(listener).to receive(:carrier_found)
       expect(find_carrier.by_fein('1234')).to eq carrier
     end
   end
-
 end
