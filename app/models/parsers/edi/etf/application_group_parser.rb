@@ -9,29 +9,49 @@ module Parsers
         end
 
         def persist!
-          primary_loop = @people_loops.detect { |pl| pl.subscriber? }
+          primary_loop = subscriber_loop
           people = Person.find_for_members(@people_loops.map(&:member_id))
-          loop_lookup = @people_loops.inject({}) do |acc, pl|
-            acc[pl.member_id] = pl
-            acc
-          end
+          loop_lookup = loops_by_id
+
           people_lookup = @people_loops.inject({}) do |acc, per|
              found_record = people.detect do |pm|
-               pm.members.any? { |m| m.hbx_member_id == per.member_id }
+                pm.members.any? { |m| m.hbx_member_id == per.member_id }
              end
              acc[per.member_id] = found_record
              acc
           end
+
           existing_application_groups = find_existing_application_groups(people.map(&:_id))
+          final_group = nil
           if existing_application_groups.count > 1
             # Hooray! Merge tiems!
-            merge_multiple_existing(existing_application_groups, primary_loop.member_id, loop_lookup, people_lookup)
+            final_group = merge_multiple_existing(existing_application_groups, primary_loop.member_id, loop_lookup, people_lookup)
           elsif existing_application_groups.count == 1
             # Add all the people to the existing group
-            merge_with_existing(existing_application_groups.first, primary_loop.member_id, loop_lookup, people_lookup)
+            final_group = merge_with_existing(existing_application_groups.first, primary_loop.member_id, loop_lookup, people_lookup)
           else
             # Do a brand new application group
-            new_application_groups(primary_loop.member_id, loop_lookup, people_lookup)
+            final_group = new_application_groups(primary_loop.member_id, loop_lookup, people_lookup)
+          end
+
+          people_ids = final_group.person_relationships.inject([]) do |acc, rel|
+            acc + [rel.subject_person, rel.object_person]
+          end.uniq
+
+          people_ids.each do |person_id|
+            final_group.people << Person.find(person_id)
+          end
+          final_group.save!
+        end
+
+        def subscriber_loop
+          @people_loops.detect { |pl| pl.subscriber? }
+        end
+
+        def loops_by_id
+          loop_lookup = @people_loops.inject({}) do |acc, pl|
+            acc[pl.member_id] = pl
+            acc
           end
         end
 
@@ -50,8 +70,8 @@ module Parsers
                 :object_person => rt[2]
               })
           end
-          prime.save!
           rest.each(&:destroy!)
+          prime
         end
 
         def create_relationship_triples(primary_member_key, loop_lookup, people_lookup)
@@ -86,7 +106,7 @@ module Parsers
                 :object_person => rt[2]
               })
           end
-          existing_group.save!
+          existing_group
         end
 
         def new_application_groups(primary_member_key, loop_lookup, people_lookup)
@@ -98,7 +118,7 @@ module Parsers
                 :object_person => rt[2]
               })
           end
-          new_group.save!
+          new_group
         end
 
         def find_existing_application_groups(person_ids)

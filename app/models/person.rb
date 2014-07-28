@@ -28,6 +28,7 @@ class Person
   belongs_to :broker
   belongs_to :employer
   belongs_to :household, counter_cache: true
+  belongs_to :application_group
 
   embeds_many :addresses, :inverse_of => :person
   accepts_nested_attributes_for :addresses, reject_if: proc { |attribs| attribs['address_1'].blank? }, allow_destroy: true

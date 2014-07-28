@@ -15,6 +15,7 @@ class ApplicationGroup
   index({"person_relationships.object_person" => 1})
 
 	has_many :households
+  has_many :people
 
   embeds_many :special_enrollment_periods, cascade_callbacks: true
   accepts_nested_attributes_for :special_enrollment_periods, reject_if: proc { |attribs| attribs['start_date'].blank? }, allow_destroy: true
@@ -45,6 +46,14 @@ class ApplicationGroup
     ]
   end
 
+  def people_relationship_map
+    map = Hash.new
+    people.each do |person|      
+      map[person] = person_relationships.detect { |r| r.object_person == person.id }.relationship_kind
+    end
+    map
+  end
+  
   aasm do
     state :closed_enrollment, initial: true
     state :open_enrollment_period
