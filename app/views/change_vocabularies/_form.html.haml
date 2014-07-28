@@ -7,8 +7,10 @@
   %table.table.table-condensed
     %thead
       %tr
-        %th
-          &nbsp;
+        %th{title: "XML: Payload, Individual Market Enrollment Group"}
+          Included Members
+        %th{title: "XML: Operation, Affected Members"}
+          Affected Members
         %th
           Name
         %th
@@ -17,7 +19,10 @@
       = f.fields_for(:people) do |people_fields|
         %tr
           %td
-            = people_fields.check_box :selected
+            = people_fields.check_box :include_selected
+            = people_fields.hidden_field :m_id
+          %td
+            = people_fields.check_box :affect_selected
             = people_fields.hidden_field :m_id
           %td
             = people_fields.object.name

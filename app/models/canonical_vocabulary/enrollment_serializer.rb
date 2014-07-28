@@ -12,8 +12,9 @@ module CanonicalVocabulary
 
     attr_reader :policy
 
-    def initialize(the_policy, opts = {})
+    def initialize(the_policy, included_member_ids, opts = {})
       @policy = the_policy
+      @included_member_ids = included_member_ids
       @options = opts
       @term_before_date = @options.fetch(:term_boundry) { nil }
     end
@@ -57,8 +58,10 @@ module CanonicalVocabulary
 
     def serialize_subscriber(xml)
       subscriber = policy.enrollees.detect { |en| en.rel_code == "self" }
-      xml['ins'].subscriber do |xml|
-        serialize_person(subscriber, xml)
+      if @included_member_ids.include?(subscriber.m_id)
+        xml['ins'].subscriber do |xml|
+          serialize_person(subscriber, xml)
+        end
       end
     end
 
@@ -151,7 +154,7 @@ module CanonicalVocabulary
     end
 
     def serialize_member(member, xml)
-      if !member.canceled?
+      if @included_member_ids.include?(member.m_id)
         xml['ins'].member do |xml|
           serialize_person(member, xml)
         end
@@ -190,7 +193,7 @@ module CanonicalVocabulary
           xml['car'].exchange_carrier_id(carrier.hbx_carrier_id)
         end
         xml['ins'].carrier_id(carrier._id)
-      end 
+      end
     end
 
     def select_root_tag
