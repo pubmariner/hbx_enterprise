@@ -39,7 +39,7 @@ class Member
 
   embedded_in :person
 
-  before_create :generate_hbx_member_id 
+  before_create :generate_hbx_member_id
 
   # Strip non-numeric chars from ssn
   # SSN validation rules, see: http://www.ssa.gov/employer/randomizationfaqs.html#a0=12

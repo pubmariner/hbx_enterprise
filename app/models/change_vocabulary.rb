@@ -2,16 +2,15 @@ class ChangeVocabulary
   include ActiveModel::Conversion
   extend ActiveModel::Naming
 
-
-  ChangePerson  = Struct.new(:selected, :m_id, :name, :role) do
+  ChangePerson  = Struct.new(:affect_selected, :include_selected, :m_id, :name, :role) do
     def initialize(h)
-      super(*h.values_at(:selected, :m_id, :name, :role))
+      super(*h.values_at(:affect_selected, :include_selected, :m_id, :name, :role))
     end
 
     def persisted?
       false
     end
-  end  
+  end
 
   attr_accessor :policy_id
   attr_accessor :operation, :reason
@@ -34,18 +33,19 @@ class ChangeVocabulary
   def map_people_from_policy(enroll)
     policy.enrollees.map do |em|
       per = em.person
-      ChangePerson.new({:m_id => em.m_id, :name => per.name_full, :role => em.rel_code, :selected => true})
+      ChangePerson.new({m_id: em.m_id, name: per.name_full, role: em.rel_code, affect_selected: true, include_selected: true})
     end
   end
 
   def to_cv
-    members = @people.reject { |p| p.selected == "0" }
-    member_ids = members.map(&:m_id)
+    member_ids = @people.reject { |p| p.affect_selected == "0" || p.affect_selected.nil? }.map(&:m_id)
+    include_member_ids = @people.reject { |p| p.include_selected == "0" }.map(&:m_id)
     ser = CanonicalVocabulary::MaintenanceSerializer.new(
       @policy,
       @operation,
       @reason,
-      member_ids
+      member_ids,
+      include_member_ids
     )
     ser.serialize
   end

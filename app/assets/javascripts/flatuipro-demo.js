@@ -211,7 +211,7 @@ String.prototype.repeat = function(num) {
         "North Carolina","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina",
         "South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"]
       });
-    }    
+    }
 
     // make code pretty
     window.prettyPrint && prettyPrint();

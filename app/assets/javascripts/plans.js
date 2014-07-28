@@ -28,4 +28,3 @@ $(document).ready(function() {
     $(this).attr('class','btn btn-success');
   });
 });
-

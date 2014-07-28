@@ -20,7 +20,7 @@ style_select_picker = ->
 	$(document).find('select').selectpicker
     style: 'btn-info',
     menuStyle: 'dropdown-inverse'
-    
+
 @update_delete_buttons = ->
   nested_fields = $('.form-inputs')
   nested_fields.each ->
@@ -29,4 +29,4 @@ style_select_picker = ->
     if visible_fieldsets.length == 1
       delete_button.hide()
     else
-      delete_button.show() 
+      delete_button.show()
