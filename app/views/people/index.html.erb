@@ -4,10 +4,7 @@
   <%= render 'shared/breadcrumb', crumbs: ['People'] %>
 
   <div class="row">
-    <div class="col-md-8">
-      <%= link_to "New", new_person_path, class: "btn btn-primary" %>
-    </div>
-    <div class="col-md-4">
+    <div class="col-md-offset-8 col-md-4">
       <%= render 'shared/search', url: people_path, q: @q, placeholder: "Name, HBX ID, SSN" %>
     </div>
   </div>
