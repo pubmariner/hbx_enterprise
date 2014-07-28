@@ -16,7 +16,8 @@ describe PeopleController do
 
   describe 'POST create' do
     context 'with valid attributes' do
-      let(:attributes) { attributes_for :person }
+      let(:person) { build(:person) }
+      let(:attributes) { person.attributes }
       it 'saves the record' do
         expect {
           post :create, person: attributes
@@ -25,7 +26,7 @@ describe PeopleController do
 
       it 'redirects to person show' do
         post :create, person: attributes
-        expect(response).to redirect_to Person.last
+        expect(response).to redirect_to person.application_group
       end
 
     end
@@ -75,10 +76,6 @@ describe PeopleController do
 
     context 'with valid attributes' do
       before do
-        notifier = double('Protocols::Notifier')
-        stub_const('Protocols::Notifier', notifier)
-        notifier.should_receive(:update_notification)
-
         put :update, format: 'html', id: person.id, person: { name_first: 'Changed' }
       end
 
