@@ -26,7 +26,7 @@ class PeopleController < ApplicationController
   end
 
   def new
-    @person = Person.new
+    @person = Person.new(application_group_id: params[:application_group_id])
     build_nested_models
 
     @person.addresses.first.city = "Washington"
@@ -50,7 +50,8 @@ class PeopleController < ApplicationController
 
     respond_to do |format|
       if @person.save
-        format.html { redirect_to @person, notice: 'Person was successfully created.' }
+        AddPerson.new.execute(@person, @person.relationship)
+        format.html { redirect_to @person.application_group, notice: 'Person was successfully created.' }
         format.json { render json: @person, status: :created, location: @person }
       else
         format.html { render action: "new" }
@@ -93,7 +94,7 @@ class PeopleController < ApplicationController
 
     respond_to do |format|
       if @person.update_attributes(updates)
-        Protocols::Notifier.update_notification(@person, delta)
+        # Protocols::Notifier.update_notification(@person, delta)
         format.html { redirect_to @person, notice: 'Person was successfully updated.' }
         format.json { head :no_content }
       else

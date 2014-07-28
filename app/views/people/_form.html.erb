@@ -62,3 +62,9 @@
 			</div>
 		</div>
 	</div>
+	<legend>Relationship</legend>
+	<div class="row">
+		<div class="col-md-offset-1 col-md-9">
+			<%= f.input :relationship, as: :select, collection: PersonRelationship::ALL_RELATIONSHIPS_LIST, include_blank: "Type" %>
+		</div>
+	</div>

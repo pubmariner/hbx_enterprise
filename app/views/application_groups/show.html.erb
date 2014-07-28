@@ -1,10 +1,11 @@
 <%- model_class = ApplicationGroup -%>
 <%t '.title', :default => model_class.model_name.human.pluralize.titleize %>
 <div class="page-header">
-  <%- pid = @application_group.person_relationships.first.subject_person -%>
+  <%- #pid = @application_group.person_relationships.first.subject_person -%>
   <%= render 'shared/breadcrumb', crumbs: [
       link_to('Application Groups', application_groups_path),
-      Person.find(pid).name_full
+      @application_group.id
+      # Person.find(pid).name_full
     ] 
   %>
 </div>
@@ -32,6 +33,7 @@
   </dl>
 
   <div class='panel-body'>
+    <%= link_to('Add Person', new_person_path(application_group_id: @application_group.id)) %>
     <table class="table table-condensed">
       <thead>
         <tr>
@@ -39,12 +41,11 @@
           <th>Relationship</th>
         </tr>
       </thead>
-      <% @application_group.person_relationships.each do |relationship| %>
+      <% @application_group.people_relationship_map.each do |person, relationship| %>
         <tbody>
           <tr>
-            <%- pid = relationship.object_person -%>
-            <td><%= link_to Person.find(pid).name_full, person_path(pid)  %></td>
-            <td><%= relationship.relationship_kind %></td>
+            <td><%= link_to person.name_full, person_path(person.id)  %></td>
+            <td><%= relationship %></td>
           </tr>
         </tbody>
       <% end %>
@@ -56,4 +57,5 @@
      <%= link_to t('.back', :default => t("helpers.links.back")), application_groups_path, :class => 'btn btn-primary'  %>
     </div>
   </div>
+
 </div>

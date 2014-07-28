@@ -6,6 +6,8 @@ class Person
 
   extend Mongorder
 
+  attr_accessor :relationship
+
   field :name_pfx, type: String, default: ""
   field :name_first, type: String
   field :name_middle, type: String, default: ""

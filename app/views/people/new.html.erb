@@ -8,7 +8,7 @@
 </div>
 
 <%= simple_form_for(@person, :html => {:class => 'form-horizontal' }) do |f| %>
-
+  <%= f.hidden_field :application_group_id %>
 	<%= render 'form', f: f %>
 
   <div class="well well-sm well-default">
