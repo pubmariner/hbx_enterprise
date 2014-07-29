@@ -3,6 +3,8 @@ ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
 require 'rspec/autorun'
+require 'capybara/rspec'
+require 'capybara/webkit/matchers'
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
@@ -60,4 +62,5 @@ RSpec.configure do |config|
   config.include FactoryGirl::Syntax::Methods
   config.include Features, type: :feature
   config.include Requests, type: :request
+  config.include(Capybara::Webkit::RspecMatchers, :type => :feature)
 end
