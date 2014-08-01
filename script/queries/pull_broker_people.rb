@@ -2,10 +2,13 @@ require 'csv'
 
 people = []
 
-CSV.open('brokers_with_glue_data_20140714.csv', 'w') do |csv|
-  csv << [
-    "NATIONALPRODUCERNUMBER","PROVIDERNAME","CLIENT_NAME","SSN","DOB","USER_ACCOUNT","PROVIDERSTATUS","STARTDATE","ENDDATE","CARRIERINGLUE","BROKERINGLUE", "SHOP"
-  ]
+CSV.open('brokers_with_glue_data_20140731.csv', 'w') do |csv|
+  csv << ["PROVIDERTYPE",  "PROVIDERPRACTICEBUSINESSAREA" , "PROVIDERREFERENCENUMBER", "NATIONALPRODUCERNUMBER", "PROVIDERNAME", "CLIENT_NAME", "SSN", "DOB", "USER_ACCOUNT", "PROVIDERSTATUS", "STARTDATE", "ENDDATE",
+          "CARRIERINGLUE", "BROKERINGLUE", "SHOP"]
+
+#  csv << [
+#    "NATIONALPRODUCERNUMBER","PROVIDERNAME","CLIENT_NAME","SSN","DOB","USER_ACCOUNT","PROVIDERSTATUS","STARTDATE","ENDDATE","CARRIERINGLUE","BROKERINGLUE", "SHOP"
+#  ]
   CSV.foreach("script/queries/brokers_from_curam.csv", :headers => true)do |inrow|
     row_a = inrow.fields
     row_h = inrow.to_hash
