@@ -24,8 +24,10 @@ group :development, :assets do
   gem 'uglifier', '>= 1.0.3'
 
   gem 'therubyracer', :platforms => :ruby
-  gem 'less-rails-bootstrap'
-  gem 'designmodo-flatuipro-rails', '~> 1.2.5.0.branch'
+  gem 'less-rails-bootstrap', :group => :test
+  gem 'designmodo-flatuipro-rails', '~> 1.2.5.0.branch', :group => :test
+
+
   gem 'font-awesome-rails'
 
 end
