@@ -1,5 +1,79 @@
-<h1>New policy</h1>
+<div class="page-header">
+  <%= render 'shared/breadcrumb', crumbs: [
+      link_to('Application Group', application_group_path(@form.application_group.id)),
+      'New Policy'
+    ]
+  %>
+</div>
 
-<%= render 'form' %>
+<%= form_for(@form) do |f| %>
+  <div class="form-group">
+    <div class="row">
+      <div class="col-md-2 text-center">
+        <%= label_tag "Select Carrier" %>
+      </div>
+      <div class="col-md-3">
+        <%= select_tag "Carriers", options_from_collection_for_select(@form.carriers, "id", "name"), prompt: "Nothing Selected" %>
+      </div>
+    </div>
 
-<%= link_to 'Back', policies_path %>
+    <div class="row">
+      <div class="col-md-2 text-center">
+        <%= label_tag "Select Plan"%>
+      </div>
+      <div class="col-md-3">
+        <%= select_tag "Plans" %>
+      </div>
+    </div>
+
+
+    <div class="row">
+      <div class="col-md-2 text-center">
+        <%= label_tag "Coverage Start"%>
+      </div>
+      <div class="input-group col-md-2">
+        <span class="input-group-btn">
+          <button class="btn" type="button"><span class="fui-calendar"></span></button>
+        </span>
+          
+        <%= f.text_field :coverage_start, class: "form-control date_picker",
+          placeholder: "mm/dd/yyyy"
+        %>
+      </div>
+    </div>
+    
+    <table class="table table-condensed">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Include?</th>
+          <th>Relationship</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <%= f.fields_for(:people) do |people_fields| %>
+          <tr>
+            <td><%= people_fields.object.name %></td>
+            <td>
+              <%= people_fields.check_box :include_selected %>
+            </td>
+            <td>
+              <%= select_tag "Carriers", options_from_collection_for_select(@form.carriers, "id", "name"), prompt: "Nothing Selected" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+
+
+    <div class="form_actions">
+      <%= f.submit nil, :class => 'btn btn-primary' %>
+    </div>
+  </div>
+<% end %>
+
+<%#= render 'form' %>
+
+<%#= link_to 'Back', policies_path %>

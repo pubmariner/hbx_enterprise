@@ -9,6 +9,8 @@ Gluedb::Application.routes.draw do
   get "tools/premium_calc"
   get "flatuipro_demo/index"
 
+  post "policy_forms", :to => 'policies#create'
+
   namespace :admin do
     namespace :settings do
       resources :hbx_policies
@@ -48,7 +50,7 @@ Gluedb::Application.routes.draw do
   end
 
   resources :users
-  resources :policies
+  resources :policies, only: [:new, :show, :create, :edit, :update]
 
   resources :individuals
   resources :people do
@@ -89,15 +91,15 @@ Gluedb::Application.routes.draw do
     end
   end
 
-  resources :policies, only: [:show]
-
-  namespace :api, :defaults => { :format => 'xml' }do
+  namespace :api, :defaults => { :format => 'xml' } do
     namespace :v1 do
       resources :people, :only => [:show, :index]
       resources :employers, :only => [:show, :index]
       resources :policies, :only => [:show, :index]
     end
   end
+
+  resources :special_enrollment_periods, only: [:new, :create]
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

@@ -7,6 +7,8 @@ class Policy
 
   extend Mongorder
 
+  attr_accessor :coverage_start
+
   auto_increment :_id
 
   field :eg_id, as: :enrollment_group_id, type: String
@@ -45,6 +47,7 @@ class Policy
   belongs_to :plan, counter_cache: true, index: true
   belongs_to :employer, counter_cache: true, index: true
   belongs_to :responsible_party
+  belongs_to :household
 
   has_many :transaction_set_enrollments,
               class_name: "Protocols::X12::TransactionSetEnrollment",

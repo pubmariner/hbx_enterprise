@@ -1,6 +1,44 @@
-<h1>Editing policy</h1>
+<h1>Policy</h1>
 
-<%= render 'form' %>
+<%= form_for(@policy) do |f| %>
+  <table class="table table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Enroll?</th>
+        <th>Role</th>
+        <th>Coverage start</th>
+      </tr>
+    </thead>
+    <tbody>
+        <%= f.fields_for(:enrollees) do |ef| %>
+          <tr>
+            <td><%= ef.object.person.full_name %></td>
 
-<%= link_to 'Show', @policy %> |
-<%= link_to 'Back', policies_path %>
+            <td>
+              <%= ef.check_box :include_checked %>
+            </td>
+
+            <td>
+              <%= ef.select :relationship_status_code, options_for_select(Enrollee::RELATIONSHIP_STATUS_CODE_LIST), prompt: "Nothing Selected" %>
+            </td>
+            
+            <td>
+              <div class="input-group col-md-3">
+                <span class="input-group-btn">
+                  <button class="btn" type="button"><span class="fui-calendar"></span></button>
+                </span>
+                  
+                <%= ef.text_field :coverage_start, class: "form-control date_picker",
+                  placeholder: "mm/dd/yyyy"
+                %>
+              </div> 
+            </td>
+            
+          </tr>
+        <% end %>
+      <%# end %>
+    </tbody>
+  </table>
+  <%= f.submit nil, :class => 'btn btn-primary'%>
+<% end %>

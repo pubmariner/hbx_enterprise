@@ -10,7 +10,43 @@
   %>
 </div>
 
-<div class='col-md-12'>
+<div class='col-md-12'> 
+  <h6>People</h6>
+
+  <div class='panel-body'>
+    <%= link_to('New Person', new_person_path(application_group_id: @application_group.id)) %>
+    <ul class="list-unstyled">
+
+      <% @application_group.people.each do |person| %>
+        <li><%= link_to prepend_glyph_to_name(name_to_listing(person)), person_path(person) %></li>
+        <li><%= link_to('Household', application_group_household_path(@application_group.id, person.household.id)) %></li>
+      <% end %>
+    </ul>
+    
+  </div>
+
+  <h6>Events</h6>
+  <%= link_to('New Life Event', new_special_enrollment_period_path(application_group_id: @application_group.id)) %>
+
+  <table class="table table-condensed">
+    <thead>
+      <tr>
+        <th>Reason</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+      </tr>
+    </thead>
+    <% @application_group.special_enrollment_periods.each do |sep| %>
+      <tbody>
+        <tr>
+          <td><%= sep.reason %></td>
+          <td><%= sep.start_date %></td>
+          <td><%= sep.end_date %></td>
+        </tr>
+      </tbody>
+    <% end %>
+  </table>
+
   <dl class="dl-horizontal">
     <dt><%= model_class.human_attribute_name(:aasm_state) %></dt>
     <dd><%= @application_group.aasm_state.humanize %></dd>
@@ -22,40 +58,11 @@
     <% @application_group.households.each do |household| %>
       <dd>household</dd>
     <% end %>
-
-    <dt><%= "Sep(s)" %></dt>
-    <% if @application_group.special_enrollment_periods.count == 0 %>
-      <dd></dd>
-    <% end %>
-    <% @application_group.special_enrollment_periods.each do |sep| %>
-      <dd>sep</dd>
-    <% end %>
   </dl>
-
-  <div class='panel-body'>
-    <%= link_to('Add Person', new_person_path(application_group_id: @application_group.id)) %>
-    <table class="table table-condensed">
-      <thead>
-        <tr>
-          <th>Person</th>
-          <th>Relationship</th>
-        </tr>
-      </thead>
-      <% @application_group.people_relationship_map.each do |person, relationship| %>
-        <tbody>
-          <tr>
-            <td><%= link_to person.name_full, person_path(person.id)  %></td>
-            <td><%= relationship %></td>
-          </tr>
-        </tbody>
-      <% end %>
-    </table>
-  </div>
 
   <div class="well well-sm default">
     <div class="form-actions">
      <%= link_to t('.back', :default => t("helpers.links.back")), application_groups_path, :class => 'btn btn-primary'  %>
     </div>
   </div>
-
 </div>
