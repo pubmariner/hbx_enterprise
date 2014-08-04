@@ -1,0 +1,46 @@
+%ul.breadcrumb
+  Cancel or Terminate
+= form_for @cancel_terminate, :html => { :class => 'form-horizontal', :role => "form" } do |f|
+  .panel.panel-default
+    .panel-body
+      .control-group
+        = f.radio_button :operation, "cancel", checked: true
+        = f.label "cancel"
+        = f.radio_button :operation, "terminate"
+        = f.label "terminate"
+      .row
+        .col-md-12
+          = f.label :benefit_end_date
+        .col-md-12
+          = f.text_field :benefit_end_date, {class: 'date_picker'}
+      %table.table.table-condensed
+        %thead
+          %tr
+            %th{title: "XML: Payload, Individual Market Enrollment Group"}
+              Included Members
+            %th{title: "XML: Operation, Affected Members"}
+              Affected Members
+            %th
+              Name
+            %th
+              Role
+        %tbody
+          = f.fields_for(:people) do |people_fields|
+            %tr
+              %td
+                = people_fields.check_box :include_selected
+                = people_fields.hidden_field :m_id
+              %td
+                = people_fields.check_box :affect_selected
+                = people_fields.hidden_field :m_id
+              %td
+                = people_fields.object.name
+                = people_fields.hidden_field :name
+              %td
+                = people_fields.object.role
+                = people_fields.hidden_field :role
+
+      = f.hidden_field :policy_id
+
+      .form_actions
+        = f.submit 'Cancel / Terminate', :class => 'btn btn-inverse'

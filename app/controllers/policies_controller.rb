@@ -31,4 +31,9 @@ class PoliciesController < ApplicationController
   def update
     raise params.inspect
   end
+
+  def cancelterminate
+    @cancel_terminate = CancelTerminate.new(params[:cancel_terminate])
+  end
+
 end

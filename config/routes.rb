@@ -50,7 +50,14 @@ Gluedb::Application.routes.draw do
   end
 
   resources :users
-  resources :policies, only: [:new, :show, :create, :edit, :update]
+
+  resources :policies, only: [:new, :show, :create, :edit, :update] do
+    member do
+      get :cancelterminate
+    end
+  end
+
+  match '/policies/:id/cancelterminate', :to => 'policies#cancelterminate', as: :cancel_terminates
 
   resources :individuals
   resources :people do
