@@ -8,6 +8,8 @@ class Enrollee
 
   include MergingModel
 
+  attr_accessor :include_checked
+
   field :m_id, as: :hbx_member_id, type: String
 
   field :ds, as: :disabled_status, type: Boolean, default: false

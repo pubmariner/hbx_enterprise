@@ -1,0 +1,53 @@
+<div class="page-header">
+  <%= render 'shared/breadcrumb', crumbs: [
+      link_to('Application Group', application_group_path(@application_group.id)),
+      'New Policy'
+    ]
+  %>
+</div>
+<%= form_for @sep do |f| %>
+  <%= hidden_field_tag 'application_group_id', @application_group.id %>
+  <%#= f.hidden_field :application_group %>
+  <div class="row">
+    <div class="col-md-2 text-center">
+      <%= label_tag "Start Date"%>
+    </div>
+    <div class="input-group col-md-2">
+      <span class="input-group-btn">
+        <button class="btn" type="button"><span class="fui-calendar"></span></button>
+      </span>
+        
+      <%= f.text_field :start_date, class: "form-control date_picker",
+        placeholder: "mm/dd/yyyy"
+      %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-2 text-center">
+      <%= label_tag "End Date"%>
+    </div>
+    <div class="input-group col-md-2">
+      <span class="input-group-btn">
+        <button class="btn" type="button"><span class="fui-calendar"></span></button>
+      </span>
+        
+      <%= f.text_field :end_date, class: "form-control date_picker",
+        placeholder: "mm/dd/yyyy"
+      %>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-2 text-center">
+      <%= label_tag "Reason"%>
+    </div>
+    <div class="input-group col-md-2">
+      <%#= select_tag "reason", options_for_select([ "None Selected", "birth" ], "None Selected") %>
+      <%#= select_tag "reason", options_from_collection_for_select(@form.carriers, "id", "name"), prompt: "Nothing Selected" %>
+      <%= collection_select(:special_enrollment_period, :reason, SpecialEnrollmentPeriod::REASONS, :to_s, :to_s, prompt: 'Nothing Selected') %>
+    </div>
+  </div>
+  <div class="form_actions">
+    <%= f.submit 'Submit', :class => 'btn btn-primary' %>
+  </div>
+<% end %>
