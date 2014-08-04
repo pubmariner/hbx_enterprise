@@ -19,9 +19,12 @@ class PolicyForm
   attr_accessor :carriers
   attr_accessor :coverage_start
   attr_accessor :people
+  attr_accessor :carrier_id
+  attr_accessor :plan_id
 
   def initialize(params = {})
-    @application_group = ApplicationGroup.find(params[:application_group_id])
+    @application_group_id = params[:application_group_id]
+    @application_group = ApplicationGroup.find(@application_group_id)
     @carriers = Carrier.all
 
       
@@ -43,11 +46,28 @@ class PolicyForm
   def people_attributes=(pas)
   end
 
-
   private
 
   def persist!
-    # @policy = Policy.create!
-    # @user = @company.users.create!(name: name, email: email)
+    # TODO 
+    #create Enrollees
+      #calcuate premium
+    #create policy
+    @policy = Policy.new(
+      :plan_id => @plan_id,
+      :enrollment_group_id => eg_id,
+      :carrier_id => @carrier_id,
+      # :tot_res_amt => reporting_categories.tot_res_amt,
+      # :pre_amt_tot => reporting_categories.pre_amt_tot,
+      # :applied_aptc => reporting_categories.applied_aptc,
+      # :tot_emp_res_amt => reporting_categories.tot_emp_res_amt,
+      # :carrier_to_bill => reporting_categories.carrier_to_bill?,
+      # :employer_id => employer_id,
+      # :broker_id => broker_id,
+      # :responsible_party_id => rp_id,
+      # :enrollees => []
+    )
+
+    @policy.enrollees
   end
 end

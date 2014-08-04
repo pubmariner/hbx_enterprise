@@ -1,6 +1,5 @@
 class PoliciesController < ApplicationController
   def new
-    raise params.inspect
     @form = PolicyForm.new(application_group_id: params[:application_group_id])
   end
 
@@ -12,7 +11,9 @@ class PoliciesController < ApplicationController
   end
 
   def create
-    raise params.inspect
+    @form = PolicyForm.new(params[:policy_form])
+
+    # @form.save
     redirect_to application_groups_path
   end
 

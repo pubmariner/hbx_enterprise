@@ -7,13 +7,14 @@
 </div>
 
 <%= form_for(@form) do |f| %>
+  <%= f.hidden_field :application_group_id %>
   <div class="form-group">
     <div class="row">
       <div class="col-md-2 text-center">
         <%= label_tag "Select Carrier" %>
       </div>
       <div class="col-md-3">
-        <%= select_tag "Carriers", options_from_collection_for_select(@form.carriers, "id", "name"), prompt: "Nothing Selected" %>
+        <%= f.select :carrier_id, options_from_collection_for_select(@form.carriers, "id", "name"), {:prompt => 'Nothing Selected'}, {:id => 'Carriers'} %>
       </div>
     </div>
 
@@ -22,7 +23,7 @@
         <%= label_tag "Select Plan"%>
       </div>
       <div class="col-md-3">
-        <%= select_tag "Plans" %>
+        <%= f.select :plan_id, [], {:prompt => 'Nothing Selected'}, {:id => 'Plans'} %>
       </div>
     </div>
 
@@ -52,14 +53,14 @@
       </thead>
       <tbody>
 
-        <%= f.fields_for(:people) do |people_fields| %>
+        <%= f.fields_for(:people) do |pf| %>
           <tr>
-            <td><%= people_fields.object.name %></td>
+            <td><%= pf.object.name %></td>
             <td>
-              <%= people_fields.check_box :include_selected %>
+              <%= pf.check_box :include_selected %>
             </td>
             <td>
-              <%= select_tag "Carriers", options_from_collection_for_select(@form.carriers, "id", "name"), prompt: "Nothing Selected" %>
+              <%= pf.select :include_selected, options_for_select(Enrollee::RELATIONSHIP_STATUS_CODE_LIST), prompt: "Nothing Selected", prompt: "Nothing Selected" %>
             </td>
           </tr>
         <% end %>
