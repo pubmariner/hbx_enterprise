@@ -21,6 +21,23 @@ class VocabularyRequest
 
   def save
     return(false) unless self.valid?
+    submit_request(self.submitted_by, self.enrollment_group_list)
+  end
+
+  def submit_request(email, data)
+    return if Rails.env.test?
+    conn = Bunny.new
+    conn.start
+    ch = conn.create_channel
+    x = ch.default_exchange
+    x.publish(
+      data,
+      :routing_key => "hbx.vocabulary_request_batch",
+      :headers => {
+        :submitted_by => email
+      }
+    )
+    conn.close
   end
 
   def persisted?
