@@ -30,6 +30,8 @@ Gluedb::Application.routes.draw do
     end
   end
 
+  resources(:vocabulary_requests, :only => [:new, :create])
+
   resources :edi_transaction_set_payments
   resources :edi_transaction_sets
   resources :edi_transmissions

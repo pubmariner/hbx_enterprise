@@ -9,6 +9,7 @@ desc "Run tests as default task"
 task :default do 
   Bundler.require(:test)
   load 'rspec/rails/tasks/rspec.rake'
+  Rake::Task["spec"].invoke
 end
 
 
