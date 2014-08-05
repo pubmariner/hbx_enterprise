@@ -7,7 +7,7 @@ module Parsers::Xml::Enrollment
     end
 
     def hios_plan_id
-      @plan.at_xpath('./pln:plan/pln:hios_plan_id').text
+      @plan.at_xpath('./pln:plan/pln:hios_plan_id', @namespaces).text
     end
 
     def premium_amount_total
@@ -20,7 +20,7 @@ module Parsers::Xml::Enrollment
     end
 
     def employer
-      fein = @enrollment_group.xpath('./emp:employer/emp:fein').text
+      fein = @enrollment_group.xpath('./emp:employer/emp:fein', @namespaces).text
       Employer.find_for_fein(fein)
     end
 
