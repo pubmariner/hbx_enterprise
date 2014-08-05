@@ -8,6 +8,7 @@ class Phone
   field :phone_type, type: String
   field :phone_number, type: String
   field :extension, type: String
+  fielt :primary, type: Boolean
 
   validates_presence_of  :phone_number
   validates_presence_of  :phone_type, message: "Choose a type"
