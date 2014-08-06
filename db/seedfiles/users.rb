@@ -7,7 +7,6 @@ def add_a_user(login, e_pass)
   new_user.approved = true
   new_user.save!(validate: false)
 end
-
   add_a_user(
     "akash.dedhia@dc.gov",
     "$2a$10$1YmfnyGhxjBlLzfgG3NZBOCwDzaJjHa.8bWtbbvx6XaxINSxirwl."
@@ -62,7 +61,7 @@ end
   )
   add_a_user(
     "holly.whelan@dc.gov",
-    "$2a$10$UNcjMQazZstmx89kBubqgeG81J827UBk7UMs7ENSVAycqG4JW/5tS"
+    "$2a$10$3WufX8gzubbTejGoLhtSJO1IFktJzcZsrsYBRluuFc/VaZNApU6DW"
   )
   add_a_user(
     "isabella.leung@dc.gov",
@@ -73,8 +72,12 @@ end
     "$2a$10$.2pX3894vQ7hE3pw/tugTO/BTobp5P7VvYW29aa7HnTa/HAwkyH1."
   )
   add_a_user(
+    "jarard.farrar@dc.gov",
+    "$2a$10$1aRh0ovmPQzbbix6vBtq0eNB2Oi9yrjfqrHaTc2E/.9.6ZrBsIzm."
+  )
+  add_a_user(
     "jeffrey.bertrando@dc.gov",
-    "$2a$10$HA1ep3gpLFnEE3qoT5T3lOkXuqKbu4/Y3WgDf5KhJ7ooeUDNeIsaO"
+    "$2a$10$Bl0c1mQzIqEtthjX1ekMZeBOvE.dcvWIt4l1D9xa/KSiwd4MoRuPC"
   )
   add_a_user(
     "john.kisor@dc.gov",
@@ -86,7 +89,7 @@ end
   )
   add_a_user(
     "kevin.wei@dc.gov",
-    "$2a$10$Ev19wqU8WXasBIkhh9SBMORH/yO2C3oL8jrBVcj9UYtoYY5bmu3Qi"
+    "$2a$10$Ovke/c8mlm1AvpAh5UI/ruCGIFxAWYBA.401tDldMzymTmVaUHYba"
   )
   add_a_user(
     "khalid.mushtaq@dc.gov",
@@ -95,6 +98,18 @@ end
   add_a_user(
     "micah.kidd@dc.gov",
     "$2a$10$CGPndVtDB9HlEuog3o9m3uhOTHpAR0eRf2Hq84xwIIhqqDYoG0IRS"
+  )
+  add_a_user(
+    "pamela.yeung@dc.gov",
+    "$2a$10$Qmwh7soMvjZmvtk2sS3Y..sVt7cbZBwnadptfr59Yc1xFKhs1/9l2"
+  )
+  add_a_user(
+    "renata.hart.@dc.gov",
+    "$2a$10$gDNdEVQ7cu14kKoobOUe7ucweSTWZ2LR5/g5hxW3Mps1D7GKMqTHy"
+  )
+  add_a_user(
+    "renata.hart@dc.gov",
+    "$2a$10$5QK9s8Urliel30/9cwse3ear1xRM8tKyyQMvH6X6wHGU4KOX1xuIq"
   )
   add_a_user(
     "reza.beheshti@dc.gov",
@@ -131,10 +146,6 @@ end
   add_a_user(
     "velvia.worrell@dc.gov",
     "$2a$10$SXJBADmcnzSRLPTrcHLhqeD7yCaMWedunykQ8lodxPo4exKJfzTme"
-  )
-  add_a_user(
-    "zachary.wynegar@dc.gov",
-    "$2a$10$3lC2qnzhwxxrYPFrAd6NM.AWwTDYihEMoHfxN42zufq29f8TYewGC"
   )
   add_a_user(
     "zoheb.nensey@dc.gov",
