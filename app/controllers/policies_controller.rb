@@ -11,9 +11,10 @@ class PoliciesController < ApplicationController
   end
 
   def create
-    @form = PolicyForm.new(params[:policy_form])
+    request = CreatePolicyRequestFactory.from_form(params[:policy_form])
+    raise request.inspect
 
-    # @form.save
+    CreatePolicy.new.execute(request)
     redirect_to application_groups_path
   end
 

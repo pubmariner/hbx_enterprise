@@ -4,9 +4,9 @@ class PolicyForm
   #include ActiveModel::Validations
 
 
-  SubmittedPerson = Struct.new(:include_selected, :name) do
+  SubmittedPerson = Struct.new(:include_selected, :name, :hbx_member_id, :relationship, :birth_date) do
     def initialize(h)
-      super(*h.values_at(:include_selected, :name))
+      super(*h.values_at(:include_selected, :name, :hbx_member_id, :relationship, :birth_date))
     end
 
     def persisted?
@@ -21,6 +21,8 @@ class PolicyForm
   attr_accessor :people
   attr_accessor :carrier_id
   attr_accessor :plan_id
+  attr_accessor :credit
+  attr_accessor :carrier_to_bill
 
   def initialize(params = {})
     @application_group_id = params[:application_group_id]
@@ -28,7 +30,15 @@ class PolicyForm
     @carriers = Carrier.all
 
       
-    @people = @application_group.people.map { |p| SubmittedPerson.new({name: p.name_full, include_selected: true}) }
+    @people = @application_group.people.map do |p| 
+      SubmittedPerson.new(
+        name: p.name_full, 
+        include_selected: true, 
+        hbx_member_id: p.authority_member_id, 
+        relationship: '',
+        birth_date: p.authority_member.dob
+        )
+    end
   end
   def persisted?
     false
@@ -49,25 +59,5 @@ class PolicyForm
   private
 
   def persist!
-    # TODO 
-    #create Enrollees
-      #calcuate premium
-    #create policy
-    @policy = Policy.new(
-      :plan_id => @plan_id,
-      :enrollment_group_id => eg_id,
-      :carrier_id => @carrier_id,
-      # :tot_res_amt => reporting_categories.tot_res_amt,
-      # :pre_amt_tot => reporting_categories.pre_amt_tot,
-      # :applied_aptc => reporting_categories.applied_aptc,
-      # :tot_emp_res_amt => reporting_categories.tot_emp_res_amt,
-      # :carrier_to_bill => reporting_categories.carrier_to_bill?,
-      # :employer_id => employer_id,
-      # :broker_id => broker_id,
-      # :responsible_party_id => rp_id,
-      # :enrollees => []
-    )
-
-    @policy.enrollees
   end
 end

@@ -42,6 +42,25 @@
         %>
       </div>
     </div>
+
+    <div class="row">
+      <div class="col-md-2 text-center">
+        <%= label_tag "Credit(APTC/Employer Contribution)"%>
+      </div>
+      <div class="input-group col-md-2">
+        <%= f.text_field :credit, :class => 'form-control input-md', placeholder: '$0.00'%>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-2 text-center">
+        <%= label_tag "Carrier To Bill?"%>
+      </div>
+      <div class="input-group col-md-2">
+        <%= f.check_box :carrier_to_bill %>
+      </div>
+    </div>
+
     
     <table class="table table-condensed">
       <thead>
@@ -54,13 +73,15 @@
       <tbody>
 
         <%= f.fields_for(:people) do |pf| %>
+          <%= pf.hidden_field(:hbx_member_id) %>
+          <%= pf.hidden_field(:birth_date) %>
           <tr>
             <td><%= pf.object.name %></td>
             <td>
               <%= pf.check_box :include_selected %>
             </td>
             <td>
-              <%= pf.select :include_selected, options_for_select(Enrollee::RELATIONSHIP_STATUS_CODE_LIST), prompt: "Nothing Selected", prompt: "Nothing Selected" %>
+              <%= pf.select :relationship, options_for_select(Enrollee::RELATIONSHIP_STATUS_CODE_LIST), prompt: "Nothing Selected", prompt: "Nothing Selected" %>
             </td>
           </tr>
         <% end %>
