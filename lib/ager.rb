@@ -5,15 +5,15 @@ class Ager
 
   def age_as_of(date)
     age = date.year - @birth_date.year
-    age -= 1 if before_birthday_this_year?(date)
+    if before_birthday_this_year?(date)
+      age -= 1 
+    end
     age
   end
 
   private
 
   def before_birthday_this_year?(date)
-    date.month < @birth_date.month ||
-    (date.month <= @birth_date.month &&
-    date.day < @birth_date.day)
+    date.yday < @birth_date.yday
   end
 end
