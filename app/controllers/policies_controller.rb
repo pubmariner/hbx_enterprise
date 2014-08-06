@@ -37,4 +37,16 @@ class PoliciesController < ApplicationController
     @cancel_terminate = CancelTerminate.new(params[:cancel_terminate])
   end
 
+  def transmit
+    @cancel_terminate = CancelTerminate.new(params[:cancel_terminate])
+
+    if params[:cancel_terminate][:transmit] == "1"
+
+    else
+      generated_filename = "#{@cancel_terminate.policy_id}.xml"
+      send_data(@cancel_terminate.to_cv, :type => "application/xml", :disposition => "attachment", :filename => generated_filename)
+    end
+
+  end
+
 end

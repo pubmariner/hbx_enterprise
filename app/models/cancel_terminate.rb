@@ -38,9 +38,35 @@ class CancelTerminate
     end
   end
 
-  def to_cv
+  def subcriber_terminate
+    if @people.any?{ |p| p.affect_selected == "1" && p.role == "self"}
+      @people.each { |p| p.affect_selected = "1" }
+    end
+  end
+
+  def add_beneifit_end
+    @policy.enrollees.each do |e|
+      if included?(e.m_id)
+        e.coverage_end = @benefit_end_date.to_date
+        e.coverage_status = "inactive"
+      end
+    end
+  end
+
+  def included?(id)
+    @people.any?{|p| p.affect_selected == "1" && p.m_id == id }
+  end
+
+  def affected_included_ids
     member_ids = @people.reject { |p| p.affect_selected == "0" || p.affect_selected.nil? }.map(&:m_id)
     include_member_ids = @people.reject { |p| p.include_selected == "0" }.map(&:m_id)
+  end
+
+  def to_cv
+    subcriber_terminate
+    affected_included_ids
+    add_beneifit_end
+
     ser = CanonicalVocabulary::MaintenanceSerializer.new(
       @policy,
       @operation,
@@ -55,13 +81,5 @@ class CancelTerminate
   end
 
   def persisted?; false; end
-
-  def self.operations
-    [
-      ["Operation Type", nil],
-      ["cancel", "cancel"],
-      ["terminate", "terminate"]
-    ]
-  end
 
 end
