@@ -8,7 +8,6 @@ def add_a_user(login, e_pass)
   new_user.save!(validate: false)
 end
 
-
   add_a_user(
     "akash.dedhia@dc.gov",
     "$2a$10$1YmfnyGhxjBlLzfgG3NZBOCwDzaJjHa.8bWtbbvx6XaxINSxirwl."
@@ -63,7 +62,7 @@ end
   )
   add_a_user(
     "holly.whelan@dc.gov",
-    "$2a$10$UNcjMQazZstmx89kBubqgeG81J827UBk7UMs7ENSVAycqG4JW/5tS"
+    "$2a$10$3WufX8gzubbTejGoLhtSJO1IFktJzcZsrsYBRluuFc/VaZNApU6DW"
   )
   add_a_user(
     "isabella.leung@dc.gov",
@@ -106,8 +105,8 @@ end
     "$2a$10$Qmwh7soMvjZmvtk2sS3Y..sVt7cbZBwnadptfr59Yc1xFKhs1/9l2"
   )
   add_a_user(
-    "renata.hart.@dc.gov",
-    "$2a$10$gDNdEVQ7cu14kKoobOUe7ucweSTWZ2LR5/g5hxW3Mps1D7GKMqTHy"
+    "renata.hart@dc.gov",
+    "$2a$10$5QK9s8Urliel30/9cwse3ear1xRM8tKyyQMvH6X6wHGU4KOX1xuIq"
   )
   add_a_user(
     "reza.beheshti@dc.gov",

@@ -1,6 +1,6 @@
 %ul.breadcrumb
   Cancel or Terminate
-= form_for @cancel_terminate, :html => { :class => 'form-horizontal', :role => "form" } do |f|
+= form_for @cancel_terminate, :html => { :class => 'form-horizontal', :role => "form" }, url: transmit_policies_path(@cancel_terminate) do |f|
   .panel.panel-default
     .panel-body
       .control-group
@@ -42,5 +42,10 @@
 
       = f.hidden_field :policy_id
 
-      .form_actions
-        = f.submit 'Cancel / Terminate', :class => 'btn btn-inverse'
+      .row
+        .col-md-2
+          .form_actions
+            = f.submit 'Cancel / Terminate', :class => 'btn btn-inverse'
+        .col-md-2
+          = f.label "Transmit?"
+          = f.check_box :transmit, checked: true
