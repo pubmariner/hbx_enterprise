@@ -1,7 +1,7 @@
 class ApplicationGroup
   include Mongoid::Document
   include Mongoid::Timestamps
-  include Mongoid::Versioning
+  #include Mongoid::Versioning
   include Mongoid::Paranoia
   include AASM
 
@@ -14,7 +14,7 @@ class ApplicationGroup
   index({"person_relationships.subject_person" => 1})
   index({"person_relationships.object_person" => 1})
 
-	has_many :households
+	has_many :households, autosave: true
   has_many :people
 
   embeds_many :special_enrollment_periods, cascade_callbacks: true

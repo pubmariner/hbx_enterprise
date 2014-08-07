@@ -1,7 +1,7 @@
 class Household
   include Mongoid::Document
   include Mongoid::Timestamps
-  include Mongoid::Versioning
+  #include Mongoid::Versioning
   include Mongoid::Paranoia
 
 
@@ -12,10 +12,9 @@ class Household
 
 #  validates :rel, presence: true, inclusion: {in: %w( subscriber responsible_party spouse life_partner child ward )}
 
-  belongs_to :application_group, counter_cache: true
-  has_many :people
-  has_many :policies
-
+  belongs_to :application_group
+  has_many :policies, autosave: true
+  has_many :people, autosave: true
   # embeds_many :person_relationships
   # accepts_nested_attributes_for :person_relationships, reject_if: proc { |attribs| attribs['subject_person', 'relationship_kind', 'object_person'].blank? }, allow_destroy: true
 
@@ -55,5 +54,4 @@ class Household
       end
     end
   end
-
 end

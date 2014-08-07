@@ -41,7 +41,26 @@ module Parsers
           people_ids.each do |person_id|
             final_group.people << Person.find(person_id)
           end
+          
+          household = household_for_group(final_group)
+          people = (final_group.people + household.people).uniq
+          household.people.concat(people)
+
+          policies = []
+          final_group.people.each { |p| policies.concat(p.policies) }
+          household.policies.concat(policies)
+
+          final_group.households << household
+          final_group.households.uniq!
           final_group.save!
+        end
+
+        def household_for_group(group)
+          if(group.households.empty?)
+            household = Household.new
+          else
+            household = group.households.first
+          end
         end
 
         def subscriber_loop
