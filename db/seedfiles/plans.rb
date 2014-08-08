@@ -1,7 +1,7 @@
 require 'csv'
 
 puts "Loading: Plans"
-Plan.collection.drop
+# Plan.collection.drop
 
 csv_loc = File.join(File.dirname(__FILE__), "plans.csv")
 

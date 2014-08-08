@@ -19,7 +19,10 @@ class Plan
   index({ coverage_type: 1 })
   index({ metal_level: 1 })
   index({ market_type: 1 })
-
+  index({ "premium_tables.age" => 1 })
+  index({ "premium_tables.rate_start_date" => 1 })
+  index({ "premium_tables.rate_end_date" => 1 })
+	    
   validates_inclusion_of :coverage_type, in: ["health", "dental"]
 #  validates_inclusion_of :market_type, in: ["individual", "shop"]
 
