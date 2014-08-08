@@ -3,11 +3,17 @@
 = form_for @cancel_terminate, :html => { :class => 'form-horizontal', :role => "form" }, url: transmit_policies_path(@cancel_terminate) do |f|
   .panel.panel-default
     .panel-body
-      .control-group
-        = f.radio_button :operation, "cancel", checked: true
-        = f.label "cancel"
-        = f.radio_button :operation, "terminate"
-        = f.label "terminate"
+      .row
+        .col-md-12
+          .control-group
+            = f.radio_button :operation, "cancel", checked: true
+            = f.label "cancel"
+            = f.radio_button :operation, "terminate"
+            = f.label "terminate"
+      .row
+        .col-md-12
+          .control-group
+            = f.select :reason, options_for_select(CancelTerminate.reasons), :class => 'form-control select-block select mbl'
       .row
         .col-md-12
           = f.label :benefit_end_date
