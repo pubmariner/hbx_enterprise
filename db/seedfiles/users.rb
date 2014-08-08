@@ -1,5 +1,5 @@
 puts "Loading: Users"
-User.collection.drop
+#User.collection.drop
 
 def add_a_user(login, e_pass)
   new_user = User.new({ email: login})
