@@ -10,7 +10,7 @@ describe Protocols::Amqp::Configuration do
   it "should yield a connection when instructed" do
     channel_mock = double
     bunny_mock = double(:create_channel => channel_mock)
-    allow(Bunny).to accept(:new).with(subject.connection_url).and_return(bunny_mock)
+    allow(Bunny).to receive(:new).with(subject.connection_url).and_return(bunny_mock)
     expect(bunny_mock).to receive(:start)
     expect(subject.connection).to eq(channel_mock)
   end
