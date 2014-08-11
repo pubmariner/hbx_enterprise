@@ -13,7 +13,7 @@ class CancelTerminate
   end
 
   attr_accessor :policy_id
-  attr_accessor :operation, :benefit_end_date
+  attr_accessor :operation, :reason, :benefit_end_date
   attr_accessor :people
   attr_accessor :policy
 
@@ -21,7 +21,7 @@ class CancelTerminate
     @policy_id = props[:policy_id]
     @policy = Policy.find(@policy_id.to_i)
     @operation = props[:operation]
-    @reason = "termination_of_benefits"
+    @reason = props[:reason]
     @benefit_end_date = props[:benefit_end_date]
     ppl_hash = props.fetch(:people_attributes) { {} }
     if ppl_hash.empty?
@@ -81,5 +81,19 @@ class CancelTerminate
   end
 
   def persisted?; false; end
+
+  def self.reasons
+    [
+      ["Reason", nil],
+      ["death", "death"],
+      ["divorce", "divorce"],
+      ["age_off", "age_off"],
+      ["termination_of_benefits", "termination_of_benefits"],
+      ["change_of_location", "change_of_location"],
+      ["reenrollment", "reenrollment"],
+      ["non_payment", "non_payment"],
+      ["notification_only", "notification_only"]
+    ]
+  end
 
 end
