@@ -1,3 +1,7 @@
+<%= javascript_tag do %>
+  var autocomplete_items = <%= raw(Employer.all.map { |e| {value: e.name, id: e.id } }.to_json) %>;
+<% end %>
+
 <div class="page-header">
   <%= render 'shared/breadcrumb', crumbs: [
       link_to('Application Group', application_group_path(@form.application_group.id)),
@@ -61,6 +65,27 @@
       </div>
     </div>
 
+    <div class="row">
+      <div class="col-md-2 text-center">
+        <%= label_tag "Employer" %>
+      </div>
+
+      <div class="input-group">
+        <input type="text" class="typeahead" data-target='#hidden_employer_id'/>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-2 text-center">
+        <%= label_tag "Transmit?" %>
+      </div>
+
+      <div class="input-group">
+        <%= f.check_box :transmit_to_carrier %>
+      </div>
+    </div>
+
+    <%= f.hidden_field(:employer_id, id: 'hidden_employer_id') %>
     
     <table class="table table-condensed">
       <thead>
@@ -89,9 +114,8 @@
     </table>
 
 
-
     <div class="form_actions">
-      <%= f.submit nil, :class => 'btn btn-primary' %>
+      <%= f.submit 'Create Policy', :class => 'btn btn-primary' %>
     </div>
   </div>
 <% end %>

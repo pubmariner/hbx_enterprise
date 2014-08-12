@@ -23,6 +23,9 @@ class PolicyForm
   attr_accessor :plan_id
   attr_accessor :credit
   attr_accessor :carrier_to_bill
+  attr_accessor :employer
+  attr_accessor :transmit_to_carrier
+  attr_accessor :employer_id
 
   def initialize(params = {})
     @application_group_id = params[:application_group_id]
