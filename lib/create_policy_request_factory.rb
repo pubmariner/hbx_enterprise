@@ -3,11 +3,12 @@ class CreatePolicyRequestFactory
     request = {
         plan_id: form[:plan_id],
         carrier_id: form[:carrier_id],
-        employer_id: nil,
+        employer_id: form[:employer_id],
         broker_id: nil,
         responsible_party_id: nil,
         credit: form[:credit],
-        carrier_to_bill: (form[:carrier_to_bill] == "1")
+        carrier_to_bill: (form[:carrier_to_bill] == "1"),
+        transmit_to_carrier: (form[:transmit_to_carrier] == "1")
     }
 
     enrollees = []
