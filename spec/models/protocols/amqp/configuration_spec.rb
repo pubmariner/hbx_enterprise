@@ -6,7 +6,7 @@ module PAConfigurationMocking
 
       def initialize(c_url)
         super(c_url)
-        raise "Connection initialized with wrong URL" unless c_url = expected_connection_string
+        raise "Connection initialized with wrong URL" unless c_url == expected_connection_string
         @connection_started = false
       end
 
