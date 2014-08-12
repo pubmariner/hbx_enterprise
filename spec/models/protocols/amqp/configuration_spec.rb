@@ -1,27 +1,34 @@
 require "spec_helper"
 
 module PAConfigurationMocking
-  def mock_connection_object(expected_connection_string, expected_channel_object)
-    Struct.new(:connection_url) do 
+  class CFInstanceMock
+    def initialize(chan)
+      @channel = chan
+      @started = false
+    end
 
-      def initialize(c_url)
-        super(c_url)
-        raise "Connection initialized with wrong URL" unless c_url == expected_connection_string
-        @connection_started = false
-      end
+    def start
+      @started = true
+    end
 
-      def start
-        @connection_started = true
-      end
-
-      def create_channel
-        raise "Connection not started!" unless @connection_started
-        expected_channel_object
-      end
+    def create_channel
+      raise "Connection not started!" unless @started
+      @channel
     end
   end
 
-  module_function :mock_connection_object
+  class CFWrapper
+    def initialize(chan_double, ext_con_string)
+      @channel = chan_double
+      @expected_connection_string = ext_con_string 
+    end 
+
+    def new(c_uri)
+        raise "Connection initialized with wrong URL" unless c_uri == @expected_connection_string
+        CFInstanceMock.new(@channel)
+    end
+  end
+
 end
 
 describe Protocols::Amqp::Configuration do
@@ -33,9 +40,9 @@ describe Protocols::Amqp::Configuration do
 
   it "should provide a connection when instructed" do
     channel_mock = double
-    connection_object_mock = PAConfigurationMocking.mock_connection_object(
-      subject.connection_url,
-      channel_mock
+    connection_object_mock = PAConfigurationMocking::CFWrapper.new(
+      channel_mock,
+      subject.connection_url
     )
     expect(subject.connection(connection_object_mock)).to eq(channel_mock)
   end
