@@ -7,7 +7,7 @@ class PlanRepository
 end
 
 describe CreatePolicy do
-  subject(:use_case) { CreatePolicy.new(plan_repo, premium_responsibility_calculator) }
+  subject(:use_case) { CreatePolicy.new(plan_repo, carrier_notifier) }
 
   let(:request) {
     {
@@ -18,14 +18,15 @@ describe CreatePolicy do
       responsible_party_id: responsible_party_id,
       credit: credit,
       carrier_to_bill: carrier_to_bill,
-      enrollees: enrollees
+      enrollees: enrollees,
+      transmit_to_carrier: transmit_to_carrier
     } 
   }
 
   let(:plan_repo) { double(find: plan) }
   let(:plan) { double(id: '1234', rate: premium)}
   let(:premium) { 22.0 }
-  let(:premium_responsibility_calculator) { double(calculate: nil) }
+  let(:carrier_notifier) { double(notify: nil) }
   let(:carrier_id) { '4321' }
   let(:employer_id) { '1111' }
   let(:broker_id) { '2222' }
@@ -40,6 +41,7 @@ describe CreatePolicy do
         relationship: 'self'
       }
     ]}
+  let(:transmit_to_carrier) { true }
 
   it 'saves a requested policy' do
     expect { use_case.execute(request) }.to change(Policy, :count).by 1
@@ -55,10 +57,27 @@ describe CreatePolicy do
     expect(Policy.last.carrier_id).to eq carrier_id
   end
 
-  it 'associates policy with an employer' do
-    use_case.execute(request)
-    expect(Policy.last.employer_id).to eq employer_id
+  context 'when employer is provided' do
+    let(:employer_id) { '111' }
+    it 'associates policy with an employer' do
+      use_case.execute(request)
+      expect(Policy.last.employer_id).to eq employer_id
+    end
+
+    it 'accepts credit as employer responsible amount' do
+      use_case.execute(request)
+      expect(Policy.last.tot_emp_res_amt.to_f.round(2)).to eq credit
+    end
   end
+
+  context 'when employer NOT provided' do
+    let(:employer_id) { nil }
+    it 'accepts credit as APTC' do
+      use_case.execute(request)
+      expect(Policy.last.applied_aptc.to_f.round(2)).to eq credit
+    end
+  end
+  
 
   it 'associates policy with a broker' do
     use_case.execute(request)
@@ -94,6 +113,9 @@ describe CreatePolicy do
     policy = Policy.last
 
     expect(policy.enrollees.first.pre_amt).to eq premium
+  end
 
   end
+ 
+  
 end

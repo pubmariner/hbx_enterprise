@@ -15,7 +15,7 @@
   <div class="form-group">
     <div class="row">
       <div class="col-md-2 text-center">
-        <%= label_tag "Select Carrier" %>
+        <%= label_tag "Carrier" %>
       </div>
       <div class="col-md-3">
         <%= f.select :carrier_id, options_from_collection_for_select(@form.carriers, "id", "name"), {:prompt => 'Nothing Selected'}, {:id => 'Carriers'} %>
@@ -24,7 +24,7 @@
 
     <div class="row">
       <div class="col-md-2 text-center">
-        <%= label_tag "Select Plan"%>
+        <%= label_tag "Plan"%>
       </div>
       <div class="col-md-3">
         <%= f.select :plan_id, [], {:prompt => 'Nothing Selected'}, {:id => 'Plans'} %>
@@ -49,16 +49,16 @@
 
     <div class="row">
       <div class="col-md-2 text-center">
-        <%= label_tag "Credit(APTC/Employer Contribution)"%>
+        <%= label_tag "Credit" %>
       </div>
       <div class="input-group col-md-2">
-        <%= f.text_field :credit, :class => 'form-control input-md', placeholder: '$0.00'%>
+        <%= f.text_field :credit, :class => 'form-control input-md', placeholder: '$0.00' %>
       </div>
     </div>
 
     <div class="row">
       <div class="col-md-2 text-center">
-        <%= label_tag "Carrier To Bill?"%>
+        <%= label_tag "Carrier To Bill?" %>
       </div>
       <div class="input-group col-md-2">
         <%= f.check_box :carrier_to_bill %>
