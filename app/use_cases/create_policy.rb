@@ -16,16 +16,18 @@ class CreatePolicy
     end
 
     @policy.pre_amt_tot = premium_total(@policy.enrollees)
-    @policy.applied_aptc = request[:credit]
-    #TODO
-    # policy.tot_emp_res_amt = request[:credit]
+
+    if(request[:employer_id].nil?)
+      @policy.applied_aptc = request[:credit]
+    else
+      @policy.tot_emp_res_amt = request[:credit]
+    end
+    
     @policy.tot_res_amt = (BigDecimal.new(@policy.pre_amt_tot) - request[:credit]).round(2)
     @policy.carrier_to_bill = request[:carrier_to_bill]
     @policy.employer_id = request[:employer_id]
     @policy.broker_id = request[:broker_id]
     @policy.responsible_party_id = request[:responsible_party_id]
-
-    
     
     @policy.save
   end
