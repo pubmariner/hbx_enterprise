@@ -20,8 +20,8 @@ module PAConfigurationMocking
   class CFWrapper
     def initialize(chan_double, ext_con_string)
       @channel = chan_double
-      @expected_connection_string = ext_con_string 
-    end 
+      @expected_connection_string = ext_con_string
+    end
 
     def new(c_uri)
         raise "Connection initialized with wrong URL" unless c_uri == @expected_connection_string

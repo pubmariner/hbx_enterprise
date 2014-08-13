@@ -7,7 +7,7 @@ class PlanRepository
 end
 
 describe CreatePolicy do
-  subject(:use_case) { CreatePolicy.new(plan_repo, carrier_notifier) }
+  subject(:use_case) { CreatePolicy.new(plan_repo) }
 
   let(:request) {
     {
@@ -19,14 +19,14 @@ describe CreatePolicy do
       credit: credit,
       carrier_to_bill: carrier_to_bill,
       enrollees: enrollees,
-      transmit_to_carrier: transmit_to_carrier
+      transmit_to_carrier: transmit_to_carrier,
+      household_id: household_id
     } 
   }
 
   let(:plan_repo) { double(find: plan) }
   let(:plan) { double(id: '1234', rate: premium)}
   let(:premium) { 22.0 }
-  let(:carrier_notifier) { double(notify: nil) }
   let(:carrier_id) { '4321' }
   let(:employer_id) { '1111' }
   let(:broker_id) { '2222' }
@@ -42,6 +42,7 @@ describe CreatePolicy do
       }
     ]}
   let(:transmit_to_carrier) { true }
+  let(:household_id) { '5555'}
 
   it 'saves a requested policy' do
     expect { use_case.execute(request) }.to change(Policy, :count).by 1
@@ -55,6 +56,11 @@ describe CreatePolicy do
   it 'associates policy with requested carrier' do
     use_case.execute(request)
     expect(Policy.last.carrier_id).to eq carrier_id
+  end
+
+  it 'associates policy with household' do
+    use_case.execute(request)
+    expect(Policy.last.household_id).to eq household_id
   end
 
   context 'when employer is provided' do
@@ -77,7 +83,6 @@ describe CreatePolicy do
       expect(Policy.last.applied_aptc.to_f.round(2)).to eq credit
     end
   end
-  
 
   it 'associates policy with a broker' do
     use_case.execute(request)
@@ -115,7 +120,23 @@ describe CreatePolicy do
     expect(policy.enrollees.first.pre_amt).to eq premium
   end
 
-  end
+  # describe 'carrier transmission' do
+  #   context 'when not specified to transmit' do
+  #     let(:transmit_to_carrier) { false }
+  #     it 'does not notify the carrier' do
+  #       expect(carrier_notifier).not_to receive(:notify)
+  #       use_case.execute(request)
+  #     end
+  #   end
+
+  #   context 'when specified to transmit' do
+  #     let(:transmit_to_carrier) { true }
+  #     it 'notifies the carrier' do
+  #       expect(carrier_notifier).to receive(:notify)
+  #       use_case.execute(request)
+  #     end
+  #   end
+  # end
  
   
 end
