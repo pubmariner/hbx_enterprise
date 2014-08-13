@@ -1,12 +1,11 @@
 <div class="col-md-10">
-<%#= link_to('New Policy', new_policy_path(application_group_id: @application_group.id)) %>
   <h4>Household Members</h4>
   <% @household.people.each do |person| %>
     <%= link_to prepend_glyph_to_name(person.full_name), person_path(person) %>
     <br/>
   <% end %>
   <h4>Policies</h4>
-    <%= link_to 'New Policy', new_policy_path(application_group_id: @household.application_group.id) %>
+    <%= link_to 'New Policy', new_policy_path(application_group_id: @household.application_group.id, household_id: @household.id) %>
     <ul>
       <% @household.policies.each do |policy| %>
         <li>

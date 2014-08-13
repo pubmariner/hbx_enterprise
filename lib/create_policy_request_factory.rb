@@ -6,9 +6,10 @@ class CreatePolicyRequestFactory
         employer_id: form[:employer_id],
         broker_id: nil,
         responsible_party_id: nil,
-        credit: form[:credit],
+        credit: form[:credit].to_f,
         carrier_to_bill: (form[:carrier_to_bill] == "1"),
-        transmit_to_carrier: (form[:transmit_to_carrier] == "1")
+        transmit_to_carrier: (form[:transmit_to_carrier] == "1"),
+        household_id: form[:household_id]
     }
 
     enrollees = []

@@ -26,9 +26,12 @@ class PolicyForm
   attr_accessor :employer
   attr_accessor :transmit_to_carrier
   attr_accessor :employer_id
+  attr_accessor :household_id
 
   def initialize(params = {})
     @application_group_id = params[:application_group_id]
+    @household_id = params[:household_id]
+    
     @application_group = ApplicationGroup.find(@application_group_id)
     @carriers = Carrier.all
 

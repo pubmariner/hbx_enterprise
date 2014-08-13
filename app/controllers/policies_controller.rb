@@ -1,6 +1,6 @@
 class PoliciesController < ApplicationController
   def new
-    @form = PolicyForm.new(application_group_id: params[:application_group_id])
+    @form = PolicyForm.new(application_group_id: params[:application_group_id], household_id: params[:household_id])
   end
 
   def show
