@@ -11,6 +11,9 @@ module Protocols
         @conn.create_channel
       end
 
+      def self.close_connection
+        @conn.close
+      end
     end
   end
 end
