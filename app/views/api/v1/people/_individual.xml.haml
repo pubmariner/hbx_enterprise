@@ -1,18 +1,62 @@
-%n1:authority_hbx_member_uri
-%n1:authority_hbx_member_id= person.authority_member_id
+%n1:id
 %n1:person
   = render 'shared/person', person: person
-%n1:member_roles
-  - person.members.each do |member|
-    %n1:member_role
-      = render 'shared/member', member: member
-- if person.employer.present?
-  %n1:employee_role
-    = render 'shared/employee', employee: person
-- if person.responsible_parties.count > 0
+%n1:relationships
+  %n1:subject_individual
+  %n1:relationship_uri
+  %n1:inverse_relationship
+  %n1:object_individual
+%n1:hbx_roles
+  %n1:authority_qhp_role_id
+  %n1:qhp_roles
+    - person.members.each do |member|
+      %n1:qhp_role
+        %n1:id
+        %n1:gender= "urn:dc0:terms:gender##{member.gender}"
+        %n1:dob= member.dob.try(:strftime,"%Y%m%d")
+        %n1:ssn= member.ssn
+        %n1:tobacco_user= member.hlh.downcase
+        %n1:language= member.lui
+        %n1:carriers
+          %n1:carrier
+            %n1:id
+            %n1:hbx_id
+            %n1:name
+            %n1:fein
+            %n1:issuer_state
+          %n1:carrier_assigned_id
   %n1:responsible_party_roles
     - person.responsible_parties.each do |party|
       %n1:responsible_party_role
         %n1:entity_identifier= party.entity_identifier
-        %n1:hbx_organization_uri
-        /%hbx_organization_uri= party.organization_name #?
+        %n1:organization_id
+  %n1:medicaid_roles
+    %n1:medicaid_role
+      %n1:id
+  %n1:employee_roles
+    %n1:employee_role
+      %n1:id
+      %n1:employment_status
+      %n1:eligibility_start_date
+      %n1:eligibility_end_date
+%n1:other_coverage
+  %n1:id
+%n1:state_of_residency
+%n1:immigration_status
+%n1:incarcerated
+%n1:financial
+  %n1:incomes
+    %n1:income
+      %n1:calendar_year
+      %n1:income_amount
+      %n1:income_type
+      %n1:income_frequency
+      %n1:reported_date
+      %n1:reported_by
+      %n1:verification
+        %n1:verified_flag
+        %n1:source
+        %n1:recorded_date
+        %n1:recorded_by
+        %n1:notes
+  %n1:tax_file_status

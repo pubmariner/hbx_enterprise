@@ -1,15 +1,19 @@
 module Requests
   def expect_person_xml(individual_xml, person)
-    # expect(individual_xml['authority_hbx_member_uri']).to eq nil
-    # expect(individual_xml['authority_hbx_member_id']).to eq nil
+    expect(individual_xml['id']).to eq nil
+    
     person_xml = individual_xml['person']
+    expect(person_xml['id']).to eq nil
+
     name = person_xml['name']
     expect(name['name_prefix']).to eq(person.name_pfx)
     expect(name['name_first']).to eq(person.name_first)
     expect(name['name_middle']).to eq(person.name_middle)
     expect(name['name_last']).to eq(person.name_last)
     expect(name['name_full']).to eq(person.name_full)
-    # expect(person_xml['job_title']).to eq(nil)
+    
+    expect(person_xml['job_title']).to eq(nil)
+    expect(person_xml['department']).to eq(nil)
     # expect(person_xml['department']).to eq(nil)
 
     addresses_xml = person_xml['addresses']['address']
@@ -25,13 +29,6 @@ module Requests
     emails_xml = person_xml['emails']['email']
     emails_xml.each_with_index do |email_xml, index|
       expect_email_xml(email_xml, person.emails[index])
-    end
-
-    member_roles = individual_xml['member_roles']['member_role']
-    member_roles.each_with_index do |member_xml, index|
-      member = person.members[index]
-
-      expect_member_xml(member_xml, member)
     end
   end
 
@@ -129,7 +126,7 @@ module Requests
   end
 
   def expect_address_xml(address_xml, address)
-    expect(address_xml['address_type']).to eq address.address_type
+    expect(address_xml['address_type']).to eq "urn:openhbx:terms:v1:address_type##{address.address_type}"
     expect(address_xml['address_1']).to eq address.address_1
     expect(address_xml['address_2']).to eq address.address_2
     expect(address_xml['city']).to eq address.city
@@ -140,13 +137,15 @@ module Requests
   end
 
   def expect_phone_xml(phone_xml, phone)
-    expect(phone_xml['phone_type']).to eq phone.phone_type
+    expect(phone_xml['phone_type']).to eq "urn:openhbx:terms:v1:phone_type##{phone.phone_type}"
     expect(phone_xml['phone_number']).to eq phone.phone_number
     expect(phone_xml['extension']).to eq phone.extension
+    expect(phone_xml['prefered']).to eq "false"
+
   end
 
   def expect_email_xml(email_xml, email)
-    expect(email_xml['email_type']).to eq email.email_type
+    expect(email_xml['email_type']).to eq "urn:openhbx:terms:v1:email_type##{email.email_type}"
     expect(email_xml['email_address']).to eq email.email_address
   end
 end
