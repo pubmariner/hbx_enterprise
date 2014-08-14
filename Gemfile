@@ -17,8 +17,8 @@ group :development do
 end
 
 group :development, :assets do
-  gem 'sass-rails',   '~> 3.2.3'
-  gem 'coffee-rails', '~> 3.2.1'
+  gem 'sass-rails',   '~> 3.2.3', :group => :test
+  gem 'coffee-rails', '~> 3.2.1', :group => :test
   gem 'uglifier', '>= 1.0.3'
   gem 'therubyracer', :platforms => :ruby
   gem 'less-rails-bootstrap', :group => :test
