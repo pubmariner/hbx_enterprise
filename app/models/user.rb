@@ -7,7 +7,7 @@ class User
          :recoverable, :rememberable, :trackable, :validatable, :registerable
 
   # Setup accessible (or protected) attributes for your model
-  attr_accessible :email, :password, :password_confirmation, :remember_me, :approved
+  attr_accessible :email, :password, :password_confirmation, :remember_me, :approved, :role
 
   ## Enable Admin approval
   ## Seed: https://github.com/plataformatec/devise/wiki/How-To%3a-Require-admin-to-activate-account-before-sign_in
@@ -32,6 +32,10 @@ class User
   field :last_sign_in_ip,    :type => String
 
   field :authentication_token
+
+  field :role, :type => String, :default => "user"
+
+  ROLES = %w[user edi_ops admin]
 
   ## Confirmable
   # field :confirmation_token,   :type => String
@@ -97,6 +101,4 @@ private
       break token unless User.where(authentication_token: token).first
     end
   end
-
-
 end

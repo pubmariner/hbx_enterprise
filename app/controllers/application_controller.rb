@@ -3,6 +3,7 @@ class ApplicationController < ActionController::Base
   before_filter :authenticate_user_from_token!
   before_filter :authenticate_me!
   rescue_from Mongoid::Errors::DocumentNotFound, with: :id_not_found
+  rescue_from CanCan::AccessDenied, with: :access_denied
 
   def authenticate_me!
     # Skip auth if you are trying to log in
@@ -24,6 +25,10 @@ class ApplicationController < ActionController::Base
 
   def id_not_found
     render file: 'public/404.html', status: 404
+  end
+
+  def access_denied
+    render file: 'public/403.html', status: 403
   end
 
   private

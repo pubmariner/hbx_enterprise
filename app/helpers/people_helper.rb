@@ -48,27 +48,6 @@ module PeopleHelper
     end
 	end
 
-	def controls_for_people(person)
-		# TODO: add roles/filters
-		# if current_user.manages?(person)
-		if user_signed_in?
-			partial = controls_partial_for_people(person)
-			contents = render(partial: partial, locals: {person: person})
-			content_tag(:ul, contents, class: "nav nav-list")
-		end
-	end
-
-	def controls_partial_for_people(person)
-		'people/controls/admin'
-		# if current_user.admin?
-		# 	'people/controls/admin'
-		# elsif current_user.author?
-		# 	'people/controls/author'
-		# elsif current_user.editor?
-		# 	'people/controls/editor'
-		# end
-	end
-
 private
 
   def handle_none(value)

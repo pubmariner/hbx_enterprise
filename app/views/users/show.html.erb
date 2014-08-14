@@ -11,6 +11,8 @@
 <dl class="dl-horizontal">
 	<dt>Approved?</dt>
   <dd><%= boolean_to_human(@user.approved) %></dd>
+  <dt>Role</dt>
+  <dd><%= @user.role %></dd>
 	<dt>Last signed in at</dt>
   <dd><%= @user.last_sign_in_at %></dd>
 	<dt>Last signed in IP</dt>
