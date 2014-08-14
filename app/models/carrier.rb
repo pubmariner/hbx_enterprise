@@ -36,6 +36,10 @@ class Carrier
     true
   end
 
+  def fein
+    carrier_profiles.first.fein
+  end
+
   def self.individual_market_health
   	where(individual_market_health: true)
 	end

@@ -62,6 +62,10 @@ class Member
     Policy.elem_match(enrollees: { m_id: hbx_member_id })
   end
 
+  def carriers
+    policies.map { |p| p.carrier }.uniq
+  end
+
   def enrollees
     policies.map { |p| p.enrollees.find_by(m_id: hbx_member_id) }
   end
