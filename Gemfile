@@ -7,7 +7,6 @@ gem "origin"
 gem "aasm", "~> 3.0.25"
 gem "nokogiri", "~> 1.6.1"
 gem "bunny"
-
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
 
@@ -20,16 +19,11 @@ end
 group :development, :assets do
   gem 'sass-rails',   '~> 3.2.3'
   gem 'coffee-rails', '~> 3.2.1'
-
   gem 'uglifier', '>= 1.0.3'
-
   gem 'therubyracer', :platforms => :ruby
   gem 'less-rails-bootstrap', :group => :test
   gem 'designmodo-flatuipro-rails', '~> 1.2.5.0.branch', :group => :test
-
-
   gem 'font-awesome-rails'
-
 end
 
 group :test do
@@ -42,6 +36,10 @@ group :test do
   gem 'ci_reporter'
 end
 
+group :production do
+  gem 'unicorn'
+end
+
 gem 'simple_form'
 gem "haml"
 gem 'kaminari'
@@ -52,11 +50,6 @@ gem 'devise'
 gem "rsec"
 gem "mongoid_auto_increment"
 gem 'american_date'
-
-gem 'roo'
-
-group :production do
-  gem 'unicorn'
-end
-
+gem 'cancancan', '~> 1.9'
 gem 'oj'
+gem 'roo'
