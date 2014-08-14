@@ -24,4 +24,8 @@ class ElectedPlan
     [self.carrier_id, self.qhp_id]
   end
 
+  def plan
+    Plan.find_by_hios_id(qhp_id)
+  end
+
 end

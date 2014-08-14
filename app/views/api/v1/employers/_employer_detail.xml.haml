@@ -1,12 +1,38 @@
-%n1:name= employer.name
-%n1:fein= employer.fein
-%n1:hbx_uri= employer_url(employer)
+%n1:id
 %n1:hbx_id= employer.hbx_id
+%n1:name= employer.name
+%n1:dba
+%n1:fein= employer.fein
 %n1:sic_code= employer.sic_code
 %n1:fte_count= employer.fte_count
 %n1:pte_count= employer.pte_count
+%n1:broker
+  %n1:id
+  %n1:hbx_id
+  %n1:npn= employer.broker.npn
+  %n1:name= employer.broker.name_full
+  %n1:tpa_ga_fein
+  %n1:tpa_name
 %n1:open_enrollment_start= employer.open_enrollment_start.try(:strftime,"%Y-%m-%d")
 %n1:open_enrollment_end= employer.open_enrollment_end.try(:strftime,"%Y-%m-%d")
 %n1:plan_year_start= employer.plan_year_start.try(:strftime,"%Y-%m-%d")
 - if employer.plan_year_end.present?
   %n1:plan_year_end= employer.plan_year_end.try(:strftime,"%Y-%m-%d")
+%n1:plans
+  - employer.elected_plans.each do |elected_plan|
+    %n1:plan
+      %n1:name= elected_plan.plan_name
+      %n1:hbx_plan_id= elected_plan.hbx_plan_id
+      %n1:qhp_id= elected_plan.qhp_id
+      %n1:issuer
+      %n1:policy_number= elected_plan.carrier_policy_number
+      %n1:group_id= elected_plan.carrier_employer_group_id
+      %n1:coverage_type= elected_plan.coverage_type
+      %n1:orginal_effective_date= elected_plan.original_effective_date
+      %n1:metal_level_code= elected_plan.plan.metal_level
+%n1:contacts
+  - 1.times do
+    %n1:contact
+      = render 'shared/person', person: employer
+%n1:version
+%n1:notes= employer.notes
