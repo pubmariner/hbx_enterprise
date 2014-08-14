@@ -1,4 +1,6 @@
 $(document).ready(function() {
+    if(typeof autocomplete_items === 'undefined')
+        return;
 
     var options = {
         name: 'autocomplete_items',
