@@ -5,8 +5,9 @@
 		<div class="col-md-6">
 			<%= f.input :email, wrapper: :input_horizontal %>
 			<%= f.input :approved, as: :boolean, boolean_style: :inline, label: "Approved?" %>
+			<%= f.collection_select :role, User::ROLES, :to_s, :humanize %>
 		</div>
-	</div> 
+	</div>
 
 	<div class="well well-sm well-default">
 		<div class="form-actions">
