@@ -1,0 +1,34 @@
+%n1:hbx_roles
+  %n1:authority_qhp_role_id= person.authority_member_id
+  %n1:qhp_roles
+    - person.members.each do |member|
+      %n1:qhp_role
+        %n1:id= member.hbx_member_id
+        %n1:gender= "urn:dc0:terms:gender##{member.gender}"
+        %n1:dob= member.dob.try(:strftime,"%Y%m%d")
+        %n1:ssn= member.ssn
+        %n1:tobacco_user= member.hlh.downcase
+        %n1:language= member.lui
+        %n1:carriers
+          - member.carriers.each do |carrier|
+            %n1:carrier
+              %n1:id
+              %n1:hbx_id= carrier.hbx_carrier_id
+              %n1:name= carrier.name
+              %n1:fein= carrier.fein
+              %n1:issuer_state
+          %n1:carrier_assigned_id
+  %n1:responsible_party_roles
+    - person.responsible_parties.each do |party|
+      %n1:responsible_party_role
+        %n1:entity_identifier= party.entity_identifier
+        %n1:organization_id= party.organization_name
+  %n1:medicaid_roles
+    %n1:medicaid_role
+      %n1:id
+  %n1:employee_roles
+    %n1:employee_role
+      %n1:id
+      %n1:employment_status= #enrollee.employment_status_code 
+      %n1:eligibility_start_date= # plan year start?
+      %n1:eligibility_end_date= #plan year end?
