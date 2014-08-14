@@ -105,8 +105,16 @@ class Policy
     end
   end
 
+  def market
+    employer.nil? ? 'individual' : 'shop'
+  end
+
   def subscriber
     enrollees.detect { |m| m.relationship_status_code == "self" }
+  end
+
+  def enrollees_sans_subscriber
+    enrollees.reject { |e| e.relationship_status_code == "self" }
   end
 
   def has_responsible_person?
