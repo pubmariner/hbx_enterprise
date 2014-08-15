@@ -1,6 +1,7 @@
 %n1:member
   %n1:id
-  %n1:person= person
+  %n1:person
+    = render 'shared/person', person: person
   %n1:relationships
     %n1:subject_individual
     %n1:relationship_uri
