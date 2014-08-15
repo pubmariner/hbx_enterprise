@@ -1,7 +1,5 @@
 %n1:id= api_v1_policy_url(policy.id)
-%n1:hbx_id= 'DC0'
-%n1:hbx_fein
-%n1:rate_area
+= render 'shared/hbx_identifier'
 %n1:carrier_assigned_policy_id
 - broker = policy.broker
 - if broker.present?
@@ -24,6 +22,7 @@
   - plan = policy.plan
   %n1:plan
     %n1:id
+    = render 'shared/hbx_identifier'
     %n1:hios_id= plan.hios_plan_id
     %n1:name= plan.name
     %n1:is_dental_only_flag= (plan.coverage_type == 'dental')
@@ -55,4 +54,3 @@
       %n1:total_employer_responsible_amount= policy.tot_emp_res_amt
   %n1:premium_amount_total= policy.pre_amt_tot
   %n1:total_responsible_amount= policy.tot_res_amt
-%n1:submitted_timestamp
