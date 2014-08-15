@@ -48,6 +48,14 @@ module PeopleHelper
     end
 	end
 
+  def controls_for_people(person)
+    if can? :edit, @people
+      contents = render(partial: 'people/controls/admin', locals: {person: person})
+    else
+      contents = render(partial: 'people/controls/user', locals: {person: person})
+    end
+  end
+
 private
 
   def handle_none(value)
