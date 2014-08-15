@@ -2,16 +2,16 @@
   <li class="nav-header">Individual</li>
   <li><%= link_to "Change Address", edit_enrollment_address_path(person, {:id => person._id}) %></li>
   <li><a id='setAuthorityLink' href='#'>Set Authority</a></li>
-  <li><%= link_to "Edit", edit_person_path(person) %></li>
-  <li><%= link_to "Add Dependent", new_person_path %></li>
-  <li><%= link_to "Drop Dependent", new_person_path %></li>
+  <li class="disabled"><%= link_to "Edit", edit_person_path(person) %></li>
+  <li class="disabled"><%= link_to "Add Dependent", new_person_path %></li>
+  <li class="disabled"><%= link_to "Drop Dependent", new_person_path %></li>
   <li class="nav-header">Coverage</li>
-  <li><a href="#">New Policy</a></li>
-  <li><a href="#">Change Carrier</a></li>
-  <li><a href="#">Change Plan</a></li>
-  <li><a href="#">Cancel/Term</a></li>
+  <li class="disabled"><a href="#">New Policy</a></li>
+  <li class="disabled"><a href="#">Change Carrier</a></li>
+  <li class="disabled"><a href="#">Change Plan</a></li>
+  <li class="disabled"><a href="#">Cancel/Term</a></li>
   <li class="nav-header">Tasks</li>
-  <li><a href="#">Transmit Changes</a></li>
-  <li><a href="#">Special Enrollment Period</a></li>
+  <li class="disabled"><a href="#">Transmit Changes</a></li>
+  <li class="disabled"><a href="#">Special Enrollment Period</a></li>
 </ul>
 

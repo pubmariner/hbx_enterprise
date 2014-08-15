@@ -9,7 +9,7 @@ class Ability
     if user.role == "admin"
       can :manage, :all
     elsif user.role == "edi_ops"
-      can :edit, :all
+      can :manage, :all
       cannot :modify, User
     else
       can :read, :all
