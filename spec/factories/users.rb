@@ -27,7 +27,5 @@ FactoryGirl.define do
     role "admin"
   end
 
-  factory :admin_user, traits: [:admin]
-  factory :edi_ops_user, traits: [:edi_ops]
   factory :invalid_user, traits: [:without_email, :without_password, :without_password_confirmation]
 end

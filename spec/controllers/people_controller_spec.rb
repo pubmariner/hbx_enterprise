@@ -1,7 +1,10 @@
 require 'spec_helper'
 
 describe PeopleController do
-  login_user
+  before(:each) do
+    @user = create :user, :admin
+    sign_in @user
+  end
 
   describe 'GET new' do
     before { get :new, format: 'html' }

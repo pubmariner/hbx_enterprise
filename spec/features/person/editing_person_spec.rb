@@ -3,7 +3,7 @@ require 'spec_helper'
 feature 'editing a person' do
   background do
     @person = create :person
-    user = create :user
+    user = create :user, :admin
     visit root_path
     sign_in_with(user.email, user.password)
   end
