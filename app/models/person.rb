@@ -181,7 +181,8 @@ class Person
   end
 
   def assign_authority_member_id
-    self.authority_member_id = (self.members.length > 1) ? nil : self.members.first.hbx_member_id
+    #  This is disabled for the moment, so we don't lose authority member ids..
+    #    self.authority_member_id = (self.members.length > 1) ? nil : self.members.first.hbx_member_id
   end
 
   def merge_address(m_address)
