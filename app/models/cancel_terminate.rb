@@ -44,7 +44,7 @@ class CancelTerminate
     end
   end
 
-  def add_beneifit_end
+  def add_benefit_end
     @policy.enrollees.each do |e|
       if included?(e.m_id)
         e.coverage_end = @benefit_end_date.to_date
@@ -57,15 +57,11 @@ class CancelTerminate
     @people.any?{|p| p.affect_selected == "1" && p.m_id == id }
   end
 
-  def affected_included_ids
-    member_ids = @people.reject { |p| p.affect_selected == "0" || p.affect_selected.nil? }.map(&:m_id)
-    include_member_ids = @people.reject { |p| p.include_selected == "0" }.map(&:m_id)
-  end
-
   def to_cv
     subcriber_terminate
-    affected_included_ids
-    add_beneifit_end
+    add_benefit_end
+    include_member_ids = @people.reject { |p| p.include_selected == "0" }.map(&:m_id)
+    member_ids = include_member_ids
 
     ser = CanonicalVocabulary::MaintenanceSerializer.new(
       @policy,

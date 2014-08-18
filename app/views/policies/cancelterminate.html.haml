@@ -22,10 +22,8 @@
       %table.table.table-condensed
         %thead
           %tr
-            %th{title: "XML: Payload, Individual Market Enrollment Group"}
-              Included Members
-            %th{title: "XML: Operation, Affected Members"}
-              Affected Members
+            %th{title: "To Terminate"}
+              Members
             %th
               Name
             %th
@@ -35,9 +33,6 @@
             %tr
               %td
                 = people_fields.check_box :include_selected
-                = people_fields.hidden_field :m_id
-              %td
-                = people_fields.check_box :affect_selected
                 = people_fields.hidden_field :m_id
               %td
                 = people_fields.object.name
