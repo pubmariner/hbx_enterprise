@@ -1,5 +1,6 @@
 class CancelTerminate
   include ActiveModel::Conversion
+  include ActiveModel::Validations
   extend ActiveModel::Naming
 
   CancelTerminate  = Struct.new(:affect_selected, :include_selected, :m_id, :name, :role) do
@@ -17,6 +18,8 @@ class CancelTerminate
   attr_accessor :people
   attr_accessor :policy
 
+  validates_presence_of :benefit_end_date, :unless => :is_cancel?
+
   def initialize(props = {})
     @policy_id = props[:policy_id]
     @policy = Policy.find(@policy_id.to_i)
@@ -29,6 +32,14 @@ class CancelTerminate
     else
       @people = ppl_hash.values.map { |person| CancelTerminate.new(person) }
     end
+  end
+
+  def is_cancel?
+    @operation == "cancel"
+  end
+
+  def selected_at_least_one
+    @people.any?{|p| p.include_selected == "0"}
   end
 
   def map_people_from_policy(enroll)
@@ -47,7 +58,7 @@ class CancelTerminate
   def add_benefit_end
     @policy.enrollees.each do |e|
       if included_person?(e.m_id)
-        if @operation == "cancel"
+        if is_cancel?
           e.coverage_end = e.coverage_start
         else
           e.coverage_end = validate_term_date(e.coverage_start)
@@ -59,7 +70,6 @@ class CancelTerminate
 
   def validate_term_date(start_date)
     if start_date > @benefit_end_date.to_date
-      raise
     else
       @benefit_end_date.todate
     end
@@ -74,7 +84,6 @@ class CancelTerminate
     add_benefit_end
     include_member_ids = @people.reject { |p| p.include_selected == "0" }.map(&:m_id)
     member_ids = include_member_ids
-
     ser = CanonicalVocabulary::MaintenanceSerializer.new(
       @policy,
       @operation,

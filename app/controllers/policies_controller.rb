@@ -46,7 +46,9 @@ class PoliciesController < ApplicationController
       generated_filename = "#{@cancel_terminate.policy_id}.xml"
       send_data(@cancel_terminate.to_cv, :type => "application/xml", :disposition => "attachment", :filename => generated_filename)
     end
-
+  rescue
+    p = params[:cancel_terminate][:policy_id]
+    redirect_to cancelterminate_policies_path(p, {:cancel_terminate => {:policy_id => p}}), flash: { error: "Invalid" }
   end
 
 end
