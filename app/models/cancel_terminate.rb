@@ -47,14 +47,18 @@ class CancelTerminate
   def add_benefit_end
     @policy.enrollees.each do |e|
       if included?(e.m_id)
-        e.coverage_end = @benefit_end_date.to_date
+        if @operation == "cancel"
+          e.coverage_end = e.coverage_start
+        else
+          e.coverage_end = @benefit_end_date.to_date
+        end
         e.coverage_status = "inactive"
       end
     end
   end
 
   def included?(id)
-    @people.any?{|p| p.affect_selected == "1" && p.m_id == id }
+    @people.any?{|p| p.include_selected == "1" && p.m_id == id }
   end
 
   def to_cv
