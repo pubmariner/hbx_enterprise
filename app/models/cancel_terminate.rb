@@ -39,25 +39,33 @@ class CancelTerminate
   end
 
   def subcriber_terminate
-    if @people.any?{ |p| p.affect_selected == "1" && p.role == "self"}
-      @people.each { |p| p.affect_selected = "1" }
+    if @people.any?{ |p| p.include_selected == "1" && p.role == "self"}
+      @people.each { |p| p.include_selected = "1" }
     end
   end
 
   def add_benefit_end
     @policy.enrollees.each do |e|
-      if included?(e.m_id)
+      if included_person?(e.m_id)
         if @operation == "cancel"
           e.coverage_end = e.coverage_start
         else
-          e.coverage_end = @benefit_end_date.to_date
+          e.coverage_end = validate_term_date(e.coverage_start)
         end
         e.coverage_status = "inactive"
       end
     end
   end
 
-  def included?(id)
+  def validate_term_date(start_date)
+    if start_date > @benefit_end_date.to_date
+      raise
+    else
+      @benefit_end_date.todate
+    end
+  end
+
+  def included_person?(id)
     @people.any?{|p| p.include_selected == "1" && p.m_id == id }
   end
 
