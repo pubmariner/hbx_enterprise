@@ -7,6 +7,7 @@ class EndCoverage
 
   def execute(request)
     @request = request
+
     @policy = @policy_repo.find(request[:policy_id])
 
     enrollees_not_already_canceled = @policy.enrollees.select { |e| !e.canceled? }
@@ -75,6 +76,11 @@ class EndCoverage
 
   def end_coverage_for(enrollee, date)
     enrollee.coverage_status = 'inactive'
-    enrollee.coverage_end = date
+
+    if(@request[:operation] == 'cancel')
+      enrollee.coverage_end = enrollee.coverage_start
+    else
+      enrollee.coverage_end = date
+    end
   end
 end

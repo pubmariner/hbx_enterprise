@@ -26,7 +26,7 @@ describe EndCoverage do
 
   let(:affected_enrollee_ids) { [subscriber.m_id, member.m_id] }
   let(:coverage_end) { Date.new(2014, 1, 14)}
-  let(:operation) { 'cancel' }
+  let(:operation) { 'terminate' }
   let(:current_user) { 'joe@example.com' }
 
   let(:policy_repo) { double(find: policy) }
@@ -34,7 +34,7 @@ describe EndCoverage do
   let(:premium_total) { 1000.00 }
   let(:enrollees) { [ subscriber, member ]}
   let(:subscriber) { Enrollee.new(rel_code: 'self', coverage_start: coverage_start, pre_amt: 100.00, ben_stat: 'active', emp_stat: 'active',  m_id: '1') }
-  let(:member) { Enrollee.new(rel_code: 'child', pre_amt: 200.00, ben_stat: 'active', emp_stat: 'active',  m_id: '2') }
+  let(:member) { Enrollee.new(rel_code: 'child', coverage_start: coverage_start, pre_amt: 200.00, ben_stat: 'active', emp_stat: 'active',  m_id: '2') }
   let(:listener) { double }
 
   let(:action_factory) { double(create_for: action) }
@@ -131,6 +131,14 @@ describe EndCoverage do
     it 'deducts member\'s premium from policy\'s total'  do
       end_coverage.execute(request)
       expect(policy.pre_amt_tot.to_f).to eq (premium_total - member.pre_amt)
+    end
+
+    context 'by cancelation' do
+      let(:operation) { 'cancel' }
+      it 'sets the benefit end date to be equal to benefit begin date' do
+        end_coverage.execute(request)
+        expect(member.coverage_end).to eq member.coverage_start
+      end
     end
   end
 end
