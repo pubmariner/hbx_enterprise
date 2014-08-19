@@ -17,6 +17,7 @@ class CancelTerminate
   attr_accessor :operation, :reason, :benefit_end_date
   attr_accessor :people
   attr_accessor :policy
+  attr_accessor :action
 
   validates_presence_of :benefit_end_date, :unless => :is_cancel?
 
@@ -103,13 +104,7 @@ class CancelTerminate
     [
       ["Reason", nil],
       ["death", "death"],
-      ["divorce", "divorce"],
-      ["age_off", "age_off"],
-      ["termination_of_benefits", "termination_of_benefits"],
-      ["change_of_location", "change_of_location"],
-      ["reenrollment", "reenrollment"],
-      ["non_payment", "non_payment"],
-      ["notification_only", "notification_only"]
+      ["termination_of_benefits", "termination_of_benefits"]
     ]
   end
 

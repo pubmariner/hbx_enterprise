@@ -6,10 +6,10 @@
       .row
         .col-md-12
           .control-group
-            = f.radio_button :operation, "cancel", checked: true
-            = f.label "cancel"
-            = f.radio_button :operation, "terminate"
+            = f.radio_button :operation, "terminate", checked: true
             = f.label "terminate"
+            = f.radio_button :operation, "cancel"
+            = f.label "cancel"
       .row
         .col-md-12
           .control-group
@@ -47,6 +47,12 @@
         .col-md-2
           .form_actions
             = f.submit 'Cancel / Terminate', :class => 'btn btn-inverse'
-        .col-md-2
-          = f.label "Transmit?"
-          = f.check_box :transmit, checked: true
+        .col-md-5
+          .form-group
+            Action :
+            = f.radio_button :action, "transmit", checked: true
+            = f.label "transmit"
+            = f.radio_button :action, "download"
+            = f.label "download"
+            = f.radio_button :action, "update"
+            = f.label "update gluedb"
