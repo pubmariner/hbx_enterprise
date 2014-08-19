@@ -13,7 +13,7 @@ class EndCoverageRequest
       coverage_end: form_params[:benefit_end_date],
       operation: form_params[:operation],
       reason: form_params[:reason],
-      transmit: form_params[:transmit] == "1",
+      action: form_params[:action],
       current_user: current_user
     } 
   end
