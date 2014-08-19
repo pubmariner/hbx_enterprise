@@ -26,6 +26,7 @@ class Policy
   field :sep_reason, type: String, default: :open_enrollment
   field :carrier_to_bill, type: Boolean, default: false
   field :aasm_state, type: String
+  field :updated_by, type: String
 
   validates_presence_of :eg_id
 
@@ -116,7 +117,7 @@ class Policy
   def enrollees_sans_subscriber
     enrollees.reject { |e| e.relationship_status_code == "self" }
   end
-
+  
   def has_responsible_person?
     !self.responsible_party_id.blank?
   end

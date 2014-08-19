@@ -40,12 +40,9 @@ class PoliciesController < ApplicationController
   def transmit
     @cancel_terminate = CancelTerminate.new(params[:cancel_terminate])
 
-    if params[:cancel_terminate][:transmit] == "1"
-
-    else
-      generated_filename = "#{@cancel_terminate.policy_id}.xml"
-      send_data(@cancel_terminate.to_cv, :type => "application/xml", :disposition => "attachment", :filename => generated_filename)
-    end
+    form = params[:cancel_terminate]
+    request = EndCoverageRequest.from_form(form, current_user.email)
+    EndCoverage.new(self, EndCoverageAction).execute(request)
   rescue
     p = params[:cancel_terminate][:policy_id]
     redirect_to cancelterminate_policies_path(p, {:cancel_terminate => {:policy_id => p}}), flash: { error: "Invalid" }
