@@ -52,7 +52,7 @@ Gluedb::Application.routes.draw do
   resources :users
 
   resources :policies, only: [:new, :show, :create, :edit, :update] do
-    collection do
+    member do
       get :cancelterminate
       post :transmit
     end

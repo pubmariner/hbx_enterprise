@@ -23,16 +23,18 @@ class CancelTerminate
   validates_presence_of :reason
 
   def initialize(props = {})
-    @policy_id = props[:policy_id]
-    @policy = Policy.find(@policy_id.to_i)
-    @operation = props[:operation]
-    @reason = props[:reason]
-    @benefit_end_date = props[:benefit_end_date]
-    ppl_hash = props.fetch(:people_attributes) { {} }
-    if ppl_hash.empty?
-      @people = map_people_from_policy(@policy)
-    else
+    @policy = Policy.find(props[:id])
+    # raise props.inspect
+    detail = props[:cancel_terminate]
+
+    if(!detail.nil?)
+      @operation = detail[:operation]
+      @reason = detail[:reason]
+      @benefit_end_date = detail[:benefit_end_date]
+      ppl_hash = detail.fetch(:people_attributes) { {} }
       @people = ppl_hash.values.map { |person| CancelTerminate.new(person) }
+    else
+      @people = map_people_from_policy(@policy) 
     end
   end
 
@@ -73,7 +75,7 @@ class CancelTerminate
   def term_date_valid?
     #get affected enrollees
     #check if any of their dates are invalid
-    if(@benefit_end_date.empty?)
+    if(@benefit_end_date.blank?)
       errors.add(:benefit_end_date, "can't be blank.")
       return
     end

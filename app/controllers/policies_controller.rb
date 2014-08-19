@@ -34,25 +34,25 @@ class PoliciesController < ApplicationController
   end
 
   def cancelterminate
-    @cancel_terminate = CancelTerminate.new(params[:cancel_terminate])
+    @cancel_terminate = CancelTerminate.new(params)
   end
 
   def transmit
-    @cancel_terminate = CancelTerminate.new(params[:cancel_terminate])
-    form = params[:cancel_terminate]
+    @cancel_terminate = CancelTerminate.new(params)
+
     if @cancel_terminate.valid?
-      p = form[:policy_id]
-      request = EndCoverageRequest.from_form(form, current_user.email)
+      request = EndCoverageRequest.from_form(params, current_user.email)
       EndCoverage.new(self, EndCoverageAction).execute(request)
-      unless form[:action] == "download"
-        redirect_to cancelterminate_policies_path(p, {:cancel_terminate => {:policy_id => p}})
+      unless params[:cancel_terminate][:action] == "download"
+        redirect_to cancelterminate_policy_path(params[:id])
       end
     else
       @cancel_terminate.errors.full_messages.each do |msg|
         flash_message(:error, msg) 
       end
-      render action: "cancelterminate"
+      render action: 'cancelterminate'
     end
+
   end
 
 end
