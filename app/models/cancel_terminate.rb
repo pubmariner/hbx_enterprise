@@ -20,6 +20,7 @@ class CancelTerminate
   attr_accessor :action
 
   validates_presence_of :benefit_end_date, :unless => :is_cancel?
+  validates_presence_of :reason
   validate :term_date_valid?
 
   def initialize(props = {})
@@ -75,7 +76,7 @@ class CancelTerminate
     #check if any of their dates are invalid
     affected_enrollees = @people.map{ |p| @policy.enrollee_for_member_id(p[:m_id])}
     if affected_enrollees.any?{ |e| e.coverage_start > @benefit_end_date.to_date }
-      errors.add(:benefit_end_date, "benefit end date must be after benefit begin date")
+      errors.add(:benefit_end_date, "must be after Benefit Begin Date")
     end
   end
 

@@ -48,7 +48,9 @@ class PoliciesController < ApplicationController
         redirect_to cancelterminate_policies_path(p, {:cancel_terminate => {:policy_id => p}})
       end
     else
-      flash_message(:error, @cancel_terminate.errors.messages)
+      @cancel_terminate.errors.full_messages.each do |msg|
+        flash_message(:error, msg) 
+      end
       render action: "cancelterminate"
     end
   end
