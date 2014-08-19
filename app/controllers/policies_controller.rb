@@ -46,7 +46,7 @@ class PoliciesController < ApplicationController
       redirect_to person_path(Policy.find(params[:id]).subscriber.person)
     else
       @cancel_terminate.errors.full_messages.each do |msg|
-        flash_message(:error, msg) 
+        flash_message(:error, msg)
       end
       render action: 'cancelterminate'
     end

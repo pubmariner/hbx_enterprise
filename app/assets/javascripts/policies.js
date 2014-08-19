@@ -1,17 +1,43 @@
 $(document).ready(function() {
-    if(typeof autocomplete_items === 'undefined')
-        return;
+  var rest = $(".cancel_terminate_table tbody tr td:first-child input:checkbox:not(:first)");
+  rest.attr("disabled", true);
 
-    var options = {
-        name: 'autocomplete_items',
-        limit: 4,
-        local: autocomplete_items
+  $('#cancel_terminate_people_attributes_0_include_selected').on('click', function() {
+    var select = $(this).prop('checked');
+
+    if (select == true) {
+      rest.prop('checked',true);
+      rest.attr("disabled", true);
+    }else{
+      rest.removeAttr("disabled");
     }
-    $('.typeahead').each(function(index, element) {
-        $(element).typeahead(options).on('typeahead:selected', function(e, data) {
-            var lookup_id = $(element).attr('data-target');
-            $(lookup_id).val(data.id);
 
-        })
-    });
+
+  });
+
+  $('input[id^="cancel_terminate_operation"]').on('click', function() {
+    var select = $(this).val();
+    if (select == 'cancel') {
+      $('.benefit_end_date_group').hide();
+      $('#cancel_terminate_benefit_end_date').val('');
+    }else {
+      $('.benefit_end_date_group').show();
+    }
+  });
+
+  if(typeof autocomplete_items === 'undefined')
+    return;
+
+  var options = {
+    name: 'autocomplete_items',
+    limit: 4,
+    local: autocomplete_items
+  }
+  $('.typeahead').each(function(index, element) {
+    $(element).typeahead(options).on('typeahead:selected', function(e, data) {
+      {var lookup_id = $(element).attr('data-target');
+        $(lookup_id).val(data.id);
+      }
+    })
+  });
 });
