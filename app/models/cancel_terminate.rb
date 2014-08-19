@@ -23,7 +23,6 @@ class CancelTerminate
 
   def initialize(props = {})
     @policy = Policy.find(props[:id])
-    # raise props.inspect
     detail = props[:cancel_terminate]
 
     if(!detail.nil?)
@@ -33,7 +32,7 @@ class CancelTerminate
       ppl_hash = detail.fetch(:people_attributes) { {} }
       @people = ppl_hash.values.map { |person| CancelTerminate.new(person) }
     else
-      @people = map_people_from_policy(@policy) 
+      @people = map_people_from_policy(@policy)
     end
   end
 
@@ -52,25 +51,6 @@ class CancelTerminate
     end
   end
 
-  # def subcriber_terminate
-  #   if @people.any?{ |p| p.include_selected == "1" && p.role == "self"}
-  #     @people.each { |p| p.include_selected = "1" }
-  #   end
-  # end
-
-  # def add_benefit_end
-  #   @policy.enrollees.each do |e|
-  #     if included_person?(e.m_id)
-  #       if is_cancel?
-  #         e.coverage_end = e.coverage_start
-  #       else
-  #         e.coverage_end = term_date(e.coverage_start)
-  #       end
-  #       e.coverage_status = "inactive"
-  #     end
-  #   end
-  # end
-
   def term_date_valid?
     #get affected enrollees
     #check if any of their dates are invalid
@@ -83,25 +63,6 @@ class CancelTerminate
       errors.add(:benefit_end_date, "must be after Benefit Begin Date")
     end
   end
-
-  # def included_person?(id)
-  #   @people.any?{|p| p.include_selected == "1" && p.m_id == id }
-  # end
-
-  # def to_cv
-  #   subcriber_terminate
-  #   add_benefit_end
-  #   include_member_ids = @people.reject { |p| p.include_selected == "0" }.map(&:m_id)
-  #   member_ids = include_member_ids
-  #   ser = CanonicalVocabulary::MaintenanceSerializer.new(
-  #     @policy,
-  #     @operation,
-  #     @reason,
-  #     member_ids,
-  #     include_member_ids
-  #   )
-  #   ser.serialize
-  # end
 
   def people_attributes=(pas)
   end
