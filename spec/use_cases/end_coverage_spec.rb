@@ -76,7 +76,7 @@ describe EndCoverage do
     context 'by cancelation' do
       let(:operation) { 'cancel' }
       let(:coverage_start) { Date.new(2014, 1, 2)}
-      let(:coverage_end) { Date.new(2014, 1, 2)}
+      let(:coverage_end) { coverage_start }
 
       it 'adjusts premium total to be the sum of all enrollees\' premiums' do
         sum = 0
@@ -93,11 +93,12 @@ describe EndCoverage do
 
     context 'by termination' do
       let(:operation) { 'terminate' }
-      let(:member) { Enrollee.new(rel_code: 'child', pre_amt: 200.00, coverage_status: 'inactive', coverage_end:  Date.new(1990, 1, 1), ben_stat: 'active', emp_stat: 'active',  m_id: '2') }
       let(:coverage_start) { Date.new(2014, 1, 2)}
       let(:coverage_end) { Date.new(2014, 1, 14)}
-      
+
       context 'when member\'s coverage ended previously' do
+        let(:member) { Enrollee.new(rel_code: 'child', pre_amt: 200.00, coverage_status: 'inactive', coverage_end:  Date.new(1990, 1, 1), ben_stat: 'active', emp_stat: 'active',  m_id: '2') }
+
         it 'new policy premium total doesnt include member' do
           sum = 0
           policy.enrollees.each do |e|
