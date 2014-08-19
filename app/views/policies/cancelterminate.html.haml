@@ -44,12 +44,6 @@
         .col-md-2
           .form_actions
             = f.submit 'Cancel / Terminate', class: 'btn btn-inverse', confirm: 'WARNING: This action will end coverage for the selected individuals. Are you sure you want to continue?'
-        .col-md-5
-          .form-group
-            Action :
-            = f.radio_button :action, "transmit", checked: true
-            = f.label "transmit"
-            = f.radio_button :action, "download"
-            = f.label "download"
-            = f.radio_button :action, "update"
-            = f.label "update gluedb"
+        .col-md-2
+          = f.label "Transmit?"
+          = f.check_box :transmit, checked: true

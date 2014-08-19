@@ -14,7 +14,7 @@ class EndCoverageRequest
       coverage_end: details[:benefit_end_date],
       operation: details[:operation],
       reason: details[:reason],
-      action: details[:action],
+      transmit: details[:transmit] == "1",
       current_user: current_user
     } 
   end

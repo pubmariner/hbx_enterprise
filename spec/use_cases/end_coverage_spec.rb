@@ -10,7 +10,7 @@ describe EndCoverage do
       operation: operation,
       reason: 'death',
       current_user: current_user,
-      action: 'transmit'
+      transmit: true
     } 
   end
 
@@ -52,7 +52,7 @@ describe EndCoverage do
   end
 
   it 'creates a resulting action' do
-    expect(action_factory).to receive(:create_for).with(request[:action], listener)
+    expect(action_factory).to receive(:create_for).with(request)
     end_coverage.execute(request)
   end
 

@@ -4,13 +4,10 @@ class NullPolicyMaintenanceAction
 end
 
 class EndCoverageAction
-  def self.create_for(action_type, listener)
-    case action_type
-    when 'transmit'
+  def self.create_for(request)
+    if(request[:transmit])
       TransmitPolicyMaintenance.new
-    when 'download'
-      DownloadPolicyMaintenance.new(listener)
-    when 'update'
+    else
       NullPolicyMaintenanceAction.new
     end
   end

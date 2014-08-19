@@ -17,7 +17,6 @@ class CancelTerminate
   attr_accessor :operation, :reason, :benefit_end_date
   attr_accessor :people
   attr_accessor :policy
-  attr_accessor :action
 
   validate :term_date_valid?, :unless => :is_cancel?
   validates_presence_of :reason

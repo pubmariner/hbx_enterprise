@@ -43,9 +43,6 @@ class PoliciesController < ApplicationController
     if @cancel_terminate.valid?
       request = EndCoverageRequest.from_form(params, current_user.email)
       EndCoverage.new(self, EndCoverageAction).execute(request)
-      unless params[:cancel_terminate][:action] == "download"
-        redirect_to cancelterminate_policy_path(params[:id])
-      end
     else
       @cancel_terminate.errors.full_messages.each do |msg|
         flash_message(:error, msg) 

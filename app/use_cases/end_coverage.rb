@@ -14,7 +14,7 @@ class EndCoverage
 
     update_policy
 
-    action = @action_factory.create_for(request[:action], @listener)
+    action = @action_factory.create_for(request)
     action_request = {
       policy_id: @policy.id,
       operation: request[:operation],
