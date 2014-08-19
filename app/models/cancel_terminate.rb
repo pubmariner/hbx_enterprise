@@ -20,6 +20,7 @@ class CancelTerminate
   attr_accessor :action
 
   validates_presence_of :benefit_end_date, :unless => :is_cancel?
+  validate :term_date_valid?
 
   def initialize(props = {})
     @policy_id = props[:policy_id]
@@ -50,50 +51,52 @@ class CancelTerminate
     end
   end
 
-  def subcriber_terminate
-    if @people.any?{ |p| p.include_selected == "1" && p.role == "self"}
-      @people.each { |p| p.include_selected = "1" }
+  # def subcriber_terminate
+  #   if @people.any?{ |p| p.include_selected == "1" && p.role == "self"}
+  #     @people.each { |p| p.include_selected = "1" }
+  #   end
+  # end
+
+  # def add_benefit_end
+  #   @policy.enrollees.each do |e|
+  #     if included_person?(e.m_id)
+  #       if is_cancel?
+  #         e.coverage_end = e.coverage_start
+  #       else
+  #         e.coverage_end = term_date(e.coverage_start)
+  #       end
+  #       e.coverage_status = "inactive"
+  #     end
+  #   end
+  # end
+
+  def term_date_valid?
+    #get affected enrollees
+    #check if any of their dates are invalid
+    affected_enrollees = @people.map{ |p| @policy.enrollee_for_member_id(p[:m_id])}
+    if affected_enrollees.any?{ |e| e.coverage_start > @benefit_end_date.to_date }
+      errors.add(:benefit_end_date, "benefit end date must be after benefit begin date")
     end
   end
 
-  def add_benefit_end
-    @policy.enrollees.each do |e|
-      if included_person?(e.m_id)
-        if is_cancel?
-          e.coverage_end = e.coverage_start
-        else
-          e.coverage_end = validate_term_date(e.coverage_start)
-        end
-        e.coverage_status = "inactive"
-      end
-    end
-  end
+  # def included_person?(id)
+  #   @people.any?{|p| p.include_selected == "1" && p.m_id == id }
+  # end
 
-  def validate_term_date(start_date)
-    if start_date > @benefit_end_date.to_date
-    else
-      @benefit_end_date.todate
-    end
-  end
-
-  def included_person?(id)
-    @people.any?{|p| p.include_selected == "1" && p.m_id == id }
-  end
-
-  def to_cv
-    subcriber_terminate
-    add_benefit_end
-    include_member_ids = @people.reject { |p| p.include_selected == "0" }.map(&:m_id)
-    member_ids = include_member_ids
-    ser = CanonicalVocabulary::MaintenanceSerializer.new(
-      @policy,
-      @operation,
-      @reason,
-      member_ids,
-      include_member_ids
-    )
-    ser.serialize
-  end
+  # def to_cv
+  #   subcriber_terminate
+  #   add_benefit_end
+  #   include_member_ids = @people.reject { |p| p.include_selected == "0" }.map(&:m_id)
+  #   member_ids = include_member_ids
+  #   ser = CanonicalVocabulary::MaintenanceSerializer.new(
+  #     @policy,
+  #     @operation,
+  #     @reason,
+  #     member_ids,
+  #     include_member_ids
+  #   )
+  #   ser.serialize
+  # end
 
   def people_attributes=(pas)
   end
