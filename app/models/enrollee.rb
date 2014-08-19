@@ -2,7 +2,7 @@ class Enrollee
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  BENEFIT_STATUS_CODE_LIST      = ["active", "cobra", "surving insured", "tefra"]
+  BENEFIT_STATUS_CODE_LIST      = ["active", "cobra", "surviving insured", "tefra"]
   EMPLOYMENT_STATUS_CODE_LIST   = ["active", "full-time", "part-time", "retired", "terminated"]
   RELATIONSHIP_STATUS_CODE_LIST = ["self", "spouse", "child", "ward"]
 
