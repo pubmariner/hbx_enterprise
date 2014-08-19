@@ -43,7 +43,7 @@
       .row
         .col-md-2
           .form_actions
-            = f.submit 'Cancel / Terminate', :class => 'btn btn-inverse'
+            = f.submit 'Cancel / Terminate', class: 'btn btn-inverse', confirm: 'WARNING: This action will end coverage for the selected individuals. Are you sure you want to continue?'
         .col-md-5
           .form-group
             Action :
