@@ -19,6 +19,7 @@ class CancelTerminate
   attr_accessor :policy
 
   validate :term_date_valid?, :unless => :is_cancel?
+  validate :selected_at_least_one?
   validates_presence_of :reason
 
   def initialize(props = {})
@@ -40,8 +41,8 @@ class CancelTerminate
     @operation == "cancel"
   end
 
-  def selected_at_least_one
-    @people.any?{|p| p.include_selected == "0"}
+  def selected_at_least_one?
+    errors.add(:people, ": must select at least one individual") unless @people.any?{|p| p.include_selected == "1"}
   end
 
   def map_people_from_policy(enroll)
