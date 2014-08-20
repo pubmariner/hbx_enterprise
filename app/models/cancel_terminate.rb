@@ -71,8 +71,6 @@ class CancelTerminate
 
   def self.reasons
     [
-      ["Reason", nil],
-      ["death", "death"],
       ["termination_of_benefits", "termination_of_benefits"]
     ]
   end
