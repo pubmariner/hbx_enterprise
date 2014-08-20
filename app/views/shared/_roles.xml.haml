@@ -15,10 +15,9 @@
           - member.carriers.each do |carrier|
             %n1:carrier
               %n1:id
-              %n1:hbx_id= carrier.hbx_carrier_id
               %n1:name= carrier.name
-              %n1:fein= carrier.fein
-              %n1:issuer_state
+              - if false
+                %n1:display_name= #carrier.carrier_profiles.first.profile_name
           %n1:carrier_assigned_id
   - if person.responsible_parties.present?
     %n1:responsible_party_roles
@@ -35,8 +34,13 @@
     %n1:employee_roles
       - employee_roles.each do |role|
         %n1:employee_role
-          %n1:id
-          %n1:employment_status= role.employment_status_code 
+          %n1:employer
+            %n1:id= api_v1_employer_url(role.policy.employer)
+            %n1:hbx_id= 'DC0'
+            %n1:name
+            - if false
+              %n1:dba
+          %n1:employment_status= "urn:openhbx:terms:v1:employment_status##{role.employment_status_code}" 
           - if role.coverage_start.present?
             %n1:eligibility_start_date= role.coverage_start.try(:strftime,"%Y%m%d")
           - if role.coverage_end.present?

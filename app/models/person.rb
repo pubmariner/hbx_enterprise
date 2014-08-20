@@ -293,7 +293,10 @@ class Person
 
   def relationship_in_group
     group = application_groups.first
-    group.person_relationships.detect { |r| r.object_person == id && r.subject_person == group.applicant.id}
+    raise group.person_relationships.count.inspect
+    group.person_relationships.detect do |r| 
+      r.object_person == id && r.subject_person == group.applicant.id
+    end
   end
 
   def employee_roles

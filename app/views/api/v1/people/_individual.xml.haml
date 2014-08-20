@@ -1,10 +1,11 @@
-%n1:id= person.authority_member.hbx_id
+%n1:id= person.authority_member.hbx_member_id
+= render 'shared/hbx_identifier'
 %n1:person
   = render 'shared/person', person: person
 %n1:relationships
   - relationship = person.relationship_in_group
   %n1:subject_individual= api_v1_person_url(relationship.subject_person)
-  %n1:relationship_uri= "#{relationship.relationship_kind}"
+  %n1:relationship_uri= "urn:openhbx:terms:v1:individual_relationship##{relationship.relationship_kind}"
   - if false
     %n1:inverse_relationship
   %n1:object_individual= api_v1_person_url(relationship.object_person)
