@@ -4,16 +4,15 @@
 - broker = policy.broker
 - if broker.present?
   %n1:broker
-    %n1:id
-    %n1:hbx_id
-    %n1:name= broker.name_full
-    %n1:npn= broker.npn
 %n1:enrollees
   %n1:subscriber
     = render 'shared/enrollee', enrollee: policy.subscriber
-  %n1:members
-    - policy.enrollees_sans_subscriber.each do |enrollee|
-      = render 'shared/enrollee', enrollee: enrollee
+  - members = policy.enrollees_sans_subscriber
+  - if members.present?
+    %n1:members
+      - members.each do |enrollee|
+        %n1:member
+          = render 'shared/enrollee', enrollee: enrollee
 - if policy.responsible_party.present?
   %n1:responsible_party
     = render 'shared/person', person: policy.responsible_party.person
@@ -23,17 +22,12 @@
   %n1:plan
     %n1:id
     = render 'shared/hbx_identifier'
-    %n1:hios_id= plan.hios_plan_id
+    %n1:qhp_id= plan.hios_plan_id
     %n1:name= plan.name
     %n1:is_dental_only_flag= (plan.coverage_type == 'dental')
-    - carrier = plan.carrier
-    %n1:carrier
-      %n1:id
-      %n1:hbx_id= carrier.hbx_carrier_id
-      %n1:name= carrier.name
-      %n1:fein= carrier.fein
-      %n1:issuer_state
+    %n1:carrier= render 'shared/carrier_link_type', carrier: plan.carrier
     %n1:coverage_type= "urn:openhbx:terms:v1:benefit_coverage##{plan.coverage_type}"
+    %n1:metal_level= "urn:openhbx:terms:v1:plan_metal_level##{plan.metal_level}"
     %n1:market= "urn:openhbx:terms:v1:hbx_market##{plan.market_type}"
   - if policy.market == 'individual'
     %n1:individual_market
@@ -42,15 +36,10 @@
       %n1:elected_aptc_percent= policy.elected_aptc
       %n1:applied_aptc_amount= policy.applied_aptc
       %n1:other_payment_amount
-        %n1:id
   - elsif policy.market == 'shop'
-    - employer = policy.employer
     %n1:shop_market
-      %n1:employer
-        %n1:id
-        %n1:hbx_id= employer.hbx_id
-        %n1:name= employer.name
-        %n1:dba
-      %n1:total_employer_responsible_amount= policy.tot_emp_res_amt
+      %n1:employer= render 'shared/employer_link_type', policy.employer
   %n1:premium_amount_total= policy.pre_amt_tot
   %n1:total_responsible_amount= policy.tot_res_amt
+  - if policy.tot_emp_res_amt.present?
+    %n1:total_employer_responsible_amount= policy.tot_emp_res_amt

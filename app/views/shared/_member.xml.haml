@@ -1,5 +1,6 @@
-%n1:member
+%n1:individual
   %n1:id
+  = render 'shared/hbx_identifier'
   %n1:person
     = render 'shared/person', person: person
   %n1:relationships
@@ -8,4 +9,5 @@
     %n1:inverse_relationship_uri
     %n1:object_individual
   = render 'shared/roles', person: person
-  %n1:other_coverage
+  - if false
+    %n1:other_coverage
