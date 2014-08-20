@@ -1,7 +1,7 @@
 $(document).ready(function() {
-  $("input[id$='include_selected']").on('click', function() {
+  $("input[id^='change'][id$='include_selected']").on('click', function() {
       var select = $(this).val();
-      var affect = $(this).closest('td').next('td').find('input');
+      var affect = $(this).closest('td').next('td').find(':checkbox');
 
        if(select==1) {
           affect.prop('disabled', !$(this).is(':checked'));

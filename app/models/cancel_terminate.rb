@@ -3,7 +3,7 @@ class CancelTerminate
   include ActiveModel::Validations
   extend ActiveModel::Naming
 
-  CancelTerminate  = Struct.new(:affect_selected, :include_selected, :m_id, :name, :role) do
+  InvolvedPerson = Struct.new(:affect_selected, :include_selected, :m_id, :name, :role) do
     def initialize(h)
       super(*h.values_at(:affect_selected, :include_selected, :m_id, :name, :role))
     end
@@ -25,12 +25,12 @@ class CancelTerminate
     @policy = Policy.find(props[:id])
     detail = props[:cancel_terminate]
 
-    if(!detail.nil?)
+    unless detail.nil?
       @operation = detail[:operation]
       @reason = detail[:reason]
       @benefit_end_date = detail[:benefit_end_date]
       ppl_hash = detail.fetch(:people_attributes) { {} }
-      @people = ppl_hash.values.map { |person| CancelTerminate.new(person) }
+      @people = ppl_hash.values.map { |person| InvolvedPerson.new(person) }
     else
       @people = map_people_from_policy(@policy)
     end
@@ -47,7 +47,7 @@ class CancelTerminate
   def map_people_from_policy(enroll)
     policy.enrollees.map do |em|
       per = em.person
-      CancelTerminate.new({m_id: em.m_id, name: per.name_full, role: em.rel_code, affect_selected: true, include_selected: true})
+      InvolvedPerson.new({m_id: em.m_id, name: per.name_full, role: em.rel_code, affect_selected: true, include_selected: true})
     end
   end
 

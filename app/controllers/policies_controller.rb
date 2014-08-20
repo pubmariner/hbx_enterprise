@@ -48,7 +48,7 @@ class PoliciesController < ApplicationController
       @cancel_terminate.errors.full_messages.each do |msg|
         flash_message(:error, msg)
       end
-      render action: 'cancelterminate'
+      render :cancelterminate
     end
 
   end

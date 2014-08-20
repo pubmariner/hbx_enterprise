@@ -1,8 +1,13 @@
 $(document).ready(function() {
   var rest = $(".cancel_terminate_table tbody tr td:first-child input:checkbox:not(:first)");
-  rest.attr("disabled", true);
+  var head = $('#cancel_terminate_people_attributes_0_include_selected');
 
-  $('#cancel_terminate_people_attributes_0_include_selected').on('click', function() {
+  if(head.prop('checked') == true){
+    rest.attr("disabled", true);
+    rest.prop('checked',true);
+  }
+
+  head.on('click', function() {
     var select = $(this).prop('checked');
 
     if (select == true) {
@@ -11,8 +16,6 @@ $(document).ready(function() {
     }else{
       rest.removeAttr("disabled");
     }
-
-
   });
 
   $('input[id^="cancel_terminate_operation"]').on('click', function() {
