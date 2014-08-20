@@ -61,6 +61,14 @@ describe EndCoverage do
     end_coverage.execute(request)
   end
 
+  context 'no one is affected' do
+    let(:affected_enrollee_ids) { [] }
+    it "doesn't execute the resulting action" do
+      expect(action).not_to receive(:execute)
+      end_coverage.execute(request)
+    end
+  end
+
   context 'when subscriber\'s coverage ends' do
     let(:affected_enrollee_ids) { [ subscriber.m_id ] }
     

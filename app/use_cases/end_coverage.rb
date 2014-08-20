@@ -7,12 +7,14 @@ class EndCoverage
 
   def execute(request)
     @request = request
-
+    affected_enrollee_ids = @request[:affected_enrollee_ids]
+    return if affected_enrollee_ids.empty?
+    
     @policy = @policy_repo.find(request[:policy_id])
 
     enrollees_not_already_canceled = @policy.enrollees.select { |e| !e.canceled? }
 
-    update_policy
+    update_policy(affected_enrollee_ids)
 
     action = @action_factory.create_for(request)
     action_request = {
@@ -27,9 +29,8 @@ class EndCoverage
 
   private
 
-  def update_policy
+  def update_policy(affected_enrollee_ids)
     subscriber = @policy.subscriber
-    affected_enrollee_ids = @request[:affected_enrollee_ids]
 
     if(affected_enrollee_ids.include?(subscriber.m_id))
       end_coverage_for_everyone
