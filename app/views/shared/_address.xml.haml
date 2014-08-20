@@ -1,7 +1,8 @@
 %n1:address
   %n1:address_type= "urn:openhbx:terms:v1:address_type##{address.address_type}"
   %n1:address_1= address.address_1
-  %n1:address_2= address.address_2
+  - if address.address_2.present?
+    %n1:address_2= address.address_2
   %n1:city= address.city
   %n1:state= address.state
   %n1:postal_code= address.zip

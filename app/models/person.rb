@@ -291,7 +291,22 @@ class Person
     query_proxy.application_groups
   end
 
+  def relationship_in_group
+    group = application_groups.first
+    group.person_relationships.detect { |r| r.object_person == id && r.subject_person == group.applicant.id}
+  end
+
+  def employee_roles
+    policies_through_employer = policies.select { |p| p.employer_id == employer_id }
+    enrollees = [] 
+    policies_through_employer.each do |p|
+      enrollees << p.enrollees.detect { |e| e.m_id == authority_member_id }
+    end
+    enrollees
+  end
+
   private
+
   def initialize_authority_member
     self.authority_member = members.first.hbx_member_id if members.count == 1
   end

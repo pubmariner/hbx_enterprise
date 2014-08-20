@@ -1,8 +1,10 @@
-%n1:id
+%n1:id= api_v1_person_url(person.id)
 %n1:name
   = render 'shared/name', object: person
-%n1:job_title
-%n1:department
+- if false #TODO
+  %n1:job_title
+- if false #TODO
+  %n1:department
 - unless person.addresses.empty?
   %n1:addresses
     - person.addresses.each do |address|

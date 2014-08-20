@@ -1,30 +1,37 @@
-%n1:id= api_v1_person_url(person.id)
+%n1:id= person.authority_member.hbx_id
 %n1:person
   = render 'shared/person', person: person
 %n1:relationships
-  %n1:subject_individual
-  %n1:relationship_uri
-  %n1:inverse_relationship
-  %n1:object_individual
+  - relationship = person.relationship_in_group
+  %n1:subject_individual= api_v1_person_url(relationship.subject_person)
+  %n1:relationship_uri= "#{relationship.relationship_kind}"
+  - if false
+    %n1:inverse_relationship
+  %n1:object_individual= api_v1_person_url(relationship.object_person)
 = render 'shared/roles', person: person
-%n1:other_coverage
-  %n1:id
-%n1:state_of_residency
-%n1:immigration_status
-%n1:incarcerated
-%n1:financial
-  %n1:incomes
-    %n1:income
-      %n1:calendar_year
-      %n1:income_amount
-      %n1:income_type
-      %n1:income_frequency
-      %n1:reported_date
-      %n1:reported_by
-      %n1:verification
-        %n1:verified_flag
-        %n1:source
-        %n1:recorded_date
-        %n1:recorded_by
-        %n1:notes
-  %n1:tax_file_status
+- if false
+  %n1:other_coverage
+    %n1:id
+- if false
+  %n1:state_of_residency
+- if false
+  %n1:immigration_status
+- if false
+  %n1:incarcerated
+- if false
+  %n1:financial
+    %n1:incomes
+      %n1:income
+        %n1:calendar_year
+        %n1:income_amount
+        %n1:income_type
+        %n1:income_frequency
+        %n1:reported_date
+        %n1:reported_by
+        %n1:verification
+          %n1:verified_flag
+          %n1:source
+          %n1:recorded_date
+          %n1:recorded_by
+          %n1:notes
+    %n1:tax_file_status
