@@ -19,6 +19,8 @@ jQuery ->
       menuStyle: 'dropdown-inverse'
       # size: 5
 
+  $('.nav.nav-list .disabled a').removeAttr('href')
+
   update_delete_buttons()
   $('#setAuthorityLink').click ->
     $('#authorityIDModal').modal({})
