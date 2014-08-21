@@ -148,5 +148,19 @@ describe EndCoverage do
         expect(member.coverage_end).to eq member.coverage_start
       end
     end
+
+    context 'and the members coverage is already ended' do
+      let(:inactive_member) { Enrollee.new(rel_code: 'child', coverage_status: 'inactive', coverage_start: coverage_start, coverage_end: already_ended_date, pre_amt: 50.00, ben_stat: 'active', emp_stat: 'active',  m_id: '3') }
+      let(:already_ended_date) { request[:coverage_end].prev_year }
+      before do
+        affected_enrollee_ids << inactive_member.m_id 
+        policy.enrollees << inactive_member
+        policy.save
+      end
+      
+      it 'does not change their coverage end date' do
+        expect { end_coverage.execute(request) }.not_to change{ inactive_member.coverage_end }
+      end
+    end
   end
 end
