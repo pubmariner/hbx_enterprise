@@ -33,7 +33,7 @@ class CancelTerminate
       ppl_hash = detail.fetch(:people_attributes) { {} }
       @people = ppl_hash.values.map { |person| InvolvedPerson.new(person) }
     else
-      @people = map_people_from_policy(@policy)
+      @people = map_people_from_policy(@policy).compact
     end
   end
 
@@ -48,7 +48,7 @@ class CancelTerminate
   def map_people_from_policy(enroll)
     policy.enrollees.map do |em|
       per = em.person
-      InvolvedPerson.new({m_id: em.m_id, name: per.name_full, role: em.rel_code, affect_selected: true, include_selected: true})
+      InvolvedPerson.new({m_id: em.m_id, name: per.name_full, role: em.rel_code, affect_selected: true, include_selected: true}) if em.coverage_status == "active"
     end
   end
 
