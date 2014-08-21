@@ -1,9 +1,14 @@
 = render 'shared/member', person: enrollee.person
 %n1:employment_status= "urn:openhbx:terms:v1:employment_status##{enrollee.emp_stat}"
 %n1:physically_disabled_flag= enrollee.ds
-%n1:coverage_status= enrollee.coverage_status
-%n1:benefit_status= enrollee.ben_stat
-%n1:coverage
-  %n1:begin_date= enrollee.coverage_start
-  %n1:end_date= enrollee.coverage_end
+- if enrollee.ben_stat.present?
+  %n1:benefit_status= "urn:openhbx:terms:v1:benefit_status##{enrollee.ben_stat}"
+%n1:benefit
   %n1:premium_amount= enrollee.pre_amt
+  %n1:begin_date= enrollee.coverage_start.try(:strftime,"%Y%m%d")
+  - if enrollee.coverage_end.present?
+    %n1:end_date= enrollee.coverage_end.try(:strftime,"%Y%m%d")
+  - if false #TODO
+    %n1:carrier_assigned_policy_id
+  - if false
+    %n1:coverage_level
