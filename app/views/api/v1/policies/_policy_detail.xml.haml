@@ -1,5 +1,4 @@
-%n1:id= api_v1_policy_url(policy.id)
-= render 'shared/hbx_identifier'
+= render 'shared/identity', id: api_v1_policy_url(policy.id)
 - broker = policy.broker
 - if broker.present?
   = render 'shared/broker_link_type', broker: policy.broker
@@ -16,17 +15,8 @@
   %n1:responsible_party
     = render 'shared/person', person: policy.responsible_party.person
 %n1:enrollment
-  - plan = policy.plan
   %n1:plan
-    %n1:id
-    = render 'shared/hbx_identifier'
-    %n1:qhp_id= plan.hios_plan_id
-    %n1:name= plan.name
-    %n1:is_dental_only_flag= (plan.coverage_type == 'dental')
-    %n1:carrier= render 'shared/carrier_link_type', carrier: plan.carrier
-    %n1:coverage_type= "urn:openhbx:terms:v1:benefit_coverage##{plan.coverage_type}"
-    %n1:metal_level= "urn:openhbx:terms:v1:plan_metal_level##{plan.metal_level}"
-    %n1:market= "urn:openhbx:terms:v1:hbx_market##{plan.market_type}"
+    = render 'shared/plan_link_type', plan: policy.plan
   - if policy.market == 'individual'
     %n1:individual_market
       %n1:carrier_to_bill_flag= policy.carrier_to_bill
@@ -41,5 +31,6 @@
   %n1:total_responsible_amount= policy.tot_res_amt
   - if policy.tot_emp_res_amt.present?
     %n1:total_employer_responsible_amount= policy.tot_emp_res_amt
-  %n1:policy_state= "urn:openhbx:terms:v1:policy_state##{policy.aasm_state}"
-  %n1:request_submitted_timestamp
+%n1:policy_state= "urn:openhbx:terms:v1:policy_state##{policy.aasm_state}"
+%n1:request_submitted_timestamp
+= render 'shared/timestamp', record: policy

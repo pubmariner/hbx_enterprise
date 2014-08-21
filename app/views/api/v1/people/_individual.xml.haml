@@ -1,5 +1,4 @@
-%n1:id= person.authority_member.hbx_member_id
-= render 'shared/hbx_identifier'
+= render 'shared/identity', id: person.authority_member.hbx_member_id
 %n1:person
   = render 'shared/person', person: person
 = render 'shared/relationships', person: person

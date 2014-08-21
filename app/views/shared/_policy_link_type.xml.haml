@@ -1,0 +1,10 @@
+= render 'shared/identity', id: api_v1_policy_url(policy.id)
+= render 'shared/broker_link_type'
+%n1:enrollees
+  - policy.enrollees.each do |enrollee|
+    %n1:enrollee= render 'shared/enrollee', enrollee: enrollee
+%n1:plan= render 'shared/plan_link_type', plan: policy.plan
+- if policy.employer.present?
+  %n1:employer= render 'shared/employer_link_type', employer: policy.employer
+%n1:policy_state= "urn:openhbx:terms:v1:policy_state##{policy.aasm_state}"
+= render 'shared/timestamp', record: policy

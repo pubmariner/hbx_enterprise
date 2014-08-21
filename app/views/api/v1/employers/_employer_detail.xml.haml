@@ -1,5 +1,4 @@
-%n1:id= api_v1_employer_url(employer.id)
-= render 'shared/hbx_identifier'
+= render 'shared/identity', id: api_v1_employer_url(employer.id)
 %n1:name= employer.name
 - if false
   %n1:dba
@@ -19,8 +18,7 @@
   - employer.elected_plans.each do |elected_plan|
     - plan = elected_plan.plan
     %n1:plan
-      %n1:id
-      = render 'shared/hbx_identifier'
+      = render 'shared/identity', id: nil
       %n1:qhp_id= elected_plan.qhp_id
       %n1:name= elected_plan.plan_name
       %n1:is_dental_only_flag= plan.coverage_type == 'dental'

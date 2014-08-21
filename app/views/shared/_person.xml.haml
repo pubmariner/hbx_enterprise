@@ -1,4 +1,4 @@
-%n1:id= api_v1_person_url(person.id)
+= render 'shared/identity', id: api_v1_person_url(person.id)
 %n1:name
   = render 'shared/name', object: person
 - if false #TODO

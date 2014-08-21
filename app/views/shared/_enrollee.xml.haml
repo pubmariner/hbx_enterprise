@@ -1,4 +1,12 @@
-= render 'shared/member', person: enrollee.person
+- person = enrollee.person
+%n1:individual
+  = render 'shared/identity', id: api_v1_person_url(person.id)
+  %n1:person
+    = render 'shared/person', person: person
+  = render 'shared/relationships', person: person
+  = render 'shared/roles', person: person
+  - if false
+    %n1:other_coverage
 %n1:employment_status= "urn:openhbx:terms:v1:employment_status##{enrollee.emp_stat}"
 %n1:physically_disabled_flag= enrollee.ds
 - if enrollee.ben_stat.present?

@@ -11,10 +11,11 @@
         %n1:tobacco_user= member.hlh.downcase
         - if member.lui.present?
           %n1:language= member.lui
-        %n1:carriers
-          - member.carriers.each do |carrier|
-            %n1:carrier= render 'shared/carrier_link_type', carrier: carrier
-            %n1:carrier_assigned_id
+        - policies = member.policies
+        - if policies.present?
+          %n1:policies
+            - policies.each do |policy|
+              = render 'shared/policy_link_type', policy: policy
   - if person.responsible_parties.present?
     %n1:responsible_party_roles
       - person.responsible_parties.each do |party|
