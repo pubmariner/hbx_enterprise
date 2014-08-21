@@ -15,7 +15,6 @@
 - if policy.responsible_party.present?
   %n1:responsible_party
     = render 'shared/person', person: policy.responsible_party.person
-%n1:carrier_assigned_member_id
 %n1:enrollment
   - plan = policy.plan
   %n1:plan
