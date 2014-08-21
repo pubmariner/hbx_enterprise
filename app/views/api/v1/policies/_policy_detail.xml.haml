@@ -1,9 +1,8 @@
 %n1:id= api_v1_policy_url(policy.id)
 = render 'shared/hbx_identifier'
-%n1:carrier_assigned_policy_id
 - broker = policy.broker
 - if broker.present?
-  %n1:broker
+  = render 'shared/broker_link_type', broker: policy.broker
 %n1:enrollees
   %n1:subscriber
     = render 'shared/enrollee', enrollee: policy.subscriber

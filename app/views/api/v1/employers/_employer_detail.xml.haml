@@ -1,18 +1,15 @@
 %n1:id= api_v1_employer_url(employer.id)
-%n1:hbx_id= employer.hbx_id
+= render 'shared/hbx_identifier'
 %n1:name= employer.name
-%n1:dba
+- if false
+  %n1:dba
 %n1:fein= employer.fein
-%n1:sic_code= employer.sic_code
+- if employer.sic_code.present?
+  %n1:sic_code= employer.sic_code
+- if employer.broker.present?
+  %n1:broker= render 'shared/broker_link_type', broker: employer.broker
 %n1:fte_count= employer.fte_count
 %n1:pte_count= employer.pte_count
-%n1:broker
-  %n1:id
-  %n1:hbx_id
-  %n1:npn= employer.broker.npn
-  %n1:name= employer.broker.name_full
-  %n1:tpa_ga_fein
-  %n1:tpa_name
 %n1:open_enrollment_start= employer.open_enrollment_start.try(:strftime,"%Y-%m-%d")
 %n1:open_enrollment_end= employer.open_enrollment_end.try(:strftime,"%Y-%m-%d")
 %n1:plan_year_start= employer.plan_year_start.try(:strftime,"%Y-%m-%d")
@@ -20,19 +17,27 @@
   %n1:plan_year_end= employer.plan_year_end.try(:strftime,"%Y-%m-%d")
 %n1:plans
   - employer.elected_plans.each do |elected_plan|
+    - plan = elected_plan.plan
     %n1:plan
-      %n1:name= elected_plan.plan_name
-      %n1:hbx_plan_id= elected_plan.hbx_plan_id
+      %n1:id
+      = render 'shared/hbx_identifier'
       %n1:qhp_id= elected_plan.qhp_id
-      %n1:issuer
-      %n1:policy_number= elected_plan.carrier_policy_number
-      %n1:group_id= elected_plan.carrier_employer_group_id
-      %n1:coverage_type= elected_plan.coverage_type
-      %n1:orginal_effective_date= elected_plan.original_effective_date
-      %n1:metal_level_code= elected_plan.plan.metal_level
+      %n1:name= elected_plan.plan_name
+      %n1:is_dental_only_flag= plan.coverage_type == 'dental'
+      %n1:carrier= render 'shared/carrier_link_type', carrier: elected_plan.carrier
+      %n1:coverage_type= "urn:openhbx:terms:v1:benefit_coverage##{plan.coverage_type}"
+      %n1:metal_level= "urn:openhbx:terms:v1:plan_metal_level##{plan.metal_level.downcase}"
+      %n1:market= "urn:openhbx:terms:v1:hbx_market##{plan.market_type}"
+      %n1:original_effective_date= elected_plan.original_effective_date.try(:strftime,"%Y-%m-%d")
+      - if elected_plan.carrier_employer_group_id.present?
+        %n1:group_id= elected_plan.carrier_employer_group_id
+      - if elected_plan.carrier_policy_number.present?
+        %n1:policy_number= elected_plan.carrier_policy_number
 %n1:contacts
   - 1.times do
     %n1:contact
       = render 'shared/person', person: employer
-%n1:version
-%n1:notes= employer.notes
+- if false
+  %n1:version
+- if employer.notes.present?
+  %n1:notes= employer.notes
