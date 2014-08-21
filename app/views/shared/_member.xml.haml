@@ -3,11 +3,7 @@
   = render 'shared/hbx_identifier'
   %n1:person
     = render 'shared/person', person: person
-  %n1:relationships
-    %n1:subject_individual
-    %n1:relationship_uri
-    %n1:inverse_relationship_uri
-    %n1:object_individual
+  = render 'shared/relationships', person: person
   = render 'shared/roles', person: person
   - if false
     %n1:other_coverage
