@@ -9,11 +9,11 @@
   %n1:broker= render 'shared/broker_link_type', broker: employer.broker
 %n1:fte_count= employer.fte_count
 %n1:pte_count= employer.pte_count
-%n1:open_enrollment_start= employer.open_enrollment_start.try(:strftime,"%Y-%m-%d")
-%n1:open_enrollment_end= employer.open_enrollment_end.try(:strftime,"%Y-%m-%d")
-%n1:plan_year_start= employer.plan_year_start.try(:strftime,"%Y-%m-%d")
+%n1:open_enrollment_start= employer.open_enrollment_start.try(:strftime,"%Y%m%d")
+%n1:open_enrollment_end= employer.open_enrollment_end.try(:strftime,"%Y%m%d")
+%n1:plan_year_start= employer.plan_year_start.try(:strftime,"%Y%m%d")
 - if employer.plan_year_end.present?
-  %n1:plan_year_end= employer.plan_year_end.try(:strftime,"%Y-%m-%d")
+  %n1:plan_year_end= employer.plan_year_end.try(:strftime,"%Y%m%d")
 %n1:plans
   - employer.elected_plans.each do |elected_plan|
     - plan = elected_plan.plan
@@ -27,7 +27,7 @@
       %n1:metal_level= "urn:openhbx:terms:v1:plan_metal_level##{plan.metal_level.downcase}"
       - if plan.market_type.present?
         %n1:market= "urn:openhbx:terms:v1:hbx_market##{plan.market_type}"
-      %n1:original_effective_date= elected_plan.original_effective_date.try(:strftime,"%Y-%m-%d")
+      %n1:original_effective_date= elected_plan.original_effective_date.try(:strftime,"%Y%m%d")
       - if elected_plan.carrier_employer_group_id.present?
         %n1:group_id= elected_plan.carrier_employer_group_id
       - if elected_plan.carrier_policy_number.present?
