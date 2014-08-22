@@ -26,7 +26,7 @@
       %n1:other_payment_amount
   - elsif policy.market == 'shop'
     %n1:shop_market
-      %n1:employer= render 'shared/employer_link_type', employer: policy.employer
+      %n1:employer_link= render 'shared/employer_link_type', employer: policy.employer
       %n1:total_employer_responsible_amount= policy.tot_emp_res_amt
   %n1:premium_amount_total= policy.pre_amt_tot
   %n1:total_responsible_amount= policy.tot_res_amt
