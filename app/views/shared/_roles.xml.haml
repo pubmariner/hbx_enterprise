@@ -32,7 +32,6 @@
   - if employee_roles.present?
     %n1:employee_roles
       - employee_roles.each do |role|
-        - raise role.policy.employer.inspect
         %n1:employee_role
           %n1:employer= render 'shared/employer_link_type', employer: role.policy.employer
           %n1:employment_status= "urn:openhbx:terms:v1:employment_status##{role.employment_status_code}" 
