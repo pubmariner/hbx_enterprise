@@ -27,10 +27,9 @@
   - elsif policy.market == 'shop'
     %n1:shop_market
       %n1:employer= render 'shared/employer_link_type', employer: policy.employer
+      %n1:total_employer_responsible_amount= policy.tot_emp_res_amt
   %n1:premium_amount_total= policy.pre_amt_tot
   %n1:total_responsible_amount= policy.tot_res_amt
-  - if policy.tot_emp_res_amt.present?
-    %n1:total_employer_responsible_amount= policy.tot_emp_res_amt
 %n1:policy_state= "urn:openhbx:terms:v1:policy_state##{policy.aasm_state}"
 %n1:request_submitted_timestamp
 = render 'shared/timestamp', record: policy

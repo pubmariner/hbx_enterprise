@@ -1,8 +1,9 @@
-= render 'shared/identity', id: person.authority_member.hbx_member_id
+= render 'shared/identity', id: person.authority_member_id
 %n1:person
   = render 'shared/person', person: person
 = render 'shared/relationships', person: person
 = render 'shared/roles', person: person
+= render 'shared/timestamp', record: person
 - if false
   %n1:other_coverage
     %n1:id

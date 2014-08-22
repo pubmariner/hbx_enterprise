@@ -7,6 +7,7 @@
   = render 'shared/roles', person: person
   - if false
     %n1:other_coverage
+  = render 'shared/timestamp', record: person
 %n1:employment_status= "urn:openhbx:terms:v1:employment_status##{enrollee.emp_stat}"
 %n1:physically_disabled_flag= enrollee.ds
 - if enrollee.ben_stat.present?
