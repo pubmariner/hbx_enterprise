@@ -9,7 +9,7 @@ class EndCoverage
     @request = request
     affected_enrollee_ids = @request[:affected_enrollee_ids]
     return if affected_enrollee_ids.empty?
-    
+
     @policy = @policy_repo.find(request[:policy_id])
 
     enrollees_not_already_canceled = @policy.enrollees.select { |e| !e.canceled? }
@@ -22,7 +22,8 @@ class EndCoverage
       operation: request[:operation],
       reason: request[:reason],
       affected_enrollee_ids: request[:affected_enrollee_ids],
-      include_enrollee_ids: enrollees_not_already_canceled.map(&:m_id)
+      include_enrollee_ids: enrollees_not_already_canceled.map(&:m_id),
+      current_user: request[:current_user]
     }
     action.execute(action_request)
   end
