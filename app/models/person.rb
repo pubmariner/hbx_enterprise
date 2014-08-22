@@ -291,15 +291,14 @@ class Person
     query_proxy.application_groups
   end
 
-  def relationship_in_group
+  def relationships_in_group
     group = application_groups.first
-    group.person_relationships.detect do |r| 
-      r.subject_person == id
-    end
+    group.person_relationships.select { |r| r.object_person == id }
   end
 
   def employee_roles
-    policies_through_employer = policies.select { |p| p.employer_id == employer_id }
+    policies_through_employer = policies.select { |p| !p.employer_id.nil? }
+
     enrollees = [] 
     policies_through_employer.each do |p|
       enrollees << p.enrollees.detect { |e| e.m_id == authority_member_id }

@@ -11,14 +11,4 @@
 %n1:physically_disabled_flag= enrollee.ds
 - if enrollee.ben_stat.present?
   %n1:benefit_status= "urn:openhbx:terms:v1:benefit_status##{enrollee.ben_stat}"
-%n1:benefit
-  %n1:premium_amount= enrollee.pre_amt
-  %n1:begin_date= enrollee.coverage_start.try(:strftime,"%Y%m%d")
-  - if enrollee.coverage_end.present?
-    %n1:end_date= enrollee.coverage_end.try(:strftime,"%Y%m%d")
-  - if enrollee.cp_id.present?
-    %n1:carrier_assigned_policy_id= enrollee.cp_id
-  -if enrollee.c_id.present?
-    %n1:carrier_assign_enrollee_id= enrollee.c_id
-  - if false
-    %n1:coverage_level
+%n1:benefit= render 'shared/enrollee_benefit_type', enrollee: enrollee

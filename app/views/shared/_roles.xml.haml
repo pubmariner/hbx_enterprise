@@ -1,5 +1,6 @@
 %n1:hbx_roles
-  %n1:authority_qhp_role_id= person.authority_member_id
+  - if person.authority_member_id.present?
+    %n1:authority_qhp_role_id= person.authority_member_id
   %n1:qhp_roles
     - person.members.each do |member|
       %n1:qhp_role
@@ -15,7 +16,7 @@
         - if policies.present?
           %n1:policies
             - policies.each do |policy|
-              = render 'shared/policy_link_type', policy: policy
+              %n1:policy= render 'shared/policy_link_type', policy: policy
   - if person.responsible_parties.present?
     %n1:responsible_party_roles
       - person.responsible_parties.each do |party|
@@ -27,11 +28,13 @@
       %n1:medicaid_role
         %n1:id
   - employee_roles = person.employee_roles
+
   - if employee_roles.present?
     %n1:employee_roles
       - employee_roles.each do |role|
+        - raise role.policy.employer.inspect
         %n1:employee_role
-          %n1:employer= render 'shared/employer_link_type',employer: role.policy.employer
+          %n1:employer= render 'shared/employer_link_type', employer: role.policy.employer
           %n1:employment_status= "urn:openhbx:terms:v1:employment_status##{role.employment_status_code}" 
           - if role.coverage_start.present?
             %n1:eligibility_start_date= role.coverage_start.try(:strftime,"%Y%m%d")
