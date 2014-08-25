@@ -1,5 +1,32 @@
 require 'spec_helper'
 
+shared_examples "coverage ended with correct responsible amount" do
+  describe "when a shop enrollment" do
+    let(:employer) { Employer.new(:name => "Fake Shell Corp, LLC") }
+
+    before { 
+      policy.employer = employer
+      policy.tot_emp_res_amt = previous_employer_contribution
+    }
+    it "should properly re-calculate the employer contribution amount" do
+      end_coverage.execute(request)
+      expect(policy.tot_emp_res_amt).to eql(expected_employer_contribution)
+    end
+
+    it "should set the total responsible amount to the premium total minus the employer contribution" do
+      end_coverage.execute(request)
+      expect(policy.tot_res_amt).to eql(policy.pre_amt_tot - expected_employer_contribution)
+    end
+  end
+
+  describe "when an individual enrollment" do
+    it "should set the responsible amount equal to the new premium total" do
+      end_coverage.execute(request)
+      expect(policy.tot_res_amt).to eql(policy.pre_amt_tot)
+    end
+  end
+end
+
 describe EndCoverage do
   subject(:end_coverage) { EndCoverage.new(listener, action_factory, policy_repo) }
   let(:request) do 
@@ -31,10 +58,11 @@ describe EndCoverage do
 
   let(:policy_repo) { double(find: policy) }
   let(:policy) { Policy.create!(eg_id: '1', enrollees: enrollees, pre_amt_tot: premium_total) }
-  let(:premium_total) { 1000.00 }
+  let(:premium_total) { 300.00 }
   let(:enrollees) { [ subscriber, member ]}
   let(:subscriber) { Enrollee.new(rel_code: 'self', coverage_start: coverage_start, pre_amt: 100.00, ben_stat: 'active', emp_stat: 'active',  m_id: '1') }
   let(:member) { Enrollee.new(rel_code: 'child', coverage_start: coverage_start, pre_amt: 200.00, ben_stat: 'active', emp_stat: 'active',  m_id: '2') }
+  let(:previous_employer_contribution) { 248.33 }
   let(:listener) { double }
 
   let(:action_factory) { double(create_for: action) }
@@ -85,6 +113,7 @@ describe EndCoverage do
       let(:operation) { 'cancel' }
       let(:coverage_start) { Date.new(2014, 1, 2)}
       let(:coverage_end) { coverage_start }
+      let(:expected_employer_contribution) { 248.33 }
 
       it 'adjusts premium total to be the sum of all enrollees\' premiums' do
         sum = 0
@@ -97,12 +126,15 @@ describe EndCoverage do
       it 'updates policy status' do
         expect(policy.aasm_state).to eq 'canceled'
       end
+
+      it_behaves_like "coverage ended with correct responsible amount"
     end
 
     context 'by termination' do
       let(:operation) { 'terminate' }
       let(:coverage_start) { Date.new(2014, 1, 2)}
       let(:coverage_end) { Date.new(2014, 1, 14)}
+      let(:expected_employer_contribution) { 82.77 }
 
       context 'when member\'s coverage ended previously' do
         let(:member) { Enrollee.new(rel_code: 'child', pre_amt: 200.00, coverage_status: 'inactive', coverage_end:  Date.new(1990, 1, 1), ben_stat: 'active', emp_stat: 'active',  m_id: '2') }
@@ -119,11 +151,15 @@ describe EndCoverage do
       it 'updates policy status' do
         expect(policy.aasm_state).to eq 'terminated'
       end
+
+      it_behaves_like "coverage ended with correct responsible amount"
     end
+
   end
 
   context 'when a member\'s coverage is ended' do
     let(:affected_enrollee_ids) { [member.m_id] }
+    let(:expected_employer_contribution) { 82.77 }
 
     it 'doesn\'t end the subscribers coverage' do
       end_coverage.execute(request)
@@ -138,8 +174,10 @@ describe EndCoverage do
 
     it 'deducts member\'s premium from policy\'s total'  do
       end_coverage.execute(request)
-      expect(policy.pre_amt_tot.to_f).to eq (premium_total - member.pre_amt)
+      expect(policy.pre_amt_tot.to_f).to eq(100.00)
     end
+
+    it_behaves_like "coverage ended with correct responsible amount"
 
     context 'by cancelation' do
       let(:operation) { 'cancel' }
