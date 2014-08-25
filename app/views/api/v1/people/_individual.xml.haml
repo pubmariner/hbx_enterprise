@@ -1,4 +1,4 @@
-= render 'shared/identity', id: person.authority_member_id
+= render 'shared/identity', id: api_v1_people_url(hbx_id: person.authority_member_id)
 %n1:person
   = render 'shared/person', person: person
 = render 'shared/relationships', person: person
