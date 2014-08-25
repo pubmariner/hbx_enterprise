@@ -20,6 +20,7 @@ class CancelTerminate
 
   validate :term_date_valid?, :unless => :is_cancel?
   validate :selected_at_least_one?
+  validate :non_aptc?
   validates_presence_of :reason
 
   def initialize(props = {})
@@ -39,6 +40,10 @@ class CancelTerminate
 
   def is_cancel?
     @operation == "cancel"
+  end
+
+  def non_aptc?
+    errors.add(:people, ": cannot effect members with aptc") unless @policy.applied_aptc == 0.00
   end
 
   def selected_at_least_one?
