@@ -4,7 +4,7 @@ shared_examples "coverage ended with correct responsible amount" do
   describe "when a shop enrollment" do
     let(:employer) { Employer.new(:name => "Fake Shell Corp, LLC") }
 
-    before { 
+    before {
       policy.employer = employer
       policy.tot_emp_res_amt = previous_employer_contribution
     }
@@ -29,16 +29,16 @@ end
 
 describe EndCoverage do
   subject(:end_coverage) { EndCoverage.new(listener, action_factory, policy_repo) }
-  let(:request) do 
-    { 
-      policy_id: policy.id, 
+  let(:request) do
+    {
+      policy_id: policy.id,
       affected_enrollee_ids: affected_enrollee_ids,
       coverage_end: coverage_end,
       operation: operation,
       reason: 'death',
       current_user: current_user,
       transmit: true
-    } 
+    }
   end
 
   let(:action_request) do
@@ -47,7 +47,8 @@ describe EndCoverage do
       operation: request[:operation],
       reason: request[:reason],
       affected_enrollee_ids: request[:affected_enrollee_ids],
-      include_enrollee_ids: enrollees.map(&:m_id)
+      include_enrollee_ids: enrollees.map(&:m_id),
+      current_user: current_user
     }
   end
 
@@ -99,7 +100,7 @@ describe EndCoverage do
 
   context 'when subscriber\'s coverage ends' do
     let(:affected_enrollee_ids) { [ subscriber.m_id ] }
-    
+
     before { end_coverage.execute(request) }
 
     it 'affects all enrollees' do
@@ -134,10 +135,12 @@ describe EndCoverage do
       let(:operation) { 'terminate' }
       let(:coverage_start) { Date.new(2014, 1, 2)}
       let(:coverage_end) { Date.new(2014, 1, 14)}
-      let(:expected_employer_contribution) { 82.77 }
+      let(:expected_employer_contribution) { 248.33 }
 
       context 'when member\'s coverage ended previously' do
-        let(:member) { Enrollee.new(rel_code: 'child', pre_amt: 200.00, coverage_status: 'inactive', coverage_end:  Date.new(1990, 1, 1), ben_stat: 'active', emp_stat: 'active',  m_id: '2') }
+        let(:member) { Enrollee.new(rel_code: 'child', pre_amt: 200.00, coverage_status: 'inactive', coverage_start: Date.new(2014, 1, 2), coverage_end:  Date.new(2014, 1, 2), ben_stat: 'active', emp_stat: 'active',  m_id: '2') }
+        let(:previous_employer_contribution) { 82.77 }
+        let(:expected_employer_contribution) { 82.77 }
 
         it 'new policy premium total doesnt include member' do
           sum = 0
@@ -191,11 +194,11 @@ describe EndCoverage do
       let(:inactive_member) { Enrollee.new(rel_code: 'child', coverage_status: 'inactive', coverage_start: coverage_start, coverage_end: already_ended_date, pre_amt: 50.00, ben_stat: 'active', emp_stat: 'active',  m_id: '3') }
       let(:already_ended_date) { request[:coverage_end].prev_year }
       before do
-        affected_enrollee_ids << inactive_member.m_id 
+        affected_enrollee_ids << inactive_member.m_id
         policy.enrollees << inactive_member
         policy.save
       end
-      
+
       it 'does not change their coverage end date' do
         expect { end_coverage.execute(request) }.not_to change{ inactive_member.coverage_end }
       end

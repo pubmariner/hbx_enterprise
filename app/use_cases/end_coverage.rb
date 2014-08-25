@@ -32,6 +32,7 @@ class EndCoverage
 
   def update_policy(affected_enrollee_ids)
     subscriber = @policy.subscriber
+    employer_contribution_percentage = @policy.employer_contribution / @policy.total_premium_amount
 
     if(affected_enrollee_ids.include?(subscriber.m_id))
       end_coverage_for_everyone
@@ -39,8 +40,14 @@ class EndCoverage
       end_coverage_for_ids(affected_enrollee_ids)
     end
 
+    @policy.total_responsible_amount = @policy.total_premium_amount - total_credit_adjustment(employer_contribution_percentage)
+
     @policy.updated_by = @request[:current_user]
     @policy.save
+  end
+
+  def total_credit_adjustment(percent)
+    @policy.employer_contribution = (@policy.total_premium_amount * percent).truncate(2)
   end
 
   def end_coverage_for_everyone
@@ -48,7 +55,7 @@ class EndCoverage
       end_coverage_for(enrollee, @request[:coverage_end])
     end
 
-    @policy.pre_amt_tot = final_premium_total
+    @policy.total_premium_amount = final_premium_total
   end
 
   def end_coverage_for_ids(ids)
@@ -56,7 +63,7 @@ class EndCoverage
     select_active(enrollees).each do |enrollee|
       end_coverage_for(enrollee, @request[:coverage_end])
 
-      @policy.pre_amt_tot -= enrollee.pre_amt
+      @policy.total_premium_amount -= enrollee.pre_amt
     end
   end
 
