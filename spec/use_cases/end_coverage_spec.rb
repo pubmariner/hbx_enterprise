@@ -134,10 +134,12 @@ describe EndCoverage do
       let(:operation) { 'terminate' }
       let(:coverage_start) { Date.new(2014, 1, 2)}
       let(:coverage_end) { Date.new(2014, 1, 14)}
-      let(:expected_employer_contribution) { 82.77 }
+      let(:expected_employer_contribution) { 248.33 }
 
       context 'when member\'s coverage ended previously' do
-        let(:member) { Enrollee.new(rel_code: 'child', pre_amt: 200.00, coverage_status: 'inactive', coverage_end:  Date.new(1990, 1, 1), ben_stat: 'active', emp_stat: 'active',  m_id: '2') }
+        let(:member) { Enrollee.new(rel_code: 'child', pre_amt: 200.00, coverage_status: 'inactive', coverage_start: Date.new(2014, 1, 2), coverage_end:  Date.new(2014, 1, 2), ben_stat: 'active', emp_stat: 'active',  m_id: '2') }
+        let(:previous_employer_contribution) { 82.77 }
+        let(:expected_employer_contribution) { 82.77 }
 
         it 'new policy premium total doesnt include member' do
           sum = 0
