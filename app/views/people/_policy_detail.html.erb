@@ -1,7 +1,7 @@
 <div class="well well-sm">
 	<h6 style="inverse">
 	<span class="fui-folder">&nbsp;</span>
-	<%= "HBX Policy ID: #{p.eg_id}" %>
+	<%= "HBX Enrollment Group ID: #{p.eg_id}" %>
 </h6>
 </div>
 <div class="row">
@@ -13,6 +13,8 @@
 			  <%= link_to p.carrier.name, carrier_path(p.carrier) %> |
 				<%= link_to truncate(p.plan.name, length: 50), plan_path(p.plan), title: "Hios ID: " + p.plan.hios_plan_id, rel: 'tooltip' %>
 		  </dd>
+		  <dt>Policy ID</dt>
+	  	<dd><%= p.id %></dd>
 		  <dt>Sponsor</dt>
 		  <dd><%= policy_sponsor(p) %></dd>
 		  <dt>Status</dt>
