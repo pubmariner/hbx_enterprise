@@ -329,4 +329,21 @@ describe Policy do
       end
     end
   end
+
+  describe '#active_enrollees' do
+    let(:enrollees) { [ active_enrollee, inactive_enrollee] }
+
+    let(:active_enrollee) { build(:enrollee, coverage_status: 'active') }
+    let(:inactive_enrollee) { build(:enrollee, coverage_status: 'inactive') }
+
+    before do
+      policy.enrollees = enrollees
+      policy.save!
+    end
+
+    it 'collects all active enrollees' do
+      expect(policy.active_enrollees).to eq [active_enrollee]
+    end
+    
+  end
 end

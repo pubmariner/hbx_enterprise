@@ -358,6 +358,10 @@ class Policy
       ]
     }
   end
+  
+  def active_enrollees
+    enrollees.select { |e| e.coverage_status == 'active' }
+  end
 
 protected
   def generate_enrollment_group_id
