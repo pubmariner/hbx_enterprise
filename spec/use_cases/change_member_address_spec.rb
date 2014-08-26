@@ -27,4 +27,22 @@ describe ChangeMemberAddress do
       it_behaves_like "a failed execution", :no_active_policies, {}
     end
 
+    describe "with a member that has one active dental and one active health policy" do
+      it "should transmit the changes on both policies"
+    end
+
+    describe "with a member that has one active, one terminated, and one cancelled health policy" do
+      it "should only transmit changes to the active policy"
+    end
+
+    describe "with a single active health policy" do
+      describe "which has a spouse at the same address" do
+        it "should also update the spouse"
+      end 
+
+      describe "which has a child at a different same address" do
+        it "should not update the child"
+      end 
+    end
+
 end
