@@ -1,13 +1,12 @@
 require 'csv'
 
-class ChangeAddressRequest
+class ChangeMemberAddressRequest
   def self.many_from_csv(spreadsheet)
-    request = Array.new
+    requests = Array.new
 
     CSV.foreach(spreadsheet, headers: true, header_converters: :symbol, converters: :all, skip_blanks: true) do |row|
-      request << Hash[row.to_hash]
+      requests << row.to_hash
     end
-    request
+    requests
   end
-
 end
