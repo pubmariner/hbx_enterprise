@@ -10,7 +10,8 @@ shared_examples "a failed console import" do |expected_error|
 end
 
 describe MemberAddressChangers::Console do
-  subject { MemberAddressChangers::Console.new(12354) }
+  let(:request) { OpenStruct.new(:member_id => 12354) }
+  subject { MemberAddressChangers::Console.new(request) }
 
   describe "with a non-existant member" do
     before do

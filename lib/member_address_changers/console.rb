@@ -1,7 +1,7 @@
 module MemberAddressChangers
   class Console
-    def initialize(m_id)
-      @member_id = m_id
+    def initialize(req)
+      @request = req
       @errors = []
     end
 
@@ -28,7 +28,7 @@ module MemberAddressChangers
     end
 
     def success
-      puts "Member #{@member_id} address changed successfully!"
+      puts "Member #{@request.member_id} address changed successfully!"
     end
   end
 end
