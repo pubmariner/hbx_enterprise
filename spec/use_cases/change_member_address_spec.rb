@@ -1,19 +1,34 @@
 require "spec_helper"
 
-describe ChangeMemberAddress do
+shared_examples "a failed execution" do |notify_msg, notify_args|
 
-  describe "should signal an error" do
-
-    it "when the member does not exist"
-
-    it "when the member has more than one active health policy"
-
-    it "when the member has more than one active dental policy"
-
-    it "when the member has no active policies"
-
-    it "when the member already has the provided address"
-
+  it "and should signal the error with :#{notify_msg} and fail" do
+    expect(listener).to receive(notify_msg).with(notify_args)
+    expect(listener).to receive(:fail)
   end
+end 
+
+describe ChangeMemberAddress do
+    let(:listener) { double }
+
+    describe "with a non-existant member" do
+      it_behaves_like "a failed execution", :no_such_member, {}
+    end
+
+    describe "when the member has more than one active health policy" do
+      it_behaves_like "a failed execution", :too_many_health_policies, {}
+    end
+
+    describe "when the member has more than one active dental policy" do
+      it_behaves_like "a failed execution", :too_many_dental_policies, {}
+    end
+
+    describe "when the member has no active policies" do
+      it_behaves_like "a failed execution", :no_active_policies, {}
+    end
+
+    describe "when the member already has the provided address" do
+      it_behaves_like "a failed execution", :no_change_to_address, {}
+    end
 
 end
