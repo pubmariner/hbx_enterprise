@@ -1,6 +1,7 @@
 module MemberAddressChangers
   class Console
-    def initialize
+    def initialize(m_id)
+      @member_id = m_id
       @errors = []
     end
 
@@ -20,10 +21,14 @@ module MemberAddressChangers
       @errors << "Member #{details[:member_id]} has no active policies"
     end
 
-    def fail
+    def fail(details = {})
       @errors.each do |err|
         puts err
       end
+    end
+
+    def success
+      puts "Member #{@member_id} address changed successfully!"
     end
   end
 end

@@ -10,7 +10,7 @@ shared_examples "a failed console import" do |expected_error|
 end
 
 describe MemberAddressChangers::Console do
-  subject { MemberAddressChangers::Console.new }
+  subject { MemberAddressChangers::Console.new(12354) }
 
   describe "with a non-existant member" do
     before do
@@ -42,5 +42,12 @@ describe MemberAddressChangers::Console do
     end
 
     it_behaves_like "a failed console import", "Member 12354 has no active policies"
+  end
+
+  describe "when successful" do
+    it "should display the successful member id" do
+      expect(subject).to receive(:puts).with("Member 12354 address changed successfully!")
+      subject.success
+    end
   end
 end
