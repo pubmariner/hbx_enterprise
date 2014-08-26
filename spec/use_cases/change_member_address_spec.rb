@@ -27,8 +27,4 @@ describe ChangeMemberAddress do
       it_behaves_like "a failed execution", :no_active_policies, {}
     end
 
-    describe "when the member already has the provided address" do
-      it_behaves_like "a failed execution", :no_change_to_address, {}
-    end
-
 end
