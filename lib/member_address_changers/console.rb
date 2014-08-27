@@ -5,6 +5,15 @@ module MemberAddressChangers
       @errors = []
     end
 
+    def invalid_address(details)
+      details.each_pair do |k, v|
+        property_errors = Array(v)
+        property_errors.each do |err|
+          @errors << "Address invalid: #{k} #{err}"
+        end
+      end
+    end
+
     def no_such_member(details)
       @errors << "Member #{details[:member_id]} does not exist"
     end

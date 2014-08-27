@@ -1,9 +1,11 @@
 require 'spec_helper'
 
-shared_examples "a failed console import" do |expected_error|
+shared_examples "a failed console import" do |expected_errors|
 
   it "should print the expected error" do
-    expect(subject).to receive(:puts).with(expected_error)
+    Array(expected_errors).each do |err|
+      expect(subject).to receive(:puts).with(err)
+    end
     subject.fail
   end
 
@@ -43,6 +45,16 @@ describe MemberAddressChangers::Console do
     end
 
     it_behaves_like "a failed console import", "Member 12354 has no active policies"
+  end
+
+  describe "when the address is invalid" do
+    before do
+      subject.invalid_address({:zip_code => ["can't be blank"], :address1 => ["can't be blank"]})
+    end
+
+    it_behaves_like "a failed console import", [
+      "Address invalid: zip_code can't be blank",
+      "Address invalid: address1 can't be blank"]
   end
 
   describe "when successful" do

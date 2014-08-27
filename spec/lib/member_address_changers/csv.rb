@@ -1,10 +1,12 @@
 require 'spec_helper'
 
-shared_examples "a failed CSV import" do |expected_error|
+shared_examples "a failed CSV import" do |expected_errors|
 
   it "should add the expected error" do
     expect(csv_slug.last[-2]).to eql("error")
-    expect(csv_slug.last[-1]).to include(expected_error)
+    Array(expected_errors).each do |err|
+      expect(csv_slug.last[-1]).to include(err)
+    end
   end
 
 end
@@ -48,6 +50,17 @@ describe MemberAddressChangers::Csv do
     end
 
     it_behaves_like "a failed CSV import", "- no active policies"
+  end
+
+  describe "when the address is invalid" do
+    before do
+      subject.invalid_address({:zip_code => ["can't be blank"], :address1 => ["can't be blank"]})
+      subject.fail
+    end
+
+    it_behaves_like "a failed CSV import", [
+      "- Address invalid: zip_code can't be blank",
+      "- Address invalid: address1 can't be blank"]
   end
 
   describe "when successful" do
