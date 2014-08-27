@@ -11,7 +11,7 @@ class ChangeMemberAddressRequest
       hash = @row.to_hash.symbolize_keys
       clean_hash = {current_user: @current_user}
       hash.each_pair do |k, v|
-        clean_value = hash[k].to_s.gsub(/\A[[:space:]]+/,'').gsub(/[[:space:]]+\z/,'')
+        clean_value = hash[k].to_s.strip # .gsub(/\A[[:space:]\\x80-\\xFE]+/,'').gsub(/[[:space:]\\x80-\\xFE]+\z/,'')
         clean_hash[k] = clean_value
       end
       clean_hash
