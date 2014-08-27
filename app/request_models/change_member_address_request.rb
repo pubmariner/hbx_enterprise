@@ -19,7 +19,7 @@ class ChangeMemberAddressRequest
   def self.many_from_csv(spreadsheet)
     requests = Array.new
 
-    CSV.foreach(spreadsheet, headers: true, header_converters: :symbol, converters: :all, skip_blanks: true) do |row|
+    CSV.parse(spreadsheet, headers: true, header_converters: :symbol, converters: :all, skip_blanks: true).each do |row|
       requests << CsvRequest.new(row)
     end
     requests

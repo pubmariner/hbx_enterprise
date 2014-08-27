@@ -23,6 +23,7 @@ Gluedb::Application.routes.draw do
   resources :plan_metrics, :only => :index
 
   resources :vocab_uploads, :only => [:new, :create]
+  resources :member_address_changes, :only => [:new, :create]
 
   resources :enrollment_transmission_updates, :only => :create
 
