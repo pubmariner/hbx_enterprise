@@ -8,7 +8,13 @@ class ChangeMemberAddressRequest
     end
 
     def to_hash
-      @row.to_hash.symbolize_keys.merge(current_user: @current_user)
+      hash = @row.to_hash.symbolize_keys
+      clean_hash = {current_user: @current_user}
+      hash.each_pair do |k, v|
+        clean_value = hash[k].to_s.gsub(/\A[[:space:]]+/,'').gsub(/[[:space:]]+\z/,'')
+        clean_hash[k] = clean_value
+      end
+      clean_hash
     end
 
     def to_a
