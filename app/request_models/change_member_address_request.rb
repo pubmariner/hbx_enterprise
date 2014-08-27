@@ -13,13 +13,17 @@ class ChangeMemberAddressRequest
     def to_a
       @row.fields
     end
+
+    def member_id
+      to_hash[:member_id]
+    end
   end
 
 
   def self.many_from_csv(spreadsheet)
     requests = Array.new
 
-    CSV.foreach(spreadsheet, headers: true, header_converters: :symbol, converters: :all, skip_blanks: true) do |row|
+    CSV.foreach(spreadsheet, headers: true, header_converters: :symbol, skip_blanks: true) do |row|
       requests << CsvRequest.new(row)
     end
     requests
