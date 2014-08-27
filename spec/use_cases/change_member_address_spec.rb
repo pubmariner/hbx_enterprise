@@ -10,10 +10,11 @@ def expect_address_to_change(person, request)
 end
 
 describe ChangeMemberAddress do
-  subject(:change_address) { ChangeMemberAddress.new(transmitter, listener, person_repo)}
+  subject(:change_address) { ChangeMemberAddress.new(transmitter, listener, person_repo, address_repo)}
   let(:listener) { double(:fail => nil) }
   let(:transmitter) { double(execute: nil) }
   let(:person_repo) { double(find_for_member_id: person) }
+  let(:address_repo) { Address }
   let(:person) { Person.new }
   
   let(:policy) { double(id: '12345', plan: plan, enrollees: [target_enrollee], active_enrollees: [target_enrollee]) }
@@ -195,6 +196,19 @@ describe ChangeMemberAddress do
 
     it 'notifies the listener of too many dental policies' do 
       expect(listener).to receive(:too_many_dental_policies)
+      expect(listener).to receive(:fail)
+      change_address.execute(request)
+    end
+  end
+
+  context "when given an invalid address" do
+    let(:address_error_details) { {:zip => ["can't be blank"]} }
+#    let(:address_errors) { double(:to_hash => address_error_details) }
+    let(:invalid_address) { double(:valid? => false, :errors => address_error_details) }
+    let(:address_repo) { double(:new => invalid_address) }
+
+    it 'notifies the listener that there is an invalid address' do
+      expect(listener).to receive(:invalid_address).with(address_error_details)
       expect(listener).to receive(:fail)
       change_address.execute(request)
     end

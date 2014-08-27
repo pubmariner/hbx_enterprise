@@ -1,7 +1,8 @@
 class ChangeMemberAddress
-  def initialize(transmitter, listener, person_repo = Person)
+  def initialize(transmitter, listener, person_repo = Person, address_repo = Address)
     @listener = listener
     @person_repo = person_repo
+    @address_repo = address_repo
     @transmitter = transmitter
   end
 
@@ -10,6 +11,21 @@ class ChangeMemberAddress
     failed = false
     if(person.nil?)
       @listener.no_such_member({:member_id => request[:member_id]})
+      @listener.fail
+      return
+    end
+    
+    new_address = @address_repo.new(
+      address_type: 'home', 
+      address_1: request[:address1], 
+      address_2: request[:address2], 
+      city: request[:city], 
+      state: request[:state], 
+      zip: request[:zip]
+    )
+
+    unless new_address.valid?
+      @listener.invalid_address(new_address.errors.to_hash)
       @listener.fail
       return
     end
