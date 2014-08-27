@@ -2,8 +2,8 @@ require "spec_helper"
 
 def expect_address_to_change(person, request)
   expect(person.addresses.first.address_type).to eq request.to_hash[:type]
-  expect(person.addresses.first.address_1).to eq request.to_hash[:address_1]
-  expect(person.addresses.first.address_2).to eq request.to_hash[:address_2]
+  expect(person.addresses.first.address_1).to eq request.to_hash[:address1]
+  expect(person.addresses.first.address_2).to eq request.to_hash[:address2]
   expect(person.addresses.first.city).to eq request.to_hash[:city]
   expect(person.addresses.first.state).to eq request.to_hash[:state]
   expect(person.addresses.first.zip).to eq request.to_hash[:zip]
@@ -26,8 +26,8 @@ describe ChangeMemberAddress do
     {
       :member_id => 1,
       :type => 'home',
-      :address_1 => '4321 cool drive',
-      :address_2 => '#999',
+      :address1 => '4321 cool drive',
+      :address2 => '#999',
       :city => 'Seattle',
       :state => 'GA',
       :zip => '12345'

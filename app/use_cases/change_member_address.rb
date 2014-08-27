@@ -47,8 +47,8 @@ class ChangeMemberAddress
       people.each do |person|
         person.update_address(Address.new(
           address_type: 'home', 
-          address_1: request[:address_1], 
-          address_2: request[:address_2], 
+          address_1: request[:address1], 
+          address_2: request[:address2], 
           city: request[:city], 
           state: request[:state], 
           zip: request[:zip]
