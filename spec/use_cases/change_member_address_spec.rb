@@ -31,7 +31,8 @@ describe ChangeMemberAddress do
       :address2 => '#999',
       :city => 'Seattle',
       :state => 'GA',
-      :zip => '12345'
+      :zip => '12345',
+      current_user: 'me@example.com' 
     }
   end
 

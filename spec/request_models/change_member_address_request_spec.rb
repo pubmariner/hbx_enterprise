@@ -9,7 +9,8 @@ describe ChangeMemberAddressRequest::CsvRequest, "given a csv row" do
       "address2" => '#999',
       "city" => 'Seattle',
       "state" => 'GA',
-      "zip" => '12345'
+      "zip" => '12345',
+      "current_user" => current_user
     }
   }
 
@@ -21,11 +22,14 @@ describe ChangeMemberAddressRequest::CsvRequest, "given a csv row" do
       :address2 => '#999',
       :city => 'Seattle',
       :state => 'GA',
-      :zip => '12345'
+      :zip => '12345',
+      :current_user => current_user
     }
   }
 
-  subject { ChangeMemberAddressRequest::CsvRequest.new(csv_row) }
+  let(:current_user) { 'me@example.com' }
+
+  subject { ChangeMemberAddressRequest::CsvRequest.new(csv_row, current_user) }
 
   it "should provide the correct request value hash for a use case" do
     expect(subject.to_hash).to eq(use_case_parameters)

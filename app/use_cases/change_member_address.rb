@@ -77,7 +77,7 @@ class ChangeMemberAddress
         reason: 'change_of_location',
         affected_enrollee_ids: affected_enrollees.map(&:m_id),#enrollees.map(&:m_id),
         include_enrollee_ids: active_enrollees.map(&:m_id), #active and term...no canceled,
-        current_user: 'me@example.com' 
+        current_user: request[:current_user]
       }
 
       @transmitter.execute(transmit_request)
