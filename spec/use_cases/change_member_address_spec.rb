@@ -10,7 +10,7 @@ def expect_address_to_change(person, request)
 end
 
 describe ChangeMemberAddress do
-  subject(:change_address) { ChangeMemberAddress.new(transmitter, listener, person_repo, address_repo)}
+  subject(:change_address) { ChangeMemberAddress.new(transmitter, person_repo, address_repo)}
   let(:listener) { double(:fail => nil) }
   let(:transmitter) { double(execute: nil) }
   let(:person_repo) { double(find_for_member_id: person) }
@@ -68,19 +68,19 @@ describe ChangeMemberAddress do
   it 'finds the person by member id' do
     expect(person_repo).to receive(:find_for_member_id).with(1)
     expect(listener).to receive(:success)
-    change_address.execute(request)
+    change_address.execute(request, listener)
   end
 
   it "finds the person's active policies"  do
     expect(person).to receive(:active_policies)
     expect(listener).to receive(:success)
-    change_address.execute(request)
+    change_address.execute(request, listener)
   end
 
   it 'finds active enrollees on policy' do
     expect(policy).to receive(:active_enrollees)
     expect(listener).to receive(:success)
-    change_address.execute(request)
+    change_address.execute(request, listener)
   end
 
   it 'finds people who share the same address' do
@@ -90,14 +90,14 @@ describe ChangeMemberAddress do
 
   it 'changes address of person' do
     expect(listener).to receive(:success)
-    change_address.execute(request)
+    change_address.execute(request, listener)
     expect_address_to_change(person, request)
   end
 
   it 'transmits the changes' do
     expect(transmitter).to receive(:execute).with(transmit_request)
     expect(listener).to receive(:success)
-    change_address.execute(request)
+    change_address.execute(request, listener)
   end
 
   context 'when there are active enrollees that share original address' do
@@ -114,7 +114,7 @@ describe ChangeMemberAddress do
     end
     it 'also changes their address' do
       expect(listener).to receive(:success)
-      change_address.execute(request)
+      change_address.execute(request, listener)
       expect_address_to_change(other_person, request)
     end
   end
@@ -139,7 +139,7 @@ describe ChangeMemberAddress do
 
     it 'does not change their address' do
       expect(listener).to receive(:success)
-      change_address.execute(request)
+      change_address.execute(request, listener)
       expect(other_person.addresses.first.address_type).to eq different_address.address_type
       expect(other_person.addresses.first.address_1).to eq different_address.address_1
       expect(other_person.addresses.first.address_2).to eq different_address.address_2
@@ -154,7 +154,7 @@ describe ChangeMemberAddress do
     it 'notifies listener of no such member' do
       expect(listener).to receive(:no_such_member).with({:member_id => request[:member_id]})
       expect(listener).to receive(:fail)
-      change_address.execute(request)
+      change_address.execute(request, listener)
     end
   end
 
@@ -183,7 +183,7 @@ describe ChangeMemberAddress do
     it 'notifies the listener of too many health policies' do 
       expect(listener).to receive(:too_many_health_policies)
       expect(listener).to receive(:fail)
-      change_address.execute(request)
+      change_address.execute(request, listener)
     end
   end
 
@@ -197,7 +197,7 @@ describe ChangeMemberAddress do
     it 'notifies the listener of too many dental policies' do 
       expect(listener).to receive(:too_many_dental_policies)
       expect(listener).to receive(:fail)
-      change_address.execute(request)
+      change_address.execute(request, listener)
     end
   end
 
@@ -210,7 +210,7 @@ describe ChangeMemberAddress do
     it 'notifies the listener that there is an invalid address' do
       expect(listener).to receive(:invalid_address).with(address_error_details)
       expect(listener).to receive(:fail)
-      change_address.execute(request)
+      change_address.execute(request, listener)
     end
   end
 
@@ -219,7 +219,7 @@ describe ChangeMemberAddress do
     it 'notifies the listener that there are no policies' do
       expect(listener).to receive(:no_active_policies)
       expect(listener).to receive(:fail)
-      change_address.execute(request)
+      change_address.execute(request, listener)
     end
   end
 
@@ -246,7 +246,7 @@ describe ChangeMemberAddress do
       expect(transmitter).to receive(:execute).with(other_transmit_request)
       expect(listener).to receive(:success)
 
-      change_address.execute(request)
+      change_address.execute(request, listener)
     end
   end
 end

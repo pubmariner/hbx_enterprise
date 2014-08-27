@@ -1,17 +1,16 @@
 class ChangeMemberAddress
-  def initialize(transmitter, listener, person_repo = Person, address_repo = Address)
-    @listener = listener
+  def initialize(transmitter, person_repo = Person, address_repo = Address)
     @person_repo = person_repo
     @address_repo = address_repo
     @transmitter = transmitter
   end
 
-  def execute(request)
+  def execute(request, listener)
     person = @person_repo.find_for_member_id(request[:member_id])
     failed = false
     if(person.nil?)
-      @listener.no_such_member({:member_id => request[:member_id]})
-      @listener.fail
+      listener.no_such_member({:member_id => request[:member_id]})
+      listener.fail
       return
     end
     
@@ -25,29 +24,29 @@ class ChangeMemberAddress
     )
 
     unless new_address.valid?
-      @listener.invalid_address(new_address.errors.to_hash)
-      @listener.fail
+      listener.invalid_address(new_address.errors.to_hash)
+      listener.fail
       return
     end
 
     active_policies = person.active_policies
     if(active_policies.empty?)
-      @listener.no_active_policies
+      listener.no_active_policies
       failed = true
     end
 
     if (count_policies_by_coverage_type(active_policies, 'health') > 1)
-      @listener.too_many_health_policies
+      listener.too_many_health_policies
       failed = true
     end
 
     if (count_policies_by_coverage_type(active_policies, 'dental') > 1)
-      @listener.too_many_dental_policies
+      listener.too_many_dental_policies
       failed = true
     end
 
     if failed
-      @listener.fail
+      listener.fail
       return
     end
 
@@ -83,7 +82,7 @@ class ChangeMemberAddress
 
       @transmitter.execute(transmit_request)
     end
-    @listener.success
+    listener.success
   end
 
   def count_policies_by_coverage_type(policies, type)
