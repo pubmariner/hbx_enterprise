@@ -1,12 +1,12 @@
 require "spec_helper"
 
 def expect_address_to_change(person, request)
-  expect(person.addresses.first.address_type).to eq request[:type]
-  expect(person.addresses.first.address_1).to eq request[:line_one]
-  expect(person.addresses.first.address_2).to eq request[:line_two]
-  expect(person.addresses.first.city).to eq request[:city]
-  expect(person.addresses.first.state).to eq request[:state]
-  expect(person.addresses.first.zip).to eq request[:zip]
+  expect(person.addresses.first.address_type).to eq request.to_hash[:type]
+  expect(person.addresses.first.address_1).to eq request.to_hash[:address_1]
+  expect(person.addresses.first.address_2).to eq request.to_hash[:address_2]
+  expect(person.addresses.first.city).to eq request.to_hash[:city]
+  expect(person.addresses.first.state).to eq request.to_hash[:state]
+  expect(person.addresses.first.zip).to eq request.to_hash[:zip]
 end
 
 describe ChangeMemberAddress do
@@ -24,13 +24,13 @@ describe ChangeMemberAddress do
 
   let(:request) do
     {
-      member_id: 1,
-      type: 'home',
-      line_one: '4321 cool drive',
-      line_two: '#999',
-      city: 'Seattle',
-      state: 'GA',
-      zip: '12345'
+      :member_id => 1,
+      :type => 'home',
+      :address_1 => '4321 cool drive',
+      :address_2 => '#999',
+      :city => 'Seattle',
+      :state => 'GA',
+      :zip => '12345'
     }
   end
 
@@ -65,7 +65,7 @@ describe ChangeMemberAddress do
   end
 
   it 'finds the person by member id' do
-    expect(person_repo).to receive(:find_for_member_id).with(request[:member_id])
+    expect(person_repo).to receive(:find_for_member_id).with(1)
     expect(listener).to receive(:success)
     change_address.execute(request)
   end

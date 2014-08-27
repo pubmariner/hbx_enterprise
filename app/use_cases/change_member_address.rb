@@ -5,8 +5,7 @@ class ChangeMemberAddress
     @transmitter = transmitter
   end
 
-  def execute(req)
-    request = req.to_hash
+  def execute(request)
     person = @person_repo.find_for_member_id(request[:member_id])
     failed = false
     if(person.nil?)
@@ -48,8 +47,8 @@ class ChangeMemberAddress
       people.each do |person|
         person.update_address(Address.new(
           address_type: 'home', 
-          address_1: request[:line_one], 
-          address_2: request[:line_two], 
+          address_1: request[:address_1], 
+          address_2: request[:address_2], 
           city: request[:city], 
           state: request[:state], 
           zip: request[:zip]
