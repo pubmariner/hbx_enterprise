@@ -9,14 +9,13 @@ class MemberAddressChangesController < ApplicationController
 
     dl_name = download_filename(@file)
 
-    requests = ChangeMemberAddressRequest.many_from_csv(@file.read)
+    requests = ChangeMemberAddressRequest.many_from_csv(@file.read, current_user.email)
 
     change_address = ChangeMemberAddress.new(transmitter)
 
     out_stream = CSV.generate do |csv|
 
       csv << ["member_id","type","address1","address2","city","state","zip","csl_number","status","errors"]
-
       requests.each do |request|
         error_logger = MemberAddressChangers::Csv.new(request, csv)
         change_address.execute(request.to_hash, error_logger)
