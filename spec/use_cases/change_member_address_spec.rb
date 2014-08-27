@@ -11,7 +11,7 @@ end
 
 describe ChangeMemberAddress do
   subject(:change_address) { ChangeMemberAddress.new(transmitter, listener, person_repo)}
-  let(:listener) { double }
+  let(:listener) { double(:fail => nil) }
   let(:transmitter) { double(execute: nil) }
   let(:person_repo) { double(find_for_member_id: person) }
   let(:person) { Person.new }
@@ -66,16 +66,19 @@ describe ChangeMemberAddress do
 
   it 'finds the person by member id' do
     expect(person_repo).to receive(:find_for_member_id).with(request[:member_id])
+    expect(listener).to receive(:success)
     change_address.execute(request)
   end
 
   it "finds the person's active policies"  do
     expect(person).to receive(:active_policies)
+    expect(listener).to receive(:success)
     change_address.execute(request)
   end
 
   it 'finds active enrollees on policy' do
     expect(policy).to receive(:active_enrollees)
+    expect(listener).to receive(:success)
     change_address.execute(request)
   end
 
@@ -85,12 +88,14 @@ describe ChangeMemberAddress do
   end
 
   it 'changes address of person' do
+    expect(listener).to receive(:success)
     change_address.execute(request)
     expect_address_to_change(person, request)
   end
 
   it 'transmits the changes' do
     expect(transmitter).to receive(:execute).with(transmit_request)
+    expect(listener).to receive(:success)
     change_address.execute(request)
   end
 
@@ -107,6 +112,7 @@ describe ChangeMemberAddress do
       person.save
     end
     it 'also changes their address' do
+      expect(listener).to receive(:success)
       change_address.execute(request)
       expect_address_to_change(other_person, request)
     end
@@ -131,6 +137,7 @@ describe ChangeMemberAddress do
     end
 
     it 'does not change their address' do
+      expect(listener).to receive(:success)
       change_address.execute(request)
       expect(other_person.addresses.first.address_type).to eq different_address.address_type
       expect(other_person.addresses.first.address_1).to eq different_address.address_1
@@ -144,7 +151,8 @@ describe ChangeMemberAddress do
   context 'when member doesnt exist' do 
     let(:person_repo) { double(find_for_member_id: nil) }
     it 'notifies listener of no such member' do
-      expect(listener).to receive(:no_such_member)
+      expect(listener).to receive(:no_such_member).with({:member_id => request[:member_id]})
+      expect(listener).to receive(:fail)
       change_address.execute(request)
     end
   end
@@ -173,6 +181,7 @@ describe ChangeMemberAddress do
 
     it 'notifies the listener of too many health policies' do 
       expect(listener).to receive(:too_many_health_policies)
+      expect(listener).to receive(:fail)
       change_address.execute(request)
     end
   end
@@ -186,6 +195,7 @@ describe ChangeMemberAddress do
 
     it 'notifies the listener of too many dental policies' do 
       expect(listener).to receive(:too_many_dental_policies)
+      expect(listener).to receive(:fail)
       change_address.execute(request)
     end
   end
@@ -194,6 +204,7 @@ describe ChangeMemberAddress do
     before { person.stub(:active_policies) { [] } }
     it 'notifies the listener that there are no policies' do
       expect(listener).to receive(:no_active_policies)
+      expect(listener).to receive(:fail)
       change_address.execute(request)
     end
   end
@@ -219,6 +230,7 @@ describe ChangeMemberAddress do
     it 'should transmit the changes on both policies' do
       expect(transmitter).to receive(:execute).with(transmit_request)
       expect(transmitter).to receive(:execute).with(other_transmit_request)
+      expect(listener).to receive(:success)
 
       change_address.execute(request)
     end

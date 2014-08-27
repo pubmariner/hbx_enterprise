@@ -5,26 +5,34 @@ class ChangeMemberAddress
     @transmitter = transmitter
   end
 
-  def execute(request)
+  def execute(req)
+    request = req.to_hash
     person = @person_repo.find_for_member_id(request[:member_id])
+    failed = false
     if(person.nil?)
-      @listener.no_such_member
+      @listener.no_such_member({:member_id => request[:member_id]})
+      @listener.fail
       return
     end
 
     active_policies = person.active_policies
     if(active_policies.empty?)
       @listener.no_active_policies
-      return
+      failed = true
     end
 
     if (count_policies_by_coverage_type(active_policies, 'health') > 1)
       @listener.too_many_health_policies
-      return
+      failed = true
     end
 
     if (count_policies_by_coverage_type(active_policies, 'dental') > 1)
       @listener.too_many_dental_policies
+      failed = true
+    end
+
+    if failed
+      @listener.fail
       return
     end
 
@@ -48,6 +56,7 @@ class ChangeMemberAddress
         ))
       end
 
+      # TODO: Operation/Reason constant cleanup
       transmit_request = {
         policy_id: policy.id,
         operation: 'change',
@@ -59,6 +68,7 @@ class ChangeMemberAddress
 
       @transmitter.execute(transmit_request)
     end
+    @listener.success
   end
 
   def count_policies_by_coverage_type(policies, type)
