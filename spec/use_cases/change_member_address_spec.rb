@@ -182,7 +182,7 @@ describe ChangeMemberAddress do
     before { person.stub(:active_policies) { [policy, other_policy]} }
 
     it 'notifies the listener of too many health policies' do 
-      expect(listener).to receive(:too_many_health_policies)
+      expect(listener).to receive(:too_many_health_policies).with({:member_id => request[:member_id]})
       expect(listener).to receive(:fail)
       change_address.execute(request, listener)
     end
@@ -196,7 +196,7 @@ describe ChangeMemberAddress do
     before { person.stub(:active_policies) { [policy, other_policy]} }
 
     it 'notifies the listener of too many dental policies' do 
-      expect(listener).to receive(:too_many_dental_policies)
+      expect(listener).to receive(:too_many_dental_policies).with({:member_id => request[:member_id]})
       expect(listener).to receive(:fail)
       change_address.execute(request, listener)
     end
@@ -218,7 +218,7 @@ describe ChangeMemberAddress do
   context "when the member has no active policies" do
     before { person.stub(:active_policies) { [] } }
     it 'notifies the listener that there are no policies' do
-      expect(listener).to receive(:no_active_policies)
+      expect(listener).to receive(:no_active_policies).with({:member_id => request[:member_id]})
       expect(listener).to receive(:fail)
       change_address.execute(request, listener)
     end

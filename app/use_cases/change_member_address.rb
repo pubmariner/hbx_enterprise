@@ -31,17 +31,17 @@ class ChangeMemberAddress
 
     active_policies = person.active_policies
     if(active_policies.empty?)
-      listener.no_active_policies
+      listener.no_active_policies(member_id: request[:member_id])
       failed = true
     end
 
     if (count_policies_by_coverage_type(active_policies, 'health') > 1)
-      listener.too_many_health_policies
+      listener.too_many_health_policies(member_id: request[:member_id])
       failed = true
     end
 
     if (count_policies_by_coverage_type(active_policies, 'dental') > 1)
-      listener.too_many_dental_policies
+      listener.too_many_dental_policies(member_id: request[:member_id])
       failed = true
     end
 
