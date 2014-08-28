@@ -96,4 +96,8 @@ class Enrollee
   def subscriber?
     self.relationship_status_code == "self"
   end
+
+  def coverage_ended?
+    !coverage_end.blank?
+  end
 end
