@@ -1,9 +1,9 @@
 require "spec_helper"
 
-describe ChangeMemberAddressRequest::CsvRequest, "given a csv row" do
+describe CsvRequest, "given a csv row" do
   let(:csv_row) { 
     {
-      "member_id" => 1,
+      "member_id" => "1",
       "type" => 'home',
       "address1" => '4321 cool drive',
       "address2" => '#999',
@@ -16,7 +16,7 @@ describe ChangeMemberAddressRequest::CsvRequest, "given a csv row" do
 
   let(:use_case_parameters) { 
     {
-      :member_id => 1,
+      :member_id => "1",
       :type => 'home',
       :address1 => '4321 cool drive',
       :address2 => '#999',
@@ -29,7 +29,7 @@ describe ChangeMemberAddressRequest::CsvRequest, "given a csv row" do
 
   let(:current_user) { 'me@example.com' }
 
-  subject { ChangeMemberAddressRequest::CsvRequest.new(csv_row, current_user) }
+  subject { CsvRequest.new(csv_row, current_user) }
 
   it "should provide the correct request value hash for a use case" do
     expect(subject.to_hash).to eq(use_case_parameters)
