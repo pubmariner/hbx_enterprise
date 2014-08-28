@@ -7,14 +7,12 @@ class ChangeEffectiveDate
   def execute(request, listener)
     policy = @policy_repo.find(request[:policy_id])
 
-    # no such policy
     if(policy.nil?)
       listener.no_such_policy
       listener.fail
       return
     end
 
-    # no changes needed
     if(policy.subscriber.coverage_start == request[:effective_date])
       listener.no_changes_needed
       listener.fail
@@ -54,8 +52,8 @@ class ChangeEffectiveDate
       policy_id: policy.id,
       operation: 'change',
       reason: 'benefit_selection',
-      affected_enrollee_ids: affected_enrollees.map(&:m_id), #todo
-      include_enrollee_ids: affected_enrollees.map(&:m_id),  #todo
+      affected_enrollee_ids: affected_enrollees.map(&:m_id),
+      include_enrollee_ids: affected_enrollees.map(&:m_id),
       current_user: request[:current_user]
     }
     @transmitter.execute(transmit_request)
