@@ -9,7 +9,7 @@ class MemberAddressChangesController < ApplicationController
 
     dl_name = download_filename(@file)
 
-    requests = ChangeMemberAddressRequest.many_from_csv(@file.read.force_encoding('utf-8'), current_user.email)
+    requests = CsvRequest.create_many(@file.read.force_encoding('utf-8'), current_user.email)
 
     change_address = ChangeMemberAddress.new(transmitter)
 
