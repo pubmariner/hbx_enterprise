@@ -22,6 +22,10 @@ module EffectiveDateChangers
       @errors << "Policy #{details[:policy_id]} has a start date mismatch"
     end
 
+    def no_changes_needed(details = {})
+      @errors << "Policy #{details[:policy_id]} - no changes needed"
+    end
+
     def fail(details = {})
       @csv << (@request.to_a + ["error", @errors.join])
     end
