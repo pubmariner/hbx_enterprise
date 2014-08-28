@@ -57,12 +57,20 @@ class ChangeMemberAddress
       return
     end
 
+    affected_enrollee_map = active_policies.inject({}) do |m, policy|
+      m[policy.id] = policy.active_enrollees.select do |enrollee|
+        person.addresses_match?(enrollee.person)
+      end
+      m
+    end
+
     active_policies.each do |policy|
       # people = people_with_members_address(policy, person)
       active_enrollees = policy.active_enrollees
-      affected_enrollees = active_enrollees.select do |enrollee|
-        person.addresses_match?(enrollee.person)
-      end
+      affected_enrollees = affected_enrollee_map[policy.id]
+#      affected_enrollees = active_enrollees.select do |enrollee|
+ #       person.addresses_match?(enrollee.person)
+  #    end
 
       people = affected_enrollees.map { |e| e.person }
 
