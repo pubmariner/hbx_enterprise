@@ -3,7 +3,7 @@ require "spec_helper"
 describe ChangeMemberAddressRequest::CsvRequest, "given a csv row" do
   let(:csv_row) { 
     {
-      "member_id" => 1,
+      "member_id" => "1",
       "type" => 'home',
       "address1" => '4321 cool drive',
       "address2" => '#999',
@@ -16,7 +16,7 @@ describe ChangeMemberAddressRequest::CsvRequest, "given a csv row" do
 
   let(:use_case_parameters) { 
     {
-      :member_id => 1,
+      :member_id => "1",
       :type => 'home',
       :address1 => '4321 cool drive',
       :address2 => '#999',
