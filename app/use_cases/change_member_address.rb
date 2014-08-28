@@ -45,6 +45,13 @@ class ChangeMemberAddress
       failed = true
     end
 
+    active_policies.each do |ap|
+      if ap.has_responsible_person?
+        listener.responsible_party_on_policy(:policy_id => ap.id)
+        failed = true
+      end
+    end
+
     if failed
       listener.fail
       return

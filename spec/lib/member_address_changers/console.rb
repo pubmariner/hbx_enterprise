@@ -23,6 +23,14 @@ describe MemberAddressChangers::Console do
     it_behaves_like "a failed console import", "Member 12354 does not exist"
   end
 
+  describe "with a policy that has a responsible party" do
+    before do
+      subject.responsible_party_on_policy(:policy_id => "123547")
+    end
+
+    it_behaves_like "a failed console import", "Policy 123547 has a responsible party"
+  end
+
   describe "when the member has more than one active health policy" do
     before do
       subject.too_many_health_policies(:member_id => 12354)

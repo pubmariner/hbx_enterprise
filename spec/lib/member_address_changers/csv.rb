@@ -16,6 +16,15 @@ describe MemberAddressChangers::Csv do
   let(:csv_slug) { [] }
   subject { MemberAddressChangers::Csv.new(request, csv_slug) }
 
+  describe "with a policy having a responsible party" do
+    before do
+      subject.responsible_party_on_policy(:policy_id => "123547")
+      subject.fail
+    end
+
+    it_behaves_like "a failed CSV import", "- Policy 123547 has a responsible party"
+  end
+
   describe "with a non-existant member" do
     before do
       subject.no_such_member(:member_id => 12354)

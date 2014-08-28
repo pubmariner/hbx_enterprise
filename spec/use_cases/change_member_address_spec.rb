@@ -17,7 +17,7 @@ describe ChangeMemberAddress do
   let(:address_repo) { Address }
   let(:person) { Person.new }
   
-  let(:policy) { double(id: '12345', plan: plan, enrollees: [target_enrollee], active_enrollees: [target_enrollee]) }
+  let(:policy) { double(id: '12345', plan: plan, enrollees: [target_enrollee], active_enrollees: [target_enrollee], :has_responsible_person? => false) }
   let(:plan) { double(coverage_type: coverage_type) }
   let(:coverage_type) { 'health'}
 
@@ -176,7 +176,7 @@ describe ChangeMemberAddress do
 
   context "when the member has more than one active health policy" do
     let(:coverage_type) { 'health' }
-    let(:other_policy) { double(plan: double(coverage_type: coverage_type), enrollees: [other_enrollee]) } 
+    let(:other_policy) { double(plan: double(coverage_type: coverage_type), enrollees: [other_enrollee], :has_responsible_person? => false) } 
     let(:other_enrollee) { double(person: person) }
 
     before { person.stub(:active_policies) { [policy, other_policy]} }
@@ -190,7 +190,7 @@ describe ChangeMemberAddress do
 
   context "when the member has more than one active dental policy" do
     let(:coverage_type) { 'dental' }
-    let(:other_policy) { double(plan: double(coverage_type: coverage_type), enrollees: [other_enrollee]) }
+    let(:other_policy) { double(plan: double(coverage_type: coverage_type), enrollees: [other_enrollee], :has_responsible_person? => false) }
     let(:other_enrollee) { double(person: person) }
 
     before { person.stub(:active_policies) { [policy, other_policy]} }
@@ -227,7 +227,7 @@ describe ChangeMemberAddress do
   context "when member has one active dental and one active health policy" do
     let(:coverage_type) { 'health' }
 
-    let(:other_policy) { double(id: '999', plan: double(coverage_type: 'dental'), enrollees: [other_enrollee], active_enrollees: [other_enrollee]) }
+    let(:other_policy) { double(id: '999', plan: double(coverage_type: 'dental'), enrollees: [other_enrollee], active_enrollees: [other_enrollee], :has_responsible_person? => false) }
     let(:other_enrollee) { double(m_id: '999', person: person) }
     
     let(:other_transmit_request) do
@@ -248,6 +248,16 @@ describe ChangeMemberAddress do
       expect(listener).to receive(:success)
 
       change_address.execute(request, listener)
+    end
+
+    context "when the dental policy has a responsible party" do
+      let(:other_policy) { double(id: '999', plan: double(coverage_type: 'dental'), enrollees: [other_enrollee], active_enrollees: [other_enrollee], :has_responsible_person? => true) }
+
+      it 'notifies the listener that a policy has a responsible party' do
+        expect(listener).to receive(:responsible_party_on_policy).with({:policy_id => '999'})
+        expect(listener).to receive(:fail)
+        change_address.execute(request, listener)
+      end
     end
   end
 end

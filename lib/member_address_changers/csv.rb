@@ -31,6 +31,10 @@ module MemberAddressChangers
       @errors << "- no active policies\n"
     end
 
+    def responsible_party_on_policy(details = {})
+      @errors << "- Policy #{details[:policy_id]} has a responsible party\n"
+    end
+
     def fail(details = {})
       @csv << (@request.to_a + ["error", @errors.join])
     end

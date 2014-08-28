@@ -30,6 +30,10 @@ module MemberAddressChangers
       @errors << "Member #{details[:member_id]} has no active policies"
     end
 
+    def responsible_party_on_policy(details = {})
+      @errors << "Policy #{details[:policy_id]} has a responsible party"
+    end
+
     def fail(details = {})
       @errors.each do |err|
         puts err
