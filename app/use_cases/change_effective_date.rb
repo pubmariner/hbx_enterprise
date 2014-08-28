@@ -5,9 +5,9 @@ class ChangeEffectiveDate
   end
 
   def execute(request, listener)
-    policy = @policy_repo.find(request[:policy_id])
+    # policy = @policy_repo.find(request[:policy_id])
     
-    # policy = @policy_repo.where({"_id" => request[:policy_id]}).first
+    policy = @policy_repo.where({"_id" => request[:policy_id]}).first
 
     if(policy.nil?)
       listener.no_such_policy(policy_id: request[:policy_id])

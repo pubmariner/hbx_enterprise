@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe ChangeEffectiveDate do
   subject(:change_effective_date) { ChangeEffectiveDate.new(transmitter, policy_repo) }
-  let(:policy_repo) { double(find: policy) }
+  let(:policy_repo) { double(where: double(first: policy)) }
   let(:policy) { double(id: '1234', enrollees: enrollees, save!: true, subscriber: subscriber)}
   let(:request) do
     {
@@ -32,7 +32,7 @@ describe ChangeEffectiveDate do
   let(:current_user) { 'me@example.com' }
 
   it 'finds the policy' do
-    expect(policy_repo).to receive(:find).with(request[:policy_id])
+    expect(policy_repo).to receive(:where).with({"_id" => request[:policy_id]})
     subject.execute(request, listener)
   end
 
@@ -57,7 +57,7 @@ describe ChangeEffectiveDate do
   end
 
   context "when policy doesn't exist" do
-    let(:policy_repo) { double(find: nil) }
+    let(:policy_repo) { double(where: double(first: nil)) }
     let(:listener) { double(no_such_policy: nil, fail: nil) }
 
     it 'notifies the listener' do
