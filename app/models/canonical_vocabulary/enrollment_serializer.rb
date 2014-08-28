@@ -77,13 +77,13 @@ module CanonicalVocabulary
         if !person.name_pfx.blank?
           xml['con'].name_prefix(person.name_pfx)
         end
-        xml['con'].name_first(person.name_first)
+        xml['con'].name_first(person.name_first.strip)
         if !person.name_middle.blank?
-          xml['con'].name_middle(person.name_middle)
+          xml['con'].name_middle(person.name_middle.strip)
         end
-        xml['con'].name_last(person.name_last)
+        xml['con'].name_last(person.name_last.strip)
         if !person.name_sfx.blank?
-          xml['con'].name_suffix(person.name_sfx)
+          xml['con'].name_suffix(person.name_sfx.strip)
         end
         if !person.home_phone.nil?
           xml['con'].phone do |xml|
@@ -142,13 +142,13 @@ module CanonicalVocabulary
       xml['con'].address do |xml|
         xml['con'].address_type("home")
         xml['con'].address do |xml|
-          xml['bt'].address_1(addr.address_1)
+          xml['bt'].address_1(addr.address_1.strip)
           if !addr.address_2.blank?
-            xml['bt'].address_2(addr.address_2)
+            xml['bt'].address_2(addr.address_2.strip)
           end
-          xml['bt'].city(addr.city)
-          xml['bt'].state(addr.state)
-          xml['bt'].zipcode(addr.zip)
+          xml['bt'].city(addr.city.strip)
+          xml['bt'].state(addr.state.strip)
+          xml['bt'].zipcode(addr.zip.strip)
         end
       end
     end

@@ -329,4 +329,105 @@ describe Policy do
       end
     end
   end
+
+  describe '#active_enrollees' do
+    let(:enrollees) { [ active_enrollee, inactive_enrollee] }
+
+    let(:active_enrollee) { build(:enrollee, coverage_status: 'active') }
+    let(:inactive_enrollee) { build(:enrollee, coverage_status: 'inactive') }
+
+    before do
+      policy.enrollees = enrollees
+      policy.save!
+    end
+
+    it 'collects all active enrollees' do
+      expect(policy.active_enrollees).to eq [active_enrollee]
+    end
+    
+  end
+end
+
+describe Policy do
+  let(:eg_id) { "1234" }
+  let(:subscriber) { Enrollee.new(:coverage_end => nil, :coverage_start => Date.today.prev_year, :rel_code => "self") }
+  let(:enrollees) { [subscriber]}
+  subject { Policy.new({
+    :eg_id => eg_id,
+    :enrollees => enrollees
+  })}
+
+  describe "with an active subscriber" do
+    it "should be currently active" do
+      expect(subject).to be_currently_active
+    end
+
+    describe "with a currently active enrollee" do
+      let(:enrollee) { Enrollee.new(:m_id => "12354", :coverage_end => nil, :coverage_start => Date.today.prev_year) }
+      let(:enrollees) { [subscriber, enrollee] }
+
+      it "should be currently_active_for enrollee" do
+        expect(subject).to be_currently_active_for("12354")
+      end
+    end
+  end
+
+  describe "with an eg_id matching /DC0.{32}/" do
+    let(:eg_id) { blarg = "a" * 32; "DC0#{blarg}"}
+
+    it "should not be currently_active" do
+      expect(subject).not_to be_currently_active
+    end
+  end
+
+  describe "with a cancelled subscriber" do
+    let(:subscriber) { Enrollee.new(:coverage_end => Date.today.prev_year, :coverage_start => Date.today.prev_year, :rel_code => "self") }
+
+    it "should not be currently_active" do
+      expect(subject).not_to be_currently_active
+    end
+  end
+
+  describe "with a subscriber with a past termination date" do
+    let(:subscriber) { Enrollee.new(:coverage_end => Date.today.prev_year, :coverage_start => Date.today.prev_year.prev_year, :rel_code => "self") }
+
+    it "should not be currently_active" do
+      expect(subject).not_to be_currently_active
+    end
+  end
+
+  describe "with a subscriber with a future benefit start date" do
+    let(:subscriber) { Enrollee.new(:coverage_end => nil, :coverage_start => Date.today.next_year, :rel_code => "self") }
+
+    it "should not be currently_active" do
+      expect(subject).not_to be_currently_active
+    end
+  end
+
+  describe "with a cancelled enrollee" do
+    let(:enrollee) { Enrollee.new(:m_id => "12354", :coverage_end => Date.today.prev_year, :coverage_start => Date.today.prev_year) }
+    let(:enrollees) { [subscriber, enrollee]}
+
+    it "should not be currently_active_for that enrollee" do
+      expect(subject).not_to be_currently_active_for("12354")
+    end
+  end
+
+  describe "with an enrollee with a past termination date" do
+    let(:enrollee) { Enrollee.new(:m_id => "12354", :coverage_end => Date.today.prev_year, :coverage_start => Date.today.prev_year.prev_year) }
+    let(:enrollees) { [subscriber, enrollee]}
+
+    it "should not be currently_active_for enrollee" do
+      expect(subject).not_to be_currently_active_for("12354")
+    end
+  end
+
+  describe "with an enrollee with a future benefit start date" do
+    let(:enrollee) { Enrollee.new(:m_id => "12354", :coverage_end => nil, :coverage_start => Date.today.next_year) }
+    let(:enrollees) { [subscriber, enrollee]}
+
+    it "should not be currently_active_for enrollee" do
+      expect(subject).not_to be_currently_active_for("12354")
+    end
+  end
 end

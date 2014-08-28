@@ -358,6 +358,31 @@ class Policy
       ]
     }
   end
+  
+  def active_enrollees
+    enrollees.select { |e| e.coverage_status == 'active' }
+  end
+
+  def currently_active?
+    return false if subscriber.nil?
+    return false if eg_id =~ /DC0.{32}/
+    now = Date.today
+    return false if subscriber.coverage_start > now
+    return false if (subscriber.coverage_start == subscriber.coverage_end)
+    return false if (!subscriber.coverage_end.nil? && subscriber.coverage_end < now)
+    true
+  end
+
+  def currently_active_for?(member_id)
+    return false unless currently_active?
+    en = enrollees.detect { |enr| enr.m_id == member_id }
+    return false if en.nil?
+    now = Date.today
+    return false if en.coverage_start > now
+    return false if (en.coverage_start == en.coverage_end)
+    return false if (!en.coverage_end.nil? && en.coverage_end < now)
+    true
+  end
 
 protected
   def generate_enrollment_group_id

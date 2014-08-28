@@ -14,7 +14,14 @@
         != active_menu_item("Employers", employers_path, :employers)
         != active_menu_item("Brokers", brokers_path, :brokers)
         != active_menu_item("Carriers", carriers_path, :carriers)
-        != active_menu_item("Tools", tools_premium_calc_path)
+        %li.dropdown
+          %a.dropdown-toggle{"data-toggle" => "dropdown", :href => "#"}
+            Tools
+            %span.caret
+          %ul.dropdown-menu{:role => "menu"}
+            != active_menu_item("Premium Calculator", tools_premium_calc_path)
+            != active_menu_item("Vocab Upload", new_vocab_upload_path) if can? :edit, @user
+            != active_menu_item("Member Address Change", new_member_address_change_path) if can? :edit, @people
         - if current_user
           %li.dropdown
             %a.dropdown-toggle{"data-toggle" => "dropdown", href: "#"}
