@@ -15,7 +15,7 @@ class ChangeEffectiveDate
       return
     end
 
-    if(policy.subscriber.coverage_start == request[:effective_date])
+    if(policy.subscriber.coverage_start == Date.parse(request[:effective_date]))
       listener.no_changes_needed(policy_id: request[:policy_id])
       listener.fail
       return
@@ -45,7 +45,7 @@ class ChangeEffectiveDate
     affected_enrollees = []
     policy.enrollees.each do |enrollee|
       unless enrollee.coverage_ended?
-        enrollee.coverage_start = request[:effective_date]
+        enrollee.coverage_start = Date.parse(request[:effective_date])
         affected_enrollees << enrollee
       end
     end

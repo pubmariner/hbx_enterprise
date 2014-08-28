@@ -7,7 +7,7 @@ describe ChangeEffectiveDate do
   let(:request) do
     {
       policy_id: '1234',
-      effective_date: Date.today.next_month,
+      effective_date: Date.today.next_month.strftime("%Y%m%d"),
       current_user: current_user
     }
   end
@@ -42,7 +42,7 @@ describe ChangeEffectiveDate do
     subject.execute(request, listener)
     
     enrollees.each do |enrollee|
-      expect(enrollee.coverage_start).to eq request[:effective_date]
+      expect(enrollee.coverage_start).to eq Date.parse(request[:effective_date])
     end
   end
 
@@ -104,7 +104,7 @@ describe ChangeEffectiveDate do
 
   context 'when subscriber already has requested effective date' do
     let(:listener) { double(no_changes_needed: nil, fail: nil)}
-    let(:subscriber) { Enrollee.new(coverage_start: request[:effective_date]) }
+    let(:subscriber) { Enrollee.new(coverage_start: Date.parse(request[:effective_date])) }
 
     it 'notifies the listener' do
       expect(listener).to receive(:no_changes_needed).with(policy_id: request[:policy_id])
@@ -128,8 +128,8 @@ describe ChangeEffectiveDate do
 
       subject.execute(request, listener)
 
-      expect(subscriber.coverage_start).to eq request[:effective_date]
-      expect(other_enrollee.coverage_start).not_to eq request[:effective_date]
+      expect(subscriber.coverage_start).to eq Date.parse(request[:effective_date])
+      expect(other_enrollee.coverage_start).not_to eq Date.parse(request[:effective_date])
     end
 
     it 'notifies listener' do
