@@ -1,5 +1,5 @@
 class EffectiveDateChangesController < ApplicationController
-    load_and_authorize_resource :class => "VocabUpload"
+  load_and_authorize_resource :class => "VocabUpload"
 
   def new
   end
