@@ -1,9 +1,5 @@
-class NullPolicyMaintenanceAction
-  def execute(request)
-  end
-end
 class EffectiveDateChangesController < ApplicationController
-    load_and_authorize_resource :class => "VocabUpload"
+  load_and_authorize_resource :class => "VocabUpload"
 
   def new
   end
@@ -31,7 +27,7 @@ class EffectiveDateChangesController < ApplicationController
   end
 
   def transmitter
-    NullPolicyMaintenanceAction.new
+    TransmitPolicyMaintenance.new
   end
 
   def download_filename(file)

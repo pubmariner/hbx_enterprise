@@ -58,8 +58,8 @@ class ChangeEffectiveDate
       include_enrollee_ids: affected_enrollees.map(&:m_id),
       current_user: request[:current_user]
     }
-    @transmitter.execute(transmit_request)
     policy.save!
+    @transmitter.execute(transmit_request)
     listener.success
   end
 
