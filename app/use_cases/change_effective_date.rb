@@ -5,29 +5,31 @@ class ChangeEffectiveDate
   end
 
   def execute(request, listener)
-    policy = @policy_repo.find(request[:policy_id])
+    # policy = @policy_repo.find(request[:policy_id])
+    
+    policy = @policy_repo.where({"_id" => request[:policy_id]}).first
 
     if(policy.nil?)
-      listener.no_such_policy
+      listener.no_such_policy(policy_id: request[:policy_id])
       listener.fail
       return
     end
 
-    if(policy.subscriber.coverage_start == request[:effective_date])
-      listener.no_changes_needed
+    if(policy.subscriber.coverage_start == Date.parse(request[:effective_date]))
+      listener.no_changes_needed(policy_id: request[:policy_id])
       listener.fail
       return
     end
 
     if policy.subscriber.coverage_ended?
-      listener.policy_inactive
+      listener.policy_inactive(policy_id: request[:policy_id])
       listener.fail
       return
     end
 
     terminateds = terminated_enrollees(policy)
     if terminateds.any?
-      listener.ambiguous_terminations(:member_ids => terminateds.map(&:m_id))
+      listener.ambiguous_terminations({:policy_id => request[:policy_id], :member_ids => terminateds.map(&:m_id)})
       listener.fail
       return
     end
@@ -35,7 +37,7 @@ class ChangeEffectiveDate
     coverage_starts = policy.enrollees.reject { |en| cancelled?(en) }.map(&:coverage_start)
 
     if coverage_starts.uniq.length > 1
-      listener.start_date_mismatch(:coverage_start => coverage_starts)
+      listener.start_date_mismatch({:policy_id => request[:policy_id], :coverage_start => coverage_starts})
       listener.fail
       return
     end
@@ -43,7 +45,7 @@ class ChangeEffectiveDate
     affected_enrollees = []
     policy.enrollees.each do |enrollee|
       unless enrollee.coverage_ended?
-        enrollee.coverage_start = request[:effective_date]
+        enrollee.coverage_start = Date.parse(request[:effective_date])
         affected_enrollees << enrollee
       end
     end

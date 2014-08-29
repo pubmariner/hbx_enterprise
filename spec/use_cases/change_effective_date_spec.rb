@@ -2,12 +2,12 @@ require 'spec_helper'
 
 describe ChangeEffectiveDate do
   subject(:change_effective_date) { ChangeEffectiveDate.new(transmitter, policy_repo) }
-  let(:policy_repo) { double(find: policy) }
+  let(:policy_repo) { double(where: double(first: policy)) }
   let(:policy) { double(id: '1234', enrollees: enrollees, save!: true, subscriber: subscriber)}
   let(:request) do
     {
       policy_id: '1234',
-      effective_date: Date.today.next_month,
+      effective_date: Date.today.next_month.strftime("%Y%m%d"),
       current_user: current_user
     }
   end
@@ -32,7 +32,7 @@ describe ChangeEffectiveDate do
   let(:current_user) { 'me@example.com' }
 
   it 'finds the policy' do
-    expect(policy_repo).to receive(:find).with(request[:policy_id])
+    expect(policy_repo).to receive(:where).with({"_id" => request[:policy_id]})
     subject.execute(request, listener)
   end
 
@@ -42,7 +42,7 @@ describe ChangeEffectiveDate do
     subject.execute(request, listener)
     
     enrollees.each do |enrollee|
-      expect(enrollee.coverage_start).to eq request[:effective_date]
+      expect(enrollee.coverage_start).to eq Date.parse(request[:effective_date])
     end
   end
 
@@ -57,11 +57,11 @@ describe ChangeEffectiveDate do
   end
 
   context "when policy doesn't exist" do
-    let(:policy_repo) { double(find: nil) }
+    let(:policy_repo) { double(where: double(first: nil)) }
     let(:listener) { double(no_such_policy: nil, fail: nil) }
 
     it 'notifies the listener' do
-      expect(listener).to receive(:no_such_policy)
+      expect(listener).to receive(:no_such_policy).with(policy_id: request[:policy_id])
       expect(listener).to receive(:fail)
       subject.execute(request, listener)
     end
@@ -77,7 +77,7 @@ describe ChangeEffectiveDate do
     let(:subscriber) { Enrollee.new(coverage_start: Date.today, coverage_end: Date.today) }
     
     it 'notifies the listener' do
-      expect(listener).to receive(:policy_inactive)
+      expect(listener).to receive(:policy_inactive).with(policy_id: request[:policy_id])
       expect(listener).to receive(:fail)
       subject.execute(request, listener)
     end
@@ -92,7 +92,7 @@ describe ChangeEffectiveDate do
     let(:subscriber) { Enrollee.new(coverage_start: Date.today, coverage_end: Date.today.next_month) }
 
     it 'notifies the listener' do
-      expect(listener).to receive(:policy_inactive)
+      expect(listener).to receive(:policy_inactive).with(policy_id: request[:policy_id])
       expect(listener).to receive(:fail)
       subject.execute(request, listener)
     end
@@ -104,10 +104,10 @@ describe ChangeEffectiveDate do
 
   context 'when subscriber already has requested effective date' do
     let(:listener) { double(no_changes_needed: nil, fail: nil)}
-    let(:subscriber) { Enrollee.new(coverage_start: request[:effective_date]) }
+    let(:subscriber) { Enrollee.new(coverage_start: Date.parse(request[:effective_date])) }
 
     it 'notifies the listener' do
-      expect(listener).to receive(:no_changes_needed)
+      expect(listener).to receive(:no_changes_needed).with(policy_id: request[:policy_id])
       expect(listener).to receive(:fail)
       subject.execute(request, listener)
     end
@@ -128,8 +128,8 @@ describe ChangeEffectiveDate do
 
       subject.execute(request, listener)
 
-      expect(subscriber.coverage_start).to eq request[:effective_date]
-      expect(other_enrollee.coverage_start).not_to eq request[:effective_date]
+      expect(subscriber.coverage_start).to eq Date.parse(request[:effective_date])
+      expect(other_enrollee.coverage_start).not_to eq Date.parse(request[:effective_date])
     end
 
     it 'notifies listener' do
@@ -147,7 +147,7 @@ describe ChangeEffectiveDate do
     let(:other_enrollee) { Enrollee.new(coverage_start: Date.today, coverage_end: Date.today.next_month, m_id: "4231") }
     let(:listener) { double(ambiguous_terminations: nil, fail: nil) }
     it 'notifies the listener' do
-      expect(listener).to receive(:ambiguous_terminations).with(:member_ids => [other_enrollee.m_id])
+      expect(listener).to receive(:ambiguous_terminations).with({:policy_id => request[:policy_id], :member_ids => [other_enrollee.m_id]})
       expect(listener).to receive(:fail)
       subject.execute(request, listener)
     end
@@ -163,7 +163,7 @@ describe ChangeEffectiveDate do
     let(:listener) { double(start_date_mismatch: nil, fail: nil) }
 
     it 'notifies the listener' do
-      expect(listener).to receive(:start_date_mismatch).with(:coverage_start => [subscriber.coverage_start, other_enrollee.coverage_start])
+      expect(listener).to receive(:start_date_mismatch).with({:policy_id => request[:policy_id], :coverage_start => [subscriber.coverage_start, other_enrollee.coverage_start]})
       expect(listener).to receive(:fail)
       subject.execute(request, listener)
     end
