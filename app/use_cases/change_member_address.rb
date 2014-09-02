@@ -65,12 +65,8 @@ class ChangeMemberAddress
     end
 
     active_policies.each do |policy|
-      # people = people_with_members_address(policy, person)
       active_enrollees = policy.active_enrollees
       affected_enrollees = affected_enrollee_map[policy.id]
-#      affected_enrollees = active_enrollees.select do |enrollee|
- #       person.addresses_match?(enrollee.person)
-  #    end
 
       people = affected_enrollees.map { |e| e.person }
 
@@ -95,7 +91,9 @@ class ChangeMemberAddress
         current_user: request[:current_user]
       }
 
-      @transmitter.execute(transmit_request)
+      if(request[:transmit])
+        @transmitter.execute(transmit_request)
+      end
     end
     listener.success
   end
@@ -113,9 +111,6 @@ class ChangeMemberAddress
     end
 
     enrollees.map { |e| e.person }
-    # policy.enrollees.inject([]) do |accum, enrollee|
-    #   member_person.addresses_match?(enrollee.person) ? accum+[enrollee] : accum
-    # end
   end
 
 end
