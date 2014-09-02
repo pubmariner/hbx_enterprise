@@ -324,4 +324,24 @@ describe Person do
       end
     end
   end
+
+  describe '#future_active_policies' do
+    let(:person) { Person.new(name_first: 'Joe', name_last: 'Dirt', members: [member]) }
+    let(:member) { Member.new(hbx_member_id: '1', gender: 'male', ssn: '11111111111')}
+    let(:policy) { Policy.new(eg_id: '1', enrollees: [enrollee]) }
+    let(:enrollee) do
+      Enrollee.new(
+        m_id: member.hbx_member_id, 
+        benefit_status_code: 'active', 
+        employment_status_code: 'active',
+        relationship_status_code: 'self',
+        coverage_start: future_date) 
+    end
+    let(:future_date) { Date.today.next_month }
+    before { policy.save! }
+
+    it 'returns policies that will be active in the future' do
+      expect(person.future_active_policies).to eq [policy]
+    end
+  end
 end
