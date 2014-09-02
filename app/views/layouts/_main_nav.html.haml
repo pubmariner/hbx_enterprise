@@ -21,7 +21,8 @@
           %ul.dropdown-menu{:role => "menu"}
             != active_menu_item("Premium Calculator", tools_premium_calc_path)
             != active_menu_item("Vocab Upload", new_vocab_upload_path) if can? :edit, @user
-            != active_menu_item("Member Address Change", new_member_address_change_path) if can? :edit, @people
+            != active_menu_item("Member Address Change", new_member_address_change_path) if can? :edit, @user
+            != active_menu_item("Member Address Change", new_effective_date_change_path) if can? :edit, @user
         - if current_user
           %li.dropdown
             %a.dropdown-toggle{"data-toggle" => "dropdown", href: "#"}
