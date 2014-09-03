@@ -1,0 +1,18 @@
+<div class="col-md-4">
+  <% obj.phones.each do |phone| %>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <%= "#{mixed_case(phone.phone_type)} phone" %>
+        </h3>
+      </div>
+      <div class="panel-body">
+        <% if obj.phones.first.extension.present? %>
+          <%= number_to_phone(phone.phone_number, area_code: true, extension: phone.extension) %>
+        <% else %>
+          <%= number_to_phone(phone.phone_number, area_code: true) %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>
