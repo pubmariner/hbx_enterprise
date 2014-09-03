@@ -83,7 +83,9 @@ class ChangeEffectiveDate
       current_user: request[:current_user]
     }
     policy.save!
-    @transmitter.execute(transmit_request)
+    if (request[:transmit])
+      @transmitter.execute(transmit_request)
+    end
     listener.success
   end
 
