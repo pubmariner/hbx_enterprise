@@ -16,10 +16,14 @@
     <div class="form-actions">
       <div class="row">
         <div class="col-md-1">
-          <%= f.submit "Continue", :class => 'btn btn-primary' %>
+          <%= f.submit "Save Changes", :class => 'btn btn-primary' %>
         </div>
         <div class="col-md-1">
-          <p class='text-center'><%= link_to t('.cancel', :default => t("helpers.links.cancel")), people_path %></p>
+            <span>Transmit?</span>
+            <%= f.check_box :transmit, checked: true %>
+        </div>
+        <div class="col-md-1">
+          <%= button_to t('.cancel', :default => t("helpers.links.cancel")), people_path, class: "btn btn-primary" %>
         </div>
       </div>
 		</div>
