@@ -1,70 +1,91 @@
-	<%= f.error_notification %>
-	  <% if @person.errors.any? %>
-    <div class="alert alert-error">
-      <h4><%= pluralize(@person.errors.count, "error") %> prohibited this person from being saved:</h4>
-      <ul>
-      <% @person.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
+<%= f.error_notification %>
+  <% if @person.errors.any? %>
+  <div class="alert alert-error">
+    <h4><%= pluralize(@person.errors.count, "error") %> prohibited this person from being saved:</h4>
+    <ul>
+    <% @person.errors.full_messages.each do |msg| %>
+      <li><%= msg %></li>
+    <% end %>
 
-      <% @person.embedded_error_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
+    <% @person.embedded_error_messages.each do |msg| %>
+      <li><%= msg %></li>
+    <% end %>
+    </ul>
+  </div>
+<% end %>
 
-	<legend>Name and Identifying Info</legend>
-	<div class="row">
-		<div class="col-md-offset-1 col-md-9">
-		  <div class="form-inputs">
-				<%= render 'name_fields', f: f %>
+<div class="panel panel-default">
+  <div class="panel-heading">Name and Identifying Info</div>
+  <div class="panel-body">
+		<div class="row">
+			<div class="col-md-offset-1 col-md-9">
+			  <div class="form-inputs">
+					<%= render 'name_fields', f: f %>
 
-				<%= f.simple_fields_for :members do |member|  %>
-					<%= render 'member_fields', m: member %>
-			  <% end %>
+					<%= f.simple_fields_for :members do |member|  %>
+						<%= render 'member_fields', m: member %>
+				  <% end %>
+				</div>
 			</div>
 		</div>
 	</div>
+</div>
 
-	<legend>Address</legend>
-	<div class="row">
-		<div class="col-md-offset-1 col-md-9">
-		  <div class="form-inputs nested-fields">
-				<%= f.simple_fields_for :addresses do |address|  %>
-					<%= render 'address_fields', f: address %>
-			  <% end %>
-			  <p class="text-right"><%= link_to_add_fields "Add Address", f, :addresses %></p>
+<div class="panel panel-default">
+  <div class="panel-heading">Address</div>
+  <div class="panel-body">
+		<div class="row">
+			<div class="col-md-offset-1 col-md-9">
+			  <div class="form-inputs nested-fields">
+					<%= f.simple_fields_for :addresses do |address|  %>
+						<%= render 'address_fields', f: address %>
+				  <% end %>
+				  <p class="text-right"><%= link_to_add_fields "Add Address", f, :addresses %></p>
+				</div>
 			</div>
 		</div>
 	</div>
-				
-	<legend>Phone</legend>
-	<div class="row">
-		<div class="col-md-offset-1 col-md-9">
-		  <div class="form-inputs nested-fields">
-				<%= f.simple_fields_for :phones do |phone|  %>
-					<%= render 'phone_fields', f: phone %>
-			  <% end %>
-			  <p class="text-right"><%= link_to_add_fields "Add Phone", f, :phones %><p>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">Phone</div>
+  <div class="panel-body">
+		<div class="row">
+			<div class="col-md-offset-1 col-md-9">
+			  <div class="form-inputs nested-fields">
+					<%= f.simple_fields_for :phones do |phone|  %>
+						<%= render 'phone_fields', f: phone %>
+				  <% end %>
+				  <!-- <p class="text-right"><%= link_to_add_fields "Add Phone", f, :phones %><p> -->
+				</div>
 			</div>
 		</div>
 	</div>
-				
-	<legend>Email</legend>
-	<div class="row">
-		<div class="col-md-offset-1 col-md-9">
-		  <div class="form-inputs nested-fields">
-				<%= f.simple_fields_for :emails do |email|  %>
-					<%= render 'email_fields', f: email %>
-			  <% end %>
-			  <p class="text-right"><%= link_to_add_fields "Add Email", f, :emails %></p>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">Email</div>
+  <div class="panel-body">
+		<div class="row">
+			<div class="col-md-offset-1 col-md-9">
+			  <div class="form-inputs nested-fields">
+					<%= f.simple_fields_for :emails do |email|  %>
+						<%= render 'email_fields', f: email %>
+				  <% end %>
+				  <!-- <p class="text-right"><%= link_to_add_fields "Add Email", f, :emails %></p> -->
+				</div>
 			</div>
 		</div>
 	</div>
-	<legend>Relationship</legend>
-	<div class="row">
-		<div class="col-md-offset-1 col-md-9">
-			<%= f.input :relationship, as: :select, collection: PersonRelationship::ALL_RELATIONSHIPS_LIST, include_blank: "Type" %>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">Relationship</div>
+  <div class="panel-body">
+		<div class="row">
+			<div class="col-md-offset-1 col-md-9">
+				<%= f.input :relationship, as: :select, collection: PersonRelationship::ALL_RELATIONSHIPS_LIST, include_blank: "Type", disabled: true %>
+			</div>
 		</div>
 	</div>
+</div>
