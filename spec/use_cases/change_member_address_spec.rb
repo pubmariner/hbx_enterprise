@@ -32,9 +32,11 @@ describe ChangeMemberAddress do
       :city => 'Seattle',
       :state => 'GA',
       :zip => '12345',
-      current_user: 'me@example.com' 
+      :current_user => 'me@example.com',
+      :transmit => transmit
     }
   end
+  let(:transmit) { true }
 
   let(:address) { Address.new(address_fields) }
 
@@ -62,6 +64,8 @@ describe ChangeMemberAddress do
 
   before do
     person.stub(:active_policies) { [policy]}
+    person.stub(:future_active_policies) { [] }
+
     person.addresses << address
     person.save
   end
@@ -74,6 +78,12 @@ describe ChangeMemberAddress do
 
   it "finds the person's active policies"  do
     expect(person).to receive(:active_policies)
+    expect(listener).to receive(:success)
+    change_address.execute(request, listener)
+  end
+
+  it "finds the person's future active policies" do
+    expect(person).to receive(:future_active_policies)
     expect(listener).to receive(:success)
     change_address.execute(request, listener)
   end
@@ -222,6 +232,37 @@ describe ChangeMemberAddress do
       expect(listener).to receive(:fail)
       change_address.execute(request, listener)
     end
+
+    context 'but will have an active policy in the future' do
+      before { person.stub(:future_active_policies) {[ policy ]} }
+      it 'does not notify the listener of no policies' do
+        expect(listener).not_to receive(:no_active_policies)
+        expect(listener).not_to receive(:fail)
+        expect(listener).to receive(:success)
+        change_address.execute(request, listener)
+      end
+
+      it 'changes address of person' do
+        expect(listener).to receive(:success)
+        change_address.execute(request, listener)
+        expect_address_to_change(person, request)
+      end
+
+      it 'transmits the changes' do
+        expect(transmitter).to receive(:execute).with(transmit_request)
+        expect(listener).to receive(:success)
+        change_address.execute(request, listener)
+      end
+
+      context 'when policy has a responsible party' do
+        before { policy.stub(:has_responsible_person?) { true } }
+        it 'notifies the listener that a policy has a responsible party' do
+          expect(listener).to receive(:responsible_party_on_policy).with({:policy_id => policy.id })
+          expect(listener).to receive(:fail)
+          change_address.execute(request, listener)
+        end
+      end
+    end
   end
 
   context "when member has one active dental and one active health policy" do
@@ -260,51 +301,13 @@ describe ChangeMemberAddress do
       end
     end
   end
+
+  context 'when requested not to transmit' do
+    let(:transmit) { false }
+    it 'does not transmit' do
+      expect(transmitter).not_to receive(:execute)
+      expect(listener).to receive(:success)
+      change_address.execute(request, listener)
+    end
+  end
 end
-
-# shared_examples "a failed execution" do |notify_msg, notify_args|
-
-#   it "and should signal the error with :#{notify_msg} and fail" do
-#     expect(listener).to receive(notify_msg).with(notify_args)
-#     expect(listener).to receive(:fail)
-#   end
-# end 
-
-# describe ChangeMemberAddress do
-#     let(:listener) { double }
-
-#     describe "with a non-existent member" do
-#       it_behaves_like "a failed execution", :no_such_member, {}
-#     end
-
-#     describe "when the member has more than one active health policy" do
-#       it_behaves_like "a failed execution", :too_many_health_policies, {}
-#     end
-
-#     describe "when the member has more than one active dental policy" do
-#       it_behaves_like "a failed execution", :too_many_dental_policies, {}
-#     end
-
-#     describe "when the member has no active policies" do
-#       it_behaves_like "a failed execution", :no_active_policies, {}
-#     end
-
-#     describe "with a member that has one active dental and one active health policy" do
-#       it "should transmit the changes on both policies"
-#     end
-
-#     describe "with a member that has one active, one terminated, and one cancelled health policy" do
-#       it "should only transmit changes to the active policy"
-#     end
-
-#     describe "with a single active health policy" do
-#       describe "which has a spouse at the same address" do
-#         it "should also update the spouse"
-#       end 
-
-#       describe "which has a child at a different address" do
-#         it "should not update the child"
-#       end 
-#     end
-
-# end

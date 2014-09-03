@@ -30,7 +30,9 @@ class ChangeMemberAddress
     end
 
     active_policies = person.active_policies
-    if(active_policies.empty?)
+    future_active_policies = person.future_active_policies
+
+    if(active_policies.empty? && future_active_policies.empty?)
       listener.no_active_policies(member_id: request[:member_id])
       failed = true
     end
@@ -45,7 +47,9 @@ class ChangeMemberAddress
       failed = true
     end
 
-    active_policies.each do |ap|
+    policies = active_policies + future_active_policies
+
+    policies.each do |ap|
       if ap.has_responsible_person?
         listener.responsible_party_on_policy(:policy_id => ap.id)
         failed = true
@@ -57,20 +61,16 @@ class ChangeMemberAddress
       return
     end
 
-    affected_enrollee_map = active_policies.inject({}) do |m, policy|
+    affected_enrollee_map = policies.inject({}) do |m, policy|
       m[policy.id] = policy.active_enrollees.select do |enrollee|
         person.addresses_match?(enrollee.person)
       end
       m
     end
 
-    active_policies.each do |policy|
-      # people = people_with_members_address(policy, person)
+    policies.each do |policy|
       active_enrollees = policy.active_enrollees
       affected_enrollees = affected_enrollee_map[policy.id]
-#      affected_enrollees = active_enrollees.select do |enrollee|
- #       person.addresses_match?(enrollee.person)
-  #    end
 
       people = affected_enrollees.map { |e| e.person }
 
@@ -95,7 +95,9 @@ class ChangeMemberAddress
         current_user: request[:current_user]
       }
 
-      @transmitter.execute(transmit_request)
+      if(request[:transmit])
+        @transmitter.execute(transmit_request)
+      end
     end
     listener.success
   end
@@ -113,9 +115,6 @@ class ChangeMemberAddress
     end
 
     enrollees.map { |e| e.person }
-    # policy.enrollees.inject([]) do |accum, enrollee|
-    #   member_person.addresses_match?(enrollee.person) ? accum+[enrollee] : accum
-    # end
   end
 
 end

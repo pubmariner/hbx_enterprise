@@ -1,5 +1,5 @@
 module MemberAddressChangers
-  class Csv 
+  class Csv
     def initialize(req, out_csv)
       @request = req
       @errors = []
@@ -10,29 +10,29 @@ module MemberAddressChangers
       details.each_pair do |k, v|
         property_errors = Array(v)
         property_errors.each do |err|
-          @errors << "- Address invalid: #{k} #{err}\n"
+          @errors << " - Address invalid: #{k} #{err}\n"
         end
       end
     end
 
     def no_such_member(details = {})
-      @errors << "- Member #{details[:member_id]} does not exist\n"
+      @errors << " - Member #{details[:member_id]} does not exist\n"
     end
 
     def too_many_health_policies(details = {})
-      @errors << "- has too many active health policies\n"
+      @errors << " - has too many active health policies\n"
     end
 
     def too_many_dental_policies(details = {})
-      @errors << "- has too many active dental policies\n"
+      @errors << " - has too many active dental policies\n"
     end
 
     def no_active_policies(details = {})
-      @errors << "- no active policies\n"
+      @errors << " - no active policies\n"
     end
 
     def responsible_party_on_policy(details = {})
-      @errors << "- Policy #{details[:policy_id]} has a responsible party\n"
+      @errors << " - Policy #{details[:policy_id]} has a responsible party\n"
     end
 
     def fail(details = {})

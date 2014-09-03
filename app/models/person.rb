@@ -44,6 +44,9 @@ class Person
   # embeds_many :members, after_add: :generate_hbx_member_id
   embeds_many :members, cascade_callbacks: true
 
+  embeds_many :incomes, :inverse_of => :person
+  accepts_nested_attributes_for :incomes, allow_destroy: true
+
   index({"members.hbx_member_id" =>1})
   index({"members.ssn" => 1})
   index({"members.dob" => 1})
@@ -279,7 +282,17 @@ class Person
   end
 
   def active_policies
-    Policy.find_active_and_unterminated_for_members_in_range(self.members.map(&:hbx_member_id),Date.today, Date.today)
+    Policy.find_active_and_unterminated_for_members_in_range(self.members.map(&:hbx_member_id), Date.today, Date.today)
+  end
+
+  def future_active_policies
+    person_future_active_policies = []
+    member_ids = self.members.map(&:hbx_member_id)
+
+    member_ids.each do |member_id|
+      person_future_active_policies.concat(policies.select { |p| p.future_active_for?(member_id) })
+    end
+    person_future_active_policies
   end
 
   def associated_for_address

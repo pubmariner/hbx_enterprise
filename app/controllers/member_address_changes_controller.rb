@@ -15,10 +15,11 @@ class MemberAddressChangesController < ApplicationController
 
     out_stream = CSV.generate do |csv|
 
-      csv << ["member_id","type","address1","address2","city","state","zip","csl_number","status","errors"]
-      requests.each do |request|
-        error_logger = MemberAddressChangers::Csv.new(request, csv)
-        change_address.execute(request.to_hash, error_logger)
+      csv << ["member_id","type","address1","address2","city","state","zip","csl_number","transmit","status","errors"]
+      requests.each do |csv_request|
+        error_logger = MemberAddressChangers::Csv.new(csv_request, csv)
+        request = ChangeAddressRequest.from_csv_request(csv_request.to_hash)
+        change_address.execute(request, error_logger)
       end
 
     end
