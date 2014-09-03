@@ -9,7 +9,7 @@ class ChangeAddressRequest
       :state => csv_request[:state],
       :zip => csv_request[:zip],
       :current_user => csv_request[:current_user],
-      :transmit => !csv_request[:transmit].empty?
+      :transmit => (csv_request[:transmit] == 'yes')
     }
   end
 end

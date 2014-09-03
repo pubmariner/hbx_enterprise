@@ -4,7 +4,7 @@ class ChangeEffectiveDateRequest
       policy_id: csv_request[:policy_id],
       effective_date: csv_request[:effective_date],
       current_user: csv_request[:current_user],
-      transmit: !csv_request[:transmit].empty?
+      transmit: (csv_request[:transmit] == 'yes')
     }
   end
 end
