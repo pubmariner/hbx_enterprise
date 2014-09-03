@@ -15,10 +15,11 @@ class EffectiveDateChangesController < ApplicationController
 
     out_stream = CSV.generate do |csv|
 
-      csv << ["policy_id","effective_date","csl_number","status","errors"]
-      requests.each do |request|
-        error_logger = EffectiveDateChangers::Csv.new(request, csv)
-        change_effective_date.execute(request.to_hash, error_logger)
+      csv << ["policy_id","effective_date","csl_number","transmit","status","errors"]
+      requests.each do |csv_request|
+        error_logger = EffectiveDateChangers::Csv.new(csv_request, csv)
+        request = ChangeEffectiveDateRequest.from_csv_request(csv_request.to_hash)
+        change_effective_date.execute(request, error_logger)
       end
 
     end

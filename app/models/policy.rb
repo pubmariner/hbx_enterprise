@@ -384,6 +384,15 @@ class Policy
     true
   end
 
+  def future_active_for?(member_id)
+    en = enrollees.detect { |enr| enr.m_id == member_id }
+    now = Date.today
+    return false if en.nil?
+    return false if (en.coverage_start == en.coverage_end)
+    return false if (!en.coverage_end.nil? && en.coverage_end < now)
+    return true if en.coverage_start > now
+  end
+
 protected
   def generate_enrollment_group_id
     self.eg_id = self.eg_id || self._id.to_s

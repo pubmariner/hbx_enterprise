@@ -282,7 +282,17 @@ class Person
   end
 
   def active_policies
-    Policy.find_active_and_unterminated_for_members_in_range(self.members.map(&:hbx_member_id),Date.today, Date.today)
+    Policy.find_active_and_unterminated_for_members_in_range(self.members.map(&:hbx_member_id), Date.today, Date.today)
+  end
+
+  def future_active_policies
+    person_future_active_policies = []
+    member_ids = self.members.map(&:hbx_member_id)
+
+    member_ids.each do |member_id|
+      person_future_active_policies.concat(policies.select { |p| p.future_active_for?(member_id) })
+    end
+    person_future_active_policies
   end
 
   def associated_for_address

@@ -46,9 +46,33 @@ class ChangeEffectiveDate
     policy.enrollees.each do |enrollee|
       unless enrollee.coverage_ended?
         enrollee.coverage_start = Date.parse(request[:effective_date])
+
+        rate_period_date = nil
+        if (policy.market == 'individual')
+          rate_period_date = enrollee.coverage_start
+        elsif (policy.market == 'shop')
+          rate_period_date = policy.employer.plan_year_start
+        end
+        enrollee.pre_amt = policy.plan.rate(rate_period_date, enrollee.coverage_start, enrollee.member.dob).amount
         affected_enrollees << enrollee
       end
     end
+
+    #reverse engineer the employer contribution
+    employer_contribution_percentage = policy.employer_contribution / policy.total_premium_amount
+
+    # calculate new total
+    subscriber = policy.subscriber
+    total = 0
+    policy.enrollees.each do |enrollee|
+      if enrollee.coverage_end == subscriber.coverage_end
+        total += enrollee.pre_amt 
+      end
+    end
+    policy.total_premium_amount = total
+
+    #update responsible amount
+    policy.total_responsible_amount = policy.total_premium_amount - total_credit_adjustment(policy, employer_contribution_percentage)
 
     transmit_request = {
       policy_id: policy.id,
@@ -59,11 +83,16 @@ class ChangeEffectiveDate
       current_user: request[:current_user]
     }
     policy.save!
-    @transmitter.execute(transmit_request)
+    if (request[:transmit])
+      @transmitter.execute(transmit_request)
+    end
     listener.success
   end
 
   private
+  def total_credit_adjustment(policy, percent)
+    policy.employer_contribution = (policy.total_premium_amount * percent).truncate(2)
+  end
 
   def cancelled?(enrollee)
     enrollee.coverage_start == enrollee.coverage_end
