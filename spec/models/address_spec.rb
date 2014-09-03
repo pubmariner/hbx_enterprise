@@ -1,6 +1,19 @@
 require 'spec_helper'
 
 describe Address do
+  it "should have an invalid zipcode" do
+    subject.valid?
+    expect(subject).to have_at_least(1).errors_on(:zip)
+  end
+
+  describe "with a zipcode of 99389" do
+    it "should have a valid zipcode" do
+      subject.zip = "99389"
+      subject.valid?
+      expect(subject).not_to have_at_least(1).errors_on(:zip)
+    end
+  end
+
   describe "validate associations" do
     it { should be_embedded_in :person }
     it { should be_embedded_in :employer }
