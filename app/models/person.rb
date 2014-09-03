@@ -44,6 +44,9 @@ class Person
   # embeds_many :members, after_add: :generate_hbx_member_id
   embeds_many :members, cascade_callbacks: true
 
+  embeds_many :incomes, :inverse_of => :person
+  accepts_nested_attributes_for :incomes, allow_destroy: true
+
   index({"members.hbx_member_id" =>1})
   index({"members.ssn" => 1})
   index({"members.dob" => 1})
