@@ -18,6 +18,8 @@ class Address
 
   validates_presence_of :address_1, :city, :state, :zip
 
+  validates_length_of :zip, :minimum => 5, :allow_blank => false, :allow_nil => false
+
   embedded_in :person, :inverse_of => :addresses
   embedded_in :employer, :inverse_of => :addresses
   embedded_in :broker, :inverse_of => :addresses
