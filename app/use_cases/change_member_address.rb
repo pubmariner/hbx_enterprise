@@ -24,7 +24,7 @@ class ChangeMemberAddress
     end
     
     new_address = @address_repo.new(
-      address_type: 'home', 
+      address_type: request[:type], 
       address_1: request[:address1], 
       address_2: request[:address2], 
       city: request[:city], 
@@ -74,7 +74,7 @@ class ChangeMemberAddress
 
   def commit(request)
     new_address = @address_repo.new(
-      address_type: 'home', 
+      address_type: request[:type], 
       address_1: request[:address1], 
       address_2: request[:address2], 
       city: request[:city], 
