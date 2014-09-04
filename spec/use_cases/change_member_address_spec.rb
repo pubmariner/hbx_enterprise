@@ -94,11 +94,6 @@ describe ChangeMemberAddress do
     change_address.execute(request, listener)
   end
 
-  it 'finds people who share the same address' do
-    people = change_address.people_with_members_address(policy, person)
-    expect(people).to eq [person]
-  end
-
   it 'changes address of person' do
     expect(listener).to receive(:success)
     change_address.execute(request, listener)
