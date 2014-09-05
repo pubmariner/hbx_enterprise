@@ -90,6 +90,7 @@ class ChangeMemberAddress
       return
     end
 
+=begin
     active_policies = person.active_policies
     future_active_policies = person.future_active_policies
 
@@ -103,10 +104,14 @@ class ChangeMemberAddress
       end
       m
     end
+    # efs = ChangedAddressAffectedPolicyEnumerator.new(policies, address_type, current_address)
+    # efs.each_affected_policy do |policy, affected_enrollees, included_enrolees|
 
-    policies.each do |policy|
-      affected_enrollees = affected_enrollee_map[policy.id]
+    # end
+=end
+    propagaterythingamabob = AddressChangePropagator.new(person, request[:type])
 
+    propagaterythingamabob.each_affected_group do |policy, affected_enrollees, included_enrollees|
       people = affected_enrollees.map { |e| e.person }
 
       people.each do |person|
@@ -119,7 +124,7 @@ class ChangeMemberAddress
         operation: 'change',
         reason: 'change_of_location',
         affected_enrollee_ids: affected_enrollees.map(&:m_id),
-        include_enrollee_ids: policy.active_enrollees.map(&:m_id),
+        include_enrollee_ids: included_enrollees.map(&:m_id),
         current_user: request[:current_user]
       }
 

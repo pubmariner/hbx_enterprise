@@ -203,6 +203,14 @@ class Person
     self.touch
   end
 
+  def remove_address_of(address_type)
+    existing_address = self.addresses.select { |p| p.address_type == address_type }
+    if existing_address
+      self.addresses.delete(existing_address)
+    end
+    self.touch
+  end
+
   def merge_email(m_email)
     unless (self.emails.any? { |p| p.match(m_email) })
       self.emails << m_email
