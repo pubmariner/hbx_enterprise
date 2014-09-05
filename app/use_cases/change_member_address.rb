@@ -15,11 +15,11 @@ class ChangeMemberAddress
   end
 
   def validate(request, listener)
-    person = @person_repo.find_for_member_id(request[:member_id])
+    person = @person_repo.find_by_id(request[:person_id])
 
     failed = false
     if(person.nil?)
-      listener.no_such_member({:member_id => request[:member_id]})
+      listener.no_such_person({:person_id => request[:person_id]})
       return false
     end
     
@@ -65,11 +65,11 @@ class ChangeMemberAddress
       end
     end
 
-    if failed
-      return false
-    end
-    return true
+    !failed
+  end
 
+  def current_address_of(person, at_place)
+    person.address_of(at_place)
   end
 
   def commit(request)
@@ -82,22 +82,28 @@ class ChangeMemberAddress
       zip: request[:zip]
     )
 
-    person = @person_repo.find_for_member_id(request[:member_id])
+    person = @person_repo.find_by_id(request[:person_id])
+
+    existing_address = current_address_of(person, request[:type])
+
+    if new_address.match(existing_address)
+      return
+    end
 
     active_policies = person.active_policies
     future_active_policies = person.future_active_policies
 
     policies = active_policies + future_active_policies
 
+    # rules for selecting affected enrollees per policy
     affected_enrollee_map = policies.inject({}) do |m, policy|
       m[policy.id] = policy.active_enrollees.select do |enrollee|
-        person.addresses_match?(enrollee.person)
+        enrollee_address = current_address_of(enrollee.person, request[:type])
+        existing_address.nil? ? enrollee_address.nil? : existing_address.match(enrollee_address)
       end
       m
     end
 
-
-    #  loop affected enrollee map instead?
     policies.each do |policy|
       affected_enrollees = affected_enrollee_map[policy.id]
 
@@ -117,7 +123,7 @@ class ChangeMemberAddress
         current_user: request[:current_user]
       }
 
-      if(request[:transmit])
+      if(request[:transmit] && ['home', 'mailing'].include?(request[:type]))
         @transmitter.execute(transmit_request)
       end
     end

@@ -319,6 +319,24 @@ class Person
     enrollees
   end
 
+  def billing_address
+    billing_addr = addresses.detect { |adr| adr.address_type == "billing" }
+    if (billing_addr.nil?)
+      home_address 
+    else
+      billing_addr
+    end
+
+  end
+
+  def address_of(location)
+    addresses.detect { |a| a.address_type == location }
+  end
+
+  def self.find_by_id(id)
+    where(id: id).first
+  end
+
   private
 
   def initialize_authority_member

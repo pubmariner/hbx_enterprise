@@ -13,7 +13,7 @@ describe ChangeMemberAddress do
   subject(:change_address) { ChangeMemberAddress.new(transmitter, person_repo, address_repo)}
   let(:listener) { double(:fail => nil) }
   let(:transmitter) { double(execute: nil) }
-  let(:person_repo) { double(find_for_member_id: person) }
+  let(:person_repo) { double(find_by_id: person) }
   let(:address_repo) { Address }
   let(:person) { Person.new }
   
@@ -25,7 +25,7 @@ describe ChangeMemberAddress do
 
   let(:request) do
     {
-      :member_id => 1,
+      :person_id => '1',
       :type => 'home',
       :address1 => '4321 cool drive',
       :address2 => '#999',
@@ -70,8 +70,8 @@ describe ChangeMemberAddress do
     person.save
   end
 
-  it 'finds the person by member id' do
-    expect(person_repo).to receive(:find_for_member_id).with(1)
+  it 'finds the person by id' do
+    expect(person_repo).to receive(:find_by_id).with(request[:person_id])
     expect(listener).to receive(:success)
     change_address.execute(request, listener)
   end
@@ -155,10 +155,10 @@ describe ChangeMemberAddress do
     end
   end
  
-  context 'when member doesnt exist' do 
-    let(:person_repo) { double(find_for_member_id: nil) }
+  context 'when person doesnt exist' do 
+    let(:person_repo) { double(find_by_id: nil) }
     it 'notifies listener of no such member' do
-      expect(listener).to receive(:no_such_member).with({:member_id => request[:member_id]})
+      expect(listener).to receive(:no_such_person).with({:person_id => request[:person_id]})
       expect(listener).to receive(:fail)
       change_address.execute(request, listener)
     end
@@ -304,5 +304,8 @@ describe ChangeMemberAddress do
       expect(listener).to receive(:success)
       change_address.execute(request, listener)
     end
+  end
+
+  context 'when request address is the same as existing' do
   end
 end

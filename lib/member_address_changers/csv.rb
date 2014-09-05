@@ -15,8 +15,8 @@ module MemberAddressChangers
       end
     end
 
-    def no_such_member(details = {})
-      @errors << " - Member #{details[:member_id]} does not exist\n"
+    def no_such_person(details = {})
+      @errors << " - Person does not exist\n"
     end
 
     def too_many_health_policies(details = {})

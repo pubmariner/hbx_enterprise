@@ -344,4 +344,47 @@ describe Person do
       expect(person.future_active_policies).to eq [policy]
     end
   end
+
+  describe '#billing_address' do
+    let(:person) { Person.new(name_first: 'Joe', name_last: 'Dirt') }
+    let(:address) { 
+        Address.new(
+        address_type: address_type,
+        address_1: "101 Main St",
+        address_2: "Apt 777",
+        city: "Washington",
+        state: "DC",
+        zip: "20001"
+      ) }
+
+    before { person.addresses << address }
+
+    context 'when there is a billing address' do
+      let(:address_type) { 'billing' }
+      
+      it 'returns the billing address' do
+        expect(person.billing_address).to eq address
+      end
+    end
+
+    context 'when there is no billing address' do
+      context 'but there is a home address' do 
+        let(:address_type) { 'home' }
+
+        it 'returns the home address' do
+          expect(person.billing_address).to eq address
+        end
+      end
+    end
+  end
+end
+
+describe Person do
+  subject { Person.new(addresses: [address]) }
+  let(:address) { Address.new(address_type: 'home') }
+
+  it 'has a home address' do
+    expect(subject.address_of('home')).to eq address
+  end
+ 
 end
