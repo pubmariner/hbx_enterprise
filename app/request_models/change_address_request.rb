@@ -14,4 +14,25 @@ class ChangeAddressRequest
       :transmit => (csv_request[:transmit] == 'yes')
     }
   end
+
+  def self.from_person_update_request(person_address_request, opts = {})
+    map_address_attributes(person_address_request).merge(opts)
+  end
+
+  def self.map_address_attributes(address_attributes)
+    map = {
+      :address_1 => :address1,
+      :address_2 => :address2,
+      :address_type => :type
+    }
+    result = {}
+    address.attributes.each_pair do |k, v|
+      if map.keys.include?(k.to_sym)
+        result[map[k.to_sym]] = v
+      else
+        result[k] = v
+      end
+    end
+    result
+  end
 end
