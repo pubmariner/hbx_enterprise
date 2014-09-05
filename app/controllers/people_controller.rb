@@ -93,7 +93,7 @@ class PeopleController < ApplicationController
     # update_person(@updated_properties)
 
     @person = Person.find(params[:id])
-    
+
     request = UpdatePersonRequest.from_form(params, current_user.email)
 
     address_changer = ChangeMemberAddress.new(transmitter)
