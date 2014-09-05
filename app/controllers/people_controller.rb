@@ -1,6 +1,10 @@
 class PeopleController < ApplicationController
   load_and_authorize_resource
 
+  def transmitter
+    TransmitPolicyMaintenance.new
+  end
+
   def index
     @q = params[:q]
     @qf = params[:qf]
@@ -71,22 +75,31 @@ class PeopleController < ApplicationController
     @person = Person.find(params[:id])
     @person.assign_attributes(params[:person], without_protection: true)
 
-    # Validate model and each embedded association
-    render action: "edit" unless @person.valid? && @person.all_embedded_documents_valid?
-
-    @updates = params[:person] || {}
-
-    @delta = @person.changes_with_embedded || {}
-    deletion_deltas = DeletionDeltaExtractor.new(params[:person]).extract
-
-    @delta.deep_merge!(deletion_deltas)
+    request = UpdatePersonRequest.from_form(params, current_user.email)
+    listener = PersonErrorCatcher.new(@person)
+    address_changer = ChangeMemberAddress.new(nil)
+    update_person = UpdatePerson.new(Person, address_changer)
+    if(!update_person.validate(request, listener))
+      render action: "edit" and return
+    end
+    @diff = PersonDiff.new(params)
   end
 
   def persist_and_transmit
-    @person = Person.find(params[:id])
-    @updated_properties = Hash.new.merge(JSON.parse(params[:person]))
 
-    update_person(@updated_properties)
+    # @person = Person.find(params[:id])
+    # @updated_properties = Hash.new.merge(JSON.parse(params[:person]))
+
+    # update_person(@updated_properties)
+
+    @person = Person.find(params[:id])
+    
+    request = UpdatePersonRequest.from_form(params, current_user.email)
+
+    address_changer = ChangeMemberAddress.new(transmitter)
+    update_person = UpdatePerson.new(Person, address_changer)
+    update_person.commit(request)
+    redirect_to @person, notice: 'Person was successfully updated.'
   end
 
   def update_person(updates)

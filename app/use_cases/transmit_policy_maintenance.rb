@@ -1,7 +1,4 @@
 class TransmitPolicyMaintenance
-  def initialize
-  end
-
   def execute(request)
       xml = CanonicalVocabulary::MaintenanceSerializer.new(
       Policy.find(request[:policy_id]),
