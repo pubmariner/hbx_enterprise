@@ -76,13 +76,14 @@ class PeopleController < ApplicationController
     @person.assign_attributes(params[:person], without_protection: true)
 
     request = UpdatePersonRequest.from_form(params, current_user.email)
-    listener = PersonErrorCatcher.new(@person)
+    listener = UpdatePersonErrorCatcher.new(@person)
     address_changer = ChangeMemberAddress.new(nil)
-    update_person = UpdatePerson.new(Person, address_changer)
+    update_person = UpdatePerson.new(Person, address_changer, ChangeAddressRequest)
     if(!update_person.validate(request, listener))
       render action: "edit" and return
     end
     @diff = PersonDiff.new(params)
+    # render action: "edit" and return
   end
 
   def persist_and_transmit

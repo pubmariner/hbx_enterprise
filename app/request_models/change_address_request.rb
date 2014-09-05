@@ -26,7 +26,7 @@ class ChangeAddressRequest
       :address_type => :type
     }
     result = {}
-    address.attributes.each_pair do |k, v|
+    address_attributes.each_pair do |k, v|
       if map.keys.include?(k.to_sym)
         result[map[k.to_sym]] = v
       else

@@ -28,14 +28,25 @@ class UpdatePerson
       end
     end
 
-    addresses_valid = request[:addresses].all? do |address|
-        change_address_request = @change_address_request_factory.from_person_update_request(address, {
+    addresses_valid = true
+    request[:addresses].each_with_index do |address, idx|
+      listener.set_current_address(idx)
+      change_address_request = @change_address_request_factory.from_person_update_request(address, {
               :person_id => request[:person_id],
               :transmit => request[:transmit], 
               :current_user => request[:current_user] 
-          })
-        @address_changer.validate(change_address_request, listener)
+      })
+      addresses_valid = addresses_valid && @address_changer.validate(change_address_request, listener)
     end
+
+    # addresses_valid = request[:addresses].all? do |address|
+    #     change_address_request = @change_address_request_factory.from_person_update_request(address, {
+    #           :person_id => request[:person_id],
+    #           :transmit => request[:transmit], 
+    #           :current_user => request[:current_user] 
+    #       })
+    #     @address_changer.validate(change_address_request, listener)
+    # end
 
     if listener.has_errors?
       fail = true
