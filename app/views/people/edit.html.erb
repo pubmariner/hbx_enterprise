@@ -2,7 +2,7 @@
 <div class="page-header">
  <%= render 'shared/breadcrumb', crumbs: [
       link_to('People', people_path),
-      link_to(@person.name_full, people_path(@person)),
+      link_to(@person.name_full, person_path(@person)),
       'Edit'
     ]
   %>
