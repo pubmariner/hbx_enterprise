@@ -73,9 +73,14 @@ class PeopleController < ApplicationController
 
   def compare
     @person = Person.find(params[:id])
+    params[:person][:addresses_attributes].each_pair do |key, addr_attr|
+      if(addr_attr.keys.count == 1) #because the ID label isnt removed in case of removal
+        params[:person][:addresses_attributes].delete(key)
+      end
+    end
     @person.assign_attributes(params[:person], without_protection: true)
 
-    request = UpdatePersonRequest.from_form(params, current_user.email)
+    request = UpdatePersonRequest.from_form(params[:id], params[:person], current_user.email)
     listener = UpdatePersonErrorCatcher.new(@person)
     address_changer = ChangeMemberAddress.new(nil)
     update_person = UpdatePerson.new(Person, address_changer, ChangeAddressRequest)
@@ -83,6 +88,7 @@ class PeopleController < ApplicationController
       render action: "edit" and return
     end
     @diff = PersonDiff.new(params)
+    @updates = params[:person] || {}
     # render action: "edit" and return
   end
 
@@ -94,11 +100,10 @@ class PeopleController < ApplicationController
     # update_person(@updated_properties)
 
     @person = Person.find(params[:id])
-
-    request = UpdatePersonRequest.from_form(params, current_user.email)
+    request = UpdatePersonRequest.from_form(params[:id], JSON.parse(params[:person]), current_user.email)
 
     address_changer = ChangeMemberAddress.new(transmitter)
-    update_person = UpdatePerson.new(Person, address_changer)
+    update_person = UpdatePerson.new(Person, address_changer, ChangeAddressRequest)
     update_person.commit(request)
     redirect_to @person, notice: 'Person was successfully updated.'
   end
