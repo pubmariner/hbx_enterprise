@@ -5,7 +5,16 @@ class PersonDiff
 
   def initialize(params)
     @old_person = Person.find_by_id(params[:id])
-    @new_person = Person.new(params[:person])
+    @new_person = Person.find_by_id(params[:id]).clone()
+    @new_person.assign_attributes(params[:person])
+
+    @new_person.addresses = []
+    params[:person][:addresses_attributes].each_value do |addr_attr|
+      if(addr_attr.keys.count > 1) #because the ID label isnt removed in case of removal
+        @new_person.addresses << Address.new(addr_attr)
+      end
+    end
+
     calculate_address_changes(@old_person, @new_person)
   end
 
