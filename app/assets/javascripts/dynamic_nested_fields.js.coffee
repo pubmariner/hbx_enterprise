@@ -11,9 +11,7 @@ jQuery ->
 
   $('form').on 'click', '.remove_fields', (event) ->
     event.preventDefault()
-    fieldset = $(this).closest('fieldset')
-    fieldset.find('input[type=hidden]').val('1')
-    fieldset.hide()
+    $(this).closest('fieldset').remove()
     update_delete_buttons()
 
 style_select_picker = ->
