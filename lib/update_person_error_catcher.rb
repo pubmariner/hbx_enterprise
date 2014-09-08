@@ -5,7 +5,7 @@ class UpdatePersonErrorCatcher
   end
 
   def home_address_not_present
-    @person.errors << "Home addresses is required."
+    @person.errors.add(:address_type, " -- Home addresses is required.")
   end
 
   def set_current_address(idx)
@@ -13,11 +13,13 @@ class UpdatePersonErrorCatcher
   end
 
   def too_many_addresses_of_type(details)
-    @person.errors << "Too many #{details[:address_type]} addresses. Only #{details[:max]} allowed."
+    # raise 'hi'.inspect
+    @person.errors.add(:address_type, " -- Too many #{details[:address_type]} addresses. Only #{details[:max]} allowed.")
+    # raise @person.errors.inspect
   end
 
   def no_such_person(details)
-    @person.errors << "No such person (id: #{details[:person_id]}"
+    @person.errors.add(:address_type, "No such person (id: #{details[:person_id]}")
   end
 
   def invalid_address(errors)
@@ -30,19 +32,19 @@ class UpdatePersonErrorCatcher
   end
 
   def no_active_policies(details)
-    @person.errors << "No active policies."
+    @person.errors.add(:policies, "No active policies.")
   end
 
   def too_many_health_policies
-    @person.errors << "Too many health policies."
+    @person.errors.add(:policies, "Too many health policies.")
   end
 
   def too_many_dental_policies
-    @person.errors << "Too many dental policies"
+    @person.errors.add(:policies, "Too many dental policies")
   end
 
   def responsible_party_on_policy
-    @person.errors << "Policy has a responsible party."
+    @person.errors.add(:policies, "Policy has a responsible party.")
   end
 
   def has_errors?
