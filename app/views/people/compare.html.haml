@@ -14,10 +14,18 @@
         record.
         This update will transmit to the Carrier, so review carefully for: 1) completeness, and 2) accuracy, before clicking Update button.
       %p If you need to make corrections, Click the Back button.
-      - @diff.addresses_added.each do |a|
-        = render 'add_addresses', a: a
-      - @diff.addresses_removed.each do |r|
-        = render 'remove_addresses', r: r
+      .panel.panel-info
+        .panel-heading
+          %h3.panel-title Addresses being added
+        .panel-body
+          - @diff.addresses_added.each do |address|
+            = render 'add_remove_addresses', address: address
+      .panel.panel-danger
+        .panel-heading
+          %h3.panel-title Addresses being removed
+        .panel-body
+          - @diff.addresses_removed.each do |address|
+            = render 'add_remove_addresses', address: address
       - @diff.addresses_changed.each do |c|
         = render 'change_table', c: c
       %p
