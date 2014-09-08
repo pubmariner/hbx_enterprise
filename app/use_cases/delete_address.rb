@@ -13,7 +13,7 @@ class DeleteAddress
     if existing_address.nil?
       return
     end
-    
+
     propagaterythingamabob = @change_propagator.new(person, request[:type])
 
     propagaterythingamabob.each_affected_group do |policy, affected_enrollees, included_enrollees|
@@ -35,7 +35,7 @@ class DeleteAddress
         current_user: request[:current_user]
       }
 
-      if(request[:transmit] && ['home', 'mailing'].include?(request[:type]))
+      if(['home', 'mailing'].include?(request[:type]))
         @transmitter.execute(transmit_request)
       end
     end

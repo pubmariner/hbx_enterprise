@@ -33,10 +33,8 @@ describe ChangeMemberAddress do
       :state => 'GA',
       :zip => '12345',
       :current_user => 'me@example.com',
-      :transmit => transmit
     }
   end
-  let(:transmit) { true }
 
   let(:address) { Address.new(address_fields) }
 
@@ -294,15 +292,6 @@ describe ChangeMemberAddress do
         expect(listener).to receive(:fail)
         change_address.execute(request, listener)
       end
-    end
-  end
-
-  context 'when requested not to transmit' do
-    let(:transmit) { false }
-    it 'does not transmit' do
-      expect(transmitter).not_to receive(:execute)
-      expect(listener).to receive(:success)
-      change_address.execute(request, listener)
     end
   end
 

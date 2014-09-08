@@ -128,7 +128,7 @@ class ChangeMemberAddress
         current_user: request[:current_user]
       }
 
-      if(request[:transmit] && ['home', 'mailing'].include?(request[:type]))
+      if(['home', 'mailing'].include?(request[:type]))
         @transmitter.execute(transmit_request)
       end
     end
