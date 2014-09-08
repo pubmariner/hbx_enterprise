@@ -136,7 +136,7 @@ module CanonicalVocabulary
       en.coverage_end <= @term_before_date
     end
 
-    def serialize_address(addr, xml)
+    def serialize_address(person, xml)
       person.addresses.each do |addr|
         xml['con'].address do |xml|
           xml['con'].address_type(addr.address_type.strip)
