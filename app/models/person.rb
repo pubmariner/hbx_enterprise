@@ -204,9 +204,9 @@ class Person
   end
 
   def remove_address_of(address_type)
-    existing_address = self.addresses.select { |p| p.address_type == address_type }
+    existing_address = self.addresses.detect { |p| p.address_type == address_type }
     if existing_address
-      self.addresses.delete(existing_address)
+      existing_address.destroy
     end
     self.touch
   end
