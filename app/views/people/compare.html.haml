@@ -32,12 +32,6 @@
         .panel-body
           - @diff.addresses_changed.each do |c|
             = render 'change_table', c: c
-      %p
-        %strong= h('<none given>')
-        indicates the attribute value is either
-        %strong nil
-        or
-        %strong blank
 = simple_form_for(@person, url: persist_and_transmit_person_path(@person), html: { class: 'form-horizontal' }) do |f|
   = hidden_field_tag(:person, @updates.to_json, id: nil)
   .well.well-sm.well-default

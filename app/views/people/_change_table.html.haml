@@ -1,34 +1,31 @@
 %table.table.table-bordered
   %thead
     %tr
-      %th
-      %th Address Field
+      %th.col-md-3 Address Field
       %th Current Value
       %th New Value
-    %tbody
-      %tr
-        %th{rowspan: "7"}
-        %tr
-          %td Address type
-          %td= c.before.address_type
-          %td= c.after.address_type
-        %tr
-          %td Address 1
-          %td= c.before.address_1
-          %td= c.after.address_1
-        %tr
-          %td Address 2
-          %td= c.before.address_2
-          %td= c.after.address_2
-        %tr
-          %td City
-          %td= c.before.city
-          %td= c.after.city
-        %tr
-          %td State
-          %td= c.before.state
-          %td= c.after.state
-        %tr
-          %td Zip
-          %td= c.before.zip
-          %td= c.after.zip
+  %tbody
+    %tr
+      %td Address type
+      %td= c.before.address_type
+      %td= c.after.address_type
+    %tr
+      %td Address 1
+      %td= c.before.address_1
+      %td= c.after.address_1
+    %tr
+      %td Address 2
+      %td= c.before.address_2
+      %td= c.after.address_2
+    %tr
+      %td City
+      %td= c.before.city
+      %td= c.after.city
+    %tr
+      %td State
+      %td= c.before.state
+      %td= c.after.state
+    %tr
+      %td Zip
+      %td= c.before.zip
+      %td= c.after.zip
