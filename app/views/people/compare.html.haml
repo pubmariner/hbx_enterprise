@@ -26,8 +26,12 @@
         .panel-body
           - @diff.addresses_removed.each do |address|
             = render 'add_remove_addresses', address: address
-      - @diff.addresses_changed.each do |c|
-        = render 'change_table', c: c
+      .panel.panel-warning
+        .panel-heading
+          %h3.panel-title Addresses being changed
+        .panel-body
+          - @diff.addresses_changed.each do |c|
+            = render 'change_table', c: c
       %p
         %strong= h('<none given>')
         indicates the attribute value is either
