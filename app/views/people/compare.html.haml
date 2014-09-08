@@ -18,20 +18,32 @@
         .panel-heading
           %h3.panel-title Addresses being added
         .panel-body
-          - @diff.addresses_added.each do |address|
-            = render 'add_remove_addresses', address: address
+          - added = @diff.addresses_added
+          - if added.empty?
+            None
+          - else
+            - added.each do |address|
+              = render 'add_remove_addresses', address: address
       .panel.panel-danger
         .panel-heading
           %h3.panel-title Addresses being removed
         .panel-body
-          - @diff.addresses_removed.each do |address|
-            = render 'add_remove_addresses', address: address
+          - removed = @diff.addresses_removed
+          - if removed.empty?
+            None
+          -else
+            - removed.each do |address|
+              = render 'add_remove_addresses', address: address
       .panel.panel-warning
         .panel-heading
           %h3.panel-title Addresses being changed
         .panel-body
-          - @diff.addresses_changed.each do |c|
-            = render 'change_table', c: c
+          - changed = @diff.addresses_changed
+          - if changed.empty?
+            None
+          - else
+            - changed.each do |c|
+              = render 'change_table', c: c
 = simple_form_for(@person, url: persist_and_transmit_person_path(@person), html: { class: 'form-horizontal' }) do |f|
   = hidden_field_tag(:person, @updates.to_json, id: nil)
   .well.well-sm.well-default
