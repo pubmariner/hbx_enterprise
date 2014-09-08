@@ -71,7 +71,7 @@ class UpdatePerson
   def commit(request)
     person = @person_repo.find_by_id(request[:person_id])
 
-    address_deleter = DeleteAddress.new(@transmitter, @person_repo)
+    address_deleter = DeleteAddress.new(NullPolicyMaintenance.new, @person_repo)
 
     Address::TYPES.each do |t|
       request_address = request[:addresses].detect { |a| a[:address_type] == t }
