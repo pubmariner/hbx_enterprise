@@ -5,7 +5,9 @@ class PersonDiff
 
   def initialize(params)
     @old_person = Person.find_by_id(params[:id])
-    @new_person = Person.new(params[:person])
+    @new_person = Person.find_by_id(params[:id])
+    @new_person.assign_attributes(params[:person])
+    
     calculate_address_changes(@old_person, @new_person)
   end
 
