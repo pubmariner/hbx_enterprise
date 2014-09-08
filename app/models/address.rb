@@ -40,6 +40,7 @@ class Address
   end
 
   def attribute_matches?(attribute, other)
+    return true if (self[attribute] == nil && other[attribute] == "")
     safe_downcase(self[attribute]) == safe_downcase(other[attribute])
   end
 
