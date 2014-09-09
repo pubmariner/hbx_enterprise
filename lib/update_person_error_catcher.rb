@@ -50,5 +50,13 @@ class UpdatePersonErrorCatcher
   def has_errors?
     !@person.errors.empty?
   end
+
+  def success
+    raise NotImplementedError
+  end
+
+  def fail
+    raise NotImplementedError
+  end
 end
 
