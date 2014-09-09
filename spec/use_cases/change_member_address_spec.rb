@@ -62,7 +62,6 @@ describe ChangeMemberAddress do
 
   before do
     person.stub(:active_policies) { [policy]}
-    person.stub(:future_active_policies) { [] }
 
     person.addresses << address
     person.save
@@ -76,12 +75,6 @@ describe ChangeMemberAddress do
 
   it "finds the person's active policies"  do
     expect(person).to receive(:active_policies)
-    expect(listener).to receive(:success)
-    change_address.execute(request, listener)
-  end
-
-  it "finds the person's future active policies" do
-    expect(person).to receive(:future_active_policies)
     expect(listener).to receive(:success)
     change_address.execute(request, listener)
   end
@@ -224,37 +217,6 @@ describe ChangeMemberAddress do
       expect(listener).to receive(:no_active_policies).with({:member_id => request[:member_id]})
       expect(listener).to receive(:fail)
       change_address.execute(request, listener)
-    end
-
-    context 'but will have an active policy in the future' do
-      before { person.stub(:future_active_policies) {[ policy ]} }
-      it 'does not notify the listener of no policies' do
-        expect(listener).not_to receive(:no_active_policies)
-        expect(listener).not_to receive(:fail)
-        expect(listener).to receive(:success)
-        change_address.execute(request, listener)
-      end
-
-      it 'changes address of person' do
-        expect(listener).to receive(:success)
-        change_address.execute(request, listener)
-        expect_address_to_change(person, request)
-      end
-
-      it 'transmits the changes' do
-        expect(transmitter).to receive(:execute).with(transmit_request)
-        expect(listener).to receive(:success)
-        change_address.execute(request, listener)
-      end
-
-      context 'when policy has a responsible party' do
-        before { policy.stub(:has_responsible_person?) { true } }
-        it 'notifies the listener that a policy has a responsible party' do
-          expect(listener).to receive(:responsible_party_on_policy).with({:policy_id => policy.id })
-          expect(listener).to receive(:fail)
-          change_address.execute(request, listener)
-        end
-      end
     end
   end
 

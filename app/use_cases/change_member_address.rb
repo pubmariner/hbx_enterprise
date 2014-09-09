@@ -38,14 +38,13 @@ class ChangeMemberAddress
     end
 
     active_policies = person.active_policies
-    future_active_policies = person.future_active_policies
 
-    if(active_policies.empty? && future_active_policies.empty?)
+    if(active_policies.empty?)
       listener.no_active_policies(member_id: request[:member_id])
       failed = true
     end
 
-    policies = active_policies + future_active_policies
+    policies = active_policies
 
     if (count_policies_by_coverage_type(policies, 'health') > 1)
       listener.too_many_health_policies(member_id: request[:member_id])
@@ -90,25 +89,6 @@ class ChangeMemberAddress
       return
     end
 
-=begin
-    active_policies = person.active_policies
-    future_active_policies = person.future_active_policies
-
-    policies = active_policies + future_active_policies
-
-    # rules for selecting affected enrollees per policy
-    affected_enrollee_map = policies.inject({}) do |m, policy|
-      m[policy.id] = policy.active_enrollees.select do |enrollee|
-        enrollee_address = current_address_of(enrollee.person, request[:type])
-        existing_address.nil? ? enrollee_address.nil? : existing_address.match(enrollee_address)
-      end
-      m
-    end
-    # efs = ChangedAddressAffectedPolicyEnumerator.new(policies, address_type, current_address)
-    # efs.each_affected_policy do |policy, affected_enrollees, included_enrolees|
-
-    # end
-=end
     propagaterythingamabob = AddressChangePropagator.new(person, request[:type])
 
     propagaterythingamabob.each_affected_group do |policy, affected_enrollees, included_enrollees|
