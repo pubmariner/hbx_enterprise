@@ -32,8 +32,7 @@ class UpdatePerson
     request[:addresses].each_with_index do |address, idx|
       listener.set_current_address(idx)
       change_address_request = @change_address_request_factory.from_person_update_request(address, {
-              :person_id => request[:person_id],
-              :transmit => request[:transmit], 
+              :person_id => request[:person_id], 
               :current_user => request[:current_user] 
       })
       addresses_valid = addresses_valid && @address_changer.validate(change_address_request, listener)

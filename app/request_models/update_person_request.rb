@@ -17,6 +17,15 @@ class UpdatePersonRequest
         zip: form_addr['zip']
       }
     end
+
+    # remove blank addresses, because rails assign_attributes removes them as well.
+    to_remove = []
+    request[:addresses].each do |a|
+      if(a.values.all? {|x| x == ""})
+        to_remove << a
+      end
+    end
+    to_remove.each { |a| request[:addresses].delete(a) }
     
     request
   end
