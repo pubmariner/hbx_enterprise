@@ -31,20 +31,20 @@ class UpdatePersonErrorCatcher
     end
   end
 
-  def no_active_policies(details)
-    @person.errors.add(:policies, "No active policies.")
+  def no_active_policies(details = {})
+    @person.errors.add(:policies, "-- No active policies.")
   end
 
-  def too_many_health_policies
-    @person.errors.add(:policies, "Too many health policies.")
+  def too_many_health_policies(details = {})
+    @person.errors.add(:policies, "-- Too many health policies.")
   end
 
-  def too_many_dental_policies
-    @person.errors.add(:policies, "Too many dental policies")
+  def too_many_dental_policies(details = {})
+    @person.errors.add(:policies, "-- Too many dental policies")
   end
 
-  def responsible_party_on_policy
-    @person.errors.add(:policies, "Policy has a responsible party.")
+  def responsible_party_on_policy(details = {})
+    @person.errors.add(:policies, "-- Policy has a responsible party.")
   end
 
   def has_errors?
