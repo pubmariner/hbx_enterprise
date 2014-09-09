@@ -13,10 +13,8 @@ describe ChangeEffectiveDate do
       policy_id: '1234',
       effective_date: Date.today.next_month.strftime("%Y%m%d"),
       current_user: current_user,
-      transmit: transmit
     }
   end
-  let(:transmit) { true }
 
   let(:enrollees) { [ subscriber, other_enrollee ] }
   let(:other_enrollee) do
@@ -77,15 +75,6 @@ describe ChangeEffectiveDate do
   it 'transmits the changes' do
     expect(transmitter).to receive(:execute).with(transmit_request)
     subject.execute(request, listener)
-  end
-
-  context 'when requested not to trasmit' do
-    let(:transmit) { false }
-    it "does not transmit changes" do
-      expect(transmitter).not_to receive(:execute)
-      expect(listener).to receive(:success)
-      subject.execute(request, listener)
-    end
   end
 
   context 'when policy is for individual market' do 

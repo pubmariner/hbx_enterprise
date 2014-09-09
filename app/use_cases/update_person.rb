@@ -39,15 +39,6 @@ class UpdatePerson
       addresses_valid = addresses_valid && @address_changer.validate(change_address_request, listener)
     end
 
-    # addresses_valid = request[:addresses].all? do |address|
-    #     change_address_request = @change_address_request_factory.from_person_update_request(address, {
-    #           :person_id => request[:person_id],
-    #           :transmit => request[:transmit], 
-    #           :current_user => request[:current_user] 
-    #       })
-    #     @address_changer.validate(change_address_request, listener)
-    # end
-
     if listener.has_errors?
       fail = true
     end
@@ -78,15 +69,13 @@ class UpdatePerson
       if (request_address.nil?)
         address_deleter.commit({
           :person_id => request[:person_id], 
-          :type => t, 
-          :transmit => request[:transmit], 
+          :type => t,  
           :current_user => request[:current_user] 
           }
         )
       else
         change_address_request = @change_address_request_factory.from_person_update_request(request_address, {
               :person_id => request[:person_id],
-              :transmit => request[:transmit], 
               :current_user => request[:current_user] 
           })
         @address_changer.commit(change_address_request)
