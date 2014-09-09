@@ -16,9 +16,9 @@
 
 <div class="panel panel-default">
   <div class="panel-heading">Name and Identifying Info</div>
-  <div class="panel-body">
+  <div class="panel-body container">
 		<div class="row">
-			<div class="col-md-offset-1 col-md-9">
+			<div class="col-xs-12">
 			  <div class="form-inputs">
 					<%= render 'name_fields', f: f %>
 
@@ -33,9 +33,9 @@
 
 <div class="panel panel-default">
   <div class="panel-heading">Address</div>
-  <div class="panel-body">
+  <div class="panel-body container">
 		<div class="row">
-			<div class="col-md-offset-1 col-md-9">
+			<div class="col-xs-12">
 			  <div class="form-inputs nested-fields">
 					<%= f.simple_fields_for :addresses do |address|  %>
 						<%= render 'address_fields', f: address %>
@@ -49,9 +49,9 @@
 
 <div class="panel panel-default">
   <div class="panel-heading">Phone</div>
-  <div class="panel-body">
+  <div class="panel-body container">
 		<div class="row">
-			<div class="col-md-offset-1 col-md-9">
+			<div class="col-xs-12">
 			  <div class="form-inputs nested-fields">
 					<%= f.simple_fields_for :phones do |phone|  %>
 						<%= render 'phone_fields', f: phone %>
@@ -65,9 +65,9 @@
 
 <div class="panel panel-default">
   <div class="panel-heading">Email</div>
-  <div class="panel-body">
+  <div class="panel-body container">
 		<div class="row">
-			<div class="col-md-offset-1 col-md-9">
+			<div class="col-xs-12">
 			  <div class="form-inputs nested-fields">
 					<%= f.simple_fields_for :emails do |email|  %>
 						<%= render 'email_fields', f: email %>
@@ -81,9 +81,9 @@
 
 <div class="panel panel-default">
   <div class="panel-heading">Relationship</div>
-  <div class="panel-body">
+  <div class="panel-body container">
 		<div class="row">
-			<div class="col-md-offset-1 col-md-9">
+			<div class="col-xs-12">
 				<%= f.input :relationship, as: :select, collection: PersonRelationship::ALL_RELATIONSHIPS_LIST, include_blank: "Type", disabled: true %>
 			</div>
 		</div>
