@@ -3,7 +3,6 @@
   = render 'shared/person', person: person
 = render 'shared/relationships', person: person
 = render 'shared/roles', person: person
-= render 'shared/timestamp', record: person
 - if false
   %n1:other_coverage
     %n1:id
@@ -12,7 +11,7 @@
 - if false
   %n1:immigration_status
 - if false
-  %n1:incarcerated
+  %n1:incarcerated_flag
 - if false
   %n1:financial
     %n1:incomes
@@ -30,3 +29,4 @@
           %n1:recorded_by
           %n1:notes
     %n1:tax_file_status
+= render 'shared/timestamp', record: person
