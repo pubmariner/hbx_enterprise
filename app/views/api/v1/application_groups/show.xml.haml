@@ -9,7 +9,7 @@
         %n1:household
           = render 'shared/identity', id: api_v1_household_url(household.id)
           %n1:tax_household_size= household.people.count
-          %n1:head_of_household= household.head_of_household
+          %n1:head_of_household= render 'shared/individual_link_type', person: household.head_of_household
           - members = @group.people.reject { |p| p == household.head_of_household }
           - unless members.empty?
             %n1:household_members
