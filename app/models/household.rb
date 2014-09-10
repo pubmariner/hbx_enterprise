@@ -56,6 +56,7 @@ class Household
   end
 
   def head_of_household
-    raise NotImplementedError
+    relationship = application_group.person_relationships.detect { |r| r.relationship_kind == "self" }
+    Person.find_by_id(relationship.subject_person)
   end
 end
