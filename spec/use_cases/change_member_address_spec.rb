@@ -21,7 +21,7 @@ describe ChangeMemberAddress do
   let(:plan) { double(coverage_type: coverage_type) }
   let(:coverage_type) { 'health'}
 
-  let(:target_enrollee) { double(m_id: '1234', person: person, coverage_status: 'active') } 
+  let(:target_enrollee) { double(m_id: '1234', person: person, coverage_status: 'active', subscriber?: true) } 
 
   let(:request) do
     {
@@ -62,6 +62,7 @@ describe ChangeMemberAddress do
 
   before do
     person.stub(:active_policies) { [policy]}
+    policy.stub(:subscriber) { target_enrollee }
 
     person.addresses << address
     person.save
@@ -109,10 +110,36 @@ describe ChangeMemberAddress do
       other_person.addresses << matching_address
       person.save
     end
-    it 'also changes their address' do
-      expect(listener).to receive(:success)
-      change_address.execute(request, listener)
-      expect_address_to_change(other_person, request)
+
+    context 'person is a subscriber' do
+      before do
+        target_enrollee.stub(:subscriber?) { true }
+        policy.stub(:subscriber) { target_enrollee }
+
+      end
+        
+      it 'also changes their address' do
+        expect(listener).to receive(:success)
+        change_address.execute(request, listener)
+        expect_address_to_change(other_person, request)
+      end
+    end
+
+    context 'person is NOT a subscriber' do
+      before do 
+        target_enrollee.stub(:subscriber?) { false }
+        policy.stub(:subscriber) { other_enrollee }
+      end
+      it 'does not change their address' do
+        expect(listener).to receive(:success)
+        change_address.execute(request, listener)
+        expect(other_person.addresses.first.address_type).to eq matching_address.address_type
+        expect(other_person.addresses.first.address_1).to eq matching_address.address_1
+        expect(other_person.addresses.first.address_2).to eq matching_address.address_2
+        expect(other_person.addresses.first.city).to eq matching_address.city
+        expect(other_person.addresses.first.state).to eq matching_address.state
+        expect(other_person.addresses.first.zip).to eq matching_address.zip
+      end
     end
   end
 
@@ -145,7 +172,7 @@ describe ChangeMemberAddress do
       expect(other_person.addresses.first.zip).to eq different_address.zip
     end
   end
- 
+
   context 'when person doesnt exist' do 
     let(:person_repo) { double(find_by_id: nil) }
     it 'notifies listener of no such member' do
@@ -237,6 +264,7 @@ describe ChangeMemberAddress do
       }
     end
     before { person.stub(:active_policies) { [policy, other_policy]} }
+    before { other_policy.stub(:subscriber) { target_enrollee } }
     
     it 'should transmit the changes on both policies' do
       expect(transmitter).to receive(:execute).with(transmit_request)
@@ -255,8 +283,5 @@ describe ChangeMemberAddress do
         change_address.execute(request, listener)
       end
     end
-  end
-
-  context 'when request address is the same as existing' do
   end
 end

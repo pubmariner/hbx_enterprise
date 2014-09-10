@@ -1,16 +1,22 @@
 class AddressChangePropagator
 
   def initialize(person, address_type)
-    @person = person
-    @existing_address = current_address_of(person, address_type)
-    @policies = person.active_policies
+    @person = person 
+    @existing_address = current_address_of(person, address_type) # get persons address by type
+    @policies = person.active_policies # get persons active_policies
+    
     @affected_enrollee_map = @policies.inject({}) do |m, policy|
-      m[policy.id] = policy.active_enrollees.select do |enrollee|
-        enrollee_address = current_address_of(enrollee.person, address_type)
-        @existing_address.nil? ? enrollee_address.nil? : @existing_address.match(enrollee_address)
+      if(policy.subscriber.person == @person)
+        m[policy.id] = policy.active_enrollees.select do |enrollee|
+          enrollee_address = current_address_of(enrollee.person, address_type)
+          @existing_address.nil? ? enrollee_address.nil? : @existing_address.match(enrollee_address)
+        end
+      else
+        m[policy.id] = policy.active_enrollees.select { |e| e.person == @person}
       end
       m
     end
+
   end
 
   def current_address_of(person, at_place)
