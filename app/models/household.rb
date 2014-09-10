@@ -54,4 +54,8 @@ class Household
       end
     end
   end
+
+  def head_of_household
+    raise NotImplementedError
+  end
 end
