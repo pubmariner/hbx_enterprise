@@ -6,32 +6,7 @@
   %n1:households
     - group.households.each do |household|
       %n1:household
-        = render 'shared/identity', id: api_v1_household_url(household.id)
-        %n1:tax_household_size= household.people.count
-        %n1:head_of_household= render 'shared/individual_link_type', person: household.head_of_household
-        - members = group.people.reject { |p| p == household.head_of_household }
-        - unless members.empty?
-          %n1:household_members
-            - members.each do |member|
-              %n1:household_member
-                = render 'shared/individual_link_type', person: member
-        - if false
-          %n1:total_incomes
-            %n1:total_income
-              %n1:calendar_year
-              %n1:total_income
-        - unless household.eligibilities.empty?
-          %n1:eligibility_determinations
-            - household.eligibilities.each do |eligibility|
-              %n1:eligibility_determination
-                %n1:id= "" # TODO... if/when there is an eligibility endpoint
-                - if false
-                  %n1:authority_source_uri
-                %n1:date= eligibility.date_determined.try(:strftime,"%Y%m%d")
-                %n1:maximum_aptc= eligibility.max_aptc
-                %n1:magi_amount= eligibility.magi
-        %n1:active_flag= household.active
-        = render 'shared/timestamp', record: household
+        = render 'shared/household_type', household: household
 %n1:qualifying_life_events
   - group.special_enrollment_periods.each do |sep|
     %n1:qualifying_life_event 
