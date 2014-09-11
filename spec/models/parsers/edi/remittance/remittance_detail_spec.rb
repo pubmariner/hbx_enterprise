@@ -1,4 +1,4 @@
-require './app/models/parsers/edi/remittance/remittance_detail'
+require "spec_helper"
 
 describe Parsers::Edi::Remittance::RemittanceDetail do
   subject(:remittance_detail) { Parsers::Edi::Remittance::RemittanceDetail.new(raw_loop) }

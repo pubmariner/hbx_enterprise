@@ -1,0 +1,14 @@
+<div class="col-md-4">
+  <% obj.addresses.each do |address| %>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <%= "#{mixed_case(address.address_type)} address" %>
+        </h3>
+      </div>
+      <div class="panel-body">
+        <%= address.formatted_address %>
+      </div>
+    </div>
+  <% end %>
+</div>

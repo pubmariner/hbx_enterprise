@@ -1,13 +1,13 @@
 <fieldset>
 	<div class="row">
 		<div class="col-md-2">
-			<%= f.input :email_type, as: :select, collection: Email::TYPES, include_blank: "Type" %>
+			<%= f.input :email_type, as: :select, collection: Email::TYPES, include_blank: "Type", disabled: true %>
 		</div>
 		<div class="col-md-offset-1 col-md-3">
-			<%= f.input :email_address, as: :email, placeholder: "name@example.com" %>
+			<%= f.input :email_address, as: :email, placeholder: "name@example.com", disabled: true %>
 		</div>
 		<p class="text-right">
-			<%= link_to '<span class="fui-cross-inverted"> Delete Email</span>'.html_safe, '#', :class => "remove_fields text-danger" %>
+			<%= link_to '<span class="fui-cross-inverted"> Delete Email</span>'.html_safe, '#', :class => "remove_fields text-danger", disabled: true %>
 		</p>
 	</div>
 	<%= f.hidden_field :_destroy %>

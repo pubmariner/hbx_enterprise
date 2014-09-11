@@ -1,8 +1,7 @@
 <ul class="nav nav-list">
   <li class="nav-header">Individual</li>
-  <li><%= link_to "Change Address", edit_enrollment_address_path(person, {:id => person._id}) %></li>
   <li><a id='setAuthorityLink' href='#'>Set Authority</a></li>
-  <li class="disabled"><%= link_to "Edit", edit_person_path(person) %></li>
+  <li><%= link_to "Edit", edit_person_path(person) %></li>
   <li class="disabled"><%= link_to "Add Dependent", new_person_path %></li>
   <li class="disabled"><%= link_to "Drop Dependent", new_person_path %></li>
   <li class="nav-header">Coverage</li>

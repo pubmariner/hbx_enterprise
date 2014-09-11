@@ -1,0 +1,14 @@
+<div class="col-md-4">
+  <% obj.emails.each do |email| %>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <%= "#{mixed_case(email.email_type)} email" %>
+        </h3>
+      </div>
+      <div class="panel-body">
+        <%= link_to email.email_address, "mailto:#{email.email_address}" %>
+      </div>
+    </div>
+  <% end %>
+</div>

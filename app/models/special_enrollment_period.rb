@@ -36,6 +36,10 @@ class SpecialEnrollmentPeriod
 		self.end_date = start_date + period_in_days unless start_date.blank?
 	end
 
+  def duration_in_days
+    end_date - start_date
+  end
+
 private
 	def end_date_follows_start_date
 		return if end_date.nil?

@@ -2,26 +2,23 @@
 <div class="page-header">
  <%= render 'shared/breadcrumb', crumbs: [
       link_to('People', people_path),
-      link_to(@person.name_full, people_path(@person)),
+      link_to(@person.name_full, person_path(@person)),
       'Edit'
     ]
   %>
 </div>
 
-<%= simple_form_for(@person, url: compare_person_path(@person), :html => {:class => 'form-horizontal' }) do |f| %>
+<%= simple_form_for(@person, url: compare_person_path(@person)) do |f| %>
 
 	<%= render 'form', f: f %>
 
   <div class="well well-sm well-default">
     <div class="form-actions">
       <div class="row">
-        <div class="col-md-1">
-          <%= f.submit "Continue", :class => 'btn btn-primary' %>
+        <div class="col-md-4">
+          <%= f.submit "Save Changes", :class => 'btn btn-primary' %>
+          <%= link_to t('.cancel', :default => t("helpers.links.cancel")), person_path(@person), class: "btn btn-primary" %>
         </div>
-        <div class="col-md-1">
-          <p class='text-center'><%= link_to t('.cancel', :default => t("helpers.links.cancel")), people_path %></p>
-        </div>
-      </div>
 		</div>
 	</div>
 

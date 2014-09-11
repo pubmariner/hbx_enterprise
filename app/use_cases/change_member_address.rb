@@ -6,16 +6,25 @@ class ChangeMemberAddress
   end
 
   def execute(request, listener)
-    person = @person_repo.find_for_member_id(request[:member_id])
+    if !validate(request, listener)
+      listener.fail
+    else
+      commit(request)
+      listener.success
+    end
+  end
+
+  def validate(request, listener)
+    person = @person_repo.find_by_id(request[:person_id])
+
     failed = false
     if(person.nil?)
-      listener.no_such_member({:member_id => request[:member_id]})
-      listener.fail
-      return
+      listener.no_such_person({:person_id => request[:person_id]})
+      return false
     end
     
     new_address = @address_repo.new(
-      address_type: 'home', 
+      address_type: request[:type], 
       address_1: request[:address1], 
       address_2: request[:address2], 
       city: request[:city], 
@@ -25,29 +34,28 @@ class ChangeMemberAddress
 
     unless new_address.valid?
       listener.invalid_address(new_address.errors.to_hash)
-      listener.fail
-      return
+      return false
     end
 
     active_policies = person.active_policies
-    future_active_policies = person.future_active_policies
 
-    if(active_policies.empty? && future_active_policies.empty?)
+    if(active_policies.empty?)
       listener.no_active_policies(member_id: request[:member_id])
       failed = true
     end
 
-    if (count_policies_by_coverage_type(active_policies, 'health') > 1)
+    policies = active_policies
+
+    if (count_policies_by_coverage_type(policies, 'health') > 1)
       listener.too_many_health_policies(member_id: request[:member_id])
       failed = true
     end
 
-    if (count_policies_by_coverage_type(active_policies, 'dental') > 1)
+    if (count_policies_by_coverage_type(policies, 'dental') > 1)
       listener.too_many_dental_policies(member_id: request[:member_id])
       failed = true
     end
 
-    policies = active_policies + future_active_policies
 
     policies.each do |ap|
       if ap.has_responsible_person?
@@ -56,33 +64,38 @@ class ChangeMemberAddress
       end
     end
 
-    if failed
-      listener.fail
+    !failed
+  end
+
+  def current_address_of(person, at_place)
+    person.address_of(at_place)
+  end
+
+  def commit(request)
+    new_address = @address_repo.new(
+      address_type: request[:type], 
+      address_1: request[:address1], 
+      address_2: request[:address2], 
+      city: request[:city], 
+      state: request[:state], 
+      zip: request[:zip]
+    )
+
+    person = @person_repo.find_by_id(request[:person_id])
+
+    existing_address = current_address_of(person, request[:type])
+
+    if new_address.match(existing_address)
       return
     end
 
-    affected_enrollee_map = policies.inject({}) do |m, policy|
-      m[policy.id] = policy.active_enrollees.select do |enrollee|
-        person.addresses_match?(enrollee.person)
-      end
-      m
-    end
+    propagaterythingamabob = AddressChangePropagator.new(person, request[:type])
 
-    policies.each do |policy|
-      active_enrollees = policy.active_enrollees
-      affected_enrollees = affected_enrollee_map[policy.id]
-
+    propagaterythingamabob.each_affected_group do |policy, affected_enrollees, included_enrollees|
       people = affected_enrollees.map { |e| e.person }
 
       people.each do |person|
-        person.update_address(Address.new(
-          address_type: 'home', 
-          address_1: request[:address1], 
-          address_2: request[:address2], 
-          city: request[:city], 
-          state: request[:state], 
-          zip: request[:zip]
-        ))
+        person.update_address(Address.new(new_address.attributes))
       end
 
       # TODO: Operation/Reason constant cleanup
@@ -90,31 +103,21 @@ class ChangeMemberAddress
         policy_id: policy.id,
         operation: 'change',
         reason: 'change_of_location',
-        affected_enrollee_ids: affected_enrollees.map(&:m_id),#enrollees.map(&:m_id),
-        include_enrollee_ids: active_enrollees.map(&:m_id), #active and term...no canceled,
+        affected_enrollee_ids: affected_enrollees.map(&:m_id),
+        include_enrollee_ids: included_enrollees.map(&:m_id),
         current_user: request[:current_user]
       }
 
-      if(request[:transmit])
+      if(['home', 'mailing'].include?(request[:type]))
         @transmitter.execute(transmit_request)
       end
     end
-    listener.success
   end
-
+  
   def count_policies_by_coverage_type(policies, type)
     count = 0
     policies.count do |policy|
       policy.plan.coverage_type == type
     end
   end
-
-  def people_with_members_address(policy, member_person)
-    enrollees = policy.enrollees.select do |enrollee|
-      member_person.addresses_match?(enrollee.person)
-    end
-
-    enrollees.map { |e| e.person }
-  end
-
 end

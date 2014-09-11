@@ -97,9 +97,7 @@ module CanonicalVocabulary
             xml['con'].email_address(person.home_email.email_address)
           end
         end
-        if !person.home_address.nil?
-          serialize_address(person.home_address, xml)
-        end
+        serialize_address(person, xml)
       end
     end
 
@@ -138,17 +136,19 @@ module CanonicalVocabulary
       en.coverage_end <= @term_before_date
     end
 
-    def serialize_address(addr, xml)
-      xml['con'].address do |xml|
-        xml['con'].address_type("home")
+    def serialize_address(person, xml)
+      person.addresses.each do |addr|
         xml['con'].address do |xml|
-          xml['bt'].address_1(addr.address_1.strip)
-          if !addr.address_2.blank?
-            xml['bt'].address_2(addr.address_2.strip)
+          xml['con'].address_type(addr.address_type.strip)
+          xml['con'].address do |xml|
+            xml['bt'].address_1(addr.address_1.strip)
+            if !addr.address_2.blank?
+              xml['bt'].address_2(addr.address_2.strip)
+            end
+            xml['bt'].city(addr.city.strip)
+            xml['bt'].state(addr.state.strip)
+            xml['bt'].zipcode(addr.zip.strip)
           end
-          xml['bt'].city(addr.city.strip)
-          xml['bt'].state(addr.state.strip)
-          xml['bt'].zipcode(addr.zip.strip)
         end
       end
     end

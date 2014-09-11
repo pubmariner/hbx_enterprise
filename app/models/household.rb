@@ -54,4 +54,9 @@ class Household
       end
     end
   end
+
+  def head_of_household
+    relationship = application_group.person_relationships.detect { |r| r.relationship_kind == "self" }
+    Person.find_by_id(relationship.subject_person)
+  end
 end

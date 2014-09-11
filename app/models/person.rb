@@ -203,6 +203,14 @@ class Person
     self.touch
   end
 
+  def remove_address_of(address_type)
+    existing_address = self.addresses.detect { |p| p.address_type == address_type }
+    if existing_address
+      existing_address.destroy
+    end
+    self.touch
+  end
+
   def merge_email(m_email)
     unless (self.emails.any? { |p| p.match(m_email) })
       self.emails << m_email
@@ -317,6 +325,24 @@ class Person
       enrollees << p.enrollees.detect { |e| e.m_id == authority_member_id }
     end
     enrollees
+  end
+
+  def billing_address
+    billing_addr = addresses.detect { |adr| adr.address_type == "billing" }
+    if (billing_addr.nil?)
+      home_address 
+    else
+      billing_addr
+    end
+
+  end
+
+  def address_of(location)
+    addresses.detect { |a| a.address_type == location }
+  end
+
+  def self.find_by_id(id)
+    where(id: id).first
   end
 
   private
