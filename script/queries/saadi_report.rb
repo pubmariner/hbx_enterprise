@@ -40,7 +40,7 @@ CSV.open("saadi_report.csv", 'w') do |csv|
       pol.enrollees.each do |en|
         member = members_map[en.m_id].first
         per = members_map[en.m_id].last
-        csv << [pol.eg_id, pol.aasm_state, pol.transaction_set_enrollments.where(transaction_kind: "effectuation").exists?, p.transaction_set_enrollments.desc(:submitted_at).first.submitted_at ,member.authority?, pol._id, plan.coverage_type ,plan.hios_plan_id, plan.name, carrier.name, en.m_id, per.name_first, per.name_middle, per.name_last, member.dob.strftime("%Y%m%d"), member.ssn]
+        csv << [pol.eg_id, pol.aasm_state, pol.transaction_set_enrollments.where(transaction_kind: "effectuation").exists?, pol.transaction_set_enrollments.desc(:submitted_at).first.submitted_at ,member.authority?, pol._id, plan.coverage_type ,plan.hios_plan_id, plan.name, carrier.name, en.m_id, per.name_first, per.name_middle, per.name_last, member.dob.strftime("%Y%m%d"), member.ssn]
       end
     end
   end
