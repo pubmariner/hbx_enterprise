@@ -1,4 +1,4 @@
-require './app/models/parsers/edi/remittance/individual_name'
+require 'spec_helper'
 
 describe Parsers::Edi::Remittance::IndividualName do
   subject(:individual_name) { Parsers::Edi::Remittance::IndividualName.new(raw_loop) }

@@ -1,4 +1,4 @@
-require './app/models/parsers/edi/etf/policy_loop_validator'
+require 'spec_helper'
 
 describe PolicyLoopValidator do
   let(:policy) { double(id: carrier_policy_id)}

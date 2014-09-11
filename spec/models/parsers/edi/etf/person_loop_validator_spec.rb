@@ -1,5 +1,4 @@
 require 'active_support/core_ext/object/blank'
-require './app/models/parsers/edi/etf/person_loop_validator'
 
 describe Parsers::Edi::PersonLoopValidator do
   let(:person_loop) { double(carrier_member_id: carrier_member_id)}
