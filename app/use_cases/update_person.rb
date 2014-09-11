@@ -23,7 +23,7 @@ class UpdatePerson
     type_count_map.each_pair do |type, count|
       max = 1
       if(count > max)
-        listener.too_many_addresses_of_type({address_type: 'home', max: max})
+        listener.too_many_addresses_of_type({address_type: type, max: max})
         fail = true
       end
     end
