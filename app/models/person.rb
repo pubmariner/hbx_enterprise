@@ -345,6 +345,10 @@ class Person
     where(id: id).first
   end
 
+  def self.find_by_member_id(member_id)
+    Person.find_for_members([member_id]).first
+  end
+
   private
 
   def initialize_authority_member
