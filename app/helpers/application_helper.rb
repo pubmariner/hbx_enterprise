@@ -74,7 +74,7 @@ module ApplicationHelper
     fields = f.fields_for(association, new_object, child_index: id) do |builder|
       render(association.to_s.singularize + "_fields", f: builder)
     end
-    link_to(content_tag(:span, raw("&nbsp;"), class: 'fui-plus-inverted') + name,
+    link_to(content_tag(:span, raw("&nbsp;"), class: 'fui-plus-circle') + name,
             '#', class: "add_fields", data: {id: id, fields: fields.gsub("\n", "")})
 
   end
