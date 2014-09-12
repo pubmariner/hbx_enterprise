@@ -17,6 +17,9 @@ module CanonicalVocabulary
       @included_member_ids = included_member_ids
       @options = opts
       @term_before_date = @options.fetch(:term_boundry) { nil }
+      @member_repo = @options.fetch(:member_repo) { nil }
+      @plan_repo = @options.fetch(:plan_repo) { nil }
+      @carrier_repo = @options.fetch(:carrier_repo) { nil }
     end
 
     def serialize
@@ -102,7 +105,7 @@ module CanonicalVocabulary
     end
 
     def serialize_person(en, xml)
-      member = en.member
+      member = member_lookup(en)
       person = en.person
       serialize_contact(person, xml)
       xml['ins'].exchange_member_id(en.m_id)
@@ -162,8 +165,8 @@ module CanonicalVocabulary
     end
 
     def serialize_plan(xml)
-      plan = @policy.plan
-      carrier = @policy.carrier
+      plan = plan_lookup(@policy)
+      carrier = carrier_lookup(@policy)
       xml['ins'].plan do |xml|
         xml['pln'].plan do |xml|
           xml['pln'].carrier_id_ref(carrier._id)
@@ -183,7 +186,7 @@ module CanonicalVocabulary
     end
 
     def serialize_carrier(xml)
-      carrier = policy.carrier
+      carrier = carrier_lookup(policy)
       suffix = profile_suffix
       profile_name = "#{carrier.abbrev}_#{suffix}"
       xml['ins'].carrier do |xml|
@@ -194,6 +197,21 @@ module CanonicalVocabulary
         end
         xml['ins'].carrier_id(carrier._id)
       end
+    end
+
+    def carrier_lookup(pol)
+      return pol.carrier if @carrier_repo.nil?
+      @carrier_repo.lookup(pol.carrier_id)
+    end
+
+    def plan_lookup(pol)
+      return pol.plan if @plan_repo.nil?
+      @plan_repo.lookup(pol.plan_id)
+    end
+
+    def member_lookup(en)
+      return en.member if @member_repo.nil?
+      @member_repo.lookup(en.m_id)
     end
 
     def select_root_tag
