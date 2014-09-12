@@ -1,7 +1,7 @@
 $(document).ready(function() {
-  $('.btn#Plans').prop('disabled', true);
+  $('#Plans').prop('disabled', true);
   $('#Carriers').change(function(e) {
-    $('.btn#Plans').prop('disabled', false);
+    $('#Plans').prop('disabled', false);
     $( "option[value|='']" ).remove()
     $(".btn[value='Calculate']").attr('class','btn btn-primary');
     var id = $(e.target).val()
@@ -10,9 +10,10 @@ $(document).ready(function() {
       $.each(data, function(key, value) {
         $('#Plans').append($('<option/>').attr("value", value._id).text(value.name).append(" : "+value.hios_plan_id));
       });
-      if($('#Plans > option[value!=""]').length == 0) {
-        $('.btn#Plans').prop('disabled', true);
+      if($('#Plans').is(':empty')) {
+        $('#Plans').prop('disabled', true);
       }
+      $("select").select2()
     });
   });
 
