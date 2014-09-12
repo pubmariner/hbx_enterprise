@@ -1,6 +1,6 @@
 <fieldset >
 	<div class="row">
-		<div class="col-xs-3">
+		<div class="col-xs-2">
 			<%= f.input :address_type do %>
 			  <%= f.select :address_type, Address::TYPES, {include_blank: "Type"}, { class: "select select-primary", data: { toggle: "select"} } %>
 			<% end %>
