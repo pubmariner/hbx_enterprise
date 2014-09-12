@@ -1,7 +1,9 @@
 <fieldset >
 	<div class="row">
-		<div class="col-md-3">
-			<%= f.input :address_type, as: :select, collection: Address::TYPES, include_blank: "Type" %>
+		<div class="col-xs-3">
+			<%= f.input :address_type do %>
+			  <%= f.select :address_type, Address::TYPES, {include_blank: "Type"}, { class: "select select-primary", data: { toggle: "select"} } %>
+			<% end %>
 		</div>
 		<p class="text-right">
 			<%= link_to '<span class="fui-cross-circle"> Delete Address</span>'.html_safe, '#', :class => "remove_fields text-danger" %>
@@ -23,7 +25,9 @@
 		  <%= f.input :city, placeholder: "City", required: true %>
 		</div>
 		<div class="col-md-offset-1 col-md-3">
-		  <%= f.input :state, as: :select, collection: State::NAME_IDS, include_blank: 'State', required: true %>
+	    <%= f.input :state do %>
+	  	  <%= f.select :state, State::NAME_IDS, {include_blank: "State", required: true}, { class: "select form-control select-primary", data: { toggle: "select"} } %>
+	  	<% end %>
 		</div>
 		<div class="col-md-2">
 		  <%= f.input_field :zip, :placeholder => "Zip code", :required => true %>

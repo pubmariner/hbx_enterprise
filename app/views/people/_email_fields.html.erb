@@ -1,7 +1,9 @@
 <fieldset>
 	<div class="row">
 		<div class="col-md-2">
-			<%= f.input :email_type, as: :select, collection: Email::TYPES, include_blank: "Type", disabled: true %>
+			<%= f.input :email_type do %>
+			  <%= f.select :email_type,  Email::TYPES, {include_blank: "Type"}, { class: "select select-primary", data: { toggle: "select"}, disabled: true } %>
+			<% end %>
 		</div>
 		<div class="col-md-offset-1 col-md-3">
 			<%= f.input :email_address, as: :email, placeholder: "name@example.com", disabled: true %>

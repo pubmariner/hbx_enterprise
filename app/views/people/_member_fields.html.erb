@@ -2,7 +2,9 @@
   <div class="row">
     <div class="col-md-2">
       <span class="help-block">Gender</span>
-      <%= m.input :gender, as: :select, collection: Member::GENDER_TYPES, include_blank: "Select", disabled: true %>
+      <%= m.input :gender do %>
+        <%= m.select :gender, Member::GENDER_TYPES, {include_blank: "Select"}, { class: "select select-primary", data: { toggle: "select"}, disabled: true } %>
+      <% end %>
     </div>
     <div class="col-md-offset-1 col-md-2">
       <span class="help-block">Social Security No.</span>
