@@ -20,6 +20,7 @@ module CanonicalVocabulary
       @member_repo = @options.fetch(:member_repo) { nil }
       @plan_repo = @options.fetch(:plan_repo) { nil }
       @carrier_repo = @options.fetch(:carrier_repo) { nil }
+      @employer_repo = @options.fetch(:employer_repo) { nil }
     end
 
     def serialize
@@ -49,7 +50,7 @@ module CanonicalVocabulary
     end
 
     def serialize_employer(xml)
-      emp = @policy.employer
+      emp = employer_lookup(@policy)
       if !emp.nil?
         xml['emp'].employer do |xml|
           xml['emp'].name(emp.name)
@@ -212,6 +213,11 @@ module CanonicalVocabulary
     def member_lookup(en)
       return en.member if @member_repo.nil?
       @member_repo.lookup(en.m_id)
+    end
+
+    def employer_lookup(pol)
+      return pol.employer if @employer_repo.nil?
+      @employer_repo.lookup(pol.employer_id)
     end
 
     def select_root_tag
