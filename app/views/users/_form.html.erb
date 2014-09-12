@@ -1,14 +1,22 @@
-<%= simple_form_for @user, :html => { :class => 'form-horizontal' } do |f| %>
+<%= simple_form_for @user do |f| %>
 	<%= f.error_notification %>
-
+<div clsas="container">
 	<div class="row">
-		<div class="col-md-6">
-			<%= f.input :email, wrapper: :input_horizontal %>
-			<%= f.input :approved, as: :boolean, boolean_style: :inline, label: "Approved?" %>
-			<%= f.collection_select :role, User::ROLES, :to_s, :humanize %>
+		<div class="col-md-4">
+			<%= f.input :email %>
 		</div>
 	</div>
 
+		<%= f.input :approved, as: :boolean, boolean_style: :inline, label: "Approved?" %>
+
+	<div class="row">
+		<div class="col-xs-2">
+			<%= f.input :role do %>
+			  <%= f.select :role,  User::ROLES, {}, { class: "select select-primary", data: { toggle: "select"} } %>
+			<% end %>
+		</div>
+	</div>
+</div>
 	<div class="well well-sm well-default">
 		<div class="form-actions">
 			<%= f.button :submit , :class => 'btn btn-primary'  %>
