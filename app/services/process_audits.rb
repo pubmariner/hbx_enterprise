@@ -25,9 +25,9 @@ class ProcessAudits
 
     audits = Policy.where("id" => {"$in" => audit_ids})
     m_cache = Caches::MemberCache.new(member_ids)
-    c_cache = Caches::CarrierCache.new
-    p_cache = Caches::PlanCache.new
-    e_cache = Caches::KeyCache.new(Employer)
+    Caches::MongoidCache.allocate(Carrier)
+    Caches::MongoidCache.allocate(Plan)
+    Caches::MongoidCache.allocate(Employer)
     audits.each do |term|
       # TODO: Make the list of included ids match non-cancelled,
       # non-termed as of X date members
@@ -45,13 +45,13 @@ class ProcessAudits
         all_ids,
         all_ids,
         { :term_boundry => active_end,
-          :plan_repo => p_cache,
-          :carrier_repo => c_cache,
-          :member_repo => m_cache,
-          :employer_repo => e_cache }
+          :member_repo => m_cache }
       )
       out_f.write(ser.serialize)
       out_f.close
     end
+    Caches::MongoidCache.release(Carrier)
+    Caches::MongoidCache.release(Plan)
+    Caches::MongoidCache.release(Employer)
   end
 end

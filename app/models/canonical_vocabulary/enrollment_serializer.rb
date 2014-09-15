@@ -18,9 +18,6 @@ module CanonicalVocabulary
       @options = opts
       @term_before_date = @options.fetch(:term_boundry) { nil }
       @member_repo = @options.fetch(:member_repo) { nil }
-      @plan_repo = @options.fetch(:plan_repo) { nil }
-      @carrier_repo = @options.fetch(:carrier_repo) { nil }
-      @employer_repo = @options.fetch(:employer_repo) { nil }
     end
 
     def serialize
@@ -201,13 +198,15 @@ module CanonicalVocabulary
     end
 
     def carrier_lookup(pol)
-      return pol.carrier if @carrier_repo.nil?
-      @carrier_repo.lookup(pol.carrier_id)
+      Caches::MongoidCache.lookup(Carrier, pol.carrier_id) {
+        pol.carrier
+      }
     end
 
     def plan_lookup(pol)
-      return pol.plan if @plan_repo.nil?
-      @plan_repo.lookup(pol.plan_id)
+      Caches::MongoidCache.lookup(Plan, pol.plan_id) {
+        pol.plan
+      }
     end
 
     def member_lookup(en)
@@ -216,8 +215,9 @@ module CanonicalVocabulary
     end
 
     def employer_lookup(pol)
-      return pol.employer if @employer_repo.nil?
-      @employer_repo.lookup(pol.employer_id)
+      Caches::MongoidCache.lookup(Employer, pol.employer_id) {
+        pol.employer
+      }
     end
 
     def select_root_tag

@@ -27,7 +27,7 @@ module Caches
     end
 
     def self.key_for(klass)
-      klass.tableize.to_s + "_cache_repository"
+      klass.name.tableize.to_s + "_cache_repository"
     end
   end
 end
