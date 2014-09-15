@@ -7,6 +7,18 @@ class Eligibility
   field :max_aptc, type: BigDecimal, default: 0.00
   field :csr_percent, type: BigDecimal, default: 0.00
 
+  field :ia_eligible, type: Boolean
+  field :medicaid_chip_eligible, type: Boolean
+
+
+  field :tax_filing_status, type: String
+  field :tax_filing_together, tpye: Boolean
+  field :is_enrolled_for_res_coverage, type: Boolean
+  field :is_without_assistance, type: Boolean
+  field :years_to_renew_coverage, type: Integer
+  field :financial_assistance, type: Boolean
+  field :receiving_benefit, type: Boolean
+
   embedded_in :household
 
   validates_presence_of :date_determined, :max_aptc, :csr_percent

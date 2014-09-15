@@ -39,6 +39,7 @@ class Income
   field :reported_by, type: Boolean
 
   embedded_in :person, :inverse_of => :incomes
+  embedded_in :household, :inverse_of => :total_income
 
   validates :amount_in_cents, presence: true, 
   														numericality: { only_integer: true, greater_than_or_equal_to: 0 }
