@@ -29,5 +29,15 @@ module Caches
     def self.key_for(klass)
       klass.name.tableize.to_s + "_cache_repository"
     end
+
+    def self.with_cache_for(*args)
+      args.each do |kls|
+        self.allocate(kls)
+      end
+      yield
+      args.each do |kls|
+        self.release(kls)
+      end
+    end
   end
 end

@@ -25,33 +25,30 @@ class ProcessAudits
 
     audits = Policy.where("id" => {"$in" => audit_ids})
     m_cache = Caches::MemberCache.new(member_ids)
-    Caches::MongoidCache.allocate(Carrier)
-    Caches::MongoidCache.allocate(Plan)
-    Caches::MongoidCache.allocate(Employer)
-    audits.each do |term|
-      # TODO: Make the list of included ids match non-cancelled,
-      # non-termed as of X date members
-      enrollee_list = term.enrollees.reject { |en| en.canceled? }
-      subscriber = term.subscriber.m_id
-      enrollee_list = enrollee_list.reject do |en|
-        !en.coverage_end.blank? && (en.coverage_end < term_start) 
+    Caches::MongoidCache.with_cache_for(Carrier, Plan, Employer) do
+
+      audits.each do |term|
+        # TODO: Make the list of included ids match non-cancelled,
+        # non-termed as of X date members
+        enrollee_list = term.enrollees.reject { |en| en.canceled? }
+        subscriber = term.subscriber.m_id
+        enrollee_list = enrollee_list.reject do |en|
+          !en.coverage_end.blank? && (en.coverage_end < term_start) 
+        end
+        all_ids = enrollee_list.map(&:m_id) | [subscriber]
+        out_f = File.open(File.join(out_directory, "#{term._id}_audit.xml"), 'w')
+        ser = CanonicalVocabulary::MaintenanceSerializer.new(
+          term,
+          "audit",
+          "notification_only",
+          all_ids,
+          all_ids,
+          { :term_boundry => active_end,
+            :member_repo => m_cache }
+        )
+        out_f.write(ser.serialize)
+        out_f.close
       end
-      all_ids = enrollee_list.map(&:m_id) | [subscriber]
-      out_f = File.open(File.join(out_directory, "#{term._id}_audit.xml"), 'w')
-      ser = CanonicalVocabulary::MaintenanceSerializer.new(
-        term,
-        "audit",
-        "notification_only",
-        all_ids,
-        all_ids,
-        { :term_boundry => active_end,
-          :member_repo => m_cache }
-      )
-      out_f.write(ser.serialize)
-      out_f.close
     end
-    Caches::MongoidCache.release(Carrier)
-    Caches::MongoidCache.release(Plan)
-    Caches::MongoidCache.release(Employer)
   end
 end
