@@ -13,7 +13,7 @@ $(document).ready(function() {
       if($('#Plans').is(':empty')) {
         $('#Plans').prop('disabled', true);
       }
-      $("#Plans").select2();
+      $("#Plans").select2({dropdownCssClass: 'show-select-search'});
     });
   });
 
