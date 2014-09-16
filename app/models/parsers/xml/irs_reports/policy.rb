@@ -1,12 +1,9 @@
 module Parsers::Xml::IrsReports
-	class Policy
-
+  class Policy
+    
     attr_accessor :individuals
-
-		def initialize(parser = nil)
-      # Household: 540e05b0c94f63be220107ed
-      # ApplicationGroup: 53e6921beb899ad9ca014fb1
-
+    
+    def initialize(parser = nil)      
       # parser = File.open(Rails.root.to_s + "/policy.xml")
       # parser = Nokogiri::XML(parser)
       @root = parser #.root
