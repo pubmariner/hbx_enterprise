@@ -2,9 +2,9 @@ $(document).ready(function() {
   $('#Plans').prop('disabled', true);
   $('#Carriers').change(function(e) {
     $('#Plans').prop('disabled', false);
-    $( "option[value|='']" ).remove()
+    $( "option[value|='']" ).remove();
     $(".btn[value='Calculate']").attr('class','btn btn-primary');
-    var id = $(e.target).val()
+    var id = $(e.target).val();
     $.getJSON('/carriers/'+id+'/show_plans', function(data) {
       $('#Plans').empty();
       $.each(data, function(key, value) {
@@ -13,7 +13,7 @@ $(document).ready(function() {
       if($('#Plans').is(':empty')) {
         $('#Plans').prop('disabled', true);
       }
-      $("select").select2()
+      $("#Plans").select2();
     });
   });
 
@@ -26,6 +26,6 @@ $(document).ready(function() {
   });
 
   $('.btn[value="Calculate"]').click(function() {
-    $(this).attr('class','btn btn-success');
+    $(this).attr('class','btn btn-default');
   });
 });
