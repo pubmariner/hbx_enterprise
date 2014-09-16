@@ -383,6 +383,13 @@ class Policy
     return false if (!en.coverage_end.nil? && en.coverage_end < now)
     true
   end
+  def future_active?
+    now = Date.today
+    return false if subscriber.nil?
+    return false if (subscriber.coverage_start == subscriber.coverage_end)
+    return false if (!subscriber.coverage_end.nil? && subscriber.coverage_end < now)
+    subscriber.coverage_start > now
+  end
 
   def future_active_for?(member_id)
     en = enrollees.detect { |enr| enr.m_id == member_id }
@@ -391,6 +398,13 @@ class Policy
     return false if (en.coverage_start == en.coverage_end)
     return false if (!en.coverage_end.nil? && en.coverage_end < now)
     return true if en.coverage_start > now
+  end
+
+  def policy_start
+    subscriber.coverage_start
+  end
+  def policy_end
+    subscriber.coverage_end
   end
 
 protected

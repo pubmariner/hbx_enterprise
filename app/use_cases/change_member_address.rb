@@ -1,8 +1,9 @@
 class ChangeMemberAddress
-  def initialize(transmitter, person_repo = Person, address_repo = Address)
+  def initialize(transmitter, person_repo = Person, address_repo = Address, eligible_policies = ChangeAddress::EligiblePolicies)
     @person_repo = person_repo
     @address_repo = address_repo
     @transmitter = transmitter
+    @eligible_policies = eligible_policies
   end
 
   def execute(request, listener)
@@ -37,7 +38,7 @@ class ChangeMemberAddress
       return false
     end
 
-    active_policies = person.active_policies
+    active_policies = @eligible_policies.for_person(person)
 
     if(active_policies.empty?)
       listener.no_active_policies(member_id: request[:member_id])
@@ -46,12 +47,12 @@ class ChangeMemberAddress
 
     policies = active_policies
 
-    if (count_policies_by_coverage_type(policies, 'health') > 1)
+    if (active_policies.too_many_health_policies?)
       listener.too_many_health_policies(member_id: request[:member_id])
       failed = true
     end
 
-    if (count_policies_by_coverage_type(policies, 'dental') > 1)
+    if (active_policies.too_many_dental_policies?)
       listener.too_many_dental_policies(member_id: request[:member_id])
       failed = true
     end
@@ -89,9 +90,9 @@ class ChangeMemberAddress
       return
     end
 
-    propagaterythingamabob = AddressChangePropagator.new(person, request[:type])
+    propagaterythingamabob = @eligible_policies.for_person(person)
 
-    propagaterythingamabob.each_affected_group do |policy, affected_enrollees, included_enrollees|
+    propagaterythingamabob.each_affected_group(request[:type]) do |policy, affected_enrollees, included_enrollees|
       people = affected_enrollees.map { |e| e.person }
 
       people.each do |person|
