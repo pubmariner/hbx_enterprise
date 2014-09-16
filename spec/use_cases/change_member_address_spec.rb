@@ -63,7 +63,6 @@ describe ChangeMemberAddress do
   end
 
   before do
-    # person.stub(:policies) { [policy]}
     policy.stub(:subscriber) { target_enrollee }
     allow(eligible_policies).to receive(:each).and_yield(policy)
     allow(eligible_policies).to receive(:each_affected_group).and_yield(policy, [target_enrollee], [target_enrollee])
@@ -76,18 +75,6 @@ describe ChangeMemberAddress do
     expect(listener).to receive(:success)
     change_address.execute(request, listener)
   end
-
-  # it "finds the person's active policies"  do
-  #   expect(person).to receive(:active_policies)
-  #   expect(listener).to receive(:success)
-  #   change_address.execute(request, listener)
-  # end
-
-  # it 'finds active enrollees on policy' do
-  #   expect(policy).to receive(:active_enrollees)
-  #   expect(listener).to receive(:success)
-  #   change_address.execute(request, listener)
-  # end
 
   it 'changes address of person' do
     expect(listener).to receive(:success)
@@ -107,21 +94,12 @@ describe ChangeMemberAddress do
     let(:matching_address) { Address.new(address_fields) }
 
     before do
-      # policy.enrollees << other_enrollee
-      # policy.active_enrollees << other_enrollee
-      # other_person.stub(:policies) { [policy]}
       allow(eligible_policies).to receive(:each_affected_group).and_yield(policy, [target_enrollee, other_enrollee], [target_enrollee, other_enrollee])
       other_person.addresses << matching_address
       person.save
     end
 
     context 'person is a subscriber' do
-      before do
-        # target_enrollee.stub(:subscriber?) { true }
-        # policy.stub(:subscriber) { target_enrollee }
-
-      end
-        
       it 'also changes their address' do
         expect(listener).to receive(:success)
         change_address.execute(request, listener)
@@ -133,7 +111,6 @@ describe ChangeMemberAddress do
       before do 
         target_enrollee.stub(:subscriber?) { false }
         allow(eligible_policies).to receive(:each_affected_group).and_yield(policy, [target_enrollee], [target_enrollee, other_enrollee])
-        # policy.stub(:subscriber) { other_enrollee }
       end
       it 'does not change their address' do
         expect(listener).to receive(:success)
@@ -150,7 +127,6 @@ describe ChangeMemberAddress do
 
   context 'when there is another active enrollee with different address' do
     let(:other_person) { Person.new }
-    # let(:other_enrollee) { double(m_id: '6666', person: other_person, coverage_status: 'active') }
     let(:different_address) { Address.new(address_type: 'home', 
       address_1: '1234 somethingelse', 
       address_2: '#654', 
@@ -159,9 +135,6 @@ describe ChangeMemberAddress do
       zip: '12345') }
 
     before do
-      # policy.enrollees << other_enrollee
-      # policy.active_enrollees << other_enrollee
-      # other_person.stub(:policies) { [policy]}
       other_person.addresses << different_address
       person.save
     end
@@ -187,28 +160,12 @@ describe ChangeMemberAddress do
     end
   end
 
-  #TODO: move?
-  # describe '#count_policies_by_coverage_type' do
-  #   let(:policies) { [ double(plan: double(coverage_type: 'health')), double(plan: double(coverage_type: 'health')), double(plan: double(coverage_type: 'dental'))] }
-    
-  #   it 'returns the number of health policies' do 
-  #     count = change_address.count_policies_by_coverage_type(policies, 'health')
-  #     expect(count).to eq 2
-  #   end
-
-  #   it 'returns the number of dental policies' do 
-  #     count = change_address.count_policies_by_coverage_type(policies, 'dental')
-  #     expect(count).to eq 1
-  #   end
-  # end
-
   context "when the member has more than one active health policy" do
     let(:coverage_type) { 'health' }
     let(:eligible_policies) { double(:empty? => false, too_many_health_policies?: true, too_many_dental_policies?: false) }
     let(:other_policy) { double(plan: double(coverage_type: coverage_type), enrollees: [other_enrollee], :has_responsible_person? => false) } 
     let(:other_enrollee) { double(person: person) }
 
-    # before { person.stub(:policies) { [policy, other_policy]} }
 
     it 'notifies the listener of too many health policies' do 
       expect(listener).to receive(:too_many_health_policies).with({:member_id => request[:member_id]})
@@ -220,10 +177,6 @@ describe ChangeMemberAddress do
   context "when the member has more than one active dental policy" do
     let(:coverage_type) { 'dental' }
     let(:eligible_policies) { double(:empty? => false, too_many_health_policies?: false, too_many_dental_policies?: true) }
-    # let(:other_policy) { double(plan: double(coverage_type: coverage_type), enrollees: [other_enrollee], :has_responsible_person? => false) }
-    # let(:other_enrollee) { double(person: person) }
-
-    # before { person.stub(:policies) { [policy, other_policy]} }
 
     it 'notifies the listener of too many dental policies' do 
       expect(listener).to receive(:too_many_dental_policies).with({:member_id => request[:member_id]})
@@ -234,7 +187,6 @@ describe ChangeMemberAddress do
 
   context "when given an invalid address" do
     let(:address_error_details) { {:zip => ["can't be blank"]} }
-#    let(:address_errors) { double(:to_hash => address_error_details) }
     let(:invalid_address) { double(:valid? => false, :errors => address_error_details) }
     let(:address_repo) { double(:new => invalid_address) }
 
@@ -246,7 +198,6 @@ describe ChangeMemberAddress do
   end
 
   context "when the member has no active policies" do
-    # before { person.stub(:policies) { [] } }
     let(:eligible_policies) { double(:empty? => true, too_many_health_policies?: false, too_many_dental_policies?: false) }
     it 'notifies the listener that there are no policies' do
       expect(listener).to receive(:no_active_policies).with({:member_id => request[:member_id]})
@@ -270,8 +221,6 @@ describe ChangeMemberAddress do
         current_user: 'me@example.com' 
       }
     end
-    # before { person.stub(:policies) { [policy, other_policy]} }
-    # before { other_policy.stub(:subscriber) { target_enrollee } }
     before {
       allow(eligible_policies).to receive(:each_affected_group).and_yield(
         policy, [target_enrollee], [target_enrollee]).and_yield(
