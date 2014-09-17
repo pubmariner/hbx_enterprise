@@ -5,9 +5,13 @@ module CanonicalVocabulary
 
     CV_API_URL = "http://localhost:3000/api/v1/"
 
+    NS = { 
+      "xmlns"     => "urn:us:gov:treasury:irs:common",
+      "xmlns:xsi" => "http://www.w3.org/2001/XMLSchema-instance",
+      "xmlns:n1"  => "urn:us:gov:treasury:irs:msg:sbmpolicylevelenrollment"
+    }
+
     def initialize
-      @person_id = "53e6921beb899ad9ca014faf"
-      @token_id = "1LGx9y5uvcsR-syqzTob"
     end
     
     def serialize
@@ -22,12 +26,17 @@ module CanonicalVocabulary
     def builder
       # Application Group ID: 53e690a3eb899ad9ca00d28d
       Nokogiri::XML::Builder.new do |xml|
-        xml.IndividualExchange do |xml|
-          xml.HealthExchangeId "00.000.000.000.000"
-          group_xml = Net::HTTP.get(URI.parse("#{CV_API_URL}application_groups/53e691aeeb899ad9ca012939?user_token=zUzBsoTSKPbvXCQsB4Ky"))
-          @app_group = Parsers::Xml::IrsReports::ApplicationGroup.new(group_xml)
-          next if @app_group.individual_policies.empty?
-          serialize_irs_household_grp(xml)
+        xml['n1'].HealthExchange(NS) do
+          xml.SubmissionYr 1000
+          xml.SubmissionMonthNum 1
+          xml.ApplicableCoverageYr 1000
+          xml.IndividualExchange do |xml|
+            xml.HealthExchangeId "00.AA*.000.000.000"
+            group_xml = Net::HTTP.get(URI.parse("#{CV_API_URL}application_groups/53e691aeeb899ad9ca012939?user_token=zUzBsoTSKPbvXCQsB4Ky"))
+            @app_group = Parsers::Xml::IrsReports::ApplicationGroup.new(group_xml)
+            next if @app_group.individual_policies.empty?
+            serialize_irs_household_grp(xml)
+          end
         end
       end
     end
@@ -45,16 +54,14 @@ module CanonicalVocabulary
     
     def serialize_insurance_policies(xml)
       @individual_policies.uniq.each do |policy|
-        # policy_xml = Net::HTTP.get(URI.parse("#{policy}?user_token=zUzBsoTSKPbvXCQsB4Ky"))
-        # policy = Parsers::Xml::IrsReports::Policy.new(policy_xml)
         xml.InsurancePolicy do |xml|
           xml.InsuranceCoverage do |xml|
-            xml.ApplicableCoverageMonthNum policy.id
-            xml.QHPPolicyNum
+            xml.ApplicableCoverageMonthNum 1
+            xml.QHPPolicyNum "00000000000000000000000000000000000000000000000000"
             xml.QHPId policy.qhp_id
             xml.PediatricDentalPlanPremiumInd "N"
-            xml.QHPIssuerEIN 000000000
-            xml.IssuerNm
+            xml.QHPIssuerEIN "000000000"
+            xml.IssuerNm "Issuer"
             xml.PolicyCoverageStartDt "1957-08-13"
             xml.PolicyCoverageEndDt "1957-08-13"
             xml.TotalQHPMonthlyPremiumAmt policy.total_monthly_premium
@@ -65,10 +72,10 @@ module CanonicalVocabulary
                   individual = Parsers::Xml::IrsReports::Individual.new(individual_xml)
                   serialize_name_ssn_dob(xml, individual)
                 end
+                xml.CoverageStartDt "1957-08-13"
+                xml.CoverageEndDt "1957-08-13"
               end
             end
-            xml.CoverageStartDt "1957-08-13"
-            xml.CoverageEndDt "1957-08-13"
           end
         end	
       end
@@ -78,6 +85,7 @@ module CanonicalVocabulary
       household = Parsers::Xml::IrsReports::Household.new(household)
       xml.TaxHousehold do |xml|
         xml.TaxHouseholdCoverage do |xml|
+          xml.ApplicableCoverageMonthNum 1
           xml.Household do |xml|
             applicants_xml = @app_group.applicants_xml
             primary_xml = applicants_xml[household.primary]
@@ -122,8 +130,8 @@ module CanonicalVocabulary
     
     def serialize_policy(xml, policy)
       xml.AssociatedPolicy do |xml|
-        xml.QHPPolicyNum
-        xml.QHPIssuerEIN 000000000
+        xml.QHPPolicyNum "00000000000000000000000000000000000000000000000000"
+        xml.QHPIssuerEIN "000000000"
         xml.PediatricDentalPlanPremiumInd "N"
         xml.SLCSPAdjMonthlyPremiumAmt 0
         xml.HouseholdAPTCAmt policy.household_aptc
@@ -135,8 +143,10 @@ module CanonicalVocabulary
       xml.send("#{relation}Grp") do |xml|
         xml.send(relation) do |xml|
           serialize_name_ssn_dob(xml, individual)
-          individual.addresses.each do |address|
-            serialize_address(xml, address)
+          if relation == "Primary"
+            individual.addresses.each do |address|
+              serialize_address(xml, address)
+            end
           end
         end
         
@@ -184,7 +194,7 @@ module CanonicalVocabulary
         xml.CityNm address[:city]
         xml.USStateCd address[:state]
         xml.USZIPCd address[:postal_code]
-        xml.USZIPExtensionCd
+        xml.USZIPExtensionCd "0000"
       end			
     end
   end

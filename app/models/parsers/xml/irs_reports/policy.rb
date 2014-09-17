@@ -39,7 +39,7 @@ module Parsers::Xml::IrsReports
     end
 
     def qhp_id
-      @root.at_xpath("n1:enrollment/n1:plan/n1:coverage_type").text
+      @root.at_xpath("n1:enrollment/n1:plan/n1:qhp_id").text.gsub(/-/,"")
     end
   end
 end
