@@ -1,0 +1,7 @@
+TODO
+- work address is saved but not transmitted
+- address changes... "nothing" happens
+- remove transmit bool from request, specs, and usecase
+- remove console and console spec
+- rename address changer specs (missing _spec)
+- implement Person.find_by_id

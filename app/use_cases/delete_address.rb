@@ -1,8 +1,8 @@
 class DeleteAddress
-  def initialize(transmitter, person_repo = Person, change_propagator = AddressChangePropagator)
+  def initialize(transmitter, person_repo = Person, eligible_policies = ChangeAddress::EligiblePolicies)
     @person_repo = person_repo
     @transmitter = transmitter
-    @change_propagator = change_propagator
+    @eligible_policies = eligible_policies
   end
 
   def commit(request)
@@ -14,9 +14,9 @@ class DeleteAddress
       return
     end
 
-    propagaterythingamabob = @change_propagator.new(person, request[:type])
+    policies = @eligible_policies.for_person(person)
 
-    propagaterythingamabob.each_affected_group do |policy, affected_enrollees, included_enrollees|
+    policies.each_affected_group(request[:type]) do |policy, affected_enrollees, included_enrollees|
 
       people = affected_enrollees.map { |e| e.person }
 

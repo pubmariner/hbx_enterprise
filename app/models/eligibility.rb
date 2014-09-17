@@ -12,7 +12,7 @@ class Eligibility
 
 
   field :tax_filing_status, type: String
-  field :tax_filing_together, tpye: Boolean
+  field :tax_filing_together, type: Boolean
   field :is_enrolled_for_res_coverage, type: Boolean
   field :is_without_assistance, type: Boolean
   field :years_to_renew_coverage, type: Integer

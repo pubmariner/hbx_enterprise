@@ -1,26 +1,29 @@
 require "spec_helper"
 
-class MyPStub
-  def initialize(pol, affected, included_enrollees)
-    @policy = pol
-    @affected = affected
-    @included_enrollees = included_enrollees
-  end
+# class MyPStub
+#   def initialize(pol, affected, included_enrollees)
+#     @policy = pol
+#     @affected = affected
+#     @included_enrollees = included_enrollees
+#   end
 
-  def each_affected_group
-    yield @policy, @affected, @included_enrollees
-  end
-end
+#   def each_affected_group
+#     yield @policy, @affected, @included_enrollees
+#   end
+# end
 
 describe DeleteAddress do
-  subject { DeleteAddress.new(transmitter, person_repo, propy_repo) }
-  let(:propy_repo) { double(new: MyPStub.new(policy, affected_enrollees, included_enrollees) )}
+  subject { DeleteAddress.new(transmitter, person_repo, eligible_policy_factory) }
+  # let(:propy_repo) { double(new: MyPStub.new(policy, affected_enrollees, included_enrollees) )}
+  let(:eligible_policy_factory) { double(:for_person => eligible_policies) }
+  let(:eligible_policies) { double(:empty? => false, too_many_health_policies?: false, too_many_dental_policies?: false) }
   let(:person_repo) { double(find_by_id: person) }
   let(:person) { double(save!: nil, address_of: address, :remove_address_of => nil) }
   let(:address) { double }
   let(:transmitter) { double(execute: nil) }
-  let(:affected_enrollees) { [double(:m_id => '234', :person => person)] }
-  let(:included_enrollees) { [double(:m_id => '234')] }
+  let(:target_enrollee) { double(:m_id => '234', :person => person) }
+  let(:affected_enrollees) { [target_enrollee] }
+  let(:included_enrollees) { [target_enrollee] }
 
   let(:transmit_request) do
     {
@@ -32,8 +35,8 @@ describe DeleteAddress do
       current_user: 'me@example.com' 
     }
   end
-  let(:affected_enrollee_ids) { ['234'] }
-  let(:include_enrollee_ids) { ['234'] }
+  let(:affected_enrollee_ids) { [target_enrollee.m_id] }
+  let(:include_enrollee_ids) { [target_enrollee.m_id] }
   let(:policy) { double(id: '1234')}
 
   let(:request) do
@@ -44,6 +47,10 @@ describe DeleteAddress do
       current_user: 'me@example.com' 
     }
   end
+
+  before {
+    allow(eligible_policies).to receive(:each_affected_group).and_yield(policy, [target_enrollee], [target_enrollee])
+  }
 
   it 'finds the person' do
     expect(person_repo).to receive(:find_by_id).with(request[:person_id])
