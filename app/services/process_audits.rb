@@ -28,14 +28,23 @@ class ProcessAudits
     Caches::MongoidCache.with_cache_for(Carrier, Plan, Employer) do
 
       audits.each do |term|
-        # TODO: Make the list of included ids match non-cancelled,
-        # non-termed as of X date members
+        # TODO: Exclude all policies where the subscriber has a 
+        #       authority_member_id, but the policy has a different member id
+        subscriber_id = term.subscriber.m_id
+        subscriber_member = m_cache.lookup(subscriber_id)
+        auth_subscriber_id = subscriber_member.person.authority_member_id
+
+        if !auth_subscriber_id.blank?
+          if subscriber_id != auth_subscriber_id
+            next
+          end
+        end
+
         enrollee_list = term.enrollees.reject { |en| en.canceled? }
-        subscriber = term.subscriber.m_id
         enrollee_list = enrollee_list.reject do |en|
           !en.coverage_end.blank? && (en.coverage_end < term_start) 
         end
-        all_ids = enrollee_list.map(&:m_id) | [subscriber]
+        all_ids = enrollee_list.map(&:m_id) | [subscriber_id]
         out_f = File.open(File.join(out_directory, "#{term._id}_audit.xml"), 'w')
         ser = CanonicalVocabulary::MaintenanceSerializer.new(
           term,
