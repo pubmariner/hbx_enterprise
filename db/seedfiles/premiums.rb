@@ -11,7 +11,8 @@ dates_by_sheet = [
   Date.new(2014, 1, 1)..Date.new(2014, 12, 31),
   Date.new(2014, 1, 1)..Date.new(2014, 3, 31),
   Date.new(2014, 4, 1)..Date.new(2014, 6, 30),
-  Date.new(2014, 7, 1)..Date.new(2014, 9, 30)
+  Date.new(2014, 7, 1)..Date.new(2014, 9, 30),
+  Date.new(2014, 10, 1)..Date.new(2014, 12, 31)
 ]
 
 def import_spreadsheet(file_path, dates_by_sheet)
@@ -71,7 +72,7 @@ end
 
 files = [
   "./db/seedfiles/premium_tables/2014_DCHL_Rates_12_13_14_INDVandSHOPthruQ2.xlsx",
-  "./db/seedfiles/premium_tables/2014_DCHL_Rates_IVL_and_SHOP_Q1_thru_Q3.xlsx"
+  "./db/seedfiles/premium_tables/2014_DCHL_Rates_IVL_and_SHOP_Q1_thru_Q4.xlsx"
 ]
 
 clean_old_premiums
