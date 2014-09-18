@@ -37,7 +37,7 @@ module ChangeAddress
         m
       end
 
-      policies.each do |pol|
+      @eligible_policies.each do |pol|
         yield pol, affected_enrollee_map[pol.id], (pol.enrollees.select { |e| !e.canceled?})
       end
     end
