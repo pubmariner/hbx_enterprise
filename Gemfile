@@ -40,7 +40,6 @@ group :production do
   gem 'unicorn'
 end
 
-gem 'simple_form'
 gem "haml"
 gem 'kaminari'
 gem 'bootstrap-kaminari-views'
