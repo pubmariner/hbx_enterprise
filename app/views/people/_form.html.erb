@@ -1,5 +1,4 @@
-<%= f.error_notification %>
-  <% if @person.errors.any? %>
+<% if @person.errors.any? %>
   <div class="alert alert-error">
     <h4><%= pluralize(@person.errors.count, "error") %> prohibited this person from being saved:</h4>
     <ul>
@@ -14,80 +13,52 @@
   </div>
 <% end %>
 
-<div class="panel panel-default">
-  <div class="panel-heading">Name and Identifying Info</div>
-  <div class="panel-body container">
-		<div class="row">
-			<div class="col-xs-12">
-			  <div class="form-inputs">
-					<%= render 'name_fields', f: f %>
+<div class="row">
+  <div class="col-sm-6">
+    <%= panel tag: :aside do %>
+      <div class='panel-heading'>
+        Name and Identifying Info
+      </div>
+      <div class='panel-body'>
+        <%= render 'name_fields', f: f %>
 
-					<%= f.simple_fields_for :members do |member|  %>
-						<%= render 'member_fields', m: member %>
-				  <% end %>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-
-<div class="panel panel-default">
-  <div class="panel-heading">Address</div>
-  <div class="panel-body container">
-		<div class="row">
-			<div class="col-xs-12">
-			  <div class="form-inputs nested-fields">
-					<%= f.simple_fields_for :addresses do |address|  %>
-						<%= render 'address_fields', f: address %>
-				  <% end %>
-				  <p class="text-right"><%= link_to_add_fields "Add Address", f, :addresses %></p>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-
-<div class="panel panel-default">
-  <div class="panel-heading">Phone</div>
-  <div class="panel-body container">
-		<div class="row">
-			<div class="col-xs-12">
-			  <div class="form-inputs nested-fields">
-					<%= f.simple_fields_for :phones do |phone|  %>
-						<%= render 'phone_fields', f: phone %>
-				  <% end %>
-				  <!-- <p class="text-right"><%= link_to_add_fields "Add Phone", f, :phones %><p> -->
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-
-<div class="panel panel-default">
-  <div class="panel-heading">Email</div>
-  <div class="panel-body container">
-		<div class="row">
-			<div class="col-xs-12">
-			  <div class="form-inputs nested-fields">
-					<%= f.simple_fields_for :emails do |email|  %>
-						<%= render 'email_fields', f: email %>
-				  <% end %>
-				  <!-- <p class="text-right"><%= link_to_add_fields "Add Email", f, :emails %></p> -->
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-
-<div class="panel panel-default">
-  <div class="panel-heading">Relationship</div>
-  <div class="panel-body container">
-		<div class="row">
-			<div class="col-xs-2">
-        <%= f.input :phone_type do %>
-          <%= f.select :relationship,  PersonRelationship::ALL_RELATIONSHIPS_LIST, {include_blank: "Type"}, { class: "select select-primary", data: { toggle: "select"}, disabled: true } %>
+        <%= f.fields_for :members do |member|  %>
+          <%= render 'member_fields', m: member %>
         <% end %>
-			</div>
-		</div>
-	</div>
+      </div>
+    <% end %>
+  </div>
+
+  <div class='col-sm-6'>
+    <%= f.fields_for :addresses do |address|  %>
+      <div class='form-inputs'>
+        <%= render 'address_fields', f: address %>
+        <p class="text-right"><%= link_to_add_fields "Add Address", f, :addresses %></p>
+      </div>
+    <% end %>
+  </div>
+
 </div>
+
+<%= panel_row column_class: 'col-sm-6' do %>
+   <div class='col-sm-6'>
+      <%= f.fields_for :phones do |phone|  %>
+        <%= render 'phone_fields', f: phone %>
+      <% end %>
+      <!-- <p class="text-right"><%= link_to_add_fields "Add Phone", f, :phones %><p> -->
+    </div>
+
+   <div class='col-sm-6'>
+      <%= f.fields_for :emails do |email|  %>
+        <%= render 'email_fields', f: email %>
+      <% end %>
+      <!-- <p class="text-right"><%= link_to_add_fields "Add Email", f, :emails %></p> -->
+    </div>
+
+<% end %>
+
+<%= panel title: 'Relationship Type' do %>
+  <div class='panel-body'>
+    <%= f.select :relationship,  PersonRelationship::ALL_RELATIONSHIPS_LIST, {include_blank: "Type"}, { class: "select select-primary", data: { toggle: "select"}, disabled: true } %>
+  </div>
+<% end %>
