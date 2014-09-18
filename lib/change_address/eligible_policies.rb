@@ -3,8 +3,17 @@ module ChangeAddress
     include Enumerable
     def initialize(person)
       @person = person
-      @policy_list = person.policies.select { |pol| pol.currently_active? || pol.future_active? }
-      @eligible_policies = categorize_policies(@policy_list).flat_map { |pg| most_recent_policies(pg) }
+      policies = Collections::Policies.new(person.policies)
+      @policy_list = policies.is_or_will_be_active
+      @health_policies = @policy_list.covering_health
+      @dental_policies = @policy_list.covering_dental
+      @too_many_health = too_many_policies?(@health_policies)
+      @too_many_dental = too_many_policies?(@dental_policies)
+      # We need to take this and get the validation out of here
+      # @eligible_policies = @health_policies.overlaps_policy(@health_policies.most_recent) +
+      #                       @dental_policies.overlaps_policy(@dental_policies.most_recent)
+      # No matter what this should be the right result, when the object is valid
+      @eligible_policies = [@health_policies.most_recent, @dental_policies.most_recent].compact
     end
 
     def self.for_person(person)
@@ -18,10 +27,9 @@ module ChangeAddress
     end
 
     def each_affected_group(address_type)
-      existing_address = current_address_of(@person, address_type) # get persons address by type
-      policies = @eligible_policies # get persons active_policies
+      existing_address = current_address_of(@person, address_type)
       
-      affected_enrollee_map = policies.inject({}) do |m, policy|
+      affected_enrollee_map = @eligible_policies.inject({}) do |m, policy|
         if(policy.subscriber.person == @person)
           m[policy.id] = policy.enrollees.select do |enrollee|
             enrollee_address = current_address_of(enrollee.person, address_type)
@@ -42,37 +50,25 @@ module ChangeAddress
       person.address_of(at_place)
     end
 
-    def categorize_policies(pols)
-      pols.partition { |pol| pol.coverage_type == "health" }
-    end
-
-    def most_recent_policies(pols)
-      sorted = pols.sort_by { |pol| pol.policy_start }
-      return sorted if sorted.length < 2
-      most_recent = sorted.last
-      sorted.select { |pol| policies_overlap?(most_recent, pol) }
-    end
-
-    def policies_overlap?(a, b)
-      first, second = [a, b].sort_by { |pol| pol.policy_start }
-      return true if first.policy_end.nil?
-      (first.policy_end > second.policy_start)
-    end
-
     def empty?
       @eligible_policies.empty?
     end
 
+    def too_many_policies?(pol)
+      return false unless pol.many?
+      pol.overlaps_policy(pol.most_recent).many?
+    end
+
     def too_many_health_policies?
-      categorize_policies(@eligible_policies).first.many?
+      @too_many_health
     end
 
     def too_many_dental_policies?
-      categorize_policies(@eligible_policies).last.many?
+      @too_many_dental
     end
 
     def too_many_active_policies?
-      categorize_policies(@eligible_policies).any? { |pol_group| pol_group.length > 1}
+      too_many_health_policies? || too_many_dental_policies?
     end
 
   end
