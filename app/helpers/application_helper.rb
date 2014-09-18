@@ -76,7 +76,6 @@ module ApplicationHelper
     end
     link_to(content_tag(:span, raw("&nbsp;"), class: 'fui-plus-circle') + name,
             '#', class: "add_fields", data: {id: id, fields: fields.gsub("\n", "")})
-
   end
 
   def render_flash
