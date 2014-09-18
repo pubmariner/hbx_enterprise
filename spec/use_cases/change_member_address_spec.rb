@@ -11,7 +11,7 @@ end
 
 describe ChangeMemberAddress do
   subject(:change_address) { ChangeMemberAddress.new(transmitter, person_repo, address_repo, eligible_policy_factory) }
-  let(:listener) { double(:fail => nil) }
+  let(:listener) { double(:fail => nil, :success => nil) }
   let(:transmitter) { double(execute: nil) }
   let(:person_repo) { double(find_by_id: person) }
   let(:address_repo) { Address }
@@ -199,11 +199,26 @@ describe ChangeMemberAddress do
 
   context "when the member has no active policies" do
     let(:eligible_policies) { double(:empty? => true, too_many_health_policies?: false, too_many_dental_policies?: false) }
-    it 'notifies the listener that there are no policies' do
-      expect(listener).to receive(:no_active_policies).with({:member_id => request[:member_id]})
-      expect(listener).to receive(:fail)
+    before do 
+      eligible_policies.stub(:each_affected_group) { nil }
+    end
+
+    it 'changes the address' do
+      change_address.execute(request, listener)
+      expect_address_to_change(person, request)
+    end
+
+    it 'does not transmit' do
+      expect(transmitter).not_to receive(:execute)
       change_address.execute(request, listener)
     end
+
+    it 'succeeds' do
+      expect(listener).to receive(:success)
+      change_address.execute(request, listener)
+    end
+   
+
   end
 
   context "when member has one active dental and one active health policy" do
