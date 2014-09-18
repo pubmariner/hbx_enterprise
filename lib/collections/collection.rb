@@ -38,10 +38,5 @@ module Collections
     def to_a
       @collection
     end
-
-    def +(other)
-      converted = other.respond_to?(:to_a) ? other.to_a : other
-      self.class.new(@collection + converted)
-    end
   end
 end

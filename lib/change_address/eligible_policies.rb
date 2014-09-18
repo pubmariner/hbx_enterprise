@@ -9,10 +9,6 @@ module ChangeAddress
       @dental_policies = @policy_list.covering_dental
       @too_many_health = too_many_policies?(@health_policies)
       @too_many_dental = too_many_policies?(@dental_policies)
-      # We need to take this and get the validation out of here
-      # @eligible_policies = @health_policies.overlaps_policy(@health_policies.most_recent) +
-      #                       @dental_policies.overlaps_policy(@dental_policies.most_recent)
-      # No matter what this should be the right result, when the object is valid
       @eligible_policies = [@health_policies.most_recent, @dental_policies.most_recent].compact
     end
 
