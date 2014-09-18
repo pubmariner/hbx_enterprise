@@ -10,33 +10,27 @@ module Collections
     end
 
     def covering_health
-      result = @collection.select { |p| p.coverage_type == 'health'}
-      return_collection(result)
+      bind.select { |p| p.coverage_type == 'health'}
     end
 
     def covering_dental
-      result = @collection.select { |p| p.coverage_type == 'dental'}
-      return_collection(result)
+      bind.select { |p| p.coverage_type == 'dental'}
     end
 
     def currently_active
-      result = @collection.select { |p| p.currently_active? }
-      return_collection(result)
+      bind.select { |p| p.currently_active? }
     end
 
     def future_active
-      result = @collection.select { |p| p.future_active? }
-      return_collection(result)
+      bind.select { |p| p.future_active? }
     end
 
     def is_or_will_be_active
-      result = @collection.select { |p| p.currently_active? || p.future_active? }
-      return_collection(result)
+      bind.select { |p| p.currently_active? || p.future_active? }
     end
 
     def overlaps_policy(policy)
-      result = @collection.select { |p| policies_overlap?(policy, p) }
-      return_collection(result)
+      bind.select { |p| policies_overlap?(policy, p) }
     end
 
     def each
@@ -46,8 +40,7 @@ module Collections
     end
 
     def sort_by_start_date
-      result = @collection.sort_by { |pol| pol.policy_start }
-      return_collection(result)
+      bind.sort_by { |pol| pol.policy_start }
     end
 
     def most_recent
@@ -61,6 +54,10 @@ module Collections
 
     def to_a
       @collection
+    end
+
+    def bind
+      CollectionDelegator.new(@collection, self.class)
     end
     
     private
