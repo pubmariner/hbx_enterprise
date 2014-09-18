@@ -3,26 +3,32 @@ module Parsers::Xml::IrsReports
     
     attr_accessor :individuals
     
-    def initialize(parser = nil)      
-      # parser = File.open(Rails.root.to_s + "/policy.xml")
-      # parser = Nokogiri::XML(parser)
-      @root = parser #.root
+    def initialize(parser = nil)
+      @root = parser
       @individuals = []
       covered_individuals
     end
 
     def covered_individuals
-      @root.xpath("n1:enrollees/n1:subscriber/n1:individual").each do |individual|
+      @root.xpath("n1:enrollees/n1:subscriber").each do |individual|
         @individuals << individual
       end
 
-      @root.xpath("n1:enrollees/n1:members/n1:member/n1:individual").each do |individual|
+      @root.xpath("n1:enrollees/n1:members/n1:member").each do |individual|
         @individuals << individual
       end
     end
 
     def id
       @root.at_xpath("n1:id").text
+    end
+
+    def start_date
+      @individuals[0].at_xpath("n1:benefit/n1:begin_date").text
+    end
+
+    def end_date
+      @individuals[0].at_xpath("n1:benefit/n1:end_date").text if @individuals[0].at_xpath("n1:benefit/n1:end_date")
     end
 
     def household_aptc

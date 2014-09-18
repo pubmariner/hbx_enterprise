@@ -56,28 +56,33 @@ module CanonicalVocabulary
       @individual_policies.uniq.each do |policy|
         xml.InsurancePolicy do |xml|
           xml.InsuranceCoverage do |xml|
+
             xml.ApplicableCoverageMonthNum 1
             xml.QHPPolicyNum "00000000000000000000000000000000000000000000000000"
             xml.QHPId policy.qhp_id
             xml.PediatricDentalPlanPremiumInd "N"
             xml.QHPIssuerEIN "000000000"
             xml.IssuerNm "Issuer"
-            xml.PolicyCoverageStartDt "1957-08-13"
-            xml.PolicyCoverageEndDt "1957-08-13"
+            xml.PolicyCoverageStartDt date_formatter(policy.start_date)
+            xml.PolicyCoverageEndDt date_formatter(policy.end_date)
             xml.TotalQHPMonthlyPremiumAmt policy.total_monthly_premium
             xml.APTCPaymentAmt policy.household_aptc
+
             policy.individuals.each do |individual_xml|
               xml.CoveredIndividual do |xml|
                 xml.InsuredPerson do |xml|
-                  individual = Parsers::Xml::IrsReports::Individual.new(individual_xml)
+                  individual = Parsers::Xml::IrsReports::Individual.new(individual_xml.at_xpath("n1:individual"))
                   serialize_name_ssn_dob(xml, individual)
                 end
-                xml.CoverageStartDt "1957-08-13"
-                xml.CoverageEndDt "1957-08-13"
+                xml.CoverageStartDt date_formatter(individual_xml.at_xpath("n1:benefit/n1:begin_date").text)
+                if individual_xml.at_xpath("n1:benefit/n1:end_date")
+                  end_date = individual_xml.at_xpath("n1:benefit/n1:end_date").text
+                end
+                xml.CoverageEndDt date_formatter(end_date)
               end
             end
           end
-        end	
+        end
       end
     end
     
@@ -196,6 +201,12 @@ module CanonicalVocabulary
         xml.USZIPCd address[:postal_code]
         xml.USZIPExtensionCd "0000"
       end			
+    end
+
+
+    def date_formatter(date)
+       return if date.nil?
+       Date.strptime(date,'%Y%m%d').strftime("%Y-%m-%d")
     end
   end
 end
