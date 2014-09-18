@@ -46,5 +46,21 @@ module Parsers::Xml::IrsReports
     def all_members
       [primary] + spouse.keys + dependents.keys
     end
+
+    def member_policy_ids(app_group)
+      policies = []
+      all_members.each do |member|
+        policies << app_group.individual_policy_holders[member]
+      end
+
+      policy_ids = []
+      policies.flatten.uniq.each do |policy|
+        if app_group.individual_policies.include?(policy)
+          policy_ids << policy.match(/\d+$/)[0]
+        end
+      end
+
+      policy_ids
+    end  
   end
 end
