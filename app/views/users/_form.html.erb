@@ -1,20 +1,25 @@
-<%= form_for @user, layout: :inline do |f| %>
-
-		<div class="panel">
+<%= simple_form_for @user do |f| %>
+	<%= f.error_notification %>
+		<div clsas="container">
 			<div class="row">
 				<div class="col-md-4">
-					<%= f.email_field :email %>
-					<%= f.check_box :approved, label: "Approved?" %>
+					<%= f.input :email %>
 				</div>
-				<div class="col-md-4">
-				  <%= f.select :role,  User::ROLES, {}, { class: "select select-primary", data: { toggle: "select"} } %>
+			</div>
+
+				<%= f.input :approved, as: :boolean, boolean_style: :inline, label: "Approved?" %>
+
+			<div class="row">
+				<div class="col-xs-2">
+					<%= f.input :role do %>
+					  <%= f.select :role,  User::ROLES, {}, { class: "select select-primary", data: { toggle: "select"} } %>
+					<% end %>
 				</div>
 			</div>
 		</div>
-
 		<div class="well well-sm well-default">
 			<div class="form-actions">
-				<%= f.button :Submit , :class => 'btn btn-primary'  %>
+				<%= f.button :submit , :class => 'btn btn-primary'  %>
 				<%= link_to t('.cancel', :default => t("helpers.links.cancel")), users_path, :class => 'btn btn-default' %>
 			  <%= link_to t('.remove', :default => t("helpers.links.remove")),
 		              user_path(@user),
