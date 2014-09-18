@@ -25,7 +25,7 @@ module Collections
       @collection = collection
     end
 
-    def bind
+    def items
       CollectionDelegator.new(@collection, self.class)
     end
 

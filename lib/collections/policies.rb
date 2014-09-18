@@ -1,31 +1,31 @@
 module Collections
   class Policies < Collection
     def covering_health
-      bind.select { |p| p.coverage_type == 'health'}
+      items.select { |p| p.coverage_type == 'health'}
     end
 
     def covering_dental
-      bind.select { |p| p.coverage_type == 'dental'}
+      items.select { |p| p.coverage_type == 'dental'}
     end
 
     def currently_active
-      bind.select { |p| p.currently_active? }
+      items.select { |p| p.currently_active? }
     end
 
     def future_active
-      bind.select { |p| p.future_active? }
+      items.select { |p| p.future_active? }
     end
 
     def is_or_will_be_active
-      bind.select { |p| p.currently_active? || p.future_active? }
+      items.select { |p| p.currently_active? || p.future_active? }
     end
 
     def overlaps_policy(policy)
-      bind.select { |p| policies_overlap?(policy, p) }
+      items.select { |p| policies_overlap?(policy, p) }
     end
     
     def sort_by_start_date
-      bind.sort_by { |pol| pol.policy_start }
+      items.sort_by { |pol| pol.policy_start }
     end
 
     def most_recent
