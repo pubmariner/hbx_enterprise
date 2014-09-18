@@ -7,8 +7,6 @@ module ChangeAddress
       @policy_list = policies.is_or_will_be_active
       @health_policies = @policy_list.covering_health
       @dental_policies = @policy_list.covering_dental
-      @too_many_health = too_many_policies?(@health_policies)
-      @too_many_dental = too_many_policies?(@dental_policies)
       @eligible_policies = [@health_policies.most_recent, @dental_policies.most_recent].compact
     end
 
@@ -56,11 +54,11 @@ module ChangeAddress
     end
 
     def too_many_health_policies?
-      @too_many_health
+      too_many_policies?(@health_policies)
     end
 
     def too_many_dental_policies?
-      @too_many_dental
+      too_many_policies?(@dental_policies)
     end
 
     def too_many_active_policies?
