@@ -3,7 +3,7 @@ class Api::V1::PoliciesController < ApplicationController
     clean_eg_id = Regexp.new(Regexp.escape(params[:enrollment_group_id].to_s))
 
     search = {"eg_id" => clean_eg_id}
-    if(!params[:ids].empty?)
+    if(!params[:ids].nil? && !params[:ids].empty?)
       search['_id'] = {"$in" => params[:ids]}
     end
     
