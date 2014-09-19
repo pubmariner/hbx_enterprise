@@ -5,8 +5,8 @@
       = f.radio_button :kind, 'maintenance', label: "Maintenance"
     .row
       .col-md-12
-        .container.form-group
-          = f.file_field :vocab
+        .container
+          = f.file_field :vocab, :class => "file form-control"
     .row
       = f.check_box :bypass_validation, label: 'Bypass Premium Validation?'
       = f.hidden_field :submitted_by
