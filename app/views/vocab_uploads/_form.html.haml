@@ -1,7 +1,7 @@
 = form_for @vocab_upload,layout: :inline do |f|
   .col-md-4.container
     .row
-      = f.radio_button :kind, 'initial enrollment'
+      = f.radio_button :kind, 'initial enrollment', checked: true
       = f.radio_button :kind, 'maintenance'
     .row
       .col-md-12
