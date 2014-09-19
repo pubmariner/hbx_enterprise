@@ -22,7 +22,7 @@
       <div class='panel-body'>
         <%= render 'name_fields', f: f %>
 
-        <%= f.fields_for :members do |member|  %>
+        <%= f.fields_for :members, fieldset: false do |member|  %>
           <%= render 'member_fields', m: member %>
         <% end %>
       </div>
@@ -30,10 +30,17 @@
   </div>
 
   <div class='col-sm-6'>
-    <%= f.fields_for :addresses do |address|  %>
-      <div class='form-inputs'>
-        <%= render 'address_fields', f: address %>
-        <p class="text-right"><%= link_to_add_fields "Add Address", f, :addresses %></p>
+    <%= panel tag: :aside do %>
+      <div class='panel-heading'>
+        Addresses
+      </div>
+      <div class='panel-body'>
+        <%= f.fields_for :addresses, errors: {}, fieldset: false do |address|  %>
+          <div class='form-inputs'>
+            <%= render 'address_fields', f: address %>
+            <p class="text-right"><%= link_to_add_fields "Add Address", f, :addresses %></p>
+          </div>
+        <% end %>
       </div>
     <% end %>
   </div>
