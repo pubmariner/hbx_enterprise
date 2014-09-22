@@ -64,46 +64,62 @@ class Policy
 
   aasm do
     state :submitted, initial: true
-    state :resubmitted
     state :effectuated
-    state :carrier_rejected
     state :carrier_canceled
     state :carrier_terminated
-    state :hbx_invalid
-    state :hbx_rejected
     state :hbx_canceled
     state :hbx_terminated
 
+    event :initial_enrollment do
+      transitions from: :submitted, to: :submitted
+    end
+
     event :effectuate do
       transitions from: :submitted, to: :effectuated
-      transitions from: :resubmitted, to: :effectuated
-    end
-
-    # Use when Carriers cancel for non-payment and initial enrollment is resent
-    event :resubmit do
-      transitions from: :carrier_canceled, to: :resubmitted
-      transitions from: :canceled, to: :resubmitted
-    end
-
-    # Use when Carrier naks a transmission or reports a functional error
-    event :carrier_reject do
-      transitions from: :submitted, to: :carrier_rejected
+      transitions from: :effectuated, to: :effectuated
+      transitions from: :hbx_canceled, to: :hbx_canceled
+      transitions from: :hbx_terminated, to: :hbx_terminated
     end
 
     event :carrier_cancel do
       transitions from: :submitted, to: :carrier_canceled
+      transitions from: :carrier_canceled, to: :carrier_canceled
+      transitions from: :carrier_terminated, to: :carrier_canceled
+      transitions from: :hbx_canceled, to: :hbx_canceled
+      transitions from: :hbx_terminated, to: :carrier_canceled
     end
 
-    event :cancel do
-      transitions from: :submitted, to: :canceled
-      transitions from: :effectuated, to: :canceled
-      transitions from: :carrier_rejected, to: :canceled
+    event :carrier_terminate do
+      transitions from: :submitted, to: :carrier_terminated
+      transitions from: :effectuated, to: :carrier_terminated
+      transitions from: :carrier_terminated, to: :carrier_terminated
+      transitions from: :hbx_terminated, to: :hbx_terminated
     end
 
-    event :terminate do
-      transitions from: :submitted, to: :terminated
-      transitions from: :effectuated, to: :terminated
+    event :hbx_cancel do
+      transitions from: :submitted, to: :hbx_canceled
+      transitions from: :effectuated, to: :hbx_canceled
+      transitions from: :carrier_canceled, to: :hbx_canceled
+      transitions from: :carrier_terminated, to: :hbx_canceled
+      transitions from: :hbx_canceled, to: :hbx_canceled
+      transitions from: :hbx_terminated, to: :hbx_canceled
     end
+
+    event :hbx_terminate do
+      transitions from: :submitted, to: :hbx_terminated
+      transitions from: :effectuated, to: :hbx_terminated
+      transitions from: :carrier_terminated, to: :carrier_terminated
+      transitions from: :carrier_canceled, to: :hbx_terminated
+      transitions from: :hbx_terminated, to: :hbx_terminated
+    end
+
+    event :hbx_reinstate do
+      transitions from: :carrier_terminated, to: :submitted
+      transitions from: :carrier_canceled, to: :submitted
+      transitions from: :hbx_terminated, to: :submitted
+      transitions from: :hbx_canceled, to: :submitted
+    end
+
   end
 
   def market
