@@ -35,8 +35,8 @@ class Income
   field :start_date, type: Date
   field :end_date, type: Date
   field :evidence_flag, type: Boolean, default: false	# Proof of income provided?
-  field :reported_date, type: Boolean
-  field :reported_by, type: Boolean
+  field :reported_date, type: DateTime
+  field :reported_by, type: String
 
   embedded_in :person, :inverse_of => :incomes
   embedded_in :household, :inverse_of => :total_income
