@@ -40,25 +40,42 @@
               <%= label_tag :rate_period_date %>
             </div>
             <div class="col-sm-3">
-              <%= text_field_tag :rate_period_date, @rate_period_date, { class: 'date_picker'} %>
+              <div class="input-group">
+                <span class="input-group-btn">
+                  <button class="btn" type="button"><span class="fui-calendar"></span></button>
+                </span>
+                <%= text_field_tag :rate_period_date, @rate_period_date, class: "form-control date_picker" %>
+              </div>
             </div>
           </div>
 
+          <br>
           <div class="row">
             <div class="col-sm-2 text-center">
               <%= label_tag :benefit_begin_date %>
             </div>
             <div class="col-sm-3">
-              <%= text_field_tag :benefit_begin_date, @benefit_begin_date, { class: 'date_picker'} %>
+              <div class="input-group">
+                <span class="input-group-btn">
+                  <button class="btn" type="button"><span class="fui-calendar"></span></button>
+                </span>
+                <%= text_field_tag :benefit_begin_date, @benefit_begin_date, class: "form-control date_picker" %>
+              </div>
             </div>
           </div>
 
+          <br>
           <div class="row">
             <div class="col-sm-2 text-center">
               <%= label_tag :birth_date %>
             </div>
             <div class="col-sm-3  ">
-              <%= text_field_tag :birth_date, @birth_date, { class: 'date_picker' } %>
+              <div class="input-group">
+                <span class="input-group-btn">
+                  <button class="btn" type="button"><span class="fui-calendar"></span></button>
+                </span>
+                <%= text_field_tag :birth_date, @birth_date, class: "form-control date_picker" %>
+              </div>
             </div>
           </div>
 
