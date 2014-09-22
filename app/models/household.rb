@@ -8,7 +8,11 @@ class Household
 #  field :rel, as: :relationship, type: String
   field :active, type: Boolean, default: true   # Household active on the Exchange?
   field :relationships, type: Array, default: []
-  field :notes, type: String
+  field :integrated_case_id, type: String # Eligibility system foreign key
+  field :irs_group_id, type: String
+
+  index({integrated_case_id:  1})
+  index({irs_group_id:  1})
 
 #  validates :rel, presence: true, inclusion: {in: %w( subscriber responsible_party spouse life_partner child ward )}
 
@@ -21,8 +25,17 @@ class Household
   embeds_many :eligibilities
   accepts_nested_attributes_for :eligibilities, reject_if: proc { |attribs| attribs['date_determined'].blank? }, allow_destroy: true
 
-  embeds_one :income, as: :total_income
-  accepts_nested_attributes_for :income
+  embeds_many :comments
+  accepts_nested_attributes_for :comments, reject_if: proc { |attribs| attribs['content'].blank? }, allow_destroy: true
+
+  # Number of people in this household for elibility determination purposes
+  def eligibility_size
+    self.people.count #TODO: may be filtered by tax filer type??
+  end
+
+  # Income sum of all tax filers in this Household for specified year
+  def total_income(year)
+  end
 
   def self.create_for_people(the_people)
     found = self.where({

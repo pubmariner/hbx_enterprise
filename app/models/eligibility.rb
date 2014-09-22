@@ -2,7 +2,7 @@ class Eligibility
   include Mongoid::Document
   include Mongoid::Timestamps
 
-	field :date_determined, type: Date
+	field :determination_date, type: Date
   field :magi, type: BigDecimal, default: 0.00  # Modified Adjusted Gross Income
   field :max_aptc, type: BigDecimal, default: 0.00
   field :csr_percent, type: BigDecimal, default: 0.00
