@@ -35,12 +35,12 @@
         Addresses
       </div>
       <div class='panel-body'>
-        <%= f.fields_for :addresses, errors: {}, fieldset: false do |address|  %>
-          <div class='form-inputs'>
+        <div class='form-inputs'>
+          <%= f.fields_for :addresses, errors: {}, fieldset: false do |address|  %>
             <%= render 'address_fields', f: address %>
-            <p class="text-right"><%= link_to_add_fields "Add Address", f, :addresses %></p>
-          </div>
-        <% end %>
+          <% end %>
+          <p class="text-right"><%= link_to_add_fields "Add Address", f, :addresses %></p>
+        </div>
       </div>
     <% end %>
   </div>
@@ -54,10 +54,12 @@
         Phones
       </div>
       <div class='panel-body'>
-        <%= f.fields_for :phones, errors: {}, fieldset: false do |phone|  %>
-          <%= render 'phone_fields', f: phone %>
-        <% end %>
-        <!-- <p class="text-right"><%= link_to_add_fields "Add Phone", f, :phones %><p> -->
+        <div class='form-inputs'>
+          <%= f.fields_for :phones, errors: {}, fieldset: false do |phone|  %>
+            <%= render 'phone_fields', f: phone %>
+          <% end %>
+          <!-- <p class="text-right"><%= link_to_add_fields "Add Phone", f, :phones %><p> -->
+        </div>
       </div>
     <% end %>
   </div>
@@ -68,10 +70,12 @@
         Emails
       </div>
       <div class='panel-body'>
-        <%= f.fields_for :emails, errors: {}, fieldset: false do |email|  %>
-          <%= render 'email_fields', f: email %>
-        <% end %>
-        <!-- <p class="text-right"><%= link_to_add_fields "Add Email", f, :emails %></p> -->
+        <div class='form-inputs'>
+          <%= f.fields_for :emails, errors: {}, fieldset: false do |email|  %>
+            <%= render 'email_fields', f: email %>
+          <% end %>
+          <!-- <p class="text-right"><%= link_to_add_fields "Add Email", f, :emails %></p> -->
+        </div>
       </div>
     <% end %>
   </div>
