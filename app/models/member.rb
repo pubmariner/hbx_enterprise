@@ -13,12 +13,15 @@ class Member
       lawful_permanent_resident
       indian_tribe_member
       undocumented_immigrant
+      not_lawfully_present_in_us
   ]
+  TAX_FILING_TYPES = %W[tax_filer tax_dependent non_filer]
 
   # gdb_member_id is the primary key. if hbx_member_id isn't provided, gdb_member_id is used
   auto_increment :_id, seed: 9999
   field :hbx_member_id, type: String
-  field :concern_role_id, type: String  # Curam internal ID
+  field :curam_person_id, type: String  # Curam case-level internal ID
+  field :concern_role_id, type: String  # Curam consolidated internal ID
 
   field :import_source, type: String  # e.g. :b2b_gateway
   field :imported_at, type: DateTime
@@ -32,14 +35,17 @@ class Member
   field :gender, type: String
 
   field :is_state_resident, type: Boolean
+  field :tax_filing_status, type: String
   field :citizen_status, type: String
   field :incarcerated, type: Boolean
+  field :coverage_participant, type: Boolean
 
   field :hlh, as: :tobacco_use_code, type: String, default: "Unknown"
   field :lui, as: :language_code, type: String
 
   validates_presence_of  :gender, message: "Choose a gender"
   validates_inclusion_of :gender, in: GENDER_TYPES, message: "Invalid gender"
+  validates_inclusion_of :tax_filing_status, in: TAX_FILING_TYPES, message: "Invalid tax filing status"
 
   # validates_numericality_of :ssn
   validates_length_of :ssn, allow_blank: true, allow_nil: true, minimum: 9, maximum: 9,

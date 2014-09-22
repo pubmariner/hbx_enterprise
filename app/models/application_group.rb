@@ -8,6 +8,7 @@ class ApplicationGroup
   field :aasm_state, type: String
   field :active, type: Boolean, default: true   # ApplicationGroup active on the Exchange?
   field :notes, type: String
+  field :renew_coverage_through, type: Integer  # Authorize auto-renewal elibility check through this year (CCYY format)
 
   index({:aasm_state => 1})
 
@@ -19,6 +20,9 @@ class ApplicationGroup
 
   embeds_many :special_enrollment_periods, cascade_callbacks: true
   accepts_nested_attributes_for :special_enrollment_periods, reject_if: proc { |attribs| attribs['start_date'].blank? }, allow_destroy: true
+
+  embeds_many :comments
+  accepts_nested_attributes_for :comments, reject_if: proc { |attribs| attribs['content'].blank? }, allow_destroy: true
 
   embeds_many :person_relationships
 
