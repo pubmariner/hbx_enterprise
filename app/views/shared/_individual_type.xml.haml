@@ -14,19 +14,25 @@
   %n1:incarcerated_flag
 - if false
   %n1:financial
+  - unless person.incomes.empty?
     %n1:incomes
-      %n1:income
-        %n1:calendar_year
-        %n1:income_amount
-        %n1:income_type
-        %n1:income_frequency
-        %n1:reported_date
-        %n1:reported_by
-        %n1:verification
-          %n1:verified_flag
-          %n1:source
-          %n1:recorded_date
-          %n1:recorded_by
-          %n1:notes
+      - person.incomes.each do |income|
+        %n1:income
+          %n1:amount= (income.amount_in_cents * 100.0)
+          %n1:type= "urn:openhbx:terms:v1:income##{income.income_type}"
+          %n1:frequency= "urn:openhbx:terms:v1:income_frequency##{income.frequency}"
+          %n1:evidence_flag= income.evidence_flag
+          %n1:start_date= income.start_date.try(:strftime,"%Y%m%d")
+          - if income.end_date.present?
+            %n1:end_date= income.end_date.try(:strftime,"%Y%m%d")
+          %n1:reported_date= income.reported_date.try(:strftime,"%Y-%m-%dT%H:%M:%S")
+          %n1:reported_by= income.reported_by
+          - if false
+            %n1:verification
+              %n1:verified_flag
+              %n1:source
+              %n1:recorded_date
+              %n1:recorded_by
+              %n1:notes
     %n1:tax_file_status
 = render 'shared/timestamp', record: person
