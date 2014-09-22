@@ -21,6 +21,9 @@ class Household
   embeds_many :eligibilities
   accepts_nested_attributes_for :eligibilities, reject_if: proc { |attribs| attribs['date_determined'].blank? }, allow_destroy: true
 
+  embeds_one :income, as: :total_income
+  accepts_nested_attributes_for :income
+
   def self.create_for_people(the_people)
     found = self.where({
       "person_ids" => {

@@ -6,6 +6,14 @@ class Member
   include MergingModel
 
   GENDER_TYPES = %W(male female unknown)
+  CITIZEN_STATUS_TYPES = %W[
+      us_citizen
+      naturalized_citizen
+      alien_lawfully_present
+      lawful_permanent_resident
+      indian_tribe_member
+      undocumented_immigrant
+  ]
 
   # gdb_member_id is the primary key. if hbx_member_id isn't provided, gdb_member_id is used
   auto_increment :_id, seed: 9999
@@ -22,6 +30,10 @@ class Member
   field :dob, type: DateTime
   field :ssn, type: String
   field :gender, type: String
+
+  field :is_state_resident, type: Boolean
+  field :citizen_status, type: String
+  field :incarcerated, type: Boolean
 
   field :hlh, as: :tobacco_use_code, type: String, default: "Unknown"
   field :lui, as: :language_code, type: String

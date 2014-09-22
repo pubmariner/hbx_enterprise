@@ -3,7 +3,7 @@ module TestBarrier
 
   describe UpdatePerson do
     subject(:update_person) { UpdatePerson.new(person_repo, address_changer, change_address_request_factory) }
-    let(:listener) { double(has_errors?: false, success: false ) }
+    let(:listener) { double(has_errors?: false, success: false, :set_current_address => nil) }
     let(:person_repo) { double(find_by_id: person) }
     let(:change_address_request_factory) { double(from_person_update_request: change_address_request) }
     
@@ -76,7 +76,7 @@ module TestBarrier
     context 'when the home address changes' do
       let(:existing_address_type) { 'home' }
       let(:requested_address_type) { 'home' }
-      let(:listener) { double(has_errors?: false, success: nil) }
+      let(:listener) { double(has_errors?: false, success: nil, :set_current_address => nil) }
 
       it 'builds a change address request' do
         expect(change_address_request_factory).to receive(:from_person_update_request)
@@ -90,7 +90,7 @@ module TestBarrier
     end
 
     context 'when request doesnt have a home address' do
-      let(:listener) { double(home_address_not_present: nil, has_errors?: true, fail: nil) }
+      let(:listener) { double(home_address_not_present: nil, has_errors?: true, fail: nil, :set_current_address => nil) }
       before { request[:addresses] = [{ address_type: 'work' }, { address_type: 'mailing' }] }
       it 'notifies the listener' do
         expect(listener).to receive(:home_address_not_present)
@@ -104,7 +104,7 @@ module TestBarrier
     end
 
     context 'when request contains more than one address with the same type' do
-      let(:listener) { double(:too_many_addresses_of_type, has_errors?: true, fail: nil) }
+      let(:listener) { double(:too_many_addresses_of_type, has_errors?: true, fail: nil, :set_current_address => nil) }
       before { request[:addresses] = [{ address_type: 'home' }, { address_type: 'home' }]}
 
       it 'notifies the listener' do
@@ -115,7 +115,7 @@ module TestBarrier
     end
 
     context 'when listener has received errors' do
-      let(:listener) { double(has_errors?: true, fail: nil)}
+      let(:listener) { double(has_errors?: true, fail: nil, :set_current_address => nil)}
       it 'does not save' do
         expect(person).not_to receive(:save!)
         subject.execute(request, listener)

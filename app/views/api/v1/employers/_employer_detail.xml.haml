@@ -15,6 +15,7 @@
 - if employer.plan_year_end.present?
   %n1:plan_year_end= employer.plan_year_end.try(:strftime,"%Y%m%d")
 %n1:plans
+  - carrier_cache = build_carrier_cache
   - employer.elected_plans.each do |elected_plan|
     - plan = elected_plan.plan
     %n1:plan
@@ -22,7 +23,7 @@
       %n1:qhp_id= elected_plan.qhp_id
       %n1:name= elected_plan.plan_name
       %n1:is_dental_only_flag= plan.coverage_type == 'dental'
-      %n1:carrier= render 'shared/carrier_link_type', carrier: elected_plan.carrier
+      %n1:carrier= render 'shared/carrier_link_type', carrier: carrier_cache[elected_plan.carrier_id]
       %n1:coverage_type= "urn:openhbx:terms:v1:benefit_coverage##{plan.coverage_type}"
       %n1:metal_level= "urn:openhbx:terms:v1:plan_metal_level##{plan.metal_level.downcase}"
       - if plan.market_type.present?

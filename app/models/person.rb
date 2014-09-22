@@ -66,6 +66,7 @@ class Person
   scope :all_with_multiple_members, exists({ :'members.1' => true })
 
   default_scope order_by(name_last: 1, name_first: 1)
+  index({name_last: 1, name_first: 1})
   #
   def update_attributes_with_delta(props = {})
     old_record = self.find(self.id)
@@ -343,6 +344,10 @@ class Person
 
   def self.find_by_id(id)
     where(id: id).first
+  end
+
+  def self.find_by_member_id(member_id)
+    Person.find_for_members([member_id]).first
   end
 
   private

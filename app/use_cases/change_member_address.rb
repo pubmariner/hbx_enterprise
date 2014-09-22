@@ -1,8 +1,9 @@
 class ChangeMemberAddress
-  def initialize(transmitter, person_repo = Person, address_repo = Address)
+  def initialize(transmitter, person_repo = Person, address_repo = Address, eligible_policies = ChangeAddress::EligiblePolicies)
     @person_repo = person_repo
     @address_repo = address_repo
     @transmitter = transmitter
+    @eligible_policies = eligible_policies
   end
 
   def execute(request, listener)
@@ -37,27 +38,20 @@ class ChangeMemberAddress
       return false
     end
 
-    active_policies = person.active_policies
+    eligible_policies = @eligible_policies.for_person(person)
 
-    if(active_policies.empty?)
-      listener.no_active_policies(member_id: request[:member_id])
-      failed = true
-    end
-
-    policies = active_policies
-
-    if (count_policies_by_coverage_type(policies, 'health') > 1)
+    if (eligible_policies.too_many_health_policies?)
       listener.too_many_health_policies(member_id: request[:member_id])
       failed = true
     end
 
-    if (count_policies_by_coverage_type(policies, 'dental') > 1)
+    if (eligible_policies.too_many_dental_policies?)
       listener.too_many_dental_policies(member_id: request[:member_id])
       failed = true
     end
 
 
-    policies.each do |ap|
+    eligible_policies.each do |ap|
       if ap.has_responsible_person?
         listener.responsible_party_on_policy(:policy_id => ap.id)
         failed = true
@@ -89,16 +83,15 @@ class ChangeMemberAddress
       return
     end
 
-    propagaterythingamabob = AddressChangePropagator.new(person, request[:type])
+    eligible_policies = @eligible_policies.for_person(person)
 
-    propagaterythingamabob.each_affected_group do |policy, affected_enrollees, included_enrollees|
+    eligible_policies.each_affected_group(request[:type]) do |policy, affected_enrollees, included_enrollees|
       people = affected_enrollees.map { |e| e.person }
 
       people.each do |person|
         person.update_address(Address.new(new_address.attributes))
       end
 
-      # TODO: Operation/Reason constant cleanup
       transmit_request = {
         policy_id: policy.id,
         operation: 'change',
@@ -111,6 +104,10 @@ class ChangeMemberAddress
       if(['home', 'mailing'].include?(request[:type]))
         @transmitter.execute(transmit_request)
       end
+    end
+
+    if (eligible_policies.empty?)
+      person.update_address(Address.new(new_address.attributes))
     end
   end
   
