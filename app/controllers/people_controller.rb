@@ -93,12 +93,6 @@ class PeopleController < ApplicationController
   end
 
   def persist_and_transmit
-
-    # @person = Person.find(params[:id])
-    # @updated_properties = Hash.new.merge(JSON.parse(params[:person]))
-
-    # update_person(@updated_properties)
-
     @person = Person.find(params[:id])
     request = UpdatePersonRequest.from_form(params[:id], JSON.parse(params[:person]), current_user.email)
 

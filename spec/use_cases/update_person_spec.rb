@@ -43,12 +43,14 @@ module TestBarrier
     let(:request) do
       {
         person_id: '1234',
-        current_user: 'me@example.com',
+        current_user: current_user,
         addresses: [
           requested_address_fields
         ]
       }
     end
+
+    let(:current_user) { 'me@example.com' }
 
     let(:requested_address_fields) {
           {
@@ -71,6 +73,11 @@ module TestBarrier
     it 'saves the person' do
       expect(person).to receive(:save!)
       subject.execute(request, listener)
+    end
+
+    it 'labels person as updated by user' do
+      subject.execute(request, listener)
+      expect(person.updated_by).to eq current_user
     end
 
     context 'when the home address changes' do

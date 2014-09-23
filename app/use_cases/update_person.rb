@@ -80,6 +80,7 @@ class UpdatePerson
         @address_changer.commit(change_address_request)
       end
     end
+    person.updated_by = request[:current_user]
     person.save!
   end
 
