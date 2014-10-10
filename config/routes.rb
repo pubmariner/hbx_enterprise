@@ -112,6 +112,14 @@ Gluedb::Application.routes.draw do
 
   resources :special_enrollment_periods, only: [:new, :create]
 
+  namespace :soap do
+    resources :individuals, :only => [] do
+      collection do
+        post 'get_by_hbx_id'
+      end
+    end
+  end
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
