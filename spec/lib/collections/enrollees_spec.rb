@@ -1,4 +1,4 @@
-require 'rails_helper'
+require 'spec_helper'
 
 describe Collections::Enrollees do
   subject { Collections::Enrollees.new(all_enrollees) }
