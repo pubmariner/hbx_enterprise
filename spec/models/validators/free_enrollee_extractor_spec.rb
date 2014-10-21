@@ -1,11 +1,10 @@
 require 'spec_helper'
 
 describe Validators::FreeEnrolleeExtractor do
-  let(:ceiling) { 3 }
   context 'when there are not enough enrollees' do
     let(:enrollees) { [double(rel_code: 'self')]}
     it 'returns none' do
-      free_enrollees = Validators::FreeEnrolleeExtractor.new(ceiling).extract_from!(enrollees)
+      free_enrollees = Validators::FreeEnrolleeExtractor.new.extract_free_from(enrollees)
       expect(free_enrollees).to eq []
     end
   end
@@ -24,9 +23,9 @@ describe Validators::FreeEnrolleeExtractor do
 
     let(:enrollees) { [subscriber, spouse, costly_one, costly_two, costly_three, costly_four, free_one, free_two, free_three] }
     it 'returns youngest children under age of 21' do
-      free_enrollees = Validators::FreeEnrolleeExtractor.new(ceiling).extract_from!(enrollees)
-      expect(free_enrollees).to include(free_one, free_two, free_three)
-      expect(free_enrollees).not_to include(subscriber, spouse, costly_one, costly_two, costly_three, costly_four)
+      costly_enrollees = Validators::FreeEnrolleeExtractor.new.extract_free_from(enrollees)
+      expect(costly_enrollees).to include(free_one, free_two, free_three)
+      expect(costly_enrollees).not_to include(subscriber, spouse, costly_one, costly_two, costly_three, costly_four)
 
     end
   end
@@ -41,7 +40,7 @@ describe Validators::FreeEnrolleeExtractor do
     let(:enrollees) { [subscriber, spouse, costly_one, costly_two, costly_three] }
     
     it 'returns none' do
-      free_enrollees = Validators::FreeEnrolleeExtractor.new(ceiling).extract_from!(enrollees)
+      free_enrollees = Validators::FreeEnrolleeExtractor.new.extract_free_from(enrollees)
       expect(free_enrollees).to eq []
     end
   end

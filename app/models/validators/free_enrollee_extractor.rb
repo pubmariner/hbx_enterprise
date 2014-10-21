@@ -1,10 +1,10 @@
 module Validators
   class FreeEnrolleeExtractor
-    def initialize(ceiling)
-      @ceiling = ceiling
+    def initialize
+      @ceiling = 3
     end
 
-    def extract_from!(collection)
+    def extract_free_from(collection)
       enrollees = Collections::Enrollees.new(collection)
 
       children = enrollees.children
