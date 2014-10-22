@@ -1,5 +1,5 @@
-root_path = File.expand_path("..", File.dirname(__FILE__))
-shared_path = File.expand_path(root_path, "..", "shared")
+root_path = File.expand_path(File.join("..", File.dirname(__FILE__)))
+shared_path = File.expand_path(File.join(root_path, "..", "shared"))
 
 working_directory root_path
 pid shared_path + "/pids/unicorn.pid"
