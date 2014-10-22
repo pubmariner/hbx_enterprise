@@ -18,6 +18,7 @@ set :scm, :gitcopy
 
 # Default value for :log_level is :debug
 # set :log_level, :debug
+set :bundle_binstubs, false
 
 # Default value for :pty is false
 set :pty, true
