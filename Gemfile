@@ -33,4 +33,5 @@ gem 'padrino', '0.12.4'
 # end
 group :development do
   gem 'capistrano'
+  gem 'capistrano-scm-gitcopy'
 end
