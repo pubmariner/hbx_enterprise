@@ -1,4 +1,4 @@
-root_path = File.expand_path(File.join("..", File.dirname(__FILE__)))
+root_path = File.expand_path(File.join(File.dirname(__FILE__), ".."))
 shared_path = File.expand_path(File.join(root_path, "..", "shared"))
 
 working_directory root_path
