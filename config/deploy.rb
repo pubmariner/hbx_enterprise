@@ -43,6 +43,7 @@ namespace :deploy do
       # Your restart mechanism here, for example:
       # execute :touch, release_path.join('tmp/restart.txt')
       sudo "service unicorn_hbx_enterprise restart"
+      sudo "service bluepill_hbx_enterprise restart"
     end
   end
 
