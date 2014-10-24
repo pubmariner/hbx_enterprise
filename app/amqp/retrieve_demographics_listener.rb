@@ -7,8 +7,8 @@ class RetrieveDemographicsListener < Amqp::Client
   end
 
   def on_message(delivery_info, properties, payload)
-    reply_to = properties.reply_to || ""
-    eg_id = properties.headers["enrollment_group_id"] || ""
+    reply_to = properties.reply_to || raise(StandardError.new("No reply_to specified!"))
+    eg_id = properties.headers["enrollment_group_id"]
     @default_exchange.publish(Proxies::RetrieveDemographicsRequest.request(eg_id), :routing_key => reply_to)
     channel.acknowledge(delivery_info.delivery_tag, false)
   end
