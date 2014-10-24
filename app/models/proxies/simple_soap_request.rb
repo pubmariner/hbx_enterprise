@@ -19,5 +19,21 @@ module Proxies
     def endpoint
       osb_host + service_location
     end
+
+    def username
+      ExchangeInformation.osb_username
+    end
+
+    def password
+      ExchangeInformation.osb_password
+    end
+
+    def nonce
+      ExchangeInformation.osb_nonce
+    end
+
+    def created
+      ExchangeInformation.osb_created
+    end
   end
 end
