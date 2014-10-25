@@ -14,10 +14,18 @@ class RetrieveDemographicsListener < Amqp::Client
   end
 end
 
-conn = Bunny.new
-conn.start
-ch = conn.create_channel
-dex = ch.default_exchange
-q = ch.queue(QUEUE_NAME, :durable => true)
 
-RetrieveDemographicsListener.new(ch, q, dex).subscribe(:block => true, :manual_ack => true)
+class RDLForklet
+  def run
+    conn = Bunny.new
+    conn.start
+    ch = conn.create_channel
+    dex = ch.default_exchange
+    q = ch.queue(QUEUE_NAME, :durable => true)
+
+    RetrieveDemographicsListener.new(ch, q, dex).subscribe(:block => true, :manual_ack => true)
+  end
+end
+
+forking_dude = Forkr.new(RDLForklet.new)
+forking_dude.run
