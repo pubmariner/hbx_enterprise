@@ -50,8 +50,17 @@ module Forkr
         spawn_missing_workers
       end
       kill_all_workers
+      reap_all_workers
       @outbound.close
       @inbound.close
+    end
+
+    def reap_all_workers
+      begin
+        wpid, status = Process.waitpid2(-1, Process::WNOHANG)
+      rescue Errno::ECHILD
+        break
+      end while true
     end
 
     def spawn_missing_workers
@@ -70,7 +79,6 @@ module Forkr
     def kill_worker(wpid)
       begin
         Process.kill("INT", wpid)
-        Process.waitpid(wpid)
       rescue Errno::ESRCH
       end
     end
@@ -81,8 +89,9 @@ module Forkr
 
     def worker_loop
       @inbound.close
+      @outbound.close
       $stdout.puts "Worker spawned as #{$$}!"
-      Signal.trap("INT") { @outbound.close unless @outbound.closed? }
+#      Signal.trap("INT") { @outbound.close unless @outbound.closed? }
       sleep 5
       exit(0)
     end
