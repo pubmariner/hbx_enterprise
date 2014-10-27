@@ -25,6 +25,7 @@ gem 'rack-test', :require => 'rack/test', :group => 'test'
 gem 'padrino', '0.12.4'
 gem 'bunny'
 gem 'bluepill'
+gem 'nokogiri'
 
 # Or Padrino Edge
 # gem 'padrino', :github => 'padrino/padrino-framework'

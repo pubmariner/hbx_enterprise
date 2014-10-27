@@ -45,6 +45,7 @@ GEM
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
     mime-types (1.25.1)
+    mini_portile (0.6.0)
     minitest (5.4.2)
     moneta (0.7.20)
     mongoid (4.0.0)
@@ -59,6 +60,8 @@ GEM
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
     net-ssh (2.9.1)
+    nokogiri (1.6.3.1)
+      mini_portile (= 0.6.0)
     optionable (0.2.0)
     origin (2.1.1)
     padrino (0.12.4)
@@ -150,6 +153,7 @@ DEPENDENCIES
   capistrano-scm-gitcopy
   haml
   mongoid
+  nokogiri
   padrino (= 0.12.4)
   rack-test
   rake

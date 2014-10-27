@@ -2,10 +2,10 @@ require 'spec_helper'
 
 describe Listeners::EnrollmentEventTransformer do
   let(:queue) { double }
-  let(:channel) { double }
+  let(:channel) { double(:acknowledge => nil) }
   let(:event_exchange) { double }
   let(:payload) { double }
-  let(:delivery_info) { double }
+  let(:delivery_info) { double(:delivery_tag => "") }
   let(:properties) { double }
   let(:expected_payload) { "" }
   let(:event_name) { "" }
@@ -29,7 +29,7 @@ describe Listeners::EnrollmentEventTransformer do
     allow(id_finder).to receive(:from_person_id).with(person_id).and_return(hbx_member_id)
   end
 
-  subject { Listeners::EnrollmentEventTransformer.new(channel, queue, event_exchange, event_parser, id_finder) }
+  subject { Listeners::EnrollmentEventTransformer.new(channel, queue, id_finder, event_exchange, event_parser) }
 
   describe "for an individual update event" do
     let(:event_type) { "PERSON_UPDATE" }

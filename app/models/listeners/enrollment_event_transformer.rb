@@ -1,6 +1,6 @@
 module Listeners
   class EnrollmentEventTransformer < Amqp::Client
-    def initialize(q, chan, e_exchange, e_parser, hbx_id_finder)
+    def initialize(q, chan, hbx_id_finder, e_exchange, e_parser = Parsers::EnrollmentEventParser.new)
       super(q, chan)
       @event_exchange = e_exchange
       @event_parser = e_parser
@@ -32,7 +32,7 @@ module Listeners
       dex = ch.default_exchange
       q = ch.queue(queue_name, :durable => true)
 
-      self.new(ch, q, nil, nil, nil).subscribe(:block => true, :manual_ack => true)
+      self.new(ch, q, nil, nil).subscribe(:block => true, :manual_ack => true)
     end
 
     def self.queue_name
