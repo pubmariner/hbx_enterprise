@@ -1,6 +1,6 @@
-BUS_DIRECTORY=File.join(File.dirname(__FILE__), "..")
-LOG_DIRECTORY=File.join(BUS_DIRECTORY, "log")
-PID_DIRECTORY=File.join(BUS_DIRECTORY, "pids")
+BUS_DIRECTORY = File.join(File.dirname(__FILE__), "..")
+LOG_DIRECTORY = File.join(BUS_DIRECTORY, "log")
+PID_DIRECTORY = File.join(BUS_DIRECTORY, "pids")
 
 BLUEPILL_LOG = File.join(LOG_DIRECTORY, "hbxbus.log")
 
@@ -19,16 +19,25 @@ def unset_list
   ev_list.map { |evv| "unset " + evv }.join(" && ")
 end
 
-def define_worker(app, worker_name, directory, worker_command)
+def start_command_for(worker_name, worker_command)
+    "/bin/bash -l -c \"#{unset_list} && cd #{BUS_DIRECTORY} && export RBENV_GEMSETS=`cat #{BUS_DIRECTORY}/.rbenv-gemsets` && echo `env` > #{LOG_DIRECTORY}/#{worker_name}_envs.log && rbenv exec #{worker_command}\""
+end
+
+def define_worker(app, worker_name, directory, worker_command, watch_kids = false)
   app.process(worker_name) do |process|
     # puts ENV.inspect
-    process.start_command = "/bin/bash -l -c \"#{unset_list} && cd #{BUS_DIRECTORY} && export RBENV_GEMSETS=`cat #{BUS_DIRECTORY}/.rbenv-gemsets` && echo `env` > #{LOG_DIRECTORY}/#{worker_name}_envs.log && rbenv exec #{worker_command}\""
+    process.start_command = start_command_for(worker_name, worker_command)
     process.stop_command = "/bin/kill -9 {{PID}}"
     process.start_grace_time 10.seconds
     process.pid_file = File.join(PID_DIRECTORY, "#{worker_name}.pid")
     process.daemonize = true
     process.working_dir = directory
     process.stdout = process.stderr = File.join(LOG_DIRECTORY, "#{worker_name}.log")
+    if watch_kids
+      process.monitor_children do |child_process|
+        child_process.stop_command = "/bin/kill -9 {{PID}}"
+      end
+    end
   end
 end
 
@@ -36,5 +45,5 @@ Bluepill.application("hbx_enterprise", :log_file => BLUEPILL_LOG) do |app|
   app.uid = "nginx"
   app.gid = "nginx"
 
-  define_worker(app, "retrieve_demographics", BUS_DIRECTORY, "padrino r -e production app/amqp/retrieve_demographics_listener.rb")
+  define_worker(app, "retrieve_demographics", BUS_DIRECTORY, "padrino r -e production app/amqp/retrieve_demographics_listener.rb", true)
 end
