@@ -1,6 +1,6 @@
 QUEUE_NAME = "dc0.requests.proxies.curam.person_details"
 
-class PersonDetails < Amqp::Client
+class PersonDetailsListener < Amqp::Client
   def initialize(ch, q, dex)
     super(ch, q)
     @default_exchange = dex
@@ -20,4 +20,4 @@ ch = conn.create_channel
 dex = ch.default_exchange
 q = ch.queue(QUEUE_NAME, :durable => true)
 
-EnrollmentDetailsListener.new(ch, q, dex).subscribe(:block => true, :manual_ack => true)
+PersonDetailsListener.new(ch, q, dex).subscribe(:block => true, :manual_ack => true)
