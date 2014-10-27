@@ -1,3 +1,4 @@
+config/exchange.yml
 .DS_Store
 log/**/*
 tmp/**/*
