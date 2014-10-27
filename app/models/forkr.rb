@@ -13,7 +13,23 @@ class Forkr
     @inbound, @outbound = IO.pipe
     Signal.trap('CHLD') { dead_child }
     Signal.trap('INT') { shutdown }
+    Signal.trap('TTIN') { add_worker }
+    Signal.trap('TTOU') { remove_worker }
     master_loop
+  end
+
+  def add_worker
+    return(nil) if $$ != master_pid
+    return(nil) if @in_shutdown
+    @child_count = @child_count + 1
+  end
+
+  def remove_worker
+    return(nil) if $$ != master_pid
+    return(nil) if @in_shutdown
+    if child_count > 0
+      @child_count = @child_count - 1
+    end
   end
 
   def shutdown
@@ -88,6 +104,7 @@ class Forkr
   end
 
   def worker_loop
+    @worker_client.after_fork if @worker_client.respond_to?(:after_fork)
     @inbound.close
     @outbound.close
     $stdout.puts "Worker spawned as #{$$}!"
