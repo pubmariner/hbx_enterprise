@@ -29,10 +29,10 @@ module Listeners
       conn.start
       ch = conn.create_channel
       ch.prefetch(1)
-      dex = ch.default_exchange
+      event_exchange = ch.topic("dc0.events.topic.individual", :durable => true)
       q = ch.queue(queue_name, :durable => true)
 
-      self.new(ch, q, nil, nil).subscribe(:block => true, :manual_ack => true)
+      self.new(ch, q, event_exchange, nil).subscribe(:block => true, :manual_ack => true)
     end
 
     def self.queue_name
