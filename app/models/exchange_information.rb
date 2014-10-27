@@ -8,7 +8,11 @@ class ExchangeInformation
 
   include Singleton
 
-  REQUIRED_KEYS = ['receiver_id', 'osb_host', 'osb_username', 'osb_password', 'osb_nonce', 'osb_created']
+  REQUIRED_KEYS = [
+    'receiver_id',
+    'osb_host', 'osb_username', 'osb_password', 'osb_nonce', 'osb_created',
+    'invalid_argument_queue', 'processing_failure_queue'
+  ]
 
   # TODO: I have a feeling we may be using this pattern
   #       A LOT.  Look into extracting it if we repeat.
@@ -49,6 +53,14 @@ class ExchangeInformation
     @config['osb_created']
   end
 
+  def invalid_argument_queue 
+    @config['invalid_argument_queue']
+  end
+
+  def processing_failure_queue
+    @config['processing_failure_queue']
+  end
+
   def self.receiver_id
     self.instance.receiver_id
   end
@@ -71,5 +83,13 @@ class ExchangeInformation
 
   def self.osb_created
     self.instance.osb_created
+  end
+
+  def self.invalid_argument_queue
+    self.instance.invalid_argument_queue
+  end
+
+  def self.processing_failure_queue
+    self.instance.processing_failure_queue
   end
 end
