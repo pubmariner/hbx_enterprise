@@ -26,6 +26,7 @@ class RetrieveDemographicsListener < Amqp::Client
     conn = Bunny.new
     conn.start
     ch = conn.create_channel
+    ch.prefetch(1)
     dex = ch.default_exchange
     q = ch.queue(QUEUE_NAME, :durable => true)
 
