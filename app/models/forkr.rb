@@ -13,6 +13,7 @@ class Forkr
     @inbound, @outbound = IO.pipe
     Signal.trap('CHLD') { dead_child }
     Signal.trap('INT') { shutdown }
+    Signal.trap('TERM') { shutdown }
     Signal.trap('TTIN') { add_worker }
     Signal.trap('TTOU') { remove_worker }
     master_loop
