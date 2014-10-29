@@ -1,7 +1,7 @@
 class Forkr
   attr_reader :master_pid, :children, :inbound, :outbound, :child_count
 
-  def initialize(forklet, num_kids = 3)
+  def initialize(forklet, num_kids = 1)
     @worker_client = forklet 
     @master_pid = $$
     @children = []
@@ -21,15 +21,13 @@ class Forkr
   def add_worker
     return(nil) if $$ != master_pid
     return(nil) if @in_shutdown
-    @child_count = @child_count + 1
+    @outbound.write("+")
   end
 
   def remove_worker
     return(nil) if $$ != master_pid
     return(nil) if @in_shutdown
-    if child_count > 0
-      @child_count = @child_count - 1
-    end
+    @outbound.write("-")
   end
 
   def shutdown
@@ -51,8 +49,19 @@ class Forkr
     end
   end
 
+  def increment_workers
+    @child_count = @child_count + 1
+  end
+
+  def decrement_workers
+    if @child_count > 1
+      @child_count = @child_count - 1
+    end
+  end
+
+
   def master_loop
-    spawn_missing_workers
+    ensure_right_worker_count
     loop do
       fds = IO.select([@inbound],nil,nil,2)
       unless fds.nil?
@@ -60,10 +69,14 @@ class Forkr
         if data_read == "K"
           @in_shutdown = true
           raise StopIteration.new
+        elsif data_read == "+"
+          increment_workers
+        elsif data_read == "-"
+          decrement_workers
         end
       end
       prune_workers
-      spawn_missing_workers
+      ensure_right_worker_count
     end
     kill_all_workers
     reap_all_workers
@@ -79,11 +92,16 @@ class Forkr
     end while true
   end
 
-  def spawn_missing_workers
-    missing_amount = @child_count - @children.length
-    if missing_amount > 0
-      missing_amount.times do
+  def ensure_right_worker_count
+    existing_workers = @children.length
+    off_by = @child_count - @children.length
+    if off_by > 0
+      off_by.times do
         spawn_worker
+      end
+    elsif off_by < 0
+      @children.take(off_by.abs).each do |kid|
+        term_worker(kid)
       end
     end
   end
@@ -92,11 +110,19 @@ class Forkr
     @children.each { |c| kill_worker(c) }
   end
 
-  def kill_worker(wpid)
+  def signal_worker(wpid, signal)
     begin
-      Process.kill(:KILL, wpid)
+      Process.kill(signal, wpid)
     rescue Errno::ESRCH
     end
+  end
+
+  def term_worker(wpid)
+    signal_worker(wpid, :TERM)
+  end
+
+  def kill_worker(wpid)
+    signal_worker(wpid, :KILL)
   end
 
   def prune_workers
