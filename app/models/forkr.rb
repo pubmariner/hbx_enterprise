@@ -83,7 +83,7 @@ class Forkr
         if data_read == "I"
           shutdown_using(:INT)
         elsif data_read == "T"
-          shutdown_using(:QUIT)
+          shutdown_using(:TERM)
         elsif data_read == "Q"
           shutdown_using(:QUIT)
         elsif data_read == "+"

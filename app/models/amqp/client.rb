@@ -1,4 +1,5 @@
 require 'timeout'
+require 'thread'
 
 module Amqp
   class Client
@@ -10,6 +11,7 @@ module Amqp
       @argument_errors = []
       @bad_argument_queue = ExchangeInformation.invalid_argument_queue
       @processing_failed_queue = ExchangeInformation.processing_failure_queue
+      @exit_after_work = false
     end
 
     def add_error(err)
@@ -53,8 +55,25 @@ module Amqp
       channel.acknowledge(delivery_info.delivery_tag, false)
     end
 
+    def start_running
+      @running = true
+    end
+
+    def try_to_stop
+      exit(0) if !@running
+      @exit_after_work = true
+    end
+
+    def stop_if_needed
+      exit(0) if @exit_after_work
+      @running = false
+    end
+
     def subscribe(opts = {})
+      @running = false
+      trap('TERM') { try_to_stop }
       @queue.subscribe(opts) do |delivery_info, properties, payload|
+        start_running
         begin
           if passes_validation?(delivery_info, properties, payload)
             on_message(delivery_info, properties, payload)
@@ -82,6 +101,7 @@ module Amqp
             throw :terminate, e
           end
         end
+        stop_if_needed
       end
     end
 
