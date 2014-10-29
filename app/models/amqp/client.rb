@@ -109,7 +109,7 @@ module Amqp
         temp_queue.pop({})
       end
       temp_queue.delete
-      delivery_info, properties, payload
+      [delivery_info, properties, payload]
     end
   end
 end

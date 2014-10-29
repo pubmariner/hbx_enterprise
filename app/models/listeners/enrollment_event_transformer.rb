@@ -1,6 +1,6 @@
 module Listeners
   class EnrollmentEventTransformer < Amqp::Client
-    def initialize(q, chan, hbx_id_finder, e_exchange, e_parser = Parsers::EnrollmentEventParser.new)
+    def initialize(q, chan, e_exchange, hbx_id_finder = Services::IdMapping, e_parser = Parsers::EnrollmentEventParser.new)
       super(q, chan)
       @event_exchange = e_exchange
       @event_parser = e_parser

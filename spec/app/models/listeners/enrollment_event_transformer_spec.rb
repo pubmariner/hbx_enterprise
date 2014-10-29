@@ -29,7 +29,7 @@ describe Listeners::EnrollmentEventTransformer do
     allow(id_finder).to receive(:from_person_id).with(person_id).and_return(hbx_member_id)
   end
 
-  subject { Listeners::EnrollmentEventTransformer.new(channel, queue, id_finder, event_exchange, event_parser) }
+  subject { Listeners::EnrollmentEventTransformer.new(channel, queue, event_exchange, id_finder, event_parser) }
 
   describe "for an individual update event" do
     let(:event_type) { "PERSON_UPDATE" }
