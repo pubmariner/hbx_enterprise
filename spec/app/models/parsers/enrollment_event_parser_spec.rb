@@ -34,7 +34,7 @@ describe Parsers::EnrollmentEventParser do
     end
 
     it "should have the correct routing_key" do
-      expect(event.routing_key).to eql("update")
+      expect(event.routing_key).to eql("individual.update")
     end
 
     it "should have the correct person_id" do
@@ -76,7 +76,7 @@ describe Parsers::EnrollmentEventParser do
     end
 
     it "should have the correct routing_key" do
-      expect(event.routing_key).to eql("withdraw_qhp")
+      expect(event.routing_key).to eql("individual.withdraw_qhp")
     end
 
     it "should have the correct person_id" do

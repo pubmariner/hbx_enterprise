@@ -5,8 +5,8 @@ module Parsers
     }
 
     PROPERTIES = {
-      "PERSON_UPDATE" => ["urn:openhbx:requests:v1:individual#update", "update"],
-      "INDIVIDUAL_DISENROLLMENT" => ["urn:openhbx:requests:v1:individual#withdraw_qhp", "withdraw_qhp"],
+      "PERSON_UPDATE" => ["urn:openhbx:requests:v1:individual#update", "individual.update"],
+      "INDIVIDUAL_DISENROLLMENT" => ["urn:openhbx:requests:v1:individual#withdraw_qhp", "individual.withdraw_qhp"],
     }
 
     class EnrollmentEvent

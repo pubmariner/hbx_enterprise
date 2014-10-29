@@ -34,7 +34,7 @@ describe Listeners::EnrollmentEventTransformer do
   describe "for an individual update event" do
     let(:event_type) { "PERSON_UPDATE" }
     let(:event_uri) { "urn:openhbx:requests:v1:individual#update" }
-    let(:routing_key) { "update" }
+    let(:routing_key) { "individual.update" }
 
     it "should re-broadcast the event" do
       expect(event_exchange).to receive(:publish).with(expected_payload, expected_properties)
@@ -45,7 +45,7 @@ describe Listeners::EnrollmentEventTransformer do
   describe "for an individual's disenrollment" do
     let(:event_type) { "INDIVIDUAL_DISENROLLMENT" }
     let(:event_uri) { "urn:openhbx:requests:v1:individual#withdraw_qhp" }
-    let(:routing_key) { "withdraw_qhp" }
+    let(:routing_key) { "individual.withdraw_qhp" }
 
     it "should re-broadcast the event" do
       expect(event_exchange).to receive(:publish).with(expected_payload, expected_properties)
