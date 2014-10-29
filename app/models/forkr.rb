@@ -12,34 +12,42 @@ class Forkr
   def run
     @inbound, @outbound = IO.pipe
     Signal.trap('CHLD') { dead_child }
-    Signal.trap('INT') { shutdown }
+    Signal.trap('INT') { interrupt }
     Signal.trap('TERM') { shutdown }
+    Signal.trap('QUIT') { core_dump_quit }
     Signal.trap('TTIN') { add_worker }
     Signal.trap('TTOU') { remove_worker }
     master_loop
   end
 
-  def add_worker
+  def send_wake_notice(notice)
     return(nil) if $$ != master_pid
     return(nil) if @in_shutdown
-    @outbound.write("+")
+    @outbound.write(notice)
+  end
+
+  def core_dump_quit
+    send_wake_notice("Q")
+  end
+
+  def add_worker
+    send_wake_notice("+")
   end
 
   def remove_worker
-    return(nil) if $$ != master_pid
-    return(nil) if @in_shutdown
-    @outbound.write("-")
+    send_wake_notice("-")
+  end
+
+  def interrupt
+    send_wake_notice("I")
   end
 
   def shutdown
-    return(nil) if $$ != master_pid
-    @outbound.write("K")
+    send_wake_notice("T")
   end
 
   def dead_child
-    return(nil) if $$ != master_pid
-    return(nil) if @in_shutdown
-    @outbound.write("D")
+    send_wake_notice("D")
   end
 
   def spawn_worker
@@ -60,6 +68,11 @@ class Forkr
     end
   end
 
+  def shutdown_using(sig)
+    @in_shutdown = true
+    signal_all_workers(sig)
+    raise StopIteration.new
+  end
 
   def master_loop
     ensure_right_worker_count
@@ -67,9 +80,12 @@ class Forkr
       fds = IO.select([@inbound],nil,nil,2)
       unless fds.nil?
         data_read = fds.first.first.read(1)
-        if data_read == "K"
-          @in_shutdown = true
-          raise StopIteration.new
+        if data_read == "I"
+          shutdown_using(:INT)
+        elsif data_read == "T"
+          shutdown_using(:QUIT)
+        elsif data_read == "Q"
+          shutdown_using(:QUIT)
         elsif data_read == "+"
           increment_workers
         elsif data_read == "-"
@@ -79,7 +95,6 @@ class Forkr
       prune_workers
       ensure_right_worker_count
     end
-    kill_all_workers
     reap_all_workers
     @outbound.close
     @inbound.close
@@ -102,13 +117,13 @@ class Forkr
       end
     elsif off_by < 0
       @children.take(off_by.abs).each do |kid|
-        term_worker(kid)
+        signal_worker(kid, :QUIT)
       end
     end
   end
 
-  def kill_all_workers
-    @children.each { |c| kill_worker(c) }
+  def signal_all_workers(sig)
+    @children.each { |c| signal_worker(c, sig) }
   end
 
   def signal_worker(wpid, signal)
@@ -116,14 +131,6 @@ class Forkr
       Process.kill(signal, wpid)
     rescue Errno::ESRCH
     end
-  end
-
-  def term_worker(wpid)
-    signal_worker(wpid, :TERM)
-  end
-
-  def kill_worker(wpid)
-    signal_worker(wpid, :KILL)
   end
 
   def prune_workers
@@ -141,7 +148,7 @@ class Forkr
   def child_dead?(pid)
     status = Process.waitpid(pid, Process::WNOHANG)
     unless status.nil?
-      puts "Process #{pid} exit: #{status}"
+      puts "Process #{pid} dead: #{status}"
     end
     !status.nil?
   end
