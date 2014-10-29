@@ -125,8 +125,13 @@ module Amqp
     def request(properties, payload)
       temp_queue = channel.queue("", :exclusive => true)
       channel.publish(payload, properties.merge({ :reply_to => temp_queue.name }))
-      delivery_info, properties, payload = Timeout::timeout(5) do
-        temp_queue.pop({})
+      delivery_info, properties, payload = [nil, nil, nil]
+      Timeout::timeout(15) do
+        temp_queue.subscribe({:manual_ack => true, :block => true}) do |di, prop, pay|
+          delivery_info, properties, payload = [di, prop, pay]
+          channel.acknowledge(di.delivery_tag, false)
+          throw :terminate, "success"
+        end
       end
       temp_queue.delete
       [delivery_info, properties, payload]
