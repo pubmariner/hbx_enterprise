@@ -141,14 +141,14 @@ class Forkr
     @worker_client.after_fork if @worker_client.respond_to?(:after_fork)
     @inbound.close
     @outbound.close
-    $stdout.puts "Worker spawned as #{$$}!"
+    $stderr.puts "Worker spawned as #{$$}!"
     @worker_client.run
   end
 
   def child_dead?(pid)
     status = Process.waitpid(pid, Process::WNOHANG)
     unless status.nil?
-      puts "Process #{pid} dead: #{status}"
+      $stderr.puts "Process #{pid} dead: #{status}"
     end
     !status.nil?
   end
