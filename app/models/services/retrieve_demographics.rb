@@ -15,6 +15,16 @@ module Services
       @xml.xpath("//ax2114:renewalFlag").text
     end
 
+    def market_type(event_name)
+      event_name.split('#').first.split(":").last.to_sym
+    end
+
+    def enrollment_request_type
+      return :renewal  if renewal_flag.eql?("Y")
+      return :special_enrollment if is_special_enrollment.eql?("Y")
+      return :initial_enrollment
+    end
+
     private
     def soap_body(enrollment_group_id)
       body = Proxies::RetrieveDemographicsRequest.request(enrollment_group_id)
