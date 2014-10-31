@@ -25,4 +25,8 @@ describe Services::RetrieveDemographics do
     expect(@retrieve_demographics.renewal_flag).to eql('N')
   end
 
+  it 'should decide the enrollment_request_type' do
+    expect(@retrieve_demographics.enrollment_request_type).to eql(:initial_enrollment)
+  end
+
 end
