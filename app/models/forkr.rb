@@ -117,7 +117,7 @@ class Forkr
       end
     elsif off_by < 0
       @children.take(off_by.abs).each do |kid|
-        signal_worker(kid, :QUIT)
+        signal_worker(kid, :TERM)
       end
     end
   end
