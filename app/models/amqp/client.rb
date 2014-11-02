@@ -72,6 +72,7 @@ module Amqp
     def subscribe(opts = {})
       @running = false
       trap('TERM') { try_to_stop }
+      trap('INT') { exit -1 }
       @queue.subscribe(opts) do |delivery_info, properties, payload|
         start_running
         begin
