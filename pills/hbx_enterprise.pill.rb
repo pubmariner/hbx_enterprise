@@ -20,8 +20,7 @@ def unset_list
 end
 
 def start_command_for(worker_name, worker_command)
-    #"cd #{BUS_DIRECTORY} && #{worker_command}"
-    "cd #{BUS_DIRECTORY} && echo `env` > #{LOG_DIRECTORY}/#{worker_name}_envs.log && rbenv exec #{worker_command}"
+    "#{worker_command}"
     # "cd #{BUS_DIRECTORY} && export RBENV_GEMSETS=`cat #{BUS_DIRECTORY}/.rbenv-gemsets` && echo `env` > #{LOG_DIRECTORY}/#{worker_name}_envs.log && #{worker_command}"
 end
 
