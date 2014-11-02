@@ -20,7 +20,9 @@ def unset_list
 end
 
 def start_command_for(worker_name, worker_command)
-    "/bin/bash -l -c \"#{unset_list} && cd #{BUS_DIRECTORY} && export RBENV_GEMSETS=`cat #{BUS_DIRECTORY}/.rbenv-gemsets` && echo `env` > #{LOG_DIRECTORY}/#{worker_name}_envs.log && rbenv exec #{worker_command}\""
+    #"cd #{BUS_DIRECTORY} && #{worker_command}"
+    "cd #{BUS_DIRECTORY} && echo `env` > #{LOG_DIRECTORY}/#{worker_name}_envs.log && rbenv exec #{worker_command}"
+    # "cd #{BUS_DIRECTORY} && export RBENV_GEMSETS=`cat #{BUS_DIRECTORY}/.rbenv-gemsets` && echo `env` > #{LOG_DIRECTORY}/#{worker_name}_envs.log && #{worker_command}"
 end
 
 def define_worker(app, worker_name, directory, worker_command, watch_kids = false)
@@ -36,6 +38,7 @@ def define_worker(app, worker_name, directory, worker_command, watch_kids = fals
     if watch_kids
       process.monitor_children do |child_process|
         child_process.stop_command = "/bin/kill -9 {{PID}}"
+        child_process.checks :flapping, :times => 5, :within => 5.seconds
       end
     end
   end
@@ -45,4 +48,6 @@ Bluepill.application("hbx_enterprise", :log_file => BLUEPILL_LOG) do |app|
   app.uid = "nginx"
   app.gid = "nginx"
 
+  define_worker(app, "qhp_selected_listener", BUS_DIRECTORY, "padrino r app/amqp/qhp_selected_listener.rb", true)
+  define_worker(app, "qhp_selected_scaler", BUS_DIRECTORY, "padrino r app/amqp/qhp_selected_scaler.rb")
 end
