@@ -8,4 +8,6 @@ options = {
   "max_duration" => 60
 }
 
+puts options["pid_file"].inspect
+
 Scaley::RabbitRunner.new(options).run
