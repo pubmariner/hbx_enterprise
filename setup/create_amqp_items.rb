@@ -11,7 +11,7 @@ class SetupAmqpTasks
   end
 
   def exchange(e_type, name)
-    @ch.send(e_type.to_sym, name)
+    @ch.send(e_type.to_sym, name, {:durable => true})
   end
 
   def logging_queue(ec, name)
