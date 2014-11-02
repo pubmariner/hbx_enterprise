@@ -7,7 +7,7 @@ module Listeners
 
     def validate(delivery_info, properties, payload)
 
-      if properties.event_name.blank?
+      if properties.headers["event_name"].blank?
         add_error("Event name to is empty.")
       end
 
@@ -33,7 +33,7 @@ module Listeners
       reply_to = properties.reply_to
       eg_id = properties.headers["enrollment_group_id"]
 
-      market_type_value = market_type(properties.event_name)
+      market_type_value = market_type(properties.headers["event_name"])
       enrollment_request_type = Services::RetrieveDemographics.new(eg_id).enrollment_request_type
 
       if market_type_value == :individual && enrollment_request_type == :renewal
