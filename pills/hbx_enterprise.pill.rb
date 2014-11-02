@@ -37,7 +37,7 @@ def define_worker(app, worker_name, directory, worker_command, watch_kids = fals
     if watch_kids
       process.monitor_children do |child_process|
         child_process.stop_command = "/bin/kill -9 {{PID}}"
-        child_process.checks :flapping, :times => 5, :within => 5.seconds
+#        child_process.checks :flapping, :times => 5, :within => 5.seconds
       end
     end
   end

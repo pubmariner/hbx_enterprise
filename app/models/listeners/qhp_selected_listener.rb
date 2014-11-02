@@ -26,7 +26,7 @@ module Listeners
     # == Returns:
     #   The type of market :individual or :employee
     def market_type(event_name)
-      event_name.split('#').first.split(":").last.to_sym
+      Maybe.new(event_name).split('#').first.split(":").last.to_sym.value
     end
 
     def on_message(delivery_info, properties, payload)
