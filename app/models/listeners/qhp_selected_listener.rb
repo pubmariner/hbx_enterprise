@@ -21,16 +21,14 @@ module Listener
       end
     end
 
+    # == Parameters:
+    # event_name::
+    #   A string. e.g. "urn:openhbx:events:v1:individual#qhp_selected"
+    #
+    # == Returns:
+    #   The type of market :individual or :employee
     def market_type(event_name)
-      #will return :individual or :employee
       event_name.split('#').first.split(":").last.to_sym
-    end
-
-    def enrollment_request_type(eg_id, service = Services::RetrieveDemographics)
-      service_obj = service.new(eg_id)
-      return :renewal  if service_obj.renewal_flag.eql("Y")
-      return :special_enrollment if service_obj.is_special_enrollment.eql("Y")
-      return :initial_enrollment
     end
 
     def on_message(delivery_info, properties, payload)
@@ -38,19 +36,21 @@ module Listener
       eg_id = properties.headers["enrollment_group_id"]
 
       market_type_value = market_type(properties.event_name)
-      enrollment_request_type_value = enrollment_request_type(eg_id)
+      enrollment_request_type = Services::RetrieveDemographics.new(eg_id).enrollment_request_type
 
-      if market_type_value == :individual && enrollment_request_type_value == :renewal
+      if market_type_value == :individual && enrollment_request_type == :renewal
         #process
-      elsif market_type_value == :individual && enrollment_request_type_value == :special_enrollment
+        @default_exchange.publish(Proxies::RetrieveDemographicsRequest.request(eg_id), :routing_key => reply_to)
+      elsif market_type_value == :individual && enrollment_request_type == :special_enrollment
         #punt
-      elsif market_type_value == :individual && enrollment_request_type_value == :initial_enrollment
+      elsif market_type_value == :individual && enrollment_request_type == :initial_enrollment
         #Process
-      elsif market_type_value == :employee && enrollment_request_type_value == :renewal
+        @default_exchange.publish(Proxies::RetrieveDemographicsRequest.request(eg_id), :routing_key => reply_to)
+      elsif market_type_value == :employee && enrollment_request_type == :renewal
         #process
-      elsif market_type_value == :employee && enrollment_request_type_value == :special_enrollment
+      elsif market_type_value == :employee && enrollment_request_type == :special_enrollment
         #punt
-      elsif market_type_value == :employee && enrollment_request_type_value == :initial_enrollment
+      elsif market_type_value == :employee && enrollment_request_type == :initial_enrollment
         #Hold for later
       end
 
