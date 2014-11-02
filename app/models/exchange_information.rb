@@ -11,8 +11,10 @@ class ExchangeInformation
   REQUIRED_KEYS = [
     'receiver_id',
     'osb_host', 'osb_username', 'osb_password', 'osb_nonce', 'osb_created',
-    'invalid_argument_queue', 'processing_failure_queue'
+    'invalid_argument_queue', 'processing_failure_queue', 'event_exchange', 'request_exchange'
   ]
+
+  attr_reader :config
 
   # TODO: I have a feeling we may be using this pattern
   #       A LOT.  Look into extracting it if we repeat.
@@ -29,67 +31,18 @@ class ExchangeInformation
     end
   end
 
-  def receiver_id
-    @config['receiver_id']
+  def self.define_key(key)
+    define_method(key.to_sym) do
+      config[key.to_s]
+    end
+    self.instance_eval(<<-RUBYCODE)
+      def self.#{key.to_s}
+        self.instance.#{key.to_s}
+      end
+    RUBYCODE
   end
 
-  def osb_host
-    @config['osb_host']
-  end
-
-  def osb_username
-    @config['osb_username']
-  end
-
-  def osb_password
-    @config['osb_password']
-  end
-
-  def osb_nonce
-    @config['osb_nonce']
-  end
-
-  def osb_created
-    @config['osb_created']
-  end
-
-  def invalid_argument_queue 
-    @config['invalid_argument_queue']
-  end
-
-  def processing_failure_queue
-    @config['processing_failure_queue']
-  end
-
-  def self.receiver_id
-    self.instance.receiver_id
-  end
-
-  def self.osb_host
-    self.instance.osb_host
-  end
-
-  def self.osb_username
-    self.instance.osb_username
-  end
-
-  def self.osb_password
-    self.instance.osb_password
-  end
-
-  def self.osb_nonce
-    self.instance.osb_nonce
-  end
-
-  def self.osb_created
-    self.instance.osb_created
-  end
-
-  def self.invalid_argument_queue
-    self.instance.invalid_argument_queue
-  end
-
-  def self.processing_failure_queue
-    self.instance.processing_failure_queue
+  REQUIRED_KEYS.each do |k|
+    define_key k
   end
 end
