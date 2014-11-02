@@ -1,6 +1,4 @@
-QUEUE_NAME = "dc0.uat.q.recording.individual_qhp_selected"
-
-module Listener
+module Listeners
   class QhpSelectedListener < Amqp::Client
     def initialize(ch, q, dex)
       super(ch, q)
@@ -58,7 +56,10 @@ module Listener
       channel.acknowledge(delivery_info.delivery_tag, false)
     end
 
-
+    def self.queue_name
+      ec = ExchangeInformation
+      "#{ec.hbx_id}.#{ec.environment}.q.qhp_selected_handler"
+    end
 
     def self.run
       conn = Bunny.new
@@ -66,7 +67,7 @@ module Listener
       ch = conn.create_channel
       ch.prefetch(1)
       dex = ch.default_exchange
-      q = ch.queue(QUEUE_NAME, :durable => true)
+      q = ch.queue(queue_name, :durable => true)
 
       self.new(ch, q, dex).subscribe(:block => true, :manual_ack => true)
     end

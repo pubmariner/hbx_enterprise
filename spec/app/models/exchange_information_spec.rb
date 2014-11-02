@@ -7,6 +7,8 @@ shared_examples "a configuration lookup" do |key|
 end
 
 describe ExchangeInformation do
+  it_behaves_like "a configuration lookup", "hbx_id"
+  it_behaves_like "a configuration lookup", "environment"
   it_behaves_like "a configuration lookup", "receiver_id"
   it_behaves_like "a configuration lookup", 'osb_host'
   it_behaves_like "a configuration lookup", 'osb_username'
