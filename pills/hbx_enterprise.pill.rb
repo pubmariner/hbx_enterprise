@@ -45,5 +45,4 @@ Bluepill.application("hbx_enterprise", :log_file => BLUEPILL_LOG) do |app|
   app.uid = "nginx"
   app.gid = "nginx"
 
-  define_worker(app, "retrieve_demographics", BUS_DIRECTORY, "padrino r -e production app/amqp/retrieve_demographics_listener.rb", true)
 end
