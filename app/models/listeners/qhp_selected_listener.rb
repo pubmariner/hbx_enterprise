@@ -57,7 +57,7 @@ module Listeners
       end
 
       event_exchange = @channel.topic(ExchangeInformation.event_exchange, :durable => true)
-      event_exchange.publish(properties, :persistent => true, :routing_key=>routing_key)
+      event_exchange.publish(nil, :persistent => true, :routing_key=>routing_key, :headers=> properties.headers)
 
       channel.acknowledge(delivery_info.delivery_tag, false)
     end
