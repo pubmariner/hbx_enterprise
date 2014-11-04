@@ -37,22 +37,28 @@ module Listeners
       enrollment_request_type = Services::RetrieveDemographics.new(eg_id).enrollment_request_type
 
       if market_type_value == :individual && enrollment_request_type == :renewal
+        routing_key = 'enrollment.individual.renewal'
         #process
-        @default_exchange.publish(Proxies::RetrieveDemographicsRequest.request(eg_id), :routing_key => reply_to)
       elsif market_type_value == :individual && enrollment_request_type == :special_enrollment
+        routing_key = 'enrollment.individual.special_enrollment'
         #punt
       elsif market_type_value == :individual && enrollment_request_type == :initial_enrollment
+        routing_key = 'enrollment.individual.initial_enrollment'
         #Process
-        @default_exchange.publish(Proxies::RetrieveDemographicsRequest.request(eg_id), :routing_key => reply_to)
       elsif market_type_value == :employee && enrollment_request_type == :renewal
+        routing_key = 'enrollment.shop.renewal'
         #process
       elsif market_type_value == :employee && enrollment_request_type == :special_enrollment
+        routing_key = 'enrollment.shop.special_enrollment'
         #punt
       elsif market_type_value == :employee && enrollment_request_type == :initial_enrollment
-        #Hold for later
+        routing_key = 'enrollment.shop.initial_enrollment'
+       #Hold for later
       end
 
-      #@default_exchange.publish(Proxies::RetrieveDemographicsRequest.request(eg_id), :routing_key => reply_to)
+      event_exchange = @channel.topic(ExchangeInformation.event_exchange, :durable => true)
+      event_exchange.publish(nil, :persistent => true, :routing_key=>routing_key, :headers=> properties.headers)
+
       channel.acknowledge(delivery_info.delivery_tag, false)
     end
 
