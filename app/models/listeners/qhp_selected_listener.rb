@@ -11,11 +11,8 @@ module Listeners
         add_error("Event name to is empty.")
       end
 
-      if properties.reply_to.blank?
-        add_error("Reply to is empty.")
-      end
-      if properties.headers["enrollment_group_id"].blank?
-        add_error("No enrollment group id specified.")
+      if properties.headers["enrollment_group_uri"].blank?
+        add_error("No enrollment group uri is specified.")
       end
     end
 
@@ -31,7 +28,7 @@ module Listeners
 
     def on_message(delivery_info, properties, payload)
       reply_to = properties.reply_to
-      eg_id = properties.headers["enrollment_group_id"]
+      eg_id = Maybe.new(properties.headers["enrollment_group_uri"]).split(":").last.value
 
       market_type_value = market_type(properties.headers["event_name"])
       enrollment_request_type = Services::RetrieveDemographics.new(eg_id).enrollment_request_type
