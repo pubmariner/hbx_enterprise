@@ -7,6 +7,11 @@ module Services
        @xml = soap_body(enrollment_group_id)
     end
     
+    def namespaces
+      {
+        "ns1" => "http://xmlns.dhs.dc.gov/DCAS/ESB/BNS/GetPrimaryApplicantDetails/V1"
+      }
+    end
 
     private
     def soap_body(enrollment_group_id)
