@@ -38,22 +38,16 @@ module Listeners
 
       if market_type_value == :individual && enrollment_request_type == :renewal
         routing_key = 'enrollment.individual.renewal'
-        #process
       elsif market_type_value == :individual && enrollment_request_type == :special_enrollment
         routing_key = 'enrollment.individual.special_enrollment'
-        #punt
       elsif market_type_value == :individual && enrollment_request_type == :initial_enrollment
         routing_key = 'enrollment.individual.initial_enrollment'
-        #Process
       elsif market_type_value == :employee && enrollment_request_type == :renewal
         routing_key = 'enrollment.shop.renewal'
-        #process
       elsif market_type_value == :employee && enrollment_request_type == :special_enrollment
         routing_key = 'enrollment.shop.special_enrollment'
-        #punt
       elsif market_type_value == :employee && enrollment_request_type == :initial_enrollment
         routing_key = 'enrollment.shop.initial_enrollment'
-       #Hold for later
       end
 
       event_exchange = @channel.topic(ExchangeInformation.event_exchange, :durable => true)
