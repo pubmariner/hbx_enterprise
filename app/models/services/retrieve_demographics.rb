@@ -8,11 +8,11 @@ module Services
     end
 
     def is_special_enrollment
-      @xml.xpath("//ax2114:isSpecialEnrollment").text
+      @xml.xpath("//ax2114:isSpecialEnrollment", namespaces).text
     end
 
     def renewal_flag
-      @xml.xpath("//ax2114:renewalFlag").text
+      @xml.xpath("//ax2114:renewalFlag", namespaces).text
     end
 
     def market_type(event_name)
@@ -23,6 +23,12 @@ module Services
       return :renewal  if renewal_flag.eql?("Y")
       return :special_enrollment if is_special_enrollment.eql?("Y")
       return :initial_enrollment
+    end
+
+    def namespaces
+      {
+        :ax2114 => "http://struct.adapter.planmanagement.curam/xsd/preview8"
+      }
     end
 
     private
