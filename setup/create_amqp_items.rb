@@ -1,6 +1,6 @@
 class SetupAmqpTasks
   def initialize
-    conn = Bunny.new
+    conn = Bunny.new(ExchangeInformation.amqp_uri)
     conn.start
     @ch = conn.create_channel
     @ch.prefetch(1)
@@ -25,6 +25,7 @@ class SetupAmqpTasks
     queue(ec.invalid_argument_queue)
     queue(ec.processing_failure_queue)
     qsl_q = queue(Listeners::QhpSelectedListener.queue_name)
+    dep_q = queue(Listeners::DcasEnrollmentProvider.queue_name)
     emp_qhps = logging_queue(ec, "recording.ee_qhp_plan_selected")
     ind_qhps = logging_queue(ec, "recording.ind_qhp_plan_selected")
     event_ex = exchange("topic", ec.event_exchange)
@@ -33,6 +34,8 @@ class SetupAmqpTasks
     ind_qhps.bind(event_ex, :routing_key => "employer_employee.qhp_selected")
     emp_qhps.bind(event_ex, :routing_key => "individual.qhp_selected")
     qsl_q.bind(event_ex, :routing_key => "*.qhp_selected")
+    
+    dep_q.bind(direct_ex, :routing_key => "enrollment.get_by_id")
   end
 end
 
