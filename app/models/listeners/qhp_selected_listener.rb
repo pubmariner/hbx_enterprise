@@ -11,9 +11,6 @@ module Listeners
         add_error("Event name to is empty.")
       end
 
-      if properties.reply_to.blank?
-        add_error("Reply to is empty.")
-      end
       if properties.headers["enrollment_group_id"].blank?
         add_error("No enrollment group id specified.")
       end
