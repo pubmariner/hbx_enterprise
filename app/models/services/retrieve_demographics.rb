@@ -39,6 +39,17 @@ module Services
       }
     end
 
+    def responsible_party?
+      subscriber = subscriber_node
+      sub_id = subscriber.at_xpath("ax2114:subscriberID",namespace).first.text.strip
+      person_id = subscriber.at_xpath("ax2114:personID",namespace).first.text.strip
+      (person_id != subscriber_id)
+    end
+
+    def subscriber
+      subscriber_node = @xml.at_xpath("//ax2114:persons[ax2114:isPrimaryContact='Y']", namespaces)
+    end
+
     private
     def soap_body(enrollment_group_id)
       body = Proxies::RetrieveDemographicsRequest.request(enrollment_group_id)
