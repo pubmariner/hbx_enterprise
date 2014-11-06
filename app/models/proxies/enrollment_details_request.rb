@@ -1,4 +1,3 @@
-# TODO: MOVE OUT OF GLUE
 module Proxies
   class EnrollmentDetailsRequest < ::Proxies::SimpleSoapRequest
     def template(en_id)
