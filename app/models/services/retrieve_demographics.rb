@@ -25,6 +25,14 @@ module Services
       return :initial_enrollment
     end
 
+    def person_list 
+      Hash.from_xml(@xml.xpath("//ax2114:personList", namespaces).to_s)
+    end
+
+    def employer_details
+      Hash.from_xml(@xml.xpath("//ax2114:employerDetails", namespaces).to_s)
+    end
+
     def namespaces
       {
         :ax2114 => "http://struct.adapter.planmanagement.curam/xsd/preview8"
