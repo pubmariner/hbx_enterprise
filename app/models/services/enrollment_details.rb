@@ -1,10 +1,9 @@
 module Services
   class EnrollmentDetails
 
-    attr_accessor :xml
-
-    def initialize(enrollment_group_id=nil)
+    def initialize(enrollment_group_id=nil, plan_builder = Parsers::EnrollmentDetails::PlanParser)
       @xml = soap_body(enrollment_group_id) if enrollment_group_id
+      @plan_builder = plan_builder
     end
 
     def namespaces
@@ -20,22 +19,32 @@ module Services
       }
     end
 
-
-    def selected_coverage
-      @xml.xpath("//nsa:selected-coverage", namespaces).map do |node|
-
+    def plans
+      coverage_nodes.map do |node|
+        @plan_builder.build(node)
       end
     end
 
+    def selected_coverages
+      coverage_nodes
+    end
+
+    def coverage_nodes
+      @xml.xpath("//nsa:selected-coverage/selected-coverage-details", namespaces)
+    end
+
+    def signature_date
+      Maybe.new(@xml.xpath("//signature/signature-date").first).text[0..9].gsub("-", "").value
+    end
+
     def applicants
-      Hash.from_xml(@xml.xpath("//nsa:applicants", namespaces).to_s)
+      @xml.xpath("//nsa:applicants", namespaces).to_s
     end
 
     private
     def soap_body(enrollment_group_id)
       body = Proxies::EnrollmentDetailsRequest.request(enrollment_group_id)
       @xml = Nokogiri::XML(body)
-      raise @xml.namespaces.inspect 
     end
   end
 end

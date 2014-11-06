@@ -1,0 +1,34 @@
+<selected-coverage-details xmlns="">
+	<product-line>Medical</product-line>
+	<coverage-waived>false</coverage-waived>
+	<plan>
+		<plan-id>92479DC0010002</plan-id>
+		<plan-id-year>92479DC0010002-2014</plan-id-year>
+		<plan-carrier>
+			<carrier-name>Dominion Dental Services Inc</carrier-name>
+			<carrier-id>4c5e9365-7ff9-48dc-b979-2e2022ad9278</carrier-id>
+			<address-line-1>115 S Union St</address-line-1>
+			<address-line-2>Suite 300</address-line-2>
+			<city>Alexandria</city>
+			<state>VA</state>
+			<zip>22314</zip>
+			<contact-info/>
+		</plan-carrier>
+		<plan-name>Select Plan</plan-name>
+		<plan-type>HMO</plan-type>
+		<plan-tier>Dental</plan-tier>
+		<product-line>Dental</product-line>
+		<premium>30.83</premium>
+		<person-premiums>
+			<person-premium>
+				<person-id>247857</person-id>
+				<premium>14.19</premium>
+			</person-premium>
+			<person-premium>
+				<person-id>248017</person-id>
+				<premium>16.64</premium>
+			</person-premium>
+		</person-premiums>
+		<ehb-percent>71.5</ehb-percent>
+	</plan>
+</selected-coverage-details>

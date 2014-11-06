@@ -1,0 +1,34 @@
+<selected-coverage-details xmlns="">
+	<product-line>Medical</product-line>
+	<coverage-waived>false</coverage-waived>
+	<plan>
+		<plan-id>86052DC0410002-01</plan-id>
+		<plan-id-year>86052DC0410002-01-2014</plan-id-year>
+		<plan-carrier>...</plan-carrier>
+		<plan-name>BlueChoice HSA Bronze $6,000</plan-name>
+		<plan-type>HMO</plan-type>
+		<plan-tier>Bronze</plan-tier>
+		<product-line>Medical</product-line>
+		<premium>262.60</premium>
+		<ehb-premium>261.08</ehb-premium>
+		<person-premiums>
+			<person-premium>
+				<person-id>247857</person-id>
+				<premium>129.68</premium>
+			</person-premium>
+			<person-premium>
+				<person-id>248017</person-id>
+				<premium>132.92</premium>
+			</person-premium>
+		</person-premiums>
+		<ehb-percent>99.42</ehb-percent>
+		<spclst-visit>0.0</spclst-visit>
+		<urgent-care-visit>0.0</urgent-care-visit>
+		<er-visit>0.0</er-visit>
+		<generic-rx>0.0</generic-rx>
+		<preferred-brand-rx>0.0</preferred-brand-rx>
+		<non-pref-brand-rx>0.0</non-pref-brand-rx>
+		<specialty-drugs>0.0</specialty-drugs>
+		<hsa-eligible>true</hsa-eligible>
+	</plan>
+</selected-coverage-details>
