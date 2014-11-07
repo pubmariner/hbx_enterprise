@@ -15,6 +15,10 @@ shared_examples "a plan parser" do
     it "should have the right person premiums" do
       expect(subject.person_premiums).to eql(person_premiums)
     end
+
+    it "should have the right ehb_percent" do
+      expect(subject.ehb_percent).to eql(ehb_percent)
+    end   
 end
 
 describe Parsers::EnrollmentDetails::PlanParser do
@@ -35,6 +39,7 @@ describe Parsers::EnrollmentDetails::PlanParser do
     let(:person_premiums) {
       {"247857"=>"14.19", "248017"=>"16.64"}
     }
+    let(:ehb_percent) {"71.5"} 
 
     it_should_behave_like "a plan parser"
 
@@ -54,6 +59,7 @@ describe Parsers::EnrollmentDetails::PlanParser do
         "248017" => "132.92"
       }
     }
+    let(:ehb_percent) {"99.42"} 
 
     it_should_behave_like "a plan parser"
 
