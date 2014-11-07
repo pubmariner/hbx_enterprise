@@ -11,7 +11,7 @@ module Amqp
 
     def request(properties, payload, timeout = 15)
       temp_queue = channel.queue("", :exclusive => true)
-      direct_exchange = channel.direct(Exchange.request_exchange, :durable => true)
+      request_exchange = channel.direct(Exchange.request_exchange, :durable => true)
       request_exchange.publish(payload, properties.merge({ :reply_to => temp_queue.name, :persistent => true }))
       delivery_info, properties, payload = [nil, nil, nil]
       Timeout::timeout(timeout) do
