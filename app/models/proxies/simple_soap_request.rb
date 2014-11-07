@@ -9,7 +9,7 @@ module Proxies
       uri = URI.parse(endpoint)
       req = Net::HTTP::Post.new(uri.request_uri, initheader = {'Content-Type' =>'text/xml'})
       req.body = template(en_id)
-      Net::HTTP.new(uri.host, uri.port).request(req).body
+      rinse(Net::HTTP.new(uri.host, uri.port).request(req).body)
     end
 
     def osb_host
@@ -34,6 +34,10 @@ module Proxies
 
     def created
       ExchangeInformation.osb_created
+    end
+
+    def rinse(body)
+      body
     end
   end
 end
