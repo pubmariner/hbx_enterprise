@@ -1,8 +1,8 @@
 module Services
   class EnrollmentDetails
 
-    def initialize(enrollment_group_id=nil, plan_builder = Parsers::EnrollmentDetails::PlanParser)
-      @xml = soap_body(enrollment_group_id) if enrollment_group_id
+    def initialize(enrollment_group_id, plan_builder = Parsers::EnrollmentDetails::PlanParser)
+      @xml = soap_body(enrollment_group_id)
       @plan_builder = plan_builder
     end
 
