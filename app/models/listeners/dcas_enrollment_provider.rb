@@ -29,15 +29,13 @@ module Listeners
     def on_message(delivery_info, properties, payload)
       reply_to = properties.reply_to
       enrollment_group_id = properties.headers["enrollment_group_id"]
-=begin
-      retrieve_demographics = Services::RetrieveDemographics.new(enrollment_group_id)
-      enrollment_details = Services::EnrollmentDetails.new(enrollment_group_id)
-      primary_applicant_details = Services::PrimaryApplicantDetails.new(enrollment_group_id)
-=end
-      event_exchange = @channel.topic(ExchangeInformation.event_exchange, :durable => true)
-      event_exchange.publish(nil, :persistent => true, :routing_key=>routing_key, :headers=> properties.headers)
+      convert_to_cv(enrollment_group_id)
+    end
 
-      channel.acknowledge(delivery_info.delivery_tag, false)
+    def convert_to_cv(enrollment_group_id)
+      retrieve_demographics = Services::RetrieveDemographics.new(enrollment_group_id)
+      plan = Services::EnrollmentDetails.new(enrollment_group_id)
+      primary_applicant_details = Services::PrimaryApplicantDetails.new(enrollment_group_id)
     end
 
     def self.queue_name

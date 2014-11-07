@@ -29,9 +29,7 @@ module Parsers
         Maybe.new(@xml.at_xpath("plan/ehb-percent")).text.value
       end
 
-
-
-      def person_premiums
+      def person_premiums_with_ids
         results = {}
         @xml.xpath("plan/person-premiums/person-premium").each do |node|
           person_id = node.at_xpath("person-id").text
@@ -39,6 +37,15 @@ module Parsers
           results[person_id] = value
         end
         results
+      end
+
+      def person_premiums(idMapping = Services::IdMapping)
+      results = {}
+       person_premiums_with_ids.each do |person_id, premium|
+          #results[Maybe.new(idMapping.from_person_id(person_id)).value] = premium
+          results[idMapping.from_person_id(person_id)] = premium
+       end
+      results
       end
 
       def self.build(xml_node)
