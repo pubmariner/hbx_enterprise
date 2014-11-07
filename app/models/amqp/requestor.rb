@@ -24,5 +24,13 @@ module Amqp
       temp_queue.delete
       [delivery_info, properties, payload]
     end
+
+    def self.default
+      conn = Bunny.new(ExchangeInformation.amqp_uri)
+      conn.start
+      ch = conn.create_channel
+      ch.prefetch(1)
+      self.new(ch)
+    end
   end
 end
