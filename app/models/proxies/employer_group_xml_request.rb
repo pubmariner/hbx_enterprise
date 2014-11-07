@@ -15,12 +15,19 @@ module Proxies
 </soap:Body>
 </soap:Envelope>
       XMLCODE
-      puts template_string.inspect
       template_string
     end
     
     def service_location 
       "/soa-infra/services/EDI/SyncEmployerGroupXMLCmpService/syncemplyergroupxmlabcsimpl_client_ep"
+    end
+
+    def rinse(body)
+      namespace = {
+        "ns0" => "http://xmlns.oracle.com/DCAS/edi/dchealthlink.com/employer/v1",
+        "ns1" => "http://dchealthlink.com/vocabulary/20131030/employer"
+      }
+      Maybe.new(Nokogiri::XML(body).at_xpath("//ns0:GetEmployerResponse/ns1:employers", namespace)).canonicalize.value
     end
   end
 end
