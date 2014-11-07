@@ -3,21 +3,24 @@ module Proxies
     def template(fed_emp_ids)
       feins = Array(fed_emp_ids)
 
-      fein_template = feins.map { |fein| "<ns1:FEINS>#{fein}</ns1:FEINS>" }.join("\n")
+      fein_template = feins.map { |fein| "<ns1:FEIN>#{fein}</ns1:FEIN>" }.join("\n")
       template_string = <<-XMLCODE
 <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
 <soap:Body>
-<ns1:EmployerRequest xmlns:ns1="http://xmlns.oracle.com/Test/SyncEmployerGroupXMLCmpService/SYNCEmployerGroupXMLABCSImpl">
+<ns1:GetEmployerRequest xmlns:ns1="http://xmlns.oracle.com/DCAS/edi/dchealthlink.com/employer/v1">
+<ns1:FEINS>
 #{fein_template}
-</ns1:EmployerRequest>
+</ns1:FEINS>
+</ns1:GetEmployerRequest>
 </soap:Body>
 </soap:Envelope>
       XMLCODE
+      puts template_string.inspect
       template_string
     end
     
     def service_location 
-      "/soa-infra/services/EDI/SyncEmployerGroupXMLCmpService/syncemployergroupxmlabcsimpl_client_ep"
+      "/soa-infra/services/EDI/SyncEmployerGroupXMLCmpService/syncemplyergroupxmlabcsimpl_client_ep"
     end
   end
 end
