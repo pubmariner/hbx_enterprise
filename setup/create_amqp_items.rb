@@ -26,6 +26,7 @@ class SetupAmqpTasks
     queue(ec.processing_failure_queue)
     qsl_q = queue(Listeners::QhpSelectedListener.queue_name)
     dep_q = queue(Listeners::DcasEnrollmentProvider.queue_name)
+    ge_q = queue(Listeners::EmployerGroupXmlListener.queue_name)
     emp_qhps = logging_queue(ec, "recording.ee_qhp_plan_selected")
     ind_qhps = logging_queue(ec, "recording.ind_qhp_plan_selected")
     event_ex = exchange("topic", ec.event_exchange)
@@ -36,6 +37,7 @@ class SetupAmqpTasks
     qsl_q.bind(event_ex, :routing_key => "*.qhp_selected")
     
     dep_q.bind(direct_ex, :routing_key => "enrollment.get_by_id")
+    ge_q.bind(direct_ex, :routing_key => "employer.get_by_feins")
   end
 end
 

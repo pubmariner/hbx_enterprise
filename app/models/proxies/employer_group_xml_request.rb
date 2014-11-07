@@ -15,7 +15,6 @@ module Proxies
 </soap:Body>
 </soap:Envelope>
       XMLCODE
-      puts template_string.inspect
       template_string
     end
     
