@@ -16,7 +16,6 @@ module Listeners
       begin
         data = JSON.load(payload)
         response_body = Proxies::EmployerGroupXmlRequest.request(data)
-        puts response_body.inspect
         channel.default_exchange.publish(response_body, response_headers.merge(:headers => {:status => "200"}))
       rescue => e
         channel.default_exchange.publish(e.inspect, response_headers.merge(:headers => {:status => "422"}))
