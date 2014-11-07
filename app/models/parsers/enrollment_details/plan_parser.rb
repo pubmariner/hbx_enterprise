@@ -22,6 +22,15 @@ module Parsers
         Maybe.new(@xml.at_xpath("plan/premium")).text.value
       end
 
+      def carrier
+      end
+
+      def ehb_percent
+        Maybe.new(@xml.at_xpath("plan/ehb-percent")).text.value
+      end
+
+
+
       def person_premiums
         results = {}
         @xml.xpath("plan/person-premiums/person-premium").each do |node|
