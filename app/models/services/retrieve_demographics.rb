@@ -1,10 +1,41 @@
 module Services
   class RetrieveDemographics
-
+    SEP_REASONS = {
+      "seri26001" => "urn:dc0:terms:v1:qualifying_life_event#lost_access_to_mec",
+      "seri26004" => "urn:dc0:terms:v1:qualifying_life_event#marriage",
+      "seri26005" => "urn:dc0:terms:v1:qualifying_life_event#birth",
+      "seri26006" => "urn:dc0:terms:v1:qualifying_life_event#adoption",
+      "seri26007" => "urn:dc0:terms:v1:qualifying_life_event#marriage",
+      "seri26008" => "urn:dc0:terms:v1:qualifying_life_event#foster_care",
+      "seri26009" => "urn:dc0:terms:v1:qualifying_life_event#immigration_status_change",
+      "seri26010" => "urn:dc0:terms:v1:qualifying_life_event#enrollment_error_or_misconduct_hbx",
+      "seri26011" => "urn:dc0:terms:v1:qualifying_life_event#contract_violation",
+      "seri26012" => "urn:dc0:terms:v1:qualifying_life_event#eligibility_change_assistance",
+      "seri26013" => "urn:dc0:terms:v1:qualifying_life_event#location_change",
+      "seri26014" => "urn:dc0:terms:v1:qualifying_life_event#qualified_native_american",
+      "seri26015" => "urn:dc0:terms:v1:qualifying_life_event#enrollment_error_or_misconduct_non_hbx",
+      "seri26016" => "urn:dc0:terms:v1:qualifying_life_event#enrollment_error_or_misconduct_issuer",
+      "seri26017" => "urn:dc0:terms:v1:qualifying_life_event#eligibility_change_medicaid_ineligible",
+      "seri26018" => "urn:dc0:terms:v1:qualifying_life_event#eligibility_change_employer_ineligible",
+      "seri26019" => "urn:dc0:terms:v1:qualifying_life_event#exceptional_circumstances_natural_disaster",
+      "seri26020" => "urn:dc0:terms:v1:qualifying_life_event#exceptional_circumstances_medical_emergency",
+      "seri26021" => "urn:dc0:terms:v1:qualifying_life_event#exceptional_circumstances_system_outage",
+      "seri26022" => "urn:dc0:terms:v1:qualifying_life_event#exceptional_circumstances_domestic_abuse",
+      "seri26023" => "urn:dc0:terms:v1:qualifying_life_event#exceptional_circumstances_hardship_exemption",
+      "seri26024" => "urn:dc0:terms:v1:qualifying_life_event#exceptional_circumstances_civic_service",
+      "seri26025" => "urn:dc0:terms:v1:qualifying_life_event#lost_access_to_mec",
+      "seri26026" => "urn:dc0:terms:v1:qualifying_life_event#divorce",
+      "seri26027" => "urn:dc0:terms:v1:qualifying_life_event#marriage",
+      "seri26028" => "urn:dc0:terms:v1:qualifying_life_event#exceptional_circumstances",
+      "seri26029" => "urn:dc0:terms:v1:qualifying_life_event#termination_of_benefits",
+      "seri26030" => "urn:dc0:terms:v1:qualifying_life_event#termination_of_benefits",
+      "seri26032" => "urn:dc0:terms:v1:qualifying_life_event#divorce",
+      "seri26034" => "urn:dc0:terms:v1:qualifying_life_event#divorce"
+    }
     attr_accessor :xml
 
     def initialize(enrollment_group_id=nil)
-       @xml = soap_body(enrollment_group_id) if enrollment_group_id
+      @xml = soap_body(enrollment_group_id) if enrollment_group_id
     end
 
     def sep_reason
@@ -35,7 +66,8 @@ module Services
     def sep_reason
       return SEP_REASONS["renewal"] if renewal?
       return SEP_REASONS["initial_enrollment"] unless special_enrollment?
-      return "NEED SEP MAP"
+      node = Maybe.new(@xml.at_xpath("//ax2114:sepReason", namespaces))
+      SEP_REASONS[node.text.strip.downcase.value]
     end
 
     def person_list 
