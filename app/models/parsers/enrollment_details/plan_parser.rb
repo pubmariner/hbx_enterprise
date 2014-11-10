@@ -22,14 +22,27 @@ module Parsers
         Maybe.new(@xml.at_xpath("plan/premium")).text.value
       end
 
-      def carrier
+      def carrier_display_name
+        Maybe.new(@xml.at_xpath("plan/plan-carrier/carrier-name")).text.value
+      end
+
+      def carrier_active
+        true
+      end
+
+      def benefit_coverage_name_type
+        "urn:openhbx:terms:v1:benefit_coverage##{Maybe.new(@xml.at_xpath("plan/product-line")).text.downcase.value}"
+      end
+
+      def metal_level
+        "urn:openhbx:terms:v1:plan_metal_level##{Maybe.new(@xml.at_xpath("plan/plan-tier")).text.downcase.value}"
       end
 
       def ehb_percent
         Maybe.new(@xml.at_xpath("plan/ehb-percent")).text.value
       end
 
-      def person_premiums_with_ids
+      def person_premiums_with_person_ids
         results = {}
         @xml.xpath("plan/person-premiums/person-premium").each do |node|
           person_id = node.at_xpath("person-id").text
@@ -41,7 +54,7 @@ module Parsers
 
       def person_premiums(idMapping = Services::IdMapping)
       results = {}
-       person_premiums_with_ids.each do |person_id, premium|
+       person_premiums_with_person_ids.each do |person_id, premium|
           #results[Maybe.new(idMapping.from_person_id(person_id)).value] = premium
           results[idMapping.from_person_id(person_id)] = premium
        end
