@@ -26,12 +26,16 @@ module Listeners
       Maybe.new(event_name).split('#').first.split(":").last.to_sym.value
     end
 
+    # TODO: Parse out sep reason
     def on_message(delivery_info, properties, payload)
       reply_to = properties.reply_to
       eg_id = Maybe.new(properties.headers["enrollment_group_uri"]).split(":").last.value
 
       market_type_value = market_type(properties.headers["event_name"])
-      enrollment_request_type = Services::RetrieveDemographics.new(eg_id).enrollment_request_type
+      rd_service = Services::RetrieveDemographics.new(eg_id)
+      enrollment_request_type = rd_service.enrollment_request_type
+      qualifying_event_uri = rd_service.sep_reason
+      routing_key = ""
 
       if market_type_value == :individual && enrollment_request_type == :renewal
         routing_key = 'enrollment.individual.renewal'
@@ -48,7 +52,13 @@ module Listeners
       end
 
       event_exchange = @channel.topic(ExchangeInformation.event_exchange, :durable => true)
-      event_exchange.publish(nil, :persistent => true, :routing_key=>routing_key, :headers=> properties.headers)
+      event_exchange.publish(
+        nil,
+        :persistent => true,
+        :routing_key=> routing_key,
+        :headers => 
+          properties.headers.to_hash.merge(:qualifying_reason_uri => qualifying_event_uri)
+      )
 
       channel.acknowledge(delivery_info.delivery_tag, false)
     end
