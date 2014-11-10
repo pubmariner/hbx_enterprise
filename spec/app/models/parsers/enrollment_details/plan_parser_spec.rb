@@ -24,7 +24,20 @@ shared_examples "a plan parser" do
 
     it "should have the right ehb_percent" do
       expect(subject.ehb_percent).to eql(ehb_percent)
-    end   
+    end
+
+    it "should have the right carrier name" do
+      expect(subject.carrier_display_name).to eql(carrier_display_name)
+    end
+
+    it "should have the right carrier active" do
+      expect(subject.carrier_active).to eql(carrier_active)
+    end
+
+    it "should have the right metal level" do
+      expect(subject.metal_level).to eql(metal_level)
+    end
+
 end
 
 describe Parsers::EnrollmentDetails::PlanParser do
@@ -52,8 +65,11 @@ describe Parsers::EnrollmentDetails::PlanParser do
     let(:person_premiums) {
       {"ret23eretret34324324"=>"14.19", "fsf43egeretret324324"=>"16.64"}
     }
-    let(:ehb_percent) {"71.5"} 
-
+    let(:ehb_percent) {"71.5"}
+    let(:carrier_display_name) {"Dominion Dental Services Inc"}
+    let(:carrier_active) { true }
+    let(:benefit_coverage_name_type) {"urn:openhbx:terms:v1:benefit_coverage#dental"}
+    let(:metal_level) {"urn:openhbx:terms:v1:plan_metal_level#dental"}
     it_should_behave_like "a plan parser"
 
     it "should be a dental plan" do
@@ -77,7 +93,11 @@ describe Parsers::EnrollmentDetails::PlanParser do
       {"ret23eretret34324324"=>"129.68", "fsf43egeretret324324"=>"132.92"}
     }
 
-    let(:ehb_percent) {"99.42"} 
+    let(:ehb_percent) {"99.42"}
+    let(:carrier_display_name) {"Nice Insurance"}
+    let(:carrier_active) {true}
+    let(:benefit_coverage_name_type) {"urn:openhbx:terms:v1:benefit_coverage#health"}
+    let(:metal_level) {"urn:openhbx:terms:v1:plan_metal_level#bronze"}
 
     it_should_behave_like "a plan parser"
 
