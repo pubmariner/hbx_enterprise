@@ -1,0 +1,70 @@
+module Parsers
+    class PersonParser
+      def initialize(node)
+        @xml = node
+      end
+
+      def namespaces
+        {
+            :ax2114 => "http://struct.adapter.planmanagement.curam/xsd/preview8"
+        }
+      end
+
+      def person_surname
+        Maybe.new(@xml.at_xpath("ax2114:lastName", namespaces)).text.value
+      end
+
+      def person_given_name
+        Maybe.new(@xml.at_xpath("ax2114:firstName", namespaces)).text.value
+      end
+
+      def address_line_1
+        Maybe.new(@xml.at_xpath("ax2114:address/ax2114:addressLine1", namespaces)).text.value
+      end
+
+      def address_line_2
+        Maybe.new(@xml.at_xpath("ax2114:address/ax2114:addressLine2", namespaces)).text.value
+      end
+
+      def city
+        Maybe.new(@xml.at_xpath("ax2114:address/ax2114:city", namespaces)).text.value
+      end
+
+      def country
+        Maybe.new(@xml.at_xpath("ax2114:address/ax2114:country", namespaces)).text.value
+      end
+
+      def state
+        Maybe.new(@xml.at_xpath("ax2114:address/ax2114:state", namespaces)).text.value
+      end
+
+      def zip
+        Maybe.new(@xml.at_xpath("ax2114:address/ax2114:zip", namespaces)).text.value
+      end
+
+      def sex
+        Maybe.new(@xml.at_xpath("ax2114:gender", namespaces)).text.value
+      end
+
+      def native_american
+        Maybe.new(@xml.at_xpath("ax2114:nativeAmerican", namespaces)).text.value
+      end
+
+      def ssn
+        Maybe.new(@xml.at_xpath("ax2114:ssn", namespaces)).text.value
+      end
+
+      def is_primary_contact
+        Maybe.new(@xml.at_xpath("ax2114:isPrimaryContact", namespaces)).text.value
+      end
+
+      def birth_date
+        Maybe.new(@xml.at_xpath("ax2114:dateOfBirth", namespaces)).text.value
+      end
+
+
+      def self.build(xml_node)
+        self.new(xml_node)
+      end
+    end
+end
