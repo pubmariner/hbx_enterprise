@@ -1,6 +1,8 @@
 module Services
   class RetrieveDemographics
     SEP_REASONS = {
+      "renewal" => "urn:dc0:terms:v1:qualifying_life_event#renewal",
+      "initial_enrollment" => "urn:dc0:terms:v1:qualifying_life_event#initial_enrollment",
       "seri26001" => "urn:dc0:terms:v1:qualifying_life_event#lost_access_to_mec",
       "seri26004" => "urn:dc0:terms:v1:qualifying_life_event#marriage",
       "seri26005" => "urn:dc0:terms:v1:qualifying_life_event#birth",
@@ -30,7 +32,20 @@ module Services
       "seri26029" => "urn:dc0:terms:v1:qualifying_life_event#termination_of_benefits",
       "seri26030" => "urn:dc0:terms:v1:qualifying_life_event#termination_of_benefits",
       "seri26032" => "urn:dc0:terms:v1:qualifying_life_event#divorce",
-      "seri26034" => "urn:dc0:terms:v1:qualifying_life_event#divorce"
+      "seri26034" => "urn:dc0:terms:v1:qualifying_life_event#divorce",
+      "sere26001" => "urn:dc0:terms:v1:qualifying_life_event#birth",
+      "sere26002" => "urn:dc0:terms:v1:qualifying_life_event#adoption",
+      "sere26003" => "urn:dc0:terms:v1:qualifying_life_event#marriage", 
+      "sere26004" => "urn:dc0:terms:v1:qualifying_life_event#marriage",
+      "sere26005" => "urn:dc0:terms:v1:qualifying_life_event#lost_access_to_mec",
+      "sere26008" => "urn:dc0:terms:v1:qualifying_life_event#termination_of_benefits",
+      "sere26009" => "urn:dc0:terms:v1:qualifying_life_event#termination_of_benefits",
+      "sere26010" => "urn:dc0:terms:v1:qualifying_life_event#termination_of_benefits",
+      "sere26011" => "urn:dc0:terms:v1:qualifying_life_event#divorce",
+      "sere26012" => "urn:dc0:terms:v1:qualifying_life_event#death",
+      "sere26013" => "urn:dc0:terms:v1:qualifying_life_event#location_change",
+      "sere26014" => "urn:dc0:terms:v1:qualifying_life_event#exceptional_circumstances",
+      "sere26015" => "urn:dc0:terms:v1:qualifying_life_event#contract_violation"
     }
     attr_accessor :xml
 
@@ -43,7 +58,6 @@ module Services
     end
 
     def special_enrollment?
-      # TODO: make an ? method
       node = Maybe.new(@xml.at_xpath("//ax2114:isSpecialEnrollment", namespaces))
       node.text.strip.downcase.value == "y"
     end
