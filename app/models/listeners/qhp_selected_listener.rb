@@ -36,13 +36,13 @@ module Listeners
       if market_type_value == :individual && enrollment_request_type == :renewal
         routing_key = 'enrollment.individual.renewal'
       elsif market_type_value == :individual && enrollment_request_type == :special_enrollment
-        routing_key = 'enrollment.individual.special_enrollment'
+        routing_key = 'enrollment.individual.sep'
       elsif market_type_value == :individual && enrollment_request_type == :initial_enrollment
         routing_key = 'enrollment.individual.initial_enrollment'
       elsif market_type_value == :employee && enrollment_request_type == :renewal
         routing_key = 'enrollment.shop.renewal'
       elsif market_type_value == :employee && enrollment_request_type == :special_enrollment
-        routing_key = 'enrollment.shop.special_enrollment'
+        routing_key = 'enrollment.shop.sep'
       elsif market_type_value == :employee && enrollment_request_type == :initial_enrollment
         routing_key = 'enrollment.shop.initial_enrollment'
       end
