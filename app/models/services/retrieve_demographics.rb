@@ -7,12 +7,19 @@ module Services
        @xml = soap_body(enrollment_group_id) if enrollment_group_id
     end
 
-    def is_special_enrollment
-      @xml.xpath("//ax2114:isSpecialEnrollment", namespaces).text
+    def sep_reason
+      # TODO: Extract SEP reason
     end
 
-    def renewal_flag
-      @xml.xpath("//ax2114:renewalFlag", namespaces).text
+    def special_enrollment?
+      # TODO: make an ? method
+      node = Maybe.new(@xml.at_xpath("//ax2114:isSpecialEnrollment", namespaces))
+      node.text.strip.downcase.value == "y"
+    end
+
+    def renewal?
+      node = Maybe.new(@xml.at_xpath("//ax2114:renewalFlag", namespaces))
+      node.text.strip.downcase.value == "y"
     end
 
     def market_type(event_name)
@@ -20,9 +27,15 @@ module Services
     end
 
     def enrollment_request_type
-      return :renewal  if renewal_flag.eql?("Y")
-      return :special_enrollment if is_special_enrollment.eql?("Y")
+      return :renewal  if renewal?
+      return :special_enrollment if special_enrollment?
       return :initial_enrollment
+    end
+
+    def sep_reason
+      return SEP_REASONS["renewal"] if renewal?
+      return SEP_REASONS["initial_enrollment"] unless special_enrollment?
+      return "NEED SEP MAP"
     end
 
     def person_list 

@@ -26,6 +26,7 @@ module Listeners
       Maybe.new(event_name).split('#').first.split(":").last.to_sym.value
     end
 
+    # TODO: Parse out sep reason
     def on_message(delivery_info, properties, payload)
       reply_to = properties.reply_to
       eg_id = Maybe.new(properties.headers["enrollment_group_uri"]).split(":").last.value
