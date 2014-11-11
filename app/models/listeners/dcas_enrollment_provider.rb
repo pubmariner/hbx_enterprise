@@ -35,7 +35,7 @@ module Listeners
     def convert_to_cv(enrollment_group_id)
       retrieve_demographics = Services::RetrieveDemographics.new(enrollment_group_id)
       plan = Services::EnrollmentDetails.new(enrollment_group_id)
-      primary_applicant_details = Services::PrimaryApplicantDetails.new(enrollment_group_id)
+      primary_applicant_details = Services::PrimaryApplicantDetails.new(enrollment_group_id) if retrieve_demographics.responsible_party?
     end
 
     def self.queue_name
