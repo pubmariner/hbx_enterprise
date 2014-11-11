@@ -43,7 +43,16 @@ module Parsers
       end
 
       def sex
-        Maybe.new(@xml.at_xpath("ax2114:gender", namespaces)).text.value
+        gender = Maybe.new(@xml.at_xpath("ax2114:gender", namespaces)).text.value
+
+        case gender.downcase
+          when "sx1"
+            return "urn:openhbx:terms:v1:gender#male"
+          when "sx2"
+            return "urn:openhbx:terms:v1:gender#female"
+          else
+            return "urn:openhbx:terms:v1:gender#unknown"
+        end
       end
 
       def native_american

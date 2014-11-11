@@ -58,6 +58,10 @@ require 'spec_helper'
       "19850101"
     }
 
+    let(:sex){
+      "urn:openhbx:terms:v1:gender#male"
+    }
+
     it "it returns the surname" do
       expect(subject.person_surname).to eql(person_surname)
     end
@@ -90,12 +94,12 @@ require 'spec_helper'
       expect(subject.state).to eql(state)
     end
 
-    it "it returns the country" do
-      expect(subject.country).to eql(country)
-    end
-
     it "it returns the zip" do
       expect(subject.zip).to eql(zip)
+    end
+
+    it "it returns the sex" do
+      expect(subject.sex).to eql(sex)
     end
 
   end
