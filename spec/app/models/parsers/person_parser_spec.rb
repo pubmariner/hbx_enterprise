@@ -43,7 +43,7 @@ require 'spec_helper'
     }
 
     let(:address){
-      {address_line_1:"609 H St NE", address_line_2:"", city:"Washington", state:"DC", zip:"20002"}
+      {address_line_1:"609 H St NE", address_line_2:"", city:"Washington", location_state:"urn:openhbx:terms:v1:us_state#district_of_columbia", zip:"20002"}
     }
 
     it "it returns the surname" do
