@@ -49,8 +49,15 @@ module Services
     }
     attr_accessor :xml
 
-    def initialize(enrollment_group_id=nil)
+    def initialize(enrollment_group_id=nil, person_builder = Parsers::PersonParser)
       @xml = soap_body(enrollment_group_id) if enrollment_group_id
+      @person_builder = person_builder
+    end
+
+    def persons
+      person_nodes.map do |node|
+        @person_builder.build(node)
+      end
     end
 
     def sep_reason
@@ -84,8 +91,8 @@ module Services
       SEP_REASONS[node.text.strip.downcase.value]
     end
 
-    def person_list 
-      Hash.from_xml(@xml.xpath("//ax2114:personList", namespaces).to_s)
+    def person_nodes
+      @xml.xpath("//ax2114:persons", namespaces)
     end
 
     def employer_details

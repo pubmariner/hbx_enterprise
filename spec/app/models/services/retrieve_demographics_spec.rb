@@ -13,11 +13,11 @@ XMLBODY
   end
 
   it 'should should return the isSpecialEnrollment ' do
-    expect(@retrieve_demographics.is_special_enrollment).to eql('N')
+    expect(@retrieve_demographics.special_enrollment?).to eql(false)
   end
 
-  it 'should should return the renewalFlag ' do
-    expect(@retrieve_demographics.renewal_flag).to eql('N')
+  it 'should should return the renewal?' do
+    expect(@retrieve_demographics.renewal?).to eql(false)
   end
 
   it 'should decide the enrollment_request_type' do
@@ -28,8 +28,16 @@ XMLBODY
     expect(@retrieve_demographics.employer_details.class).to eql(Hash)
   end
 
-  it 'should return a Hash of person List' do
-    expect(@retrieve_demographics.person_list.class).to eql(Hash)
+  it 'should return a correct number of persons' do
+    expect(@retrieve_demographics.persons.length).to eql 2
+  end
+
+  it 'on calling persons it should return array with PersonParser objects' do
+    persons = @retrieve_demographics.persons
+
+    persons.each do |p|
+      expect(p.class).to be(Parsers::PersonParser)
+    end
   end
 
 end
