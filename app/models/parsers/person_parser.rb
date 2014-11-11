@@ -23,7 +23,14 @@ module Parsers
         result[:address_line_1] = Maybe.new(@xml.at_xpath("ax2114:address/ax2114:addressLine1", namespaces)).text.value
         result[:address_line_2] =         Maybe.new(@xml.at_xpath("ax2114:address/ax2114:addressLine2", namespaces)).text.value
         result[:city] =  Maybe.new(@xml.at_xpath("ax2114:address/ax2114:city", namespaces)).text.value
-        result[:state] =  Maybe.new(@xml.at_xpath("ax2114:address/ax2114:state", namespaces)).text.value
+
+        state =  Maybe.new(@xml.at_xpath("ax2114:address/ax2114:state", namespaces)).text.value.downcase
+        if state.eql? "dc"
+          result[:location_state] = "urn:openhbx:terms:v1:us_state#district_of_columbia"
+        else
+          result[:location_state] = "urn:openhbx:terms:v1:us_state#{state}"
+        end
+
         result[:zip] =  Maybe.new(@xml.at_xpath("ax2114:address/ax2114:zip", namespaces)).text.value
         result
       end
