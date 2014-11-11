@@ -18,30 +18,6 @@ require 'spec_helper'
       "DCHIXbbb"
     }
 
-    let(:country) {
-      "DC"
-    }
-
-    let(:state) {
-      "DC"
-    }
-
-    let(:city) {
-      "Washington"
-    }
-
-    let(:zip) {
-      "20002"
-    }
-
-    let(:address_line_1) {
-      "609 H St NE"
-    }
-
-    let(:address_line_2) {
-      ""
-    }
-
     let(:native_american) {
       "false"
     }
@@ -62,6 +38,14 @@ require 'spec_helper'
       "urn:openhbx:terms:v1:gender#male"
     }
 
+    let(:phone){
+      {country_code:"", area_code:"", phone_number:"", full_phone_number:"", extension:""}
+    }
+
+    let(:address){
+      {address_line_1:"609 H St NE", address_line_2:"", city:"Washington", state:"DC", zip:"20002"}
+    }
+
     it "it returns the surname" do
       expect(subject.person_surname).to eql(person_surname)
     end
@@ -78,28 +62,16 @@ require 'spec_helper'
       expect(subject.birth_date).to eql(birth_date)
     end
 
-    it "it returns the address_line_1" do
-      expect(subject.address_line_1).to eql(address_line_1)
-    end
-
-    it "it returns the address_line_2" do
-      expect(subject.address_line_2).to eql(address_line_2)
-    end
-
-    it "it returns the city" do
-      expect(subject.city).to eql(city)
-    end
-
-    it "it returns the state" do
-      expect(subject.state).to eql(state)
-    end
-
-    it "it returns the zip" do
-      expect(subject.zip).to eql(zip)
-    end
-
     it "it returns the sex" do
       expect(subject.sex).to eql(sex)
+    end
+
+    it "it returns the phone hash" do
+      expect(subject.phone).to eql(phone)
+    end
+
+    it "return the address hash" do
+      expect(subject.address).to eql(address)
     end
 
   end

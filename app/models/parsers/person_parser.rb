@@ -18,28 +18,25 @@ module Parsers
         Maybe.new(@xml.at_xpath("ax2114:firstName", namespaces)).text.value
       end
 
-      def address_line_1
-        Maybe.new(@xml.at_xpath("ax2114:address/ax2114:addressLine1", namespaces)).text.value
+      def address
+        result = {}
+        result[:address_line_1] = Maybe.new(@xml.at_xpath("ax2114:address/ax2114:addressLine1", namespaces)).text.value
+        result[:address_line_2] =         Maybe.new(@xml.at_xpath("ax2114:address/ax2114:addressLine2", namespaces)).text.value
+        result[:city] =  Maybe.new(@xml.at_xpath("ax2114:address/ax2114:city", namespaces)).text.value
+        result[:state] =  Maybe.new(@xml.at_xpath("ax2114:address/ax2114:state", namespaces)).text.value
+        result[:zip] =  Maybe.new(@xml.at_xpath("ax2114:address/ax2114:zip", namespaces)).text.value
+        result
       end
 
-      def address_line_2
-        Maybe.new(@xml.at_xpath("ax2114:address/ax2114:addressLine2", namespaces)).text.value
-      end
-
-      def city
-        Maybe.new(@xml.at_xpath("ax2114:address/ax2114:city", namespaces)).text.value
-      end
-
-      def country
-        Maybe.new(@xml.at_xpath("ax2114:address/ax2114:country", namespaces)).text.value
-      end
-
-      def state
-        Maybe.new(@xml.at_xpath("ax2114:address/ax2114:state", namespaces)).text.value
-      end
-
-      def zip
-        Maybe.new(@xml.at_xpath("ax2114:address/ax2114:zip", namespaces)).text.value
+      def phone
+        result = {}
+        result[:country_code] =  Maybe.new(@xml.at_xpath("ax2114:phoneNumber/ax2114:countryCode", namespaces)).text.value
+        result[:area_code] = Maybe.new(@xml.at_xpath("ax2114:phoneNumber/ax2114:areaCode", namespaces)).text.value
+        result[:extension] = Maybe.new(@xml.at_xpath("ax2114:phoneNumber/ax2114:extension", namespaces)).text.value
+        result[:phone_number] = Maybe.new(@xml.at_xpath("ax2114:phoneNumber/ax2114:phoneNumber", namespaces)).text.value
+        result[:full_phone_number] = Maybe.new(@xml.at_xpath("ax2114:phoneNumber/ax2114:phoneNumber", namespaces)).text.value
+        result[:extension] = Maybe.new(@xml.at_xpath("ax2114:phoneNumber/ax2114:extension", namespaces)).text.value
+        result
       end
 
       def sex
