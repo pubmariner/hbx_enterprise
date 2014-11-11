@@ -41,8 +41,8 @@ module Parsers
         result[:area_code] = Maybe.new(@xml.at_xpath("ax2114:phoneNumber/ax2114:areaCode", namespaces)).text.value
         result[:extension] = Maybe.new(@xml.at_xpath("ax2114:phoneNumber/ax2114:extension", namespaces)).text.value
         result[:phone_number] = Maybe.new(@xml.at_xpath("ax2114:phoneNumber/ax2114:phoneNumber", namespaces)).text.value
-        result[:full_phone_number] = Maybe.new(@xml.at_xpath("ax2114:phoneNumber/ax2114:phoneNumber", namespaces)).text.value
-        result[:extension] = Maybe.new(@xml.at_xpath("ax2114:phoneNumber/ax2114:extension", namespaces)).text.value
+        result[:full_phone_number] = "#{result[:country_code]}#{result[:area_code]}#{result[:phone_number]}"
+        result[:full_phone_number] = "#{result[:full_phone_number]}x#{result[:extension]}" if result[:extension].present?
         result
       end
 
