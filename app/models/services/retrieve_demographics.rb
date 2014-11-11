@@ -2,7 +2,7 @@ module Services
   class RetrieveDemographics
     SEP_REASONS = {
       "renewal" => "urn:dc0:terms:v1:qualifying_life_event#renewal",
-      "initial_enrollment" => "urn:dc0:terms:v1:qualifying_life_event#initial_enrollment",
+      "initial_enrollment" => "urn:dc0:terms:v1:qualifying_life_event#open_enrollment",
       "seri26001" => "urn:dc0:terms:v1:qualifying_life_event#lost_access_to_mec",
       "seri26004" => "urn:dc0:terms:v1:qualifying_life_event#marriage",
       "seri26005" => "urn:dc0:terms:v1:qualifying_life_event#birth",
