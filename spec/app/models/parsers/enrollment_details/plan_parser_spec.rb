@@ -42,6 +42,10 @@ shared_examples "a plan parser" do
       expect(subject.plan_year).to eql(plan_year)
     end
 
+    it "should have the carrier id" do
+      expect(subject.carrier_id).to eql(carrier_id)
+    end
+
 end
 
 describe Parsers::EnrollmentDetails::PlanParser do
@@ -72,9 +76,12 @@ describe Parsers::EnrollmentDetails::PlanParser do
     let(:ehb_percent) {"71.5"}
     let(:carrier_display_name) {"Dominion Dental Services Inc"}
     let(:carrier_active) { true }
-    let(:benefit_coverage_name_type) {"urn:openhbx:terms:v1:benefit_coverage#dental"}
+    let(:coverage_type) {"urn:openhbx:terms:v1:benefit_coverage#dental"}
     let(:metal_level) {"urn:openhbx:terms:v1:plan_metal_level#dental"}
     let(:plan_year) {"2014"}
+    let(:carrier_id) {"4c5e9365-7ff9-48dc-b979-2e2022ad9278"}
+
+
     it_should_behave_like "a plan parser"
 
     it "should be a dental plan" do
@@ -101,9 +108,10 @@ describe Parsers::EnrollmentDetails::PlanParser do
     let(:ehb_percent) {"99.42"}
     let(:carrier_display_name) {"Nice Insurance"}
     let(:carrier_active) {true}
-    let(:benefit_coverage_name_type) {"urn:openhbx:terms:v1:benefit_coverage#health"}
+    let(:coverage_type) {"urn:openhbx:terms:v1:benefit_coverage#health"}
     let(:metal_level) {"urn:openhbx:terms:v1:plan_metal_level#bronze"}
     let(:plan_year) {"2014"}
+    let(:carrier_id) {"4c5e9365-7ff9-48dc-b979-2e2022ad9278"}
 
     it_should_behave_like "a plan parser"
 
