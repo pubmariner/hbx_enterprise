@@ -75,9 +75,43 @@ module Parsers
         Maybe.new(@xml.at_xpath("ax2114:dateOfBirth", namespaces)).text.value
       end
 
+      def subscriber?
+        !Maybe.new(@xml.at_xpath("ax2114:subscriberID", namespaces)).text.value.empty?
+      end
+
+      def begin_date
+        Maybe.new(@xml.at_xpath("ax2114:coverageStartDate", namespaces)).text.value
+      end
+
+      def end_date
+        Maybe.new(@xml.at_xpath("ax2114:coverageEndDate", namespaces)).text.value
+      end
+
+      def person_id
+        Maybe.new(@xml.at_xpath("ax2114:personID", namespaces)).text.value
+      end
+
+      def hbx_id
+       get_hbx_id
+      end
 
       def self.build(xml_node)
         self.new(xml_node)
       end
+
+      def premium_amount
+        @premium
+      end
+
+      def premium_amount=(premium)
+        @premium = premium
+      end
+
+      private
+      def get_hbx_id(idMapping = Services::IdMapping)
+        idMapping.from_person_id(person_id)
+      end
+
+
     end
 end

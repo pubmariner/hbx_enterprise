@@ -42,9 +42,13 @@ module Listeners
 
     def convert_to_cv(properties)
       @persons = @retrieve_demographics.persons
-      @plan = Services::EnrollmentDetails.new(properties.headers["enrollment_group_id"]).plans
-      @plan.market = market_type(properties.headers["event_name"])
-      @plan.broker = @retrieve_demographics.broker
+      @plans = Services::EnrollmentDetails.new(properties.headers["enrollment_group_id"]).plans
+      @plans.each do |plan|
+        plan.market = market_type(properties.headers["event_name"])
+        plan.broker = @retrieve_demographics.broker
+        plan.assign_enrollees(@persons)
+      end
+
       render "api/enrollment"
     end
 

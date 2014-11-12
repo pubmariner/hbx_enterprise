@@ -2,6 +2,8 @@ module Parsers
   module EnrollmentDetails
     class PlanParser
 
+      attr_reader :enrollees
+
       def initialize(node)
         @xml = node
         @market = ""
@@ -86,6 +88,17 @@ module Parsers
       def plan_year
         plan_id_year = Maybe.new(@xml.at_xpath("plan/plan-id-year")).text.value
         plan_id_year.split(//).last(4).join
+      end
+
+      def assign_enrollees(enrollees)
+        @enrollees = enrollees.select do |enrollee|
+          person_premiums.keys.include? enrollee.hbx_id
+        end
+
+        @enrollees.each do |enrollee|
+          enrollee.premium_amount = person_premiums[enrollee.hbx_id]
+        end
+
       end
 
 
