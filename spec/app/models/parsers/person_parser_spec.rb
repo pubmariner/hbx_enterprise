@@ -46,6 +46,8 @@ require 'spec_helper'
       {address_line_1:"609 H St NE", address_line_2:"", city:"Washington", location_state:"urn:openhbx:terms:v1:us_state#district_of_columbia", zip:"20002"}
     }
 
+    let(:subscriber) { true }
+
     it "it returns the surname" do
       expect(subject.person_surname).to eql(person_surname)
     end
@@ -72,6 +74,10 @@ require 'spec_helper'
 
     it "return the address hash" do
       expect(subject.address).to eql(address)
+    end
+
+    it "return the subscriber id" do
+      expect(subject.subscriber?).to eql(subscriber)
     end
 
   end
