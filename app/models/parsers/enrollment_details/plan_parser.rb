@@ -61,6 +61,11 @@ module Parsers
       results
       end
 
+      def plan_year
+        plan_id_year = Maybe.new(@xml.at_xpath("plan/plan-id-year")).text.value
+        plan_id_year.split(//).last(4).join
+      end
+
       def self.build(xml_node)
         self.new(xml_node)
       end

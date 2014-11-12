@@ -38,6 +38,10 @@ shared_examples "a plan parser" do
       expect(subject.metal_level).to eql(metal_level)
     end
 
+    it "should have the right metal level" do
+      expect(subject.plan_year).to eql(plan_year)
+    end
+
 end
 
 describe Parsers::EnrollmentDetails::PlanParser do
@@ -70,6 +74,7 @@ describe Parsers::EnrollmentDetails::PlanParser do
     let(:carrier_active) { true }
     let(:benefit_coverage_name_type) {"urn:openhbx:terms:v1:benefit_coverage#dental"}
     let(:metal_level) {"urn:openhbx:terms:v1:plan_metal_level#dental"}
+    let(:plan_year) {"2014"}
     it_should_behave_like "a plan parser"
 
     it "should be a dental plan" do
@@ -98,6 +103,7 @@ describe Parsers::EnrollmentDetails::PlanParser do
     let(:carrier_active) {true}
     let(:benefit_coverage_name_type) {"urn:openhbx:terms:v1:benefit_coverage#health"}
     let(:metal_level) {"urn:openhbx:terms:v1:plan_metal_level#bronze"}
+    let(:plan_year) {"2014"}
 
     it_should_behave_like "a plan parser"
 
