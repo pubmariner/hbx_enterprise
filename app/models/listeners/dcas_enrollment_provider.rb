@@ -29,13 +29,22 @@ module Listeners
     def on_message(delivery_info, properties, payload)
       reply_to = properties.reply_to
       enrollment_group_id = properties.headers["enrollment_group_id"]
+
+      @retrieve_demographics = Services::RetrieveDemographics.new(enrollment_group_id)
+      if @retrieve_demographics.responsible_party?
+        @channel.default_exchange.publish(payload, error_properties(properties.headers["routing_key"], delivery_info, properties))
+      end
+
+
       convert_to_cv(enrollment_group_id)
     end
 
     def convert_to_cv(enrollment_group_id)
-      retrieve_demographics = Services::RetrieveDemographics.new(enrollment_group_id)
-      plan = Services::EnrollmentDetails.new(enrollment_group_id)
-      primary_applicant_details = Services::PrimaryApplicantDetails.new(enrollment_group_id) if retrieve_demographics.responsible_party?
+
+
+      persons = @retrieve_demographics.persons
+      plan = Services::EnrollmentDetails.new(enrollment_group_id).plans
+
     end
 
     def self.queue_name
