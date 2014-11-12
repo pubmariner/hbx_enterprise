@@ -4,6 +4,28 @@ module Parsers
 
       def initialize(node)
         @xml = node
+        @market = ""
+        @broker = {}
+      end
+
+      def market=(market_type)
+        @market = market_type
+      end
+
+      def market
+        @market
+      end
+
+      def broker=(broker)
+        @broker = broker
+      end
+
+      def broker
+        @broker
+      end
+
+      def has_broker?
+        !@broker.empty?
       end
 
       def plan_name
@@ -65,6 +87,7 @@ module Parsers
         plan_id_year = Maybe.new(@xml.at_xpath("plan/plan-id-year")).text.value
         plan_id_year.split(//).last(4).join
       end
+
 
       def self.build(xml_node)
         self.new(xml_node)

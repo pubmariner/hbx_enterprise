@@ -40,4 +40,8 @@ XMLBODY
     end
   end
 
+  it 'should return the broker' do
+    expect(@retrieve_demographics.broker).to eq ({})
+  end
+
 end
