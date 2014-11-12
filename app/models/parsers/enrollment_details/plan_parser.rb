@@ -54,7 +54,7 @@ module Parsers
         true
       end
 
-      def benefit_coverage_name_type
+      def coverage_type
         "urn:openhbx:terms:v1:benefit_coverage##{Maybe.new(@xml.at_xpath("plan/product-line")).text.downcase.value}"
       end
 
@@ -99,6 +99,10 @@ module Parsers
           enrollee.premium_amount = person_premiums[enrollee.hbx_id]
         end
 
+      end
+
+      def carrier_id
+        Maybe.new(@xml.at_xpath("plan/plan-carrier/carrier-id")).text.value
       end
 
 
