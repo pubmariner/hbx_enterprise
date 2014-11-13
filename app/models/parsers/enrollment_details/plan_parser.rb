@@ -108,7 +108,7 @@ module Parsers
           person_premiums.keys.include? enrollee.hbx_id
         end
 
-        @enrollees.each do |enrollee|
+        @enrollees.map do |enrollee|
           enrollee.premium_amount = person_premiums[enrollee.hbx_id]
         end
       end
