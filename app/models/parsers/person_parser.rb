@@ -33,7 +33,7 @@ module Parsers
       result[:address_line_2] = Maybe.new(@xml.at_xpath("ax2114:address/ax2114:addressLine2", namespaces)).text.value
 
       if Maybe.new(@xml.at_xpath("ax2114:address/ax2114:suiteNumber", namespaces)).text.value.present?
-        result[:address_line_2] = result[:address_line_2] + " Apt " + Maybe.new(@xml.at_xpath("ax2114:address/ax2114:suiteNumber", namespaces)).text.value
+        result[:address_line_2] = result[:address_line_2] + "Apt " + Maybe.new(@xml.at_xpath("ax2114:address/ax2114:suiteNumber", namespaces)).text.value
       end
 
       result[:city] = Maybe.new(@xml.at_xpath("ax2114:address/ax2114:city", namespaces)).text.value
