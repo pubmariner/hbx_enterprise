@@ -36,6 +36,7 @@ module Listeners
         @channel.default_exchange.publish(payload, error_properties(properties.headers["routing_key"], delivery_info, properties))
       end
 
+      properties.headers.to_hash.merge(:qualifying_reason_uri => @retrieve_demographics.sep_reason)
 
       response_cv = convert_to_cv(properties, @retrieve_demographics)
       @channel.default_exchange.publish(response_cv, properties)
