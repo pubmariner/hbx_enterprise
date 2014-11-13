@@ -42,12 +42,13 @@ module Listeners
     end
 
     def convert_to_cv(properties, retrieve_demo)
-      @persons = retrieve_demo.persons
+      id_map = Services::IdMapping.from_person_ids(retrieve_demo.person_ids)
+      @persons = retrieve_demo.persons(id_map)
       @plans = Services::EnrollmentDetails.new(properties.headers["enrollment_group_id"]).plans
       @plans.each do |plan|
         plan.market = market_type(properties.headers["event_name"])
         plan.broker = retrieve_demo.broker
-        plan.assign_enrollees(@persons)
+        plan.assign_enrollees(@persons, id_map)
       end
 
       @renderer.partial("api/enrollment", {:engine => :haml, :locals => {:policies => @plans}})

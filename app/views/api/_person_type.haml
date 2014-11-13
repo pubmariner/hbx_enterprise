@@ -1,4 +1,4 @@
-%id= person.hbx_id
+%id= person.person_id
 %person_name= partial 'api/person_name', :locals => { :person => person }
 - address = person.address
 - if address.present?
@@ -27,4 +27,4 @@
       %extension= phone[:extension]
     - if phone[:phone_number].present?
       %phone_number= phone.phone_number
-    %full_phone_number= phone[:full_phone_number]
+      %full_phone_number= phone[:full_phone_number]
