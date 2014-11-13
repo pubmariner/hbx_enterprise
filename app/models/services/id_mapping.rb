@@ -23,8 +23,8 @@ module Services
       xml = Nokogiri::XML(response)
       map = {}
       xml.xpath("//hbx_res:DCASIDPersonIDList", XML_NSES).each do |node|
-        p_id = node.xpath("//hbx_res:PersonID", XML_NSES).first.text
-        hbx_id = node.xpath("//hbx_res:DCASID", XML_NSES).first.text
+        p_id = node.xpath("hbx_res:PersonID", XML_NSES).first.text
+        hbx_id = node.xpath("hbx_res:DCASID", XML_NSES).first.text
         map[p_id] = hbx_id
       end
       map

@@ -1,4 +1,5 @@
-%id= person.hbx_id
+%id
+  %id= person.person_id
 %person_name= partial 'api/person_name', :locals => { :person => person }
 - address = person.address
 - if address.present?
@@ -16,7 +17,7 @@
     %type="urn:openhbx:terms:v1:email_type#home"
     %email_address= person.email
 - phone = person.phone
-- if phone.present?
+- if phone[:full_phone_number].present?
   %phones
     %type="urn:openhbx:terms:v1:phone_type#home"
     - if phone[:country_code].present?
@@ -27,4 +28,4 @@
       %extension= phone[:extension]
     - if phone[:phone_number].present?
       %phone_number= phone.phone_number
-    %full_phone_number= phone[:full_phone_number]
+      %full_phone_number= phone[:full_phone_number]

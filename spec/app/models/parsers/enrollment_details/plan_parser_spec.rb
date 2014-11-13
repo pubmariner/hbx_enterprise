@@ -25,10 +25,6 @@ shared_examples "a plan parser" do
     end
 
     it "should have the right person premiums" do
-      #allow(IdMapping).to receive(:from_person_id).and_return({'247857'=>'14.19', '248017'=>'16.64'})
-
-      allow(idMapping).to receive(:from_person_id).with('247857').and_return('ret23eretret34324324')
-      allow(idMapping).to receive(:from_person_id).with('248017').and_return('fsf43egeretret324324') 
       expect(subject.person_premiums(idMapping)).to eql(person_premiums)
     end
 
@@ -61,7 +57,7 @@ shared_examples "a plan parser" do
     allow(enrollee1).to receive(:premium_amount=)
     allow(enrollee2).to receive(:premium_amount=)
 
-    subject.assign_enrollees(enrollees)
+    subject.assign_enrollees(enrollees, idMapping)
 
     expect(subject.enrollees.first).to eql(enrollee1)
     expect(subject.enrollees.last).to eql(enrollee2)
@@ -83,7 +79,7 @@ describe Parsers::EnrollmentDetails::PlanParser do
     }
 
     let(:idMapping) {
-      double
+      {"247857" => "114419", "248017" => "114"}
     }
 
 
@@ -92,7 +88,7 @@ describe Parsers::EnrollmentDetails::PlanParser do
     }
 
     let(:enrollee2){
-      double(:hbx_id => "114419", :person_id => "247857")
+      double(:hbx_id => "114", :person_id => "248017")
     }
 
     let(:enrollees){
@@ -153,7 +149,7 @@ describe Parsers::EnrollmentDetails::PlanParser do
     #  {"247857"=>"14.19", "248017"=>"16.64"}
     #}
     let(:person_premiums) {
-      {"ret23eretret34324324"=>"14.19", "fsf43egeretret324324"=>"16.64"}
+      {"114419"=>"14.19", "114"=>"16.64"}
     }
     let(:ehb_percent) { 71.5 }
     let(:carrier_display_name) {"Dominion Dental Services Inc"}
@@ -185,7 +181,7 @@ describe Parsers::EnrollmentDetails::PlanParser do
     #}
 
     let(:person_premiums) {
-      {"ret23eretret34324324"=>"129.68", "fsf43egeretret324324"=>"132.92"}
+      {"114419"=>"129.68", "114"=>"132.92"}
     }
 
     let(:ehb_percent) { 99.42 }

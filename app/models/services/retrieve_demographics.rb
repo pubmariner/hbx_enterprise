@@ -54,14 +54,10 @@ module Services
       @person_builder = person_builder
     end
 
-    def persons
+    def persons(id_map)
       person_nodes.map do |node|
-        @person_builder.build(node)
+        @person_builder.build(node, id_map)
       end
-    end
-
-    def sep_reason
-      # TODO: Extract SEP reason
     end
 
     def special_enrollment?
@@ -95,6 +91,10 @@ module Services
       @xml.xpath("//ax2114:persons", namespaces)
     end
 
+    def person_ids
+      (@xml.xpath("//ax2114:personID",namespaces).map(&:text) + @xml.xpath("//ax2114:subscriberID",namespaces).map(&:text)).compact.uniq
+    end
+
     def employer_details
       Hash.from_xml(@xml.xpath("//ax2114:employerDetails", namespaces).to_s)
     end
@@ -114,7 +114,7 @@ module Services
     end
 
     def subscriber
-      subscriber_node = @xml.at_xpath("//ax2114:persons[ax2114:isPrimaryContact='Y']", namespaces)
+      subscriber_node = @xml.at_xpath("//ax2114:persons[ax2114:isPrimaryContact='true']", namespaces)
     end
 
     def broker

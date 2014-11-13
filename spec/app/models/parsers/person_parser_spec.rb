@@ -7,7 +7,7 @@ require 'spec_helper'
     }
 
     subject {
-      Parsers::PersonParser.new(person)
+      Parsers::PersonParser.new(person, {"247857" => "114419"})
     }
 
     let(:surname) {

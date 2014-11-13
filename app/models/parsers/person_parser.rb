@@ -1,7 +1,15 @@
 module Parsers
   class PersonParser
-    def initialize(node)
+
+    RELATIONSHIP_MAP = {
+      "TFRT26002" => "spouse",
+      "RTA26002" => "spouse",
+      "TFRT26001" => "child"
+    }
+
+    def initialize(node, id_map)
       @xml = node
+      @id_mapper = id_map
     end
 
     def namespaces
@@ -32,7 +40,7 @@ module Parsers
       result[:address_line_2] = Maybe.new(@xml.at_xpath("ax2114:address/ax2114:addressLine2", namespaces)).text.value
 
       if Maybe.new(@xml.at_xpath("ax2114:address/ax2114:suiteNumber", namespaces)).text.value.present?
-        result[:address_line_2] = result[:address_line_2] + " Apt " + Maybe.new(@xml.at_xpath("ax2114:address/ax2114:suiteNumber", namespaces)).text.value
+        result[:address_line_2] = result[:address_line_2] + "Apt " + Maybe.new(@xml.at_xpath("ax2114:address/ax2114:suiteNumber", namespaces)).text.value
       end
 
       result[:city] = Maybe.new(@xml.at_xpath("ax2114:address/ax2114:city", namespaces)).text.value
@@ -81,7 +89,7 @@ module Parsers
     end
 
     def is_primary_contact
-      Maybe.new(@xml.at_xpath("ax2114:isPrimaryContact", namespaces)).text.value
+      Maybe.new(@xml.at_xpath("ax2114:isPrimaryContact", namespaces)).text.downcase.value
     end
 
     def birth_date
@@ -89,7 +97,7 @@ module Parsers
     end
 
     def subscriber?
-      !Maybe.new(@xml.at_xpath("ax2114:subscriberID", namespaces)).text.value.empty?
+      "true" == is_primary_contact
     end
 
     def begin_date
@@ -105,11 +113,11 @@ module Parsers
     end
 
     def hbx_id
-      get_hbx_id
+      @id_mapper[person_id]
     end
 
-    def self.build(xml_node)
-      self.new(xml_node)
+    def self.build(xml_node, id_map)
+      self.new(xml_node, id_map)
     end
 
     def premium_amount
@@ -120,13 +128,32 @@ module Parsers
       @premium = premium
     end
 
+    def relationships
+      return [] if subscriber?
+      rels = []
+      @xml.xpath("ax2114:relationship", namespaces).each do |node|
+         sub_id = node.at_xpath("ax2114:relatedPersonID",namespaces).text
+         rel_code = node.at_xpath("ax2114:relationshipType",namespaces).text
+         rels << OpenStruct.new(
+           :subject_individual => hbx_id,
+           :object_individual => @id_mapper[sub_id],
+           :relationship_uri => relationship_code_from(rel_code)
+         )
+      end
+      rels
+    end
+
+    def relationship_code_from(value)
+      found_rel_code = RELATIONSHIP_MAP[value]
+      if found_rel_code.blank?
+        return(prefix + "child")
+      end
+      "urn:openhbx:terms:v1:individual_relationship#" + found_rel_code
+    end
+
     def email
       Maybe.new(@xml.at_xpath("ax2114:emailAddress", namespaces)).text.value
     end
 
-    private
-    def get_hbx_id(idMapping = Services::IdMapping)
-      idMapping.from_person_id(person_id)
-    end
   end
 end

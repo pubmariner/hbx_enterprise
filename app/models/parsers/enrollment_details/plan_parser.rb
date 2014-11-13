@@ -77,12 +77,11 @@ module Parsers
         results
       end
 
-      def person_premiums(idMapping = Services::IdMapping)
+      def person_premiums(idMapping)
       results = {}
-       person_premiums_with_person_ids.each do |person_id, premium|
-          #results[Maybe.new(idMapping.from_person_id(person_id)).value] = premium
-          results[idMapping.from_person_id(person_id)] = premium
-       end
+      person_premiums_with_person_ids.each do |person_id, premium|
+        results[idMapping[person_id]] = premium
+      end
       results
       end
 
@@ -107,9 +106,9 @@ module Parsers
         "urn:openhbx:terms:v1:hios_id##{hios_id}"
       end
 
-      def assign_enrollees(enrollees)
+      def assign_enrollees(enrollees, id_map)
 
-        person_premiums_array = person_premiums
+        person_premiums_array = person_premiums(id_map)
 
         @enrollees = enrollees.select do |enrollee|
           person_premiums_array.keys.include? enrollee.hbx_id
