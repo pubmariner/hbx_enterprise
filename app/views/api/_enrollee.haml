@@ -2,7 +2,7 @@
   %member
     = partial 'api/individual_type', :locals => { :person => object }
   %is_subscriber= object.subscriber?
-  %benefit_status="active"
+  %benefit_status="urn:openhbx:terms:v1:benefit_status#active"
   %benefit
     %premium_amount= object.premium_amount
     %begin_date= object.begin_date
