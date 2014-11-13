@@ -1,4 +1,5 @@
-%id= person.person_id
+%id
+  %id= person.person_id
 %person_name= partial 'api/person_name', :locals => { :person => person }
 - address = person.address
 - if address.present?

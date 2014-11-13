@@ -1,7 +1,8 @@
 %policy
   - if policy.has_broker?
     %broker
-      %id= policy.broker[:npn]
+      %id
+        %id= policy.broker[:npn]
       %name= policy.broker[:name]
   %enrollees
     - policy.enrollees.each do |enrollee|
@@ -10,7 +11,8 @@
   -#  %responsible_party
   %enrollment
     %plan
-      %id= policy.plan_id
+      %id
+        %id= policy.plan_id
       %coverage_type= policy.coverage_type
       %carrier
         %id= policy.carrier_id
