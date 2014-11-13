@@ -1,0 +1,6 @@
+%name
+  %person_surname= person.person_surname
+  %person_given_name= person.person_given_name
+  - if person.middle_name.present?
+    %person_middle_name= person.middle_name
+  %person_full_name= person.full_name

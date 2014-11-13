@@ -1,0 +1,30 @@
+%id= person.hbx_id
+%person_name= partial 'api/person_name', person: person
+- address = person.address
+- if address.present?
+  %addresses
+    %address
+      %type="urn:openhbx:terms:v1:address_type#home"
+      %address_line_1= address[:address_line_1]
+      - if address[:address_line_2].present?
+        %address_line_2= address[:address_line_2]
+      %location_city_name= address[:city]
+      %location_state_name= address[:location_state]
+      %postal_code= address[:zip]
+- if person.email.present?
+  %emails
+    %type="urn:openhbx:terms:v1:email_type#home"
+    %email_address= person.email
+- phone = person.phone
+- if phone.present?
+  %phones
+    %type="urn:openhbx:terms:v1:phone_type#home"
+    - if phone[:country_code].present?
+      %country_code= phone[:country_code]
+    - if phone[:area_code].present?
+      %area_code= phone[:area_code]
+    - if phone[:extension].present?
+      %extension= phone[:extension]
+    - if phone[:phone_number].present?
+      %phone_number= phone.phone_number
+    %full_phone_number= phone[:full_phone_number]
