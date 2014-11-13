@@ -1,5 +1,5 @@
 %id= person.hbx_id
-%person_name= partial 'api/person_name', person: person
+%person_name= partial 'api/person_name', :locals => { :person => person }
 - address = person.address
 - if address.present?
   %addresses
