@@ -81,6 +81,17 @@ describe Parsers::EnrollmentDetails::PlanParser do
     let(:plan_year) {"2014"}
     let(:carrier_id) {"4c5e9365-7ff9-48dc-b979-2e2022ad9278"}
 
+    let(:enrollee1){
+
+    }
+
+    let(:enrollee2){
+
+    }
+
+    let(:enrollees){
+      [enrollee1, enrollee2]
+    }
 
     it_should_behave_like "a plan parser"
 
