@@ -5,17 +5,16 @@
       %name= policy.broker[:name]
   %enrollees
     - policy.enrollees.each do |enrollee|
-      = partial 'api/enrollee', :enrollee => enrollee
+      = partial 'api/enrollee', :object => enrollee
   -#- if policy.has_responsible_party?
   -#  %responsible_party
   %enrollment
     %plan
-      %id
+      %id= policy.plan_id
       %carrier
-        %id=
+        %id= policy.carrier_id
         %name= policy.carrier_display_name
         %display_name= policy.carrier_display_name
-        %is_active= policy.active?
       %coverage_type= policy.coverage_type
       %plan_year= policy.plan_year
       %name= policy.plan_name

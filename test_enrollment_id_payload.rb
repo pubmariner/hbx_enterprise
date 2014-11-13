@@ -1,4 +1,4 @@
-enrollment_group_id = "1234"
+enrollment_group_id = "8970064349024485376"
 
 conn = Bunny.new
 conn.start
