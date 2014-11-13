@@ -4,10 +4,11 @@ module Parsers
 
       attr_reader :enrollees
 
-      def initialize(node)
+      def initialize(node, elected_aptc)
         @xml = node
         @market = ""
         @broker = {}
+        @elected_aptc = elected_aptc
       end
 
       def market=(market_type)
@@ -43,7 +44,7 @@ module Parsers
       end
 
       def premium_total
-        Maybe.new(@xml.at_xpath("plan/premium")).text.value
+        Maybe.new(@xml.at_xpath("plan/premium")).text.to_f.value || 0.00
       end
 
       def carrier_display_name
@@ -63,7 +64,7 @@ module Parsers
       end
 
       def ehb_percent
-        Maybe.new(@xml.at_xpath("plan/ehb-percent")).text.value
+        (Maybe.new(@xml.at_xpath("plan/ehb-percent")).text.to_f.value || 0.00)
       end
 
       def person_premiums_with_person_ids
@@ -83,6 +84,16 @@ module Parsers
           results[idMapping.from_person_id(person_id)] = premium
        end
       results
+      end
+
+      def applied_aptc
+        return 0.00 if dental?
+        max_aptc = (ehb_percent * 0.01) * premium_total
+        (max_aptc < @elected_aptc) ? max_aptc : @elected_aptc
+      end
+
+      def total_responsible_amount
+        premium_total - applied_aptc
       end
 
       def plan_year
@@ -105,9 +116,8 @@ module Parsers
         Maybe.new(@xml.at_xpath("plan/plan-carrier/carrier-id")).text.value
       end
 
-
-      def self.build(xml_node)
-        self.new(xml_node)
+      def self.build(xml_node, elected_aptc)
+        self.new(xml_node, elected_aptc)
       end
     end
   end
