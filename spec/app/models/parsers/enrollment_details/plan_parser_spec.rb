@@ -1,5 +1,15 @@
 require 'spec_helper'
 
+shared_examples "an aptc plan" do
+    it "should have the right amount of applied_aptc" do
+       expect(subject.applied_aptc).to eql(applied_aptc)
+    end
+
+    it "should have the right total_responsible_amount" do
+      expect(subject.total_responsible_amount).to eql(tot_res_amount)
+    end
+end
+
 shared_examples "a plan parser" do
 
 
@@ -49,6 +59,12 @@ shared_examples "a plan parser" do
 end
 
 describe Parsers::EnrollmentDetails::PlanParser do
+    let(:elected_aptc) {
+      0.00
+    }
+
+    let(:applied_aptc) { 0.00 }
+
     let(:plan) {
       f = File.open(File.join(HbxEnterprise::App.root, "..", "spec", "data", "parsers", "enrollment_details", "#{file_name}_plan.xml"))
       Nokogiri::XML(f).root
@@ -59,8 +75,48 @@ describe Parsers::EnrollmentDetails::PlanParser do
     }
 
     subject {
-      Parsers::EnrollmentDetails::PlanParser.new(plan, 0.00)
+      Parsers::EnrollmentDetails::PlanParser.new(plan, elected_aptc)
     }
+
+  describe "given a health plan with more than the ehb-allowed aptc" do
+    let(:file_name) { "health" }
+    let(:elected_aptc) { 20000.00 }
+    let(:applied_aptc) { 261.08 }
+    let(:tot_res_amount) { 1.52 }
+
+    it_should_behave_like "an aptc plan"
+
+  end
+
+  describe "given a health plan with exactly the max ehb-allowed aptc" do
+    let(:file_name) { "health" }
+    let(:elected_aptc) { 261.08 }
+    let(:applied_aptc) { 261.08 }
+    let(:tot_res_amount) { 1.52 }
+
+    it_should_behave_like "an aptc plan"
+
+  end
+
+  describe "given a health plan with less than max aptc elected" do
+    let(:file_name) { "health" }
+    let(:elected_aptc) { 100.00 }
+    let(:applied_aptc) { 100.00 }
+    let(:tot_res_amount) { 162.60 }
+
+    it_should_behave_like "an aptc plan"
+  end
+
+
+  describe "given a dental plan with aptc" do
+    let(:file_name) { "dental" }
+    let(:elected_aptc) { 5.00 }
+    let(:applied_aptc) { 0.00 }
+
+    let(:tot_res_amount) { 30.83 }
+
+    it_should_behave_like "an aptc plan"
+  end
 
   describe "given a dental plan" do
     let(:file_name) { "dental" }
@@ -131,3 +187,5 @@ describe Parsers::EnrollmentDetails::PlanParser do
     end
   end
 end
+
+
