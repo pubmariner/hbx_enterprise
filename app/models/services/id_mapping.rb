@@ -22,9 +22,9 @@ module Services
     def self.map_hbx_id_results(response)
       xml = Nokogiri::XML(response)
       map = {}
-      xml.xpath("//hbx_res:DCASIDPersonIDList").each do |node|
-        p_id = node.at_path("hbx_res:PersonID").text
-        hbx_id = node.at_xpath("hbx_res:DCASID").text
+      xml.xpath("//hbx_res:DCASIDPersonIDList", XML_NSES).each do |node|
+        p_id = node.xpath("//hbx_res:PersonID", XML_NSES).first.text
+        hbx_id = node.xpath("//hbx_res:DCASID", XML_NSES).first.text
         map[p_id] = hbx_id
       end
       map
@@ -33,9 +33,9 @@ module Services
     def self.map_person_id_results(response)
       xml = Nokogiri::XML(response)
       map = {}
-      xml.xpath("//hbx_res:DCASIDPersonIDList").each do |node|
-        p_id = node.at_path("hbx_res:PersonID").text
-        hbx_id = node.at_xpath("hbx_res:DCASID").text
+      xml.xpath("//hbx_res:DCASIDPersonIDList", XML_NSES).each do |node|
+        p_id = node.xpath("hbx_res:PersonID", XML_NSES).first.text
+        hbx_id = node.xpath("hbx_res:DCASID", XML_NSES).first.text
         map[hbx_id] = p_id
       end
       map
