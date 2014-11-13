@@ -1,6 +1,6 @@
 %enrollee
   %member
-    = partial 'api/individual_type', :person => enrollee
+    = partial 'api/individual_type', :locals => { :person => object }
   %is_subscriber= enrollee.subscriber?
   %benefit
     %premium_amount= enrollee.premium_amount

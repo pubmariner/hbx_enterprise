@@ -1,9 +1,10 @@
 module Listeners
   class DcasEnrollmentProvider < Amqp::Client
-    def initialize(ch, q, dex, hbx_id_finder = Services::IdMapping)
+    def initialize(ch, q, dex, hbx_id_finder = Services::IdMapping, renderer = HbxEnterprise::App.prototype.helpers)
       super(ch, q)
       @default_exchange = dex
       @id_mapper = hbx_id_finder
+      @renderer = renderer
     end
 
     def validate(delivery_info, properties, payload)
@@ -36,20 +37,20 @@ module Listeners
       end
 
 
-      response_cv = convert_to_cv(properties)
+      response_cv = convert_to_cv(properties, @retrieve_demographics)
       @channel.default_exchange.publish(response_cv, properties)
     end
 
-    def convert_to_cv(properties)
-      @persons = @retrieve_demographics.persons
+    def convert_to_cv(properties, retrieve_demo)
+      @persons = retrieve_demo.persons
       @plans = Services::EnrollmentDetails.new(properties.headers["enrollment_group_id"]).plans
       @plans.each do |plan|
         plan.market = market_type(properties.headers["event_name"])
-        plan.broker = @retrieve_demographics.broker
+        plan.broker = retrieve_demo.broker
         plan.assign_enrollees(@persons)
       end
 
-      render "api/enrollment"
+      @renderer.partial("api/enrollment", {:engine => :haml, :locals => {:policies => @plans}})
     end
 
     def self.queue_name

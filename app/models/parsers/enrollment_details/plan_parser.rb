@@ -103,6 +103,10 @@ module Parsers
         plan_id_year.split(//).last(4).join
       end
 
+      def plan_id
+        "urn:openhbx:terms:v1:hios_id##{hios_id}"
+      end
+
       def assign_enrollees(enrollees)
 
         person_premiums_array = person_premiums
