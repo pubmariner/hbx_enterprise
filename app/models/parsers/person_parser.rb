@@ -10,12 +10,20 @@ module Parsers
         }
       end
 
-      def person_surname
+      def surname
         Maybe.new(@xml.at_xpath("ax2114:lastName", namespaces)).text.value
       end
 
-      def person_given_name
+      def given_name
         Maybe.new(@xml.at_xpath("ax2114:firstName", namespaces)).text.value
+      end
+
+      def middle_name
+        Maybe.new(@xml.at_xpath("ax2114:middleName", namespaces)).text.value
+      end
+
+      def full_name
+        given_name + " " + middle_name + " " + surname
       end
 
       def address
