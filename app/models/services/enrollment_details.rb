@@ -21,8 +21,12 @@ module Services
 
     def plans
       coverage_nodes.map do |node|
-        @plan_builder.build(node)
+        @plan_builder.build(node, elected_aptc)
       end
+    end
+
+    def elected_aptc
+      Maybe.new(@xml.xpath("//premium-tax-credit-used",namespaces).first).text.to_f.value || 0.00
     end
 
     def selected_coverages
@@ -34,7 +38,7 @@ module Services
     end
 
     def signature_date
-      Maybe.new(@xml.xpath("//signature/signature-date").first).text[0..9].gsub("-", "").value
+      Maybe.new(@xml.xpath("//signature/signature-date",namespaces).first).text[0..9].gsub("-", "").value
     end
 
     def applicants

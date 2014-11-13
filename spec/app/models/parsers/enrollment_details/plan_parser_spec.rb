@@ -59,21 +59,21 @@ describe Parsers::EnrollmentDetails::PlanParser do
     }
 
     subject {
-      Parsers::EnrollmentDetails::PlanParser.new(plan)
+      Parsers::EnrollmentDetails::PlanParser.new(plan, 0.00)
     }
 
   describe "given a dental plan" do
     let(:file_name) { "dental" }
     let(:plan_name) { "Select Plan" }
     let(:hios_id) { "92479DC0010002" }
-    let(:premium_total) { "30.83" }
+    let(:premium_total) { 30.83 }
     #let(:person_premiums) {
     #  {"247857"=>"14.19", "248017"=>"16.64"}
     #}
     let(:person_premiums) {
       {"ret23eretret34324324"=>"14.19", "fsf43egeretret324324"=>"16.64"}
     }
-    let(:ehb_percent) {"71.5"}
+    let(:ehb_percent) { 71.5 }
     let(:carrier_display_name) {"Dominion Dental Services Inc"}
     let(:carrier_active) { true }
     let(:coverage_type) {"urn:openhbx:terms:v1:benefit_coverage#dental"}
@@ -104,7 +104,7 @@ describe Parsers::EnrollmentDetails::PlanParser do
     let(:file_name) { "health" }
     let(:plan_name) { "BlueChoice HSA Bronze $6,000" }
     let(:hios_id) { "86052DC0410002-01" }
-    let(:premium_total) { "262.60" }
+    let(:premium_total) { 262.60 }
     #let(:person_premiums) {
     #{
     #    "247857" => "129.68",
@@ -116,7 +116,7 @@ describe Parsers::EnrollmentDetails::PlanParser do
       {"ret23eretret34324324"=>"129.68", "fsf43egeretret324324"=>"132.92"}
     }
 
-    let(:ehb_percent) {"99.42"}
+    let(:ehb_percent) { 99.42 }
     let(:carrier_display_name) {"Nice Insurance"}
     let(:carrier_active) {true}
     let(:coverage_type) {"urn:openhbx:terms:v1:benefit_coverage#health"}
