@@ -1,5 +1,12 @@
 module Parsers
   class PersonParser
+
+    RELATIONSHIP_MAP = {
+      "TFRT26002" => "spouse",
+      "RTA26002" => "spouse",
+      "TFRT26001" => "child"
+    }
+
     def initialize(node, id_map)
       @xml = node
       @id_mapper = id_map
@@ -130,10 +137,18 @@ module Parsers
          rels << OpenStruct.new(
            :subject_individual => hbx_id,
            :object_individual => @id_mapper[sub_id],
-           :relationship_uri => rel_code
+           :relationship_uri => relationship_code_from(rel_code)
          )
       end
       rels
+    end
+
+    def relationship_code_from(value)
+      found_rel_code = RELATIONSHIP_MAP[value]
+      if found_rel_code.blank?
+        return(prefix + "child")
+      end
+      "urn:openhbx:terms:v1:individual_relationship#" + found_rel_code
     end
 
     def email
