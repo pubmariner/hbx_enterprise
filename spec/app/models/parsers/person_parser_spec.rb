@@ -48,9 +48,9 @@ require 'spec_helper'
 
     let(:subscriber) { true }
 
-    let(:person_id) {"247857"}
+    let(:person_id_value) {"247857"}
 
-    let(:hbx_id) {"ssss"}
+    let(:hbx_id_value) {"114419"}
 
     let(:middle_name) {""}
 
@@ -98,6 +98,11 @@ require 'spec_helper'
 
     it "returns email address" do
       expect(subject.email).to eql(email)
+    end
+
+    it "returns the correct hbx_id" do
+      allow(subject).to receive(:person_id) {person_id_value}
+      expect(subject.hbx_id).to eql(hbx_id_value)
     end
 
   end
