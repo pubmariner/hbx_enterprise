@@ -53,7 +53,7 @@ module Listeners
 
       event_exchange = @channel.topic(ExchangeInformation.event_exchange, :durable => true)
       event_exchange.publish(
-        nil,
+        "",
         :persistent => true,
         :routing_key=> routing_key,
         :headers => 
@@ -69,7 +69,7 @@ module Listeners
     end
 
     def self.run
-      conn = Bunny.new
+      conn = Bunny.new(ExchangeInformation.amqp_uri)
       conn.start
       ch = conn.create_channel
       ch.prefetch(1)
