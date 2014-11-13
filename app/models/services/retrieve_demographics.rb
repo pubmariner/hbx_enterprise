@@ -1,51 +1,78 @@
 module Services
   class RetrieveDemographics
     SEP_REASONS = {
-        "renewal" => "urn:dc0:terms:v1:qualifying_life_event#renewal",
-        "initial_enrollment" => "urn:dc0:terms:v1:qualifying_life_event#open_enrollment",
-        "seri26001" => "urn:dc0:terms:v1:qualifying_life_event#lost_access_to_mec",
-        "seri26004" => "urn:dc0:terms:v1:qualifying_life_event#marriage",
-        "seri26005" => "urn:dc0:terms:v1:qualifying_life_event#birth",
-        "seri26006" => "urn:dc0:terms:v1:qualifying_life_event#adoption",
-        "seri26007" => "urn:dc0:terms:v1:qualifying_life_event#marriage",
-        "seri26008" => "urn:dc0:terms:v1:qualifying_life_event#foster_care",
-        "seri26009" => "urn:dc0:terms:v1:qualifying_life_event#immigration_status_change",
-        "seri26010" => "urn:dc0:terms:v1:qualifying_life_event#enrollment_error_or_misconduct_hbx",
-        "seri26011" => "urn:dc0:terms:v1:qualifying_life_event#contract_violation",
-        "seri26012" => "urn:dc0:terms:v1:qualifying_life_event#eligibility_change_assistance",
-        "seri26013" => "urn:dc0:terms:v1:qualifying_life_event#location_change",
-        "seri26014" => "urn:dc0:terms:v1:qualifying_life_event#qualified_native_american",
-        "seri26015" => "urn:dc0:terms:v1:qualifying_life_event#enrollment_error_or_misconduct_non_hbx",
-        "seri26016" => "urn:dc0:terms:v1:qualifying_life_event#enrollment_error_or_misconduct_issuer",
-        "seri26017" => "urn:dc0:terms:v1:qualifying_life_event#eligibility_change_medicaid_ineligible",
-        "seri26018" => "urn:dc0:terms:v1:qualifying_life_event#eligibility_change_employer_ineligible",
-        "seri26019" => "urn:dc0:terms:v1:qualifying_life_event#exceptional_circumstances_natural_disaster",
-        "seri26020" => "urn:dc0:terms:v1:qualifying_life_event#exceptional_circumstances_medical_emergency",
-        "seri26021" => "urn:dc0:terms:v1:qualifying_life_event#exceptional_circumstances_system_outage",
-        "seri26022" => "urn:dc0:terms:v1:qualifying_life_event#exceptional_circumstances_domestic_abuse",
-        "seri26023" => "urn:dc0:terms:v1:qualifying_life_event#exceptional_circumstances_hardship_exemption",
-        "seri26024" => "urn:dc0:terms:v1:qualifying_life_event#exceptional_circumstances_civic_service",
-        "seri26025" => "urn:dc0:terms:v1:qualifying_life_event#lost_access_to_mec",
-        "seri26026" => "urn:dc0:terms:v1:qualifying_life_event#divorce",
-        "seri26027" => "urn:dc0:terms:v1:qualifying_life_event#marriage",
-        "seri26028" => "urn:dc0:terms:v1:qualifying_life_event#exceptional_circumstances",
-        "seri26029" => "urn:dc0:terms:v1:qualifying_life_event#termination_of_benefits",
-        "seri26030" => "urn:dc0:terms:v1:qualifying_life_event#termination_of_benefits",
-        "seri26032" => "urn:dc0:terms:v1:qualifying_life_event#divorce",
-        "seri26034" => "urn:dc0:terms:v1:qualifying_life_event#divorce",
-        "sere26001" => "urn:dc0:terms:v1:qualifying_life_event#birth",
-        "sere26002" => "urn:dc0:terms:v1:qualifying_life_event#adoption",
-        "sere26003" => "urn:dc0:terms:v1:qualifying_life_event#marriage",
-        "sere26004" => "urn:dc0:terms:v1:qualifying_life_event#marriage",
-        "sere26005" => "urn:dc0:terms:v1:qualifying_life_event#lost_access_to_mec",
-        "sere26008" => "urn:dc0:terms:v1:qualifying_life_event#termination_of_benefits",
-        "sere26009" => "urn:dc0:terms:v1:qualifying_life_event#termination_of_benefits",
-        "sere26010" => "urn:dc0:terms:v1:qualifying_life_event#termination_of_benefits",
-        "sere26011" => "urn:dc0:terms:v1:qualifying_life_event#divorce",
-        "sere26012" => "urn:dc0:terms:v1:qualifying_life_event#death",
-        "sere26013" => "urn:dc0:terms:v1:qualifying_life_event#location_change",
-        "sere26014" => "urn:dc0:terms:v1:qualifying_life_event#exceptional_circumstances",
-        "sere26015" => "urn:dc0:terms:v1:qualifying_life_event#contract_violation"
+        "renewal" => "renewal",
+        "initial_enrollment" => "open_enrollment",
+
+        "seri26006" => "adoption",
+        "sere26002" => "adoption",
+
+        "seri26005" => "birth",
+        "sere26001" => "birth",
+
+        "sere26010" => "child_age_off",
+
+        "seri26009" => "citizen_status_change",
+
+        "seri26011" => "contract_violation",
+        "sere26015" => "contract_violation",
+
+        "sere26012" => "death",
+
+        "seri26026" => "divorce",
+        "sere26011" => "divorce",
+        "seri26032" => "divorce",
+
+        "sere26009" => "drop_family_member_due_to_new_eligibility", #"termination_of_benefits" ?
+
+        "sere26008" => "drop_self_due_to_new_eligibility", #"termination_of_benefits"?
+
+        "seri26012" => "eligibility_change_assistance",
+
+        "seri26018" => "eligibility_change_employer_ineligible",
+
+        "seri26017" => "eligibility_change_medicaid_ineligible",
+
+        "seri26029" => "employee_gaining_medicare",
+
+        "seri26030" => "employer_cobra_non_payment",
+
+        "seri26010" => "enrollment_error_or_misconduct_hbx",
+
+        "seri26016" => "enrollment_error_or_misconduct_issuer",
+
+        "seri26015" => "enrollment_error_or_misconduct_non_hbx",
+
+        "seri26027" => "entering_domestic_partnership",
+        "sere26004" => "entering_domestic_partnership",
+
+        "sere26014" => "exceptional_circumstances",
+        "seri26024" => "exceptional_circumstances_civic_service",
+        "seri26022" => "exceptional_circumstances_domestic_abuse",
+        "seri26023" => "exceptional_circumstances_hardship_exemption",
+        "seri26020" => "exceptional_circumstances_medical_emergency",
+        "seri26019" => "exceptional_circumstances_natural_disaster",
+        "seri26021" => "exceptional_circumstances_system_outage",
+
+        "seri26008" => "foster_care",
+
+        "seri26013" => "location_change",
+        "sere26013" => "location_change",
+
+        "seri26001" => "lost_access_to_mec",
+        "sere26005" => "lost_access_to_mec",
+
+        "seri26007" => "marriage",
+        "seri26004" => "marriage",
+        "sere26003" => "marriage",
+
+        "seri26028" => "medical_coverage_order",
+
+        "seri26014" => "qualified_native_american",
+
+        "seri26034" => "termination_of_domestic_partnership",
+
+        "seri26025" => "voluntary_droppping_cobra"
     }
     attr_accessor :xml
 
@@ -81,10 +108,11 @@ module Services
     end
 
     def sep_reason
-      return SEP_REASONS["renewal"] if renewal?
-      return SEP_REASONS["initial_enrollment"] unless special_enrollment?
+      prefix = "urn:dc0:terms:v1:qualifying_life_event#"
+      return(prefix + SEP_REASONS["renewal"]) if renewal?
+      return(prefix + SEP_REASONS["initial_enrollment"]) unless special_enrollment?
       node = Maybe.new(@xml.at_xpath("//ax2114:sepReason", namespaces))
-      SEP_REASONS[node.text.strip.downcase.value]
+      prefix + SEP_REASONS[node.text.strip.downcase.value]
     end
 
     def person_nodes
