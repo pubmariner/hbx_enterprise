@@ -89,11 +89,13 @@ module Parsers
       def applied_aptc
         return 0.00 if dental?
         max_aptc = (ehb_percent * 0.01) * premium_total
-        (max_aptc < @elected_aptc) ? max_aptc : @elected_aptc
+        aptc = (max_aptc < @elected_aptc) ? max_aptc : @elected_aptc
+        sprintf('%.2f', aptc).to_f
       end
 
       def total_responsible_amount
-        premium_total - applied_aptc
+        res_amt = premium_total - applied_aptc
+        sprintf('%.2f', res_amt).to_f
       end
 
       def plan_year
@@ -109,7 +111,6 @@ module Parsers
         @enrollees.each do |enrollee|
           enrollee.premium_amount = person_premiums[enrollee.hbx_id]
         end
-
       end
 
       def carrier_id
