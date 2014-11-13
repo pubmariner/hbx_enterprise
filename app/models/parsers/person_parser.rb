@@ -115,6 +115,10 @@ module Parsers
         @premium = premium
       end
 
+      def email
+        Maybe.new(@xml.at_xpath("ax2114:emailAddress", namespaces)).text.value
+      end
+
       private
       def get_hbx_id(idMapping = Services::IdMapping)
         idMapping.from_person_id(person_id)

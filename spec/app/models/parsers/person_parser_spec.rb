@@ -54,6 +54,8 @@ require 'spec_helper'
 
     let(:middle_name) {""}
 
+    let(:email) {""}
+
     it "it returns the surname" do
       expect(subject.surname).to eql(surname)
     end
@@ -92,6 +94,10 @@ require 'spec_helper'
 
     it "returns the full name" do
       expect(subject.full_name).to eql(given_name + " " + middle_name + " " + surname)
+    end
+
+    it "returns email address" do
+      expect(subject.email).to eql(email)
     end
 
   end
