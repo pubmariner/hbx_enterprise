@@ -29,7 +29,9 @@ module Parsers
       def address
         result = {}
         result[:address_line_1] = Maybe.new(@xml.at_xpath("ax2114:address/ax2114:addressLine1", namespaces)).text.value
-        result[:address_line_2] = Maybe.new(@xml.at_xpath("ax2114:address/ax2114:addressLine2", namespaces)).text.value
+        result[:address_line_2] = Maybe.new(@xml.at_xpath("ax2114:address/ax2114:addressLine2", namespaces)).text.value +
+                                  " Apt # " +
+                                  Maybe.new(@xml.at_xpath("ax2114:address/ax2114:suiteNumber", namespaces)).text.value
         result[:city] =  Maybe.new(@xml.at_xpath("ax2114:address/ax2114:city", namespaces)).text.value
 
         state =  Maybe.new(@xml.at_xpath("ax2114:address/ax2114:state", namespaces)).text.value.downcase
