@@ -104,13 +104,18 @@ module Parsers
       end
 
       def assign_enrollees(enrollees)
+
+        person_premiums_array = person_premiums
+
         @enrollees = enrollees.select do |enrollee|
-          person_premiums.keys.include? enrollee.hbx_id
+          person_premiums_array.keys.include? enrollee.hbx_id
         end
 
         @enrollees.map do |enrollee|
-          enrollee.premium_amount = person_premiums[enrollee.hbx_id]
+          enrollee.premium_amount = person_premiums_array[enrollee.hbx_id]
         end
+
+        @enrollees
       end
 
       def carrier_id

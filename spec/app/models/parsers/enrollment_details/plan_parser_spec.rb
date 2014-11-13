@@ -56,6 +56,18 @@ shared_examples "a plan parser" do
       expect(subject.carrier_id).to eql(carrier_id)
     end
 
+  it "should assign enrollees" do
+
+    allow(enrollee1).to receive(:premium_amount=)
+    allow(enrollee2).to receive(:premium_amount=)
+
+    subject.assign_enrollees(enrollees)
+
+    expect(subject.enrollees.first).to eql(enrollee1)
+    expect(subject.enrollees.last).to eql(enrollee2)
+
+  end
+
 end
 
 describe Parsers::EnrollmentDetails::PlanParser do
@@ -73,6 +85,20 @@ describe Parsers::EnrollmentDetails::PlanParser do
     let(:idMapping) {
       double
     }
+
+
+    let(:enrollee1){
+      double(:hbx_id => "114419", :person_id => "247857")
+    }
+
+    let(:enrollee2){
+      double(:hbx_id => "114419", :person_id => "247857")
+    }
+
+    let(:enrollees){
+      [enrollee1, enrollee2]
+    }
+
 
     subject {
       Parsers::EnrollmentDetails::PlanParser.new(plan, elected_aptc)
@@ -137,17 +163,7 @@ describe Parsers::EnrollmentDetails::PlanParser do
     let(:plan_year) {"2014"}
     let(:carrier_id) {"4c5e9365-7ff9-48dc-b979-2e2022ad9278"}
 
-    let(:enrollee1){
 
-    }
-
-    let(:enrollee2){
-
-    }
-
-    let(:enrollees){
-      [enrollee1, enrollee2]
-    }
 
     it_should_behave_like "a plan parser"
 
