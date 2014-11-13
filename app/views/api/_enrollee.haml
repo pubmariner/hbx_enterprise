@@ -1,8 +1,8 @@
 %enrollee
   %member
     = partial 'api/individual_type', :locals => { :person => object }
-  %is_subscriber= enrollee.subscriber?
+  %is_subscriber= object.subscriber?
   %benefit
-    %premium_amount= enrollee.premium_amount
-    %begin_date= enrollee.begin_date
-    %end_date= enrollee.end_date
+    %premium_amount= object.premium_amount
+    %begin_date= object.begin_date
+    %end_date= object.end_date
