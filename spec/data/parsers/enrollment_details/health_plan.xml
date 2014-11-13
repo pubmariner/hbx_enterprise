@@ -4,7 +4,10 @@
 	<plan>
 		<plan-id>86052DC0410002-01</plan-id>
 		<plan-id-year>86052DC0410002-01-2014</plan-id-year>
-		<plan-carrier>...</plan-carrier>
+		<plan-carrier>
+			<carrier-name>Nice Insurance</carrier-name>
+			<carrier-id>4c5e9365-7ff9-48dc-b979-2e2022ad9278</carrier-id>
+		</plan-carrier>
 		<plan-name>BlueChoice HSA Bronze $6,000</plan-name>
 		<plan-type>HMO</plan-type>
 		<plan-tier>Bronze</plan-tier>
