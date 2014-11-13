@@ -1,7 +1,8 @@
 %policy
   - if policy.has_broker?
     %broker
-      %id= policy.broker[:npn]
+      %id
+        %id= policy.broker[:npn]
       %name= policy.broker[:name]
   %enrollees
     - policy.enrollees.each do |enrollee|
@@ -10,7 +11,8 @@
   -#  %responsible_party
   %enrollment
     %plan
-      %id= policy.plan_id
+      %id
+        %id= policy.plan_id
       %coverage_type= policy.coverage_type
       %carrier
         %id= policy.carrier_id
@@ -19,10 +21,7 @@
       %plan_year= policy.plan_year
       %name= policy.plan_name
       %individual_market
-        %is_carrier_to_bill
-        %allocated_aptc_amount
-        %elected_aptc_amount
+        %is_carrier_to_bill=true
         %applied_aptc_amount= policy.applied_aptc
-        %other_payment_amount
       %premium_total_amount= policy.premium_total
       %total_responsible_amount= policy.total_responsible_amount

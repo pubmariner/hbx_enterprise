@@ -1,4 +1,5 @@
-%id= person.hbx_id
+%id
+  %id= person.hbx_id
 %person= partial 'api/person_type', {:locals => { :person => person } }
 %person_relationships= partial 'api/person_relationships', {:locals => { :person => person }}
 %person_demographics= partial 'api/person_demographics', {:locals => { :person => person } }

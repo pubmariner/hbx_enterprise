@@ -56,6 +56,8 @@ require 'spec_helper'
 
     let(:email) {""}
 
+    let(:apartment_no) {""}
+
     it "it returns the surname" do
       expect(subject.surname).to eql(surname)
     end
