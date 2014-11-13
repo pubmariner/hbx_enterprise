@@ -10,11 +10,11 @@ require 'spec_helper'
       Parsers::PersonParser.new(person)
     }
 
-    let(:person_surname) {
+    let(:surname) {
       "DCHIXbbb"
     }
 
-    let(:person_given_name) {
+    let(:given_name) {
       "DCHIXbbb"
     }
 
@@ -48,12 +48,24 @@ require 'spec_helper'
 
     let(:subscriber) { true }
 
+    let(:person_id_value) {"247857"}
+
+    let(:hbx_id_value) {"114419"}
+
+    let(:middle_name) {""}
+
+    let(:email) {""}
+
     it "it returns the surname" do
-      expect(subject.person_surname).to eql(person_surname)
+      expect(subject.surname).to eql(surname)
     end
 
     it "it returns the given-name" do
-      expect(subject.person_given_name).to eql(person_given_name)
+      expect(subject.given_name).to eql(given_name)
+    end
+
+    it "returns the middle name" do
+      expect(subject.middle_name).to eql(middle_name)
     end
 
     it "it returns the is_primary_contact" do
@@ -78,6 +90,19 @@ require 'spec_helper'
 
     it "return the subscriber id" do
       expect(subject.subscriber?).to eql(subscriber)
+    end
+
+    it "returns the full name" do
+      expect(subject.full_name).to eql(given_name + " " + middle_name + " " + surname)
+    end
+
+    it "returns email address" do
+      expect(subject.email).to eql(email)
+    end
+
+    it "returns the correct hbx_id" do
+      allow(subject).to receive(:person_id) {person_id_value}
+      expect(subject.hbx_id).to eql(hbx_id_value)
     end
 
   end
