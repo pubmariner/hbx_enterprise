@@ -37,11 +37,6 @@ module Services
       @xml.xpath("//nsa:selected-coverage/selected-coverage-details", namespaces)
     end
 
-    def market_type
-      emp_id = Maybe.new(@xml.xpath("//employer_id", namespaces).first).text.value
-      (emp_id.blank? || ("0" == emp_id)) ? "individual" : "shop"
-    end
-
     def signature_date
       Maybe.new(@xml.xpath("//signature/signature-date",namespaces).first).text[0..9].gsub("-", "").value
     end
