@@ -29,11 +29,11 @@ XMLBODY
   end
 
   it 'should return a correct number of persons' do
-    expect(@retrieve_demographics.persons.length).to eql 2
+    expect(@retrieve_demographics.persons({}).length).to eql 2
   end
 
   it 'on calling persons it should return array with PersonParser objects' do
-    persons = @retrieve_demographics.persons
+    persons = @retrieve_demographics.persons({})
 
     persons.each do |p|
       expect(p.class).to be(Parsers::PersonParser)
