@@ -1,11 +1,6 @@
-enrollment_group_id = "8970064349024485376"
+enrollment_group_id = "-4601383594475126784"
 
-conn = Bunny.new
-conn.start
-ch = conn.create_channel
-ch.prefetch(1)
-
-listener = Listeners::DcasEnrollmentProvider.new(ch, ch.queue("", :exclusive => true), ch.default_exchange)
+listener = Listeners::DcasEnrollmentProvider.new(nil, nil, nil)
 retrieve_demo = Services::RetrieveDemographics.new(enrollment_group_id)
 props = OpenStruct.new(:headers => { "enrollment_group_id" => enrollment_group_id })
 puts listener.convert_to_cv(props, retrieve_demo)

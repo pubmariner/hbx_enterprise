@@ -35,9 +35,10 @@ module Listeners
     def convert_to_cv(properties, retrieve_demo)
       id_map = Services::IdMapping.from_person_ids(retrieve_demo.person_ids)
       persons = retrieve_demo.persons(id_map)
-      plans = Services::EnrollmentDetails.new(properties.headers["enrollment_group_id"]).plans
+      enroll_details = Services::EnrollmentDetails.new(properties.headers["enrollment_group_id"])
+      plans = enroll_details.plans
       plans.each do |plan|
-        plan.market = plans.market_type
+        plan.market = enroll_details.market_type
         plan.broker = retrieve_demo.broker
         plan.assign_enrollees(persons, id_map)
       end
