@@ -3,6 +3,7 @@ module Parsers
     class PlanParser
 
       attr_reader :enrollees
+      attr_accessor :enrollment_group_id
 
       def initialize(node, elected_aptc)
         @xml = node
