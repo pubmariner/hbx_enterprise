@@ -8,7 +8,6 @@ module Listeners
     end
 
     def validate(delivery_info, properties, payload)
-
       if properties.reply_to.blank?
         add_error("Reply to is empty.")
       end
@@ -17,42 +16,33 @@ module Listeners
       end
     end
 
-    # == Parameters:
-    # event_name::
-    #   A string. e.g. "urn:openhbx:events:v1:individual#qhp_selected"
-    #
-    # == Returns:
-    #   The type of market :individual or :employee
-    def market_type(event_name)
-      Maybe.new(event_name).split('#').first.split(":").last.to_sym.value
-    end
-
     def on_message(delivery_info, properties, payload)
       reply_to = properties.reply_to
       enrollment_group_id = properties.headers["enrollment_group_id"]
 
-      @retrieve_demographics = Services::RetrieveDemographics.new(enrollment_group_id)
+      retrieve_demographics = Services::RetrieveDemographics.new(enrollment_group_id)
       if retrieve_demographics.responsible_party?
-        @channel.default_exchange.publish(payload, error_properties(properties.headers["routing_key"], delivery_info, properties))
+        err_props = error_properties(reply_to, delivery_info, properties)
+        err_props[:headers][:return_code] = "500"
+        @channel.default_exchange.publish("Due to an outstanding issue, responsible party scenarios can not be processed.", err_props)
+      else
+        response_cv = convert_to_cv(properties, retrieve_demographics)
+        @channel.default_exchange.publish(response_cv, { :routing_key => reply_to, :headers => { :return_code => "200" } })
       end
-
-      properties.headers.to_hash.merge(:qualifying_reason_uri => @retrieve_demographics.sep_reason)
-
-      response_cv = convert_to_cv(properties, @retrieve_demographics)
-      @channel.default_exchange.publish(response_cv, properties)
+      channel.acknowledge(delivery_info.delivery_tag, false)
     end
 
     def convert_to_cv(properties, retrieve_demo)
       id_map = Services::IdMapping.from_person_ids(retrieve_demo.person_ids)
-      @persons = retrieve_demo.persons(id_map)
-      @plans = Services::EnrollmentDetails.new(properties.headers["enrollment_group_id"]).plans
-      @plans.each do |plan|
-        plan.market = market_type(properties.headers["event_name"])
+      persons = retrieve_demo.persons(id_map)
+      plans = Services::EnrollmentDetails.new(properties.headers["enrollment_group_id"]).plans
+      plans.each do |plan|
+        plan.market = plans.market_type
         plan.broker = retrieve_demo.broker
-        plan.assign_enrollees(@persons, id_map)
+        plan.assign_enrollees(persons, id_map)
       end
 
-      @renderer.partial("api/enrollment", {:engine => :haml, :locals => {:policies => @plans}})
+      @renderer.partial("api/enrollment", {:engine => :haml, :locals => {:policies => plans}})
     end
 
     def self.queue_name
