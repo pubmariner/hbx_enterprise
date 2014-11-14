@@ -23,11 +23,11 @@ module Listeners
       retrieve_demographics = Services::RetrieveDemographics.new(enrollment_group_id)
       if retrieve_demographics.responsible_party?
         err_props = error_properties(reply_to, delivery_info, properties)
-        err_props[:headers][:return_code] = "500"
+        err_props[:headers][:return_status] = "500"
         @channel.default_exchange.publish("Due to an outstanding issue, responsible party scenarios can not be processed.", err_props)
       else
         response_cv = convert_to_cv(properties, retrieve_demographics)
-        @channel.default_exchange.publish(response_cv, { :routing_key => reply_to, :headers => { :return_code => "200" } })
+        @channel.default_exchange.publish(response_cv, { :routing_key => reply_to, :headers => { :return_status => "200" } })
       end
       channel.acknowledge(delivery_info.delivery_tag, false)
     end
