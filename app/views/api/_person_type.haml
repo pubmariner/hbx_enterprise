@@ -14,18 +14,20 @@
       %postal_code= address[:zip]
 - if person.email.present?
   %emails
-    %type="urn:openhbx:terms:v1:email_type#home"
-    %email_address= person.email
+    %email
+      %type="urn:openhbx:terms:v1:email_type#home"
+      %email_address= person.email
 - phone = person.phone
 - if phone[:full_phone_number].present?
   %phones
-    %type="urn:openhbx:terms:v1:phone_type#home"
-    - if phone[:country_code].present?
-      %country_code= phone[:country_code]
-    - if phone[:area_code].present?
-      %area_code= phone[:area_code]
-    - if phone[:extension].present?
-      %extension= phone[:extension]
-    - if phone[:phone_number].present?
-      %phone_number= phone.phone_number
-      %full_phone_number= phone[:full_phone_number]
+    %phone
+      %type="urn:openhbx:terms:v1:phone_type#home"
+      - if phone[:country_code].present?
+        %country_code= phone[:country_code]
+      - if phone[:area_code].present?
+        %area_code= phone[:area_code]
+      - if phone[:extension].present?
+        %extension= phone[:extension]
+      - if phone[:phone_number].present?
+        %phone_number= phone.phone_number
+        %full_phone_number= phone[:full_phone_number]
