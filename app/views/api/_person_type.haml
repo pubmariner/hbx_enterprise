@@ -10,7 +10,7 @@
       - if address[:address_line_2].present?
         %address_line_2= address[:address_line_2]
       %location_city_name= address[:city]
-      %location_state_name= address[:location_state]
+      %location_state_code= address[:location_state_code]
       %postal_code= address[:zip]
 - if person.email.present?
   %emails

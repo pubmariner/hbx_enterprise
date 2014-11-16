@@ -40,17 +40,18 @@ module Parsers
       result[:address_line_2] = Maybe.new(@xml.at_xpath("ax2114:address/ax2114:addressLine2", namespaces)).text.value
 
       if Maybe.new(@xml.at_xpath("ax2114:address/ax2114:suiteNumber", namespaces)).text.value.present?
-        result[:address_line_2] = result[:address_line_2] + "Apt " + Maybe.new(@xml.at_xpath("ax2114:address/ax2114:suiteNumber", namespaces)).text.value
+        spacer = result[:address_line_2].blank? ? "" : " "
+        result[:address_line_2] = result[:address_line_2] + "#{spacer}Apt " + Maybe.new(@xml.at_xpath("ax2114:address/ax2114:suiteNumber", namespaces)).text.value
       end
 
       result[:city] = Maybe.new(@xml.at_xpath("ax2114:address/ax2114:city", namespaces)).text.value
 
       state = Maybe.new(@xml.at_xpath("ax2114:address/ax2114:state", namespaces)).text.value.downcase
-      if state.eql? "dc"
-        result[:location_state] = "urn:openhbx:terms:v1:us_state#district_of_columbia"
-      else
-        result[:location_state] = "urn:openhbx:terms:v1:us_state#{state}"
-      end
+#      if state.eql? "dc"
+#        result[:location_state_code] = "urn:openhbx:terms:v1:us_state#district_of_columbia"
+#      else
+        result[:location_state_code] = state
+#      end
 
       result[:zip] = Maybe.new(@xml.at_xpath("ax2114:address/ax2114:zip", namespaces)).text.value
       result
