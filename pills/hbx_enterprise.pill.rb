@@ -2,7 +2,7 @@ BUS_DIRECTORY = File.join(File.dirname(__FILE__), "..")
 LOG_DIRECTORY = File.join(BUS_DIRECTORY, "log")
 PID_DIRECTORY = File.join(BUS_DIRECTORY, "pids")
 
-BLUEPILL_LOG = File.join(LOG_DIRECTORY, "hbxbus.log")
+BLUEPILL_LOG = File.join(LOG_DIRECTORY, "hbx_enterprise.log")
 
 def unset_list
   ev_list = [ 
