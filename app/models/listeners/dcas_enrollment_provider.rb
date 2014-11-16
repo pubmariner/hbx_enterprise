@@ -27,7 +27,7 @@ module Listeners
         @channel.default_exchange.publish("Due to an outstanding issue, responsible party scenarios can not be processed.", err_props)
       else
         response_cv = convert_to_cv(properties, retrieve_demographics)
-        @channel.default_exchange.publish(response_cv, { :routing_key => reply_to, :headers => { :return_status => "200" } })
+        @channel.default_exchange.publish(response_cv, { :routing_key => reply_to, :headers => { :return_status => "200", :qualifying_reason_uri => retrieve_demographics.sep_reason } })
       end
       channel.acknowledge(delivery_info.delivery_tag, false)
     end
@@ -44,7 +44,6 @@ module Listeners
         plan.broker = retrieve_demo.broker
         plan.assign_enrollees(persons, id_map)
       end
-
       @renderer.partial("api/enrollment", {:engine => :haml, :locals => {:policies => plans}})
     end
 
@@ -54,7 +53,7 @@ module Listeners
     end
 
     def self.run
-      conn = Bunny.new
+      conn = Bunny.new(ExchangeInformation.amqp_uri)
       conn.start
       ch = conn.create_channel
       ch.prefetch(1)

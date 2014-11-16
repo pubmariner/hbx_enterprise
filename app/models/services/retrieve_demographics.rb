@@ -123,10 +123,6 @@ module Services
       (@xml.xpath("//ax2114:personID",namespaces).map(&:text) + @xml.xpath("//ax2114:subscriberID",namespaces).map(&:text)).compact.uniq
     end
 
-    def employer_details
-      Hash.from_xml(@xml.xpath("//ax2114:employerDetails", namespaces).to_s)
-    end
-
     def namespaces
       {
           :ax2114 => "http://struct.adapter.planmanagement.curam/xsd/preview8",
@@ -135,14 +131,13 @@ module Services
     end
 
     def responsible_party?
-      subscriber = subscriber_node
-      sub_id = subscriber.at_xpath("ax2114:subscriberID", namespace).first.text.strip
-      person_id = subscriber.at_xpath("ax2114:personID", namespace).first.text.strip
-      (person_id != subscriber_id)
+      sub_id = subscriber.at_xpath("ax2114:subscriberID", namespaces).text.strip
+      person_id = subscriber.at_xpath("ax2114:personID", namespaces).text.strip
+      (person_id != sub_id)
     end
 
     def subscriber
-      subscriber_node = @xml.at_xpath("//ax2114:persons[ax2114:isPrimaryContact='true']", namespaces)
+      @xml.at_xpath("//ax2114:persons[ax2114:isPrimaryContact='true']", namespaces)
     end
 
     def broker
