@@ -4,8 +4,8 @@ options = {
   "queue_name" => Listeners::DcasEnrollmentProvider.queue_name,
   "max_workers" => 10,
   "min_workers" => 1,
-  "request_duration" => 2,
-  "max_duration" => 15
+  "request_duration" => 3,
+  "max_duration" => 5
 }
 
 puts options["pid_file"].inspect
