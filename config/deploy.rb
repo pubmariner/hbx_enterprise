@@ -20,6 +20,7 @@ set :scm, :gitcopy
 # set :log_level, :debug
 set :bundle_binstubs, false
 set :bundle_flags, "--quiet"
+set :bundle_path, nil
 
 # Default value for :pty is false
 set :pty, true
