@@ -23,7 +23,7 @@ module Listeners
     # == Returns:
     #   The type of market :individual or :employee
     def market_type(event_name)
-      Maybe.new(event_name).split('#').first.split(":").last.to_sym.value
+      Maybe.new(event_name).split('#').first.split(":").last.value.contains?("employ") ? :employer_employee : :individual
     end
 
     # TODO: Parse out sep reason
