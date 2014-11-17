@@ -32,8 +32,8 @@ class SetupAmqpTasks
     event_ex = exchange("topic", ec.event_exchange)
     direct_ex = exchange("direct", ec.request_exchange)
 
-    ind_qhps.bind(event_ex, :routing_key => "employer_employee.qhp_selected")
-    emp_qhps.bind(event_ex, :routing_key => "individual.qhp_selected")
+    ind_qhps.bind(event_ex, :routing_key => "individual.qhp_selected")
+    emp_qhps.bind(event_ex, :routing_key => "employer_employee.qhp_selected")
     qsl_q.bind(event_ex, :routing_key => "*.qhp_selected")
     
     dep_q.bind(direct_ex, :routing_key => "enrollment.get_by_id")
