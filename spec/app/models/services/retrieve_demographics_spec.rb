@@ -24,9 +24,6 @@ XMLBODY
     expect(@retrieve_demographics.enrollment_request_type).to eql(:initial_enrollment)
   end
 
-  it 'should return a Hash of employer details' do
-    expect(@retrieve_demographics.employer_details.class).to eql(Hash)
-  end
 
   it 'should return a correct number of persons' do
     expect(@retrieve_demographics.persons({}).length).to eql 2
@@ -44,4 +41,7 @@ XMLBODY
     expect(@retrieve_demographics.broker).to eq ({})
   end
 
+  it "should fetch the subscriber" do
+    expect(@retrieve_demographics.subscriber.class).to eq (Nokogiri::XML::Element)
+  end
 end
