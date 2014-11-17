@@ -24,7 +24,6 @@ gem 'rack-test', :require => 'rack/test', :group => 'test'
 # Padrino Stable Gem
 gem 'padrino', '0.12.4'
 gem 'bunny'
-gem 'bluepill'
 gem 'nokogiri'
 
 # Or Padrino Edge
@@ -36,6 +35,7 @@ gem 'nokogiri'
 # end
 group :production do
   gem 'unicorn'
+  gem 'bluepill', '0.0.68'
 end
 
 group :development do
