@@ -11,4 +11,8 @@ HbxEnterprise::App.controller :proxies_curam, :map => "/proxies/curam" do
     content_type 'application/xml'
     body Proxies::PrimaryApplicantDetailsRequest.request(params[:id])
   end
+  get "application_group", :with => :id do
+    content_type 'application/xml'
+    body Proxies::CuramApplicationGroup.request(params[:id])
+  end
 end
