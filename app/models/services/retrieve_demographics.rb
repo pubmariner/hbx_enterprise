@@ -112,7 +112,8 @@ module Services
       return(prefix + SEP_REASONS["renewal"]) if renewal?
       return(prefix + SEP_REASONS["initial_enrollment"]) unless special_enrollment?
       node = Maybe.new(@xml.at_xpath("//ax2114:sepReason", namespaces))
-      prefix + SEP_REASONS[node.text.strip.downcase.value]
+      sep_reason_code = SEP_REASONS[node.text.strip.downcase.value] || "INVALID_REASON"
+      prefix + sep_reason_code
     end
 
     def person_nodes
