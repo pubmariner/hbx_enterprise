@@ -39,7 +39,7 @@ require 'spec_helper'
     }
 
     let(:phone){
-      {country_code:"", area_code:"", phone_number:"", full_phone_number:"", extension:""}
+      {country_code:"+1", area_code:"425", phone_number:"205 8433", full_phone_number:"+1425205 8433", extension:""}
     }
 
     let(:address){

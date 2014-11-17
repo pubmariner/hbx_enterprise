@@ -22,10 +22,10 @@
   <ax2114:nativeAmerican>false</ax2114:nativeAmerican>
   <ax2114:personID>247857</ax2114:personID>
   <ax2114:phoneNumber>
-    <ax2114:areaCode/>
-    <ax2114:countryCode/>
+    <ax2114:areaCode>425</ax2114:areaCode>
+    <ax2114:countryCode>+1</ax2114:countryCode>
     <ax2114:extension/>
-    <ax2114:phoneNumber/>
+    <ax2114:phoneNumber>205 8433</ax2114:phoneNumber>
   </ax2114:phoneNumber>
   <ax2114:relationship>
     <ax2114:relatedPersonID>247857</ax2114:relatedPersonID>
