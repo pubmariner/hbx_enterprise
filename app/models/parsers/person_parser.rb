@@ -43,8 +43,9 @@ module Parsers
       result[:address_line_2] = Maybe.new(@xml.at_xpath("ax2114:address/ax2114:addressLine2", namespaces)).text.value
 
       if Maybe.new(@xml.at_xpath("ax2114:address/ax2114:suiteNumber", namespaces)).text.value.present?
+        al2_val = result[:address_line_2].blank? ? "" : result[:address_line_2]
         spacer = result[:address_line_2].blank? ? "" : " "
-        result[:address_line_2] = result[:address_line_2] + "#{spacer}Apt " + Maybe.new(@xml.at_xpath("ax2114:address/ax2114:suiteNumber", namespaces)).text.value
+        result[:address_line_2] = al2_val + "#{spacer}" + Maybe.new(@xml.at_xpath("ax2114:address/ax2114:suiteNumber", namespaces)).text.value
       end
 
       result[:city] = Maybe.new(@xml.at_xpath("ax2114:address/ax2114:city", namespaces)).text.value
