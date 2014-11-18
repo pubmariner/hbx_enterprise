@@ -1,5 +1,5 @@
 module ServiceErrors
-  class Standard < StandardError
+  class Error < StandardError
     def initialize(msg, payload = "")
       super(msg)
       @payload = payload

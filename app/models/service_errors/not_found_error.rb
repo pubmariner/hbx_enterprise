@@ -1,5 +1,5 @@
 module ServiceErrors
-  class NotFound < Standard
+  class NotFoundError < ::ServiceErrors::Error
     def return_status
       "404"
     end
