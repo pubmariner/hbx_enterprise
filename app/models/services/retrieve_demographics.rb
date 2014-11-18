@@ -82,6 +82,7 @@ module Services
     end
 
     def persons(id_map)
+
       person_nodes.map do |node|
         @person_builder.build(node, id_map)
       end
@@ -118,7 +119,7 @@ module Services
 
     def person_nodes
       @xml.xpath("//ax2114:persons", namespaces).tap do |persons|
-        raise ServiceErrors::Error if persons.empty?
+        raise ServiceErrors::Error.new("No persons present",  @xml.canonicalize) unless persons.present?
       end
     end
 
