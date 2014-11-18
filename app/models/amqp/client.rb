@@ -105,11 +105,17 @@ module Amqp
       end
     end
 
-    def error_properties(error_routing_key, delivery_info, properties)
+    def error_properties(error_routing_key, delivery_info, properties, exception = nil)
       new_properties = properties.to_hash.dup
       new_headers = new_properties[:headers] || {}
       new_headers[:previous_routing_key] = delivery_info.routing_key
       new_properties[:routing_key] = error_routing_key
+
+      if exception
+        new_headers[:return_status] = exception.return_status
+        new_headers[:error_message] = exception.message
+      end
+
       new_properties
     end
 

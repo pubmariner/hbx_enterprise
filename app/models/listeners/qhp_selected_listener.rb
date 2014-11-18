@@ -28,39 +28,46 @@ module Listeners
 
     # TODO: Parse out sep reason
     def on_message(delivery_info, properties, payload)
-      reply_to = properties.reply_to
-      eg_id = Maybe.new(properties.headers["enrollment_group_uri"]).split(":").last.value
 
-      market_type_value = market_type(properties.headers["event_name"])
-      rd_service = Services::RetrieveDemographics.new(eg_id)
-      enrollment_request_type = rd_service.enrollment_request_type
-      qualifying_event_uri = rd_service.sep_reason
-      routing_key = ""
+      begin
+        reply_to = properties.reply_to
+        eg_id = Maybe.new(properties.headers["enrollment_group_uri"]).split(":").last.value
 
-      if market_type_value == :individual && enrollment_request_type == :renewal
-        routing_key = 'enrollment.individual.renewal'
-      elsif market_type_value == :individual && enrollment_request_type == :special_enrollment
-        routing_key = 'enrollment.individual.sep'
-      elsif market_type_value == :individual && enrollment_request_type == :initial_enrollment
-        routing_key = 'enrollment.individual.initial_enrollment'
-      elsif market_type_value == :employer_employee && enrollment_request_type == :renewal
-        routing_key = 'enrollment.shop.renewal'
-      elsif market_type_value == :employer_employee && enrollment_request_type == :special_enrollment
-        routing_key = 'enrollment.shop.sep'
-      elsif market_type_value == :employer_employee && enrollment_request_type == :initial_enrollment
-        routing_key = 'enrollment.shop.initial_enrollment'
+        market_type_value = market_type(properties.headers["event_name"])
+        rd_service = Services::RetrieveDemographics.new(eg_id)
+        enrollment_request_type = rd_service.enrollment_request_type
+        qualifying_event_uri = rd_service.sep_reason
+        routing_key = ""
+
+        if market_type_value == :individual && enrollment_request_type == :renewal
+          routing_key = 'enrollment.individual.renewal'
+        elsif market_type_value == :individual && enrollment_request_type == :special_enrollment
+          routing_key = 'enrollment.individual.sep'
+        elsif market_type_value == :individual && enrollment_request_type == :initial_enrollment
+          routing_key = 'enrollment.individual.initial_enrollment'
+        elsif market_type_value == :employer_employee && enrollment_request_type == :renewal
+          routing_key = 'enrollment.shop.renewal'
+        elsif market_type_value == :employer_employee && enrollment_request_type == :special_enrollment
+          routing_key = 'enrollment.shop.sep'
+        elsif market_type_value == :employer_employee && enrollment_request_type == :initial_enrollment
+          routing_key = 'enrollment.shop.initial_enrollment'
+        end
+
+        event_exchange = @channel.topic(ExchangeInformation.event_exchange, :durable => true)
+        event_exchange.publish(
+            "",
+            :persistent => true,
+            :routing_key => routing_key,
+            :headers =>
+                properties.headers.to_hash.merge(:qualifying_reason_uri => qualifying_event_uri)
+        )
+
+        channel.acknowledge(delivery_info.delivery_tag, false)
+
+      rescue ServiceErrors::Error => e
+        err_props = error_properties(reply_to, delivery_info, properties, e)
+        @channel.default_exchange.publish(e.payload, err_props)
       end
-
-      event_exchange = @channel.topic(ExchangeInformation.event_exchange, :durable => true)
-      event_exchange.publish(
-        "",
-        :persistent => true,
-        :routing_key=> routing_key,
-        :headers => 
-          properties.headers.to_hash.merge(:qualifying_reason_uri => qualifying_event_uri)
-      )
-
-      channel.acknowledge(delivery_info.delivery_tag, false)
     end
 
     def self.queue_name
