@@ -7,9 +7,12 @@ module Parsers
       "TFRT26001" => "child"
     }
 
+    attr_accessor :premium_amount
+
     def initialize(node, id_map)
       @xml = node
       @id_mapper = id_map
+      @premium_amount = {}
     end
 
     def namespaces
@@ -119,14 +122,6 @@ module Parsers
 
     def self.build(xml_node, id_map)
       self.new(xml_node, id_map)
-    end
-
-    def premium_amount
-      @premium
-    end
-
-    def premium_amount=(premium)
-      @premium = premium
     end
 
     def relationships

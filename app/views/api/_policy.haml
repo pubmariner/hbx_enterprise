@@ -8,7 +8,7 @@
       %name= policy.broker[:name]
   %enrollees
     - policy.enrollees.each do |enrollee|
-      = partial 'api/enrollee', :locals => { :object => enrollee }
+      = partial 'api/enrollee', :locals => { :object => enrollee, :policy => policy }
   -#- if policy.has_responsible_party?
   -#  %responsible_party
   %enrollment

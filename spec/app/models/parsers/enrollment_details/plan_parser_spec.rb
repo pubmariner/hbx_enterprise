@@ -54,8 +54,8 @@ shared_examples "a plan parser" do
 
   it "should assign enrollees" do
 
-    allow(enrollee1).to receive(:premium_amount=)
-    allow(enrollee2).to receive(:premium_amount=)
+    allow(enrollee1).to receive(:premium_amount).and_return({})
+    allow(enrollee2).to receive(:premium_amount).and_return({})
 
     subject.assign_enrollees(enrollees, idMapping)
 
