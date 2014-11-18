@@ -21,13 +21,20 @@ module Listeners
       enrollment_group_id = properties.headers["enrollment_group_id"]
 
       retrieve_demographics = Services::RetrieveDemographics.new(enrollment_group_id)
-      if retrieve_demographics.responsible_party?
+      begin
+        if retrieve_demographics.responsible_party?
+          err_props = error_properties(reply_to, delivery_info, properties)
+          err_props[:headers][:return_status] = "500"
+          @channel.default_exchange.publish("Due to an outstanding issue, responsible party scenarios can not be processed.", err_props)
+        else
+          response_cv = convert_to_cv(properties, retrieve_demographics)
+          @channel.default_exchange.publish(response_cv, { :routing_key => reply_to, :headers => { :return_status => "200", :qualifying_reason_uri => retrieve_demographics.sep_reason } })
+        end
+      rescue ServiceErrors::Standard => e
         err_props = error_properties(reply_to, delivery_info, properties)
-        err_props[:headers][:return_status] = "500"
-        @channel.default_exchange.publish("Due to an outstanding issue, responsible party scenarios can not be processed.", err_props)
-      else
-        response_cv = convert_to_cv(properties, retrieve_demographics)
-        @channel.default_exchange.publish(response_cv, { :routing_key => reply_to, :headers => { :return_status => "200", :qualifying_reason_uri => retrieve_demographics.sep_reason } })
+        err_props[:headers][:return_status] = e.return_status
+        err_props[:headers][:error_code] = e.message
+        @channel.default_exchange.publish(e.payload, err_props)
       end
       channel.acknowledge(delivery_info.delivery_tag, false)
     end

@@ -138,7 +138,9 @@ module Services
     end
 
     def subscriber
-      @xml.at_xpath("//ax2114:persons[ax2114:isPrimaryContact='true']", namespaces)
+      @xml.at_xpath("//ax2114:persons[ax2114:isPrimaryContact='true']", namespaces).tap do |node|
+        raise ServiceErrors::NotFound.new("No subscriber found", @xml.canonicalize) if node.blank?
+      end
     end
 
     def broker
