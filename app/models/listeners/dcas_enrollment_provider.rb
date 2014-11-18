@@ -31,9 +31,7 @@ module Listeners
           @channel.default_exchange.publish(response_cv, { :routing_key => reply_to, :headers => { :return_status => "200", :qualifying_reason_uri => retrieve_demographics.sep_reason } })
         end
       rescue ServiceErrors::Error => e
-        err_props = error_properties(reply_to, delivery_info, properties)
-        err_props[:headers][:return_status] = e.return_status
-        err_props[:headers][:error_message] = e.message
+        err_props = error_properties(reply_to, delivery_info, properties, e)
         @channel.default_exchange.publish(e.payload, err_props)
       end
       channel.acknowledge(delivery_info.delivery_tag, false)
