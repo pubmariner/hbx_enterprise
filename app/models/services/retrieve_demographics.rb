@@ -117,7 +117,9 @@ module Services
     end
 
     def person_nodes
-      @xml.xpath("//ax2114:persons", namespaces)
+      @xml.xpath("//ax2114:persons", namespaces).tap do |persons|
+        raise ServiceErrors::Error if persons.empty?
+      end
     end
 
     def person_ids
@@ -139,7 +141,7 @@ module Services
 
     def subscriber
       @xml.at_xpath("//ax2114:persons[ax2114:isPrimaryContact='true']", namespaces).tap do |node|
-        raise ServiceErrors::NotFound.new("No subscriber found", @xml.canonicalize) if node.blank?
+        raise ServiceErrors::NotFoundError.new("No subscriber found", @xml.canonicalize) if node.blank?
       end
     end
 
