@@ -26,7 +26,7 @@ module Services
     end
 
     def elected_aptc
-      Maybe.new(@xml.xpath("//premium-tax-credit-used",namespaces).first).text.to_f.value || 0.00
+      Maybe.new(@xml.xpath("//nsa:premium-tax-credit-used",namespaces).first).text.to_f.value || 0.00
     end
 
     def selected_coverages
