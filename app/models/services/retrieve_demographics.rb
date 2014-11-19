@@ -149,14 +149,14 @@ module Services
     def broker
       result = {}
 
-      agencyOrganisationID = Maybe.new(@xml.at_xpath("ax2114:assistors/ax2114:agencyOrganisationID", namespaces)).text.value
+      agencyOrganisationID = Maybe.new(@xml.at_xpath("//ax2114:assistors/ax2114:agencyOrganisationID", namespaces)).text.value
 
       if agencyOrganisationID.present? && !agencyOrganisationID.eql?("0")
 
-        first_name = Maybe.new(@xml.at_xpath("//ax2114:assistors/ax2114:firstName", namespaces)).text.value
-        last_name = Maybe.new(@xml.at_xpath("//ax2114:assistors/ax2114:lastName", namespaces)).text.value
+        first_name = Maybe.new(@xml.at_xpath("//ax2114:assistors/ax2114:firstName", namespaces)).text.value || ""
+        last_name = Maybe.new(@xml.at_xpath("//ax2114:assistors/ax2114:lastName", namespaces)).text.value || ""
         result[:name] = first_name + " " + last_name
-        result[:npm] = agencyOrganisationID
+        result[:npn] = agencyOrganisationID
       end
 
       result
