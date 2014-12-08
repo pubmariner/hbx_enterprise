@@ -3,13 +3,14 @@ module Parsers
     class PlanParser
 
       attr_reader :enrollees
-      attr_accessor :enrollment_group_id
+      attr_accessor :enrollment_group_id, :employer
 
       def initialize(node, elected_aptc)
         @xml = node
         @market = ""
         @broker = {}
         @elected_aptc = elected_aptc
+        @employer = nil
       end
 
       def market=(market_type)

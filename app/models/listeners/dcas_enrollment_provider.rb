@@ -42,11 +42,16 @@ module Listeners
       id_map = Services::IdMapping.from_person_ids(retrieve_demo.person_ids)
       persons = retrieve_demo.persons(id_map)
       enroll_details = Services::EnrollmentDetails.new(properties.headers["enrollment_group_id"])
+      employer = nil
+      if enroll_details.is_shop?
+        employer = Services::EmployerLookup.new(enroll_details.employer_id)
+      end
       plans = enroll_details.plans
       plans.each do |plan|
         plan.enrollment_group_id = enrollment_group_id
         plan.market = enroll_details.market_type
         plan.broker = retrieve_demo.broker
+        plan.employer = employer
         plan.assign_enrollees(persons, id_map)
       end
       @renderer.partial("api/enrollment", {:engine => :haml, :locals => {:policies => plans}})

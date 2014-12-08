@@ -42,6 +42,15 @@ module Services
       (emp_id.blank? || ("0" == emp_id)) ? "individual" : "shop"
     end
 
+    def is_shop?
+      emp_id = Maybe.new(@xml.xpath("//employer_id", namespaces).first).text.value
+      !(emp_id.blank? || ("0" == emp_id))
+    end
+
+    def employer_id
+      Maybe.new(@xml.xpath("//employer_id", namespaces).first).text.value
+    end
+
     def signature_date
       Maybe.new(@xml.xpath("//signature/signature-date",namespaces).first).text[0..9].gsub("-", "").value
     end
