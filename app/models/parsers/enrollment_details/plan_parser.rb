@@ -5,11 +5,12 @@ module Parsers
       attr_reader :enrollees
       attr_accessor :enrollment_group_id, :employer
 
-      def initialize(node, elected_aptc)
+      def initialize(node, elected_aptc, is_shop = false)
         @xml = node
         @market = ""
         @broker = {}
         @elected_aptc = elected_aptc
+        @is_shop = is_shop
         @employer = nil
       end
 
@@ -69,6 +70,10 @@ module Parsers
         (Maybe.new(@xml.at_xpath("plan/ehb-percent")).text.to_f.value || 0.00)
       end
 
+      def employer_responsible_amount
+        (Maybe.new(@xml.at_xpath("contribution-amount")).text.to_f.value || 0.00)
+      end
+
       def person_premiums_with_person_ids
         results = {}
         @xml.xpath("plan/person-premiums/person-premium").each do |node|
@@ -95,8 +100,13 @@ module Parsers
       end
 
       def total_responsible_amount
-        res_amt = premium_total - applied_aptc
-        sprintf('%.2f', res_amt).to_f
+        if @is_shop
+          res_amt = premium_total - employer_responsible_amount
+          sprintf('%.2f', res_amt).to_f
+        else
+          res_amt = premium_total - applied_aptc
+          sprintf('%.2f', res_amt).to_f
+        end
       end
 
       def plan_year
@@ -127,8 +137,8 @@ module Parsers
         Maybe.new(@xml.at_xpath("plan/plan-carrier/carrier-id")).text.value
       end
 
-      def self.build(xml_node, elected_aptc)
-        self.new(xml_node, elected_aptc)
+      def self.build(xml_node, elected_aptc, is_shop = false)
+        self.new(xml_node, elected_aptc, is_shop)
       end
     end
   end

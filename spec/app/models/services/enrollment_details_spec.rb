@@ -34,8 +34,8 @@ XMLBODY
     end
 
     it 'should construct plans for each coverage entry' do
-      allow(plan_builder).to receive(:build).with(@enrollment_details.selected_coverages[0], 0.00).and_return(plan1)
-      allow(plan_builder).to receive(:build).with(@enrollment_details.selected_coverages[1], 0.00).and_return(plan2)
+      allow(plan_builder).to receive(:build).with(@enrollment_details.selected_coverages[0], 0.00, false).and_return(plan1)
+      allow(plan_builder).to receive(:build).with(@enrollment_details.selected_coverages[1], 0.00, false).and_return(plan2)
       expect(@enrollment_details.plans).to include(plan1)
       expect(@enrollment_details.plans).to include(plan2)
     end

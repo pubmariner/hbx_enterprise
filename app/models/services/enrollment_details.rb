@@ -21,7 +21,7 @@ module Services
 
     def plans
       coverage_nodes.map do |node|
-        @plan_builder.build(node, elected_aptc)
+        @plan_builder.build(node, elected_aptc, is_shop?)
       end
     end
 
@@ -38,17 +38,17 @@ module Services
     end
 
     def market_type
-      emp_id = Maybe.new(@xml.xpath("//employer_id", namespaces).first).text.value
+      emp_id = Maybe.new(@xml.xpath("//nsa:employer/employer-id", namespaces).first).text.value
       (emp_id.blank? || ("0" == emp_id)) ? "individual" : "shop"
     end
 
     def is_shop?
-      emp_id = Maybe.new(@xml.xpath("//employer_id", namespaces).first).text.value
+      emp_id = Maybe.new(@xml.xpath("//nsa:employer/employer-id", namespaces).first).text.value
       !(emp_id.blank? || ("0" == emp_id))
     end
 
     def employer_id
-      Maybe.new(@xml.xpath("//employer_id", namespaces).first).text.value
+      Maybe.new(@xml.xpath("//nsa:employer/employer-id", namespaces).first).text.value
     end
 
     def signature_date
