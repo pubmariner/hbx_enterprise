@@ -38,7 +38,7 @@ module ManualEnrollments
 
     def serialize_enrollment(xml)
       xml.enrollment do |xml|
-        serialize_plan(xml)
+        serialize_plan(@enrollment.plan, xml)
         @enrollment.shop_market? ? serialize_shop_market(xml) : serialize_individual_market(xml)
         xml.premium_amount_total @enrollment_plan.premium_total.gsub(/\$/, '')
         xml.total_responsible_amount @enrollment_plan.responsible_amount.gsub(/\$/, '')
@@ -56,20 +56,20 @@ module ManualEnrollments
           xml.id do |xml|
             xml.id @enrollment.fein
           end
-          xml.name @enrollment.employer_name
+          xml.name @enrollment.employer_name.camelcase
         end
         xml.total_employer_responsible_amount @enrollment_plan.employer_contribution.gsub(/\$/, '')
       end
     end
 
-    def serialize_plan(xml)
+    def serialize_plan(plan, xml)
       xml.plan do |xml|
         xml.id do |xml|
-          xml.id @enrollment_plan.hios_id
+          xml.id plan.hios_id
         end
         xml.coverage_type 'health'
         xml.plan_year '2015'
-        xml.name @enrollment_plan.name
+        xml.name plan.name
         xml.is_dental_only false
       end
     end
@@ -80,9 +80,13 @@ module ManualEnrollments
           xml.enrollee do |xml|
             xml.member do |xml|
               serialize_person(enrollee, xml)
+              serialize_relationships(enrollee, xml)
               serialize_demographics(enrollee, xml)
             end
             xml.is_subscriber enrollee.is_subscriber
+            xml.benefit do |xml|
+              xml.premium_amount enrollee.premium.gsub(/\$/, '')
+            end
           end
         end
       end
@@ -91,7 +95,12 @@ module ManualEnrollments
     def serialize_person(enrollee, xml)
       xml.person do |xml|
         xml.id do |xml|
-          xml.id @person_id_generator.unique_identifier
+          if enrollee.is_subscriber
+            @subscriber_id = @person_id_generator.unique_identifier 
+            xml.id @subscriber_id
+          else
+            xml.id @person_id_generator.unique_identifier
+          end
         end
         xml.person_name do |xml|
           xml.person_surname enrollee.last_name
@@ -104,10 +113,25 @@ module ManualEnrollments
       end
     end
 
+    def serialize_relationships(enrollee, xml)
+      xml.person_relationships do |xml|
+        xml.person_relationship do |xml|
+          xml.subject_individual do |xml|
+            xml.id @person_id_generator.current
+          end
+          xml.relationship_uri (enrollee.is_subscriber ? 'self' : enrollee.relationship)
+          xml.object_individual do |xml|
+            xml.id @subscriber_id
+          end
+        end
+      end
+    end
+
     def serialize_demographics(enrollee, xml)
       xml.person_demograhics do |xml|
-        xml.ssn enrollee.ssn unless enrollee.ssn.blank?
-        xml.sex enrollee.gender unless enrollee.gender.blank?
+        xml.ssn enrollee.ssn.gsub(/-/,'') unless enrollee.ssn.blank?
+        xml.sex enrollee.gender.downcase unless enrollee.gender.blank?
+        xml.birth_date format_date(enrollee.dob) unless enrollee.dob.blank?
       end
     end
 
@@ -142,7 +166,7 @@ module ManualEnrollments
         if !enrollee.phone.blank?
           xml.phone do |xml|
             xml.type 'home'
-            xml.phone_number enrollee.phone
+            xml.phone_number enrollee.phone.gsub(/-/,'')
           end
         end
       end   
@@ -152,6 +176,11 @@ module ManualEnrollments
       File.open("#{Padrino.root}/enrollments/enrollment_#{@policy_id_generator.current}.xml", 'w') do |file|
         file.write xml_string
       end
+    end
+
+    def format_date(date)
+      date = Date.strptime(date,'%m/%d/%Y')
+      date.strftime('%Y%m%d')
     end
   end
 
