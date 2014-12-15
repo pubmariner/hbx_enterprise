@@ -1,5 +1,11 @@
 require 'csv'
 
+class String
+  def scrub_utf8
+    self.gsub(/[^\x00-\x7F]+/, "")
+  end
+end
+  
 module ManualEnrollments
   class EnrollmentRowParser
      
@@ -75,12 +81,6 @@ module ManualEnrollments
         counter += 1
         data
       end
-    end
-  end
-
-  class String
-    def scrub_utf8
-      self.gsub(/[^\x00-\x7F]+/, "")
     end
   end
 end

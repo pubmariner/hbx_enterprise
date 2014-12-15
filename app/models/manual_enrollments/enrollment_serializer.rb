@@ -11,7 +11,7 @@ module ManualEnrollments
       @policy_id_generator = IdGenerator.new(1000000)
       @person_id_generator = IdGenerator.new(30000)
       CSV.foreach(file) do |row|
-        next if row[1].blank? || ["employer name"].include?(row[1].strip)
+        next if row[2].blank? || ["employer name"].include?(row[2].strip)
         generate_enrollment_cv(row)
       end
     end
@@ -29,17 +29,17 @@ module ManualEnrollments
               xml.id @policy_id_generator.unique_identifier
             end
             serialize_enrollees(xml)
-            serialize_enrollment(xml)
+            serialize_enrollment(enrollment, xml)
           end
         end
       end
       write_to_file builder.to_xml(:indent => 2)
     end
 
-    def serialize_enrollment(xml)
+    def serialize_enrollment(enrollment, xml)
       xml.enrollment do |xml|
-        serialize_plan(@enrollment.plan, xml)
-        @enrollment.shop_market? ? serialize_shop_market(xml) : serialize_individual_market(xml)
+        serialize_plan(enrollment.plan, xml)
+        enrollment.shop_market? ? serialize_shop_market(xml) : serialize_individual_market(xml)
         xml.premium_amount_total @enrollment_plan.premium_total.gsub(/\$/, '')
         xml.total_responsible_amount @enrollment_plan.responsible_amount.gsub(/\$/, '')
       end
