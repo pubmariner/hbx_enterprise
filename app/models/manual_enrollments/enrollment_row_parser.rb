@@ -22,7 +22,8 @@ module ManualEnrollments
     end
 
     def market
-      @row[1].to_s.strip.scrub_utf8
+      # @row[1].to_s.strip.scrub_utf8
+      'shop'
     end
 
     def employer_name
@@ -39,10 +40,6 @@ module ManualEnrollments
 
     def broker_npn
       @row[5].to_s.strip.scrub_utf8
-    end
-
-    def shop_market?
-      return true
     end
 
     def enrollees

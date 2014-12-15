@@ -7,9 +7,12 @@ module ManualEnrollments
       "xmlns:xsi" => "http://www.w3.org/2001/XMLSchema-instance"
     }
 
-    def from_csv(file = "#{Padrino.root}/2015oe.csv")
+    def initialize
       @policy_id_generator = IdGenerator.new(1000000)
-      @person_id_generator = IdGenerator.new(30000)
+      @person_id_generator = IdGenerator.new(30000)     
+    end
+
+    def from_csv(file = "#{Padrino.root}/2015oe.csv")
       CSV.foreach(file) do |row|
         next if row[2].blank? || ["employer name"].include?(row[2].strip)
         generate_enrollment_cv(row)
@@ -28,37 +31,30 @@ module ManualEnrollments
             xml.id do |xml|
               xml.id @policy_id_generator.unique_identifier
             end
-            serialize_enrollees(xml)
-            serialize_enrollment(enrollment, xml)
+            serialize_broker(@enrollment, xml)
+            serialize_enrollees(@enrollment, xml)
+            serialize_enrollment(@enrollment, xml)
           end
         end
       end
       write_to_file builder.to_xml(:indent => 2)
     end
 
+    def serialize_broker(enrollment, xml)
+      xml.broker do |xml|
+        xml.id do |xml|
+          xml.id enrollment.broker_npn
+        end        
+        xml.name enrollment.broker
+      end
+    end
+
     def serialize_enrollment(enrollment, xml)
       xml.enrollment do |xml|
         serialize_plan(enrollment.plan, xml)
-        enrollment.shop_market? ? serialize_shop_market(xml) : serialize_individual_market(xml)
-        xml.premium_amount_total @enrollment_plan.premium_total.gsub(/\$/, '')
-        xml.total_responsible_amount @enrollment_plan.responsible_amount.gsub(/\$/, '')
-      end
-    end
-
-    def serialize_individual_market(xml)
-      xml.individual_market do |xml|
-      end
-    end
-
-    def serialize_shop_market(xml)
-      xml.shop_market do |xml|
-        xml.employer_link do |xml|
-          xml.id do |xml|
-            xml.id @enrollment.fein
-          end
-          xml.name @enrollment.employer_name.camelcase
-        end
-        xml.total_employer_responsible_amount @enrollment_plan.employer_contribution.gsub(/\$/, '')
+        enrollment.market == 'shop' ? serialize_shop_market(enrollment, xml) : serialize_individual_market(enrollment, xml)
+        xml.premium_amount_total enrollment.plan.premium_total.gsub(/\$/, '')
+        xml.total_responsible_amount enrollment.plan.responsible_amount.gsub(/\$/, '')
       end
     end
 
@@ -74,15 +70,28 @@ module ManualEnrollments
       end
     end
 
-    def serialize_enrollees(xml)
+    def serialize_individual_market(enrollment, xml)
+      xml.individual_market do |xml|
+      end
+    end
+
+    def serialize_shop_market(enrollment, xml)
+      xml.shop_market do |xml|
+        xml.employer_link do |xml|
+          xml.id do |xml|
+            xml.id enrollment.fein
+          end
+          xml.name enrollment.employer_name.camelcase
+        end
+        xml.total_employer_responsible_amount enrollment.plan.employer_contribution.gsub(/\$/, '')
+      end
+    end
+
+    def serialize_enrollees(enrollment, xml)
       xml.enrollees do |xml|
-        @enrollment.enrollees.each do |enrollee| 
+        enrollment.enrollees.each do |enrollee|
           xml.enrollee do |xml|
-            xml.member do |xml|
-              serialize_person(enrollee, xml)
-              serialize_relationships(enrollee, xml)
-              serialize_demographics(enrollee, xml)
-            end
+            serialize_member(enrollee, xml)
             xml.is_subscriber enrollee.is_subscriber
             xml.benefit do |xml|
               xml.premium_amount enrollee.premium.gsub(/\$/, '')
@@ -92,21 +101,18 @@ module ManualEnrollments
       end
     end
 
+    def serialize_member(enrollee, xml)
+      xml.member do |xml|
+        serialize_person(enrollee, xml)
+        serialize_relationships(enrollee, xml)
+        serialize_demographics(enrollee, xml)
+      end      
+    end
+
     def serialize_person(enrollee, xml)
       xml.person do |xml|
-        xml.id do |xml|
-          if enrollee.is_subscriber
-            @subscriber_id = @person_id_generator.unique_identifier 
-            xml.id @subscriber_id
-          else
-            xml.id @person_id_generator.unique_identifier
-          end
-        end
-        xml.person_name do |xml|
-          xml.person_surname enrollee.last_name
-          xml.person_given_name enrollee.first_name
-          xml.person_middle_name enrollee.middle_name unless enrollee.middle_name.blank?
-        end
+        serialize_person_id(enrollee, xml)
+        serialize_names(enrollee, xml)
         serialize_address(enrollee, xml)
         serialize_email(enrollee, xml)
         serialize_phone(enrollee, xml)
@@ -129,9 +135,28 @@ module ManualEnrollments
 
     def serialize_demographics(enrollee, xml)
       xml.person_demograhics do |xml|
-        xml.ssn enrollee.ssn.gsub(/-/,'') unless enrollee.ssn.blank?
-        xml.sex enrollee.gender.downcase unless enrollee.gender.blank?
-        xml.birth_date format_date(enrollee.dob) unless enrollee.dob.blank?
+        xml.ssn enrollee.ssn.gsub(/-/,'') if !enrollee.ssn.blank?
+        xml.sex enrollee.gender.downcase if !enrollee.gender.blank?
+        xml.birth_date format_date(enrollee.dob) if !enrollee.dob.blank?
+      end
+    end
+
+    def serialize_person_id(enrollee, xml)
+      xml.id do |xml|
+        if enrollee.is_subscriber
+          @subscriber_id = @person_id_generator.unique_identifier 
+          xml.id @subscriber_id
+        else
+          xml.id @person_id_generator.unique_identifier
+        end
+      end    
+    end
+
+    def serialize_names(enrollee, xml)
+      xml.person_name do |xml|
+        xml.person_surname enrollee.last_name
+        xml.person_given_name enrollee.first_name
+        xml.person_middle_name enrollee.middle_name if !enrollee.middle_name.blank?
       end
     end
 
@@ -141,7 +166,7 @@ module ManualEnrollments
           xml.address do |xml|
             xml.type 'home'
             xml.address_line_1 enrollee.address_1
-            xml.address_line_2 enrollee.address_2 unless enrollee.address_2.blank?
+            xml.address_line_2 enrollee.address_2 if !enrollee.address_2.blank?
             xml.location_city_name enrollee.city
             xml.location_state enrollee.state
             xml.location_postal_code enrollee.zip
