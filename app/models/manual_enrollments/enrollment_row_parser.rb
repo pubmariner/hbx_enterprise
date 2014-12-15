@@ -11,16 +11,32 @@ module ManualEnrollments
       @row = row
     end
 
-    def shop_market?
-      return true
+    def type
+      @row[0].to_s.strip.scrub_utf8
+    end
+
+    def market
+      @row[1].to_s.strip.scrub_utf8
     end
 
     def employer_name
-      @row[1].to_s.strip.gsub(/[^\x00-\x7F]+/, "")
+      @row[2].to_s.strip.scrub_utf8
     end
 
     def fein
-      @row[2].to_s.strip.gsub(/[^\x00-\x7F]+/, "")
+      @row[3].to_s.strip.scrub_utf8
+    end
+
+    def broker
+      @row[4].to_s.strip.scrub_utf8
+    end
+
+    def broker_npn
+      @row[5].to_s.strip.scrub_utf8
+    end
+
+    def shop_market?
+      return true
     end
 
     def enrollees
@@ -28,19 +44,19 @@ module ManualEnrollments
     end
 
     def plan
-      fields = @row[3..7]
+      fields = @row[6..10]
       OpenStruct.new(build_fields_hash(fields, PLAN_FIEDLS))
     end
 
     def subscriber
-      fields = @row[8..21]
+      fields = @row[11..24]
       return if fields.compact.empty?
       OpenStruct.new(build_fields_hash(fields, SUBSCRIBER_FIEDLS).merge({is_subscriber: true}))
     end
 
     def dependents
       individuals = [ ]
-      current = 22
+      current = 25
       8.times do |i|
         fields = @row[current..(current + 14)]
         current += 15
@@ -55,10 +71,16 @@ module ManualEnrollments
     def build_fields_hash(fields, columns)
       counter = 0
       columns.inject({}) do |data, column|
-        data[column] = fields[counter].to_s.strip.gsub(/[^\x00-\x7F]+/, "")
+        data[column] = fields[counter].to_s.strip.scrub_utf8
         counter += 1
         data
       end
+    end
+  end
+
+  class String
+    def scrub_utf8
+      self.gsub(/[^\x00-\x7F]+/, "")
     end
   end
 end
