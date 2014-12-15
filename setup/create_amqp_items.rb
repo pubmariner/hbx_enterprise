@@ -27,17 +27,22 @@ class SetupAmqpTasks
     qsl_q = queue(Listeners::QhpSelectedListener.queue_name)
     dep_q = queue(Listeners::DcasEnrollmentProvider.queue_name)
     ge_q = queue(Listeners::EmployerGroupXmlListener.queue_name)
+
     emp_qhps = logging_queue(ec, "recording.ee_qhp_plan_selected")
     ind_qhps = logging_queue(ec, "recording.ind_qhp_plan_selected")
+    shop_oe_q = logging_queue(ec, "logging.shop.open_enrollment")
     event_ex = exchange("topic", ec.event_exchange)
     direct_ex = exchange("direct", ec.request_exchange)
 
     ind_qhps.bind(event_ex, :routing_key => "individual.qhp_selected")
     emp_qhps.bind(event_ex, :routing_key => "employer_employee.qhp_selected")
     qsl_q.bind(event_ex, :routing_key => "*.qhp_selected")
+    shop_oe_q.bind(event_ex, :routing_key => "enrollment.shop.renewal")
+    shop_oe_q.bind(event_ex, :routing_key => "enrollment.shop.initial_enrollment")
     
     dep_q.bind(direct_ex, :routing_key => "enrollment.get_by_id")
     ge_q.bind(direct_ex, :routing_key => "employer.get_by_feins")
+
   end
 end
 
