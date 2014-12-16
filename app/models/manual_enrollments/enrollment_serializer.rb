@@ -4,6 +4,7 @@ module ManualEnrollments
   class EnrollmentSerializer
 
     CV_XMLNS = {
+      "xmlns" => 'http://openhbx.org/api/terms/1.0',
       "xmlns:xsi" => "http://www.w3.org/2001/XMLSchema-instance"
     }
 
@@ -63,7 +64,7 @@ module ManualEnrollments
         xml.id do |xml|
           xml.id plan.hios_id
         end
-        xml.coverage_type 'health'
+        xml.coverage_type 'urn:openhbx:terms:v1:qhp_benefit_coverage#health'
         xml.plan_year '2015'
         xml.name plan.name
         xml.is_dental_only false
@@ -125,7 +126,7 @@ module ManualEnrollments
           xml.subject_individual do |xml|
             xml.id @person_id_generator.current
           end
-          xml.relationship_uri (enrollee.is_subscriber ? 'self' : enrollee.relationship)
+          xml.relationship_uri 'urn:openhbx:terms:v1:individual_relationship#' + (enrollee.is_subscriber ? 'self' : enrollee.relationship).downcase
           xml.object_individual do |xml|
             xml.id @subscriber_id
           end
@@ -134,9 +135,9 @@ module ManualEnrollments
     end
 
     def serialize_demographics(enrollee, xml)
-      xml.person_demograhics do |xml|
+      xml.person_demographics do |xml|
         xml.ssn enrollee.ssn.gsub(/-/,'') if !enrollee.ssn.blank?
-        xml.sex enrollee.gender.downcase if !enrollee.gender.blank?
+        xml.sex 'urn:openhbx:terms:v1:gender#' + enrollee.gender.downcase if !enrollee.gender.blank?
         xml.birth_date format_date(enrollee.dob) if !enrollee.dob.blank?
       end
     end
@@ -164,11 +165,11 @@ module ManualEnrollments
       xml.addresses do |xml|
         if !enrollee.address_1.blank?
           xml.address do |xml|
-            xml.type 'home'
+            xml.type 'urn:openhbx:terms:v1:address_type#home'
             xml.address_line_1 enrollee.address_1
             xml.address_line_2 enrollee.address_2 if !enrollee.address_2.blank?
             xml.location_city_name enrollee.city
-            xml.location_state enrollee.state
+            xml.location_state_code enrollee.state
             xml.location_postal_code enrollee.zip
           end
         end
@@ -190,11 +191,11 @@ module ManualEnrollments
       xml.phones do |xml|
         if !enrollee.phone.blank?
           xml.phone do |xml|
-            xml.type 'home'
+            xml.type 'urn:openhbx:terms:v1:phone_type#home'
             xml.phone_number enrollee.phone.gsub(/-/,'')
           end
         end
-      end   
+      end
     end
 
     def write_to_file(xml_string)
