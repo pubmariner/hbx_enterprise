@@ -15,7 +15,7 @@ module ManualEnrollments
 
     def from_csv(file = "#{Padrino.root}/2015oe.csv")
       CSV.foreach(file) do |row|
-        next if row[2].blank? || ["employer name"].include?(row[2].strip)
+        next if row[2].blank? || ["Sponsor Name"].include?(row[2].strip)
         generate_enrollment_cv(row)
       end
     end
@@ -24,6 +24,7 @@ module ManualEnrollments
       @enrollment = EnrollmentRowParser.new(row)
       @enrollment_plan = @enrollment.plan
       return if @enrollment.subscriber.nil?
+
       builder = Nokogiri::XML::Builder.new do |xml|
         xml.enrollment(CV_XMLNS) do |xml|
           xml.type 'renewal'
@@ -180,7 +181,7 @@ module ManualEnrollments
       xml.emails do |xml|
         if !enrollee.email.blank?
           xml.email do |xml|
-            xml.type 'home'
+            xml.type 'urn:openhbx:terms:v1:email_type#home'
             xml.email_address enrollee.email
           end
         end
