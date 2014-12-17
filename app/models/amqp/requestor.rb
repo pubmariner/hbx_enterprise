@@ -3,13 +3,12 @@ require 'thread'
 
 module Amqp
   class Requestor
-    attr_reader :channel
-
-    def initialize(chan)
-      @channel = chan
+    def initialize(conn)
+      @connection = conn
     end
 
     def request(properties, payload, timeout = 15)
+      channel = @connection.create_channel
       temp_queue = channel.queue("", :exclusive => true)
       channel.prefetch(1)
       request_exchange = channel.direct(ExchangeInformation.request_exchange, :durable => true)
@@ -25,6 +24,7 @@ module Amqp
         end
       ensure
         temp_queue.delete
+        channel.close
       end
       [delivery_info, r_props, r_payload]
     end
@@ -32,9 +32,7 @@ module Amqp
     def self.default
       conn = Bunny.new(ExchangeInformation.amqp_uri)
       conn.start
-      ch = conn.create_channel
-      ch.prefetch(1)
-      self.new(ch)
+      self.new(conn)
     end
   end
 end
