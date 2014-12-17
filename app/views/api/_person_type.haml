@@ -30,4 +30,5 @@
         %extension= phone[:extension]
       - if phone[:phone_number].present?
         %phone_number= phone[:phone_number]
+      - if phone[:full_phone_number].present?
         %full_phone_number= phone[:full_phone_number]
