@@ -25,7 +25,6 @@ module Amqp
         end
       ensure
         temp_queue.delete
-        channel.close
       end
       [delivery_info, r_props, r_payload]
     end
