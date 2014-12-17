@@ -3,12 +3,13 @@ require 'thread'
 
 module Amqp
   class Requestor
+    attr_reader :channel
+
     def initialize(chan)
       @channel = chan
     end
 
     def request(properties, payload, timeout = 15)
-      channel = @channel.connection.create_channel
       temp_queue = channel.queue("", :exclusive => true)
       request_exchange = channel.direct(ExchangeInformation.request_exchange, :durable => true)
       request_exchange.publish(payload, properties.dup.merge({ :reply_to => temp_queue.name, :persistent => true }))
@@ -23,7 +24,6 @@ module Amqp
         end
       ensure
         temp_queue.delete
-        channel.close
       end
       [delivery_info, r_props, r_payload]
     end
