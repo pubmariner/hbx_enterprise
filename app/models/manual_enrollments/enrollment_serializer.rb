@@ -9,14 +9,21 @@ module ManualEnrollments
     }
 
     def initialize
-      @policy_id_generator = IdGenerator.new(1000000)
-      @person_id_generator = IdGenerator.new(30000)     
+      @policy_id_generator = IdGenerator.new(45000)
+      @person_id_generator = IdGenerator.new(10002000)     
     end
 
     def from_csv(file = "#{Padrino.root}/2015oe.csv")
-      CSV.foreach(file) do |row|
-        next if row[2].blank? || ["Sponsor Name"].include?(row[2].strip)
-        generate_enrollment_cv(row)
+      publisher = ManualEnrollments::EnrollmentPublisher.new
+      File.open("#{Padrino.root}/enrollments.log", "a") do |f|
+        CSV.foreach(file) do |row|
+          next if row[2].blank? || ["Sponsor Name"].include?(row[2].strip)
+          payload = generate_enrollment_cv(row)
+          response = publisher.publish(payload)
+          f.puts row
+          f.puts response
+          puts response.inspect
+        end
       end
     end
 
@@ -39,15 +46,18 @@ module ManualEnrollments
           end
         end
       end
-      write_to_file builder.to_xml(:indent => 2)
+      # write_to_file builder.to_xml(:indent => 2)
+      builder.to_xml(:indent => 2)
     end
 
     def serialize_broker(enrollment, xml)
       xml.broker do |xml|
-        xml.id do |xml|
-          xml.id enrollment.broker_npn
-        end        
-        xml.name enrollment.broker
+        if enrollment.market != 'shop'
+          xml.id do |xml|
+            xml.id enrollment.broker_npn
+          end
+          xml.name enrollment.broker
+        end
       end
     end
 
@@ -96,6 +106,7 @@ module ManualEnrollments
             serialize_member(enrollee, xml)
             xml.is_subscriber enrollee.is_subscriber
             xml.benefit do |xml|
+              xml.begin_date '20150101'
               xml.premium_amount enrollee.premium.gsub(/\$/, '')
             end
           end
@@ -105,15 +116,17 @@ module ManualEnrollments
 
     def serialize_member(enrollee, xml)
       xml.member do |xml|
-        serialize_person(enrollee, xml)
+        id = @person_id_generator.unique_identifier
+        serialize_person_id(enrollee, xml, id)
+        serialize_person(enrollee, xml, id)
         serialize_relationships(enrollee, xml)
         serialize_demographics(enrollee, xml)
       end      
     end
 
-    def serialize_person(enrollee, xml)
+    def serialize_person(enrollee, xml, id)
       xml.person do |xml|
-        serialize_person_id(enrollee, xml)
+        serialize_person_id(enrollee, xml, id)
         serialize_names(enrollee, xml)
         serialize_address(enrollee, xml)
         serialize_email(enrollee, xml)
@@ -123,7 +136,7 @@ module ManualEnrollments
 
     def serialize_relationships(enrollee, xml)
       xml.person_relationships do |xml|
-        xml.person_relationship do |xml|
+        xml.relationship do |xml|
           xml.subject_individual do |xml|
             xml.id @person_id_generator.current
           end
@@ -137,20 +150,18 @@ module ManualEnrollments
 
     def serialize_demographics(enrollee, xml)
       xml.person_demographics do |xml|
-        xml.ssn enrollee.ssn.gsub(/-/,'') if !enrollee.ssn.blank?
+        xml.ssn format_ssn(enrollee.ssn) if !enrollee.ssn.blank?
         xml.sex 'urn:openhbx:terms:v1:gender#' + enrollee.gender.downcase if !enrollee.gender.blank?
         xml.birth_date format_date(enrollee.dob) if !enrollee.dob.blank?
       end
     end
 
-    def serialize_person_id(enrollee, xml)
+    def serialize_person_id(enrollee, xml, id)
       xml.id do |xml|
         if enrollee.is_subscriber
-          @subscriber_id = @person_id_generator.unique_identifier 
-          xml.id @subscriber_id
-        else
-          xml.id @person_id_generator.unique_identifier
+          @subscriber_id = id
         end
+        xml.id id
       end    
     end
 
@@ -163,16 +174,18 @@ module ManualEnrollments
     end
 
     def serialize_address(enrollee, xml)
+      if enrollee.address_1.blank?
+        # puts "----------found match"
+        enrollee = @enrollment.subscriber
+      end
       xml.addresses do |xml|
-        if !enrollee.address_1.blank?
-          xml.address do |xml|
-            xml.type 'urn:openhbx:terms:v1:address_type#home'
-            xml.address_line_1 enrollee.address_1
-            xml.address_line_2 enrollee.address_2 if !enrollee.address_2.blank?
-            xml.location_city_name enrollee.city
-            xml.location_state_code enrollee.state
-            xml.location_postal_code enrollee.zip
-          end
+        xml.address do |xml|
+          xml.type 'urn:openhbx:terms:v1:address_type#home'
+          xml.address_line_1 enrollee.address_1
+          xml.address_line_2 enrollee.address_2 if !enrollee.address_2.blank?
+          xml.location_city_name enrollee.city
+          xml.location_state_code enrollee.state
+          xml.postal_code enrollee.zip
         end
       end
     end
@@ -193,7 +206,7 @@ module ManualEnrollments
         if !enrollee.phone.blank?
           xml.phone do |xml|
             xml.type 'urn:openhbx:terms:v1:phone_type#home'
-            xml.phone_number enrollee.phone.gsub(/-/,'')
+            xml.full_phone_number enrollee.phone.gsub(/-/,'')
           end
         end
       end
@@ -208,6 +221,18 @@ module ManualEnrollments
     def format_date(date)
       date = Date.strptime(date,'%m/%d/%Y')
       date.strftime('%Y%m%d')
+    end
+
+    private
+
+    def format_ssn(ssn)
+      ssn.gsub!(/-/,'')
+      (9 - ssn.size).times{ ssn = prepend_zero(ssn) }
+      ssn
+    end
+
+    def prepend_zero(ssn)
+      '0' + ssn
     end
   end
 
