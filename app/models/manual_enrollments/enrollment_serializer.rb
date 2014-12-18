@@ -53,14 +53,11 @@ module ManualEnrollments
 
     def serialize_enrollment(enrollment, xml)
       xml.enrollment do |xml|
-        serialize_plan(enrollment.plan, xml)
-        enrollment.market == 'shop' ? serialize_shop_market(enrollment, xml) : serialize_individual_market(enrollment, xml)
-        xml.premium_amount_total enrollment.plan.premium_total.gsub(/\$/, '')
-        xml.total_responsible_amount enrollment.plan.responsible_amount.gsub(/\$/, '')
+        serialize_plan(enrollment.plan, enrollment, xml)
       end
     end
 
-    def serialize_plan(plan, xml)
+    def serialize_plan(plan, enrollment, xml)
       xml.plan do |xml|
         xml.id do |xml|
           xml.id plan.hios_id
@@ -69,6 +66,9 @@ module ManualEnrollments
         xml.plan_year '2015'
         xml.name plan.name
         xml.is_dental_only false
+        enrollment.market == 'shop' ? serialize_shop_market(enrollment, xml) : serialize_individual_market(enrollment, xml)
+        xml.premium_amount_total plan.premium_total.gsub(/\$/, '')
+        xml.total_responsible_amount plan.responsible_amount.gsub(/\$/, '')
       end
     end
 
