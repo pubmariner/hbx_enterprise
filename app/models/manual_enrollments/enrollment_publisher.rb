@@ -1,23 +1,21 @@
 module ManualEnrollments
-  class EnrollmentPublisher < Amqp::Client
+  class EnrollmentPublisher
 
     def initialize
-      conn = Bunny.new
+      conn = Bunny.new('amqp://guest:guest@10.83.85.128:5672')
       conn.start
 
       @ch = conn.create_channel
-      @x = @ch.direct("dc0.preprod.e.direct.requests")
+      @requestor = Amqp::Requestor.new(conn)
     end
 
-    def publish(payload, options = {})
-      temp_queue = @ch.queue("", :exclusive => true)
-      # temp_queue.bind(@x)
-      
-      @x.publish(payload, options.merge({
+    def publish(payload)
+      properties = {
         :routing_key => 'enrollment.create',
-        :reply_to => temp_queue.name,
-        :persistent => true })
-      )
+        :headers => {
+          qualifying_reason_uri: 'urn:dc0:terms:v1:qualifying_life_event#open_enrollment'
+        }}
+      @requestor.request(properties, payload)
     end
   end
 end
