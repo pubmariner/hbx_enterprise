@@ -36,14 +36,12 @@ module Listeners
       end
       channel.acknowledge(delivery_info.delivery_tag, false)
     end
-
-    # @param properties
-    # @param retrieve_demo
-    def convert_to_cv(properties, retrieve_demo)
+    
+    def convert_to_cv(properties, retrieve_demographics)
       enrollment_group_id = properties.headers["enrollment_group_id"]
-      id_map = Services::IdMapping.from_person_ids(retrieve_demo.person_ids)
-      #persons = get_persons(properties, retrieve_demo, id_map) #TODO new workflow
-      persons = retrieve_demo.persons(id_map) #TODO should go away
+      id_map = Services::IdMapping.from_person_ids(retrieve_demographics.person_ids)
+      #persons = get_persons(properties, retrieve_demographics, id_map) #TODO new workflow
+      persons = retrieve_demographics.persons(id_map) #TODO should go away
       enroll_details = Services::EnrollmentDetails.new(properties.headers["enrollment_group_id"])
       employer = nil
       if enroll_details.is_shop?
@@ -53,7 +51,7 @@ module Listeners
       plans.each do |plan|
         plan.enrollment_group_id = enrollment_group_id
         plan.market = enroll_details.market_type
-        plan.broker = retrieve_demo.broker
+        plan.broker = retrieve_demographics.broker
         plan.employer = employer
         plan.assign_enrollees(persons, id_map)
       end
