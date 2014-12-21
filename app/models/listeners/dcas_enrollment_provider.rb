@@ -37,10 +37,13 @@ module Listeners
       channel.acknowledge(delivery_info.delivery_tag, false)
     end
 
+    # @param properties
+    # @param retrieve_demo
     def convert_to_cv(properties, retrieve_demo)
       enrollment_group_id = properties.headers["enrollment_group_id"]
       id_map = Services::IdMapping.from_person_ids(retrieve_demo.person_ids)
-      persons = retrieve_demo.persons(id_map)
+      #persons = get_persons(properties, retrieve_demo, id_map) #TODO new workflow
+      persons = retrieve_demo.persons(id_map) #TODO should go away
       enroll_details = Services::EnrollmentDetails.new(properties.headers["enrollment_group_id"])
       employer = nil
       if enroll_details.is_shop?
@@ -55,6 +58,31 @@ module Listeners
         plan.assign_enrollees(persons, id_map)
       end
       @renderer.partial("api/enrollment", {:engine => :haml, :locals => {:policies => plans}})
+    end
+
+    # This method decided the source of persons information based of the key in properties.
+    #
+    def get_persons(properties, retrieve_demo, id_map)
+      people = retrieve_demo.persons(id_map)
+        if true #some test condition
+          people = people_from_glue(people)
+        end
+    end
+
+    def people_from_glue(people)
+      person_match_request = PersonMatchRequest.new
+      people.map do |person|
+
+        people_params = {}
+        people_params[:name_first] = person.given_name
+        people_params[:name_last] = person.surname
+        people_params[:ssn] = person.ssn
+        people_params[:hbx_member_id] = person.hbx_id
+        people_params[:dob] = person.birth_date
+        people_params[:email] = person.email
+        properties = {routing_key:"person.match", headers:people_params}
+        delivery_info, r_props, r_payload = self.request(properties, "")
+      end
     end
 
     def self.queue_name
