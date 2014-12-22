@@ -20,7 +20,7 @@ module Parsers
           result[:address_line_1] = address.address_line_1
           result[:address_line_2] = address.address_line_2
           result[:city] = address.location_city_name
-          result[:state] = address.location_state_code
+          result[:state] = address.location_state
           result[:zip] = address.location_postal_code
           result[:type] = address.type
           result[:location_state_code] = address.location_state_code
