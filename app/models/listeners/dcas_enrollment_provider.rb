@@ -94,7 +94,7 @@ module Listeners
       status = response_properties.headers["return_status"]
       case status
       when "200"
-        IndividualCvParser.new(person_cv, id_map, person)
+        Parsers::IndividualCvParser.new(person_cv, id_map, person)
       when "404"
         person
       when "409"
