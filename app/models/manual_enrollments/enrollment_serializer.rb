@@ -9,29 +9,35 @@ module ManualEnrollments
     }
 
     def initialize
-      @policy_id_generator = IdGenerator.new(45000)
-      @person_id_generator = IdGenerator.new(10002000)     
+      @policy_id_generator = IdGenerator.new(56500)
+      @person_id_generator = IdGenerator.new(10001600)  
     end
 
     def from_csv(file = "#{Padrino.root}/2015oe.csv")
+      count = 0
       publisher = ManualEnrollments::EnrollmentPublisher.new
-      File.open("#{Padrino.root}/enrollments.log", "a") do |f|
+      CSV.open("#{Padrino.root}/individual_enrollments_prod_results.csv", "wb") do |csv|
         CSV.foreach(file) do |row|
-          next if row[2].blank? || ["Sponsor Name"].include?(row[2].strip)
-          payload = generate_enrollment_cv(row)
+          if row[2].blank? || ["Sponsor Name"].include?(row[2].strip)
+            csv << row
+            next
+          end
+          count += 1
+          puts "processing.....#{count}"
+          @enrollment = EnrollmentRowParser.new(row)
+          @enrollment_plan = @enrollment.plan
+          next if @enrollment.subscriber.address_1.blank?
+          payload = generate_enrollment_cv
           response = publisher.publish(payload)
-          f.puts row
-          f.puts response
-          puts response.inspect
+          return_status = response[-2][:headers]['return_status'] == '200' ? "success" : "failed"
+          puts return_status.inspect
+          csv << row + [return_status] + [response[-1]]
+          # break
         end
       end
     end
 
-    def generate_enrollment_cv(row)
-      @enrollment = EnrollmentRowParser.new(row)
-      @enrollment_plan = @enrollment.plan
-      return if @enrollment.subscriber.nil?
-
+    def generate_enrollment_cv
       builder = Nokogiri::XML::Builder.new do |xml|
         xml.enrollment(CV_XMLNS) do |xml|
           xml.type 'renewal'
@@ -77,8 +83,8 @@ module ManualEnrollments
         xml.name plan.name
         xml.is_dental_only false
         enrollment.market == 'shop' ? serialize_shop_market(enrollment, xml) : serialize_individual_market(enrollment, xml)
-        xml.premium_amount_total plan.premium_total.gsub(/\$/, '')
-        xml.total_responsible_amount plan.responsible_amount.gsub(/\$/, '')
+        xml.premium_total_amount plan.premium_total.gsub(/\$/, '').to_f.round(2)
+        xml.total_responsible_amount plan.responsible_amount.gsub(/\$/, '').to_f.round(2)
       end
     end
 

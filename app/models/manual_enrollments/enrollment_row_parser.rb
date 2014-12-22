@@ -63,7 +63,7 @@ module ManualEnrollments
       8.times do |i|
         fields = @row[current..(current + 14)]
         current += 15
-        next if fields.compact.empty? || fields[0].nil?
+        next if (fields[5].blank? && fields[7].blank?)
         individuals << OpenStruct.new(build_fields_hash(fields, DEPENDENT_FIELDS).merge({is_subscriber: false}))
       end
       individuals
