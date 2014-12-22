@@ -58,17 +58,17 @@ module Listeners
       @renderer.partial("api/enrollment", {:engine => :haml, :locals => {:policies => plans}})
     end
 
-    # This method decided the source of persons information based of the key in properties.
-    #
+    # This method decided the source of persons information based of the key in properties
     def get_persons(properties, retrieve_demo, id_map)
       people = retrieve_demo.persons(id_map)
-        if true #some test condition
-          people = people_from_glue(people)
+        if properties[:originating_service].eql? "curam"
+          people = people_from_glue(people, id_map)
         end
+      people
     end
 
-    def people_from_glue(people)
-      person_match_request = PersonMatchRequest.new
+    def people_from_glue(people, id_map)
+      response_people = []
       people.map do |person|
 
         people_params = {}
@@ -79,8 +79,13 @@ module Listeners
         people_params[:dob] = person.birth_date
         people_params[:email] = person.email
         properties = {routing_key:"person.match", headers:people_params}
-        delivery_info, r_props, r_payload = self.request(properties, "")
+        response_delivery_info, response_properties, person_cv = self.request(properties, "")
+        response_people << person_cv_to_individual_parser(response_payload, id_map, person)
       end
+    end
+
+    def person_cv_to_individual_parser(person_cv, id_map, person)
+      IndividualCvParser.new(person_cv, id_map, person)
     end
 
     def self.queue_name
