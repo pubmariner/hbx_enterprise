@@ -99,9 +99,13 @@ module Parsers
     end
 
     def email
+      email_value = nil
       @parser.person.emails.map do |email|
-        email.email_address
+        if email.type.split("#").last.eql? "home"
+          email_value = email.email_address
+        end
       end
+      email_value
     end
 
     def relationships
