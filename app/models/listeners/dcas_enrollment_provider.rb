@@ -46,8 +46,8 @@ module Listeners
     def convert_to_cv(properties, retrieve_demographics)
       enrollment_group_id = properties.headers["enrollment_group_id"]
       id_map = Services::IdMapping.from_person_ids(retrieve_demographics.person_ids)
-      persons = get_persons(properties, retrieve_demographics, id_map) #TODO new workflow
-      # persons = retrieve_demographics.persons(id_map) #TODO should go away
+#      persons = get_persons(properties, retrieve_demographics, id_map) #TODO new workflow
+      persons = retrieve_demographics.persons(id_map) #TODO should go away
       enroll_details = Services::EnrollmentDetails.new(properties.headers["enrollment_group_id"])
       employer = nil
       if enroll_details.is_shop?
