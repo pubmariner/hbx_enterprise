@@ -12,6 +12,7 @@ source 'https://rubygems.org'
 
 # Project requirements
 gem 'rake'
+gem 'activesupport', '4.1.8'
 
 # Component requirements
 gem 'haml'
@@ -20,7 +21,6 @@ gem 'mongoid'
 # Test requirements
 gem 'rspec', :group => 'test'
 gem 'rack-test', :require => 'rack/test', :group => 'test'
-gem 'activesupport', '4.1.6'
 
 # Padrino Stable Gem
 gem 'padrino', '0.12.4'
@@ -41,8 +41,8 @@ group :production do
 end
 
 group :development do
-  gem 'capistrano'
-  gem 'capistrano-scm-gitcopy'
+  gem 'capistrano', '3.2.1'
+  gem 'capistrano-scm-gitcopy', '0.0.7'
   gem 'capistrano-bundler'
 end
 
