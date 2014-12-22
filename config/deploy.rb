@@ -1,5 +1,5 @@
 # config valid only for Capistrano 3.1
-lock '3.3.5'
+lock '3.2.1'
 
 set :application, 'hbx_enterprise'
 set :repo_url, 'git@dchbx.info:repos/hbx_enterprise.git'
