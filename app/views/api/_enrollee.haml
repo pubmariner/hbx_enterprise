@@ -5,6 +5,6 @@
   %benefit_status="urn:openhbx:terms:v1:benefit_status#active"
   %benefit
     %premium_amount= object.premium_amount[policy.plan_id]
-    %begin_date= Date.today.strftime("%Y%d%m")
+    %begin_date= Date.new(2015, 1, 1).strftime("%Y%m%d")
     - if !object.end_date.blank?
       %end_date= object.end_date
