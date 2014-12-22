@@ -10,6 +10,8 @@ module Parsers
 
         has_one :person, Parsers::Xml::Cv::PersonParser, tag: 'person'
         has_one :person_demographics, Parsers::Xml::Cv::PersonDemographicsParser, tag: 'person_demographics'
+        element :is_subscriber, String, tag: 'is_subscriber'
+        element :is_primary_applicant, String, tag: 'is_primary_applicant'
 
       end
     end
