@@ -85,7 +85,7 @@ module Listeners
         people_params[:email] = person.email
         properties = {routing_key:"person.match", headers:people_params}
         response_delivery_info, response_properties, person_cv = self.request(properties, "")
-        response_people << person_cv_to_individual_parser(response_properties, response_payload, id_map, person)
+        response_people << person_cv_to_individual_parser(response_properties, person_cv, id_map, person)
       end
       response_people
     end
