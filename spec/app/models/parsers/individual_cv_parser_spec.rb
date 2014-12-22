@@ -2,10 +2,26 @@ require 'spec_helper'
 
 describe Parsers::IndividualCvParser do
 
+  let(:dcas_object){
+    double()
+  }
+
+  before :each do
+    allow(dcas_object).to receive(:relationships).and_return({})
+    allow(dcas_object).to receive(:begin_date).and_return("20141201")
+    allow(dcas_object).to receive(:end_date).and_return("20141201")
+  end
+
   before(:all) do
     @xml = File.read("/Users/CitadelFirm/Downloads/projects/hbx/hbx_enterprise/spec/data/parsers/individual_cv.xml")
     @individual_cv_parser = Parsers::IndividualCvParser.new(@xml, nil, nil)
   end
+
+
+
+  subject {
+    @individual_cv_parser = Parsers::IndividualCvParser.new(@xml, nil, dcas_object)
+  }
 
   it 'initializes successfully' do
     expect(@individual_cv_parser.class).to eq(Parsers::IndividualCvParser)
@@ -52,5 +68,14 @@ describe Parsers::IndividualCvParser do
 
   it "returns email" do
 
+  end
+
+  it "returns begin and end dates from dcas_person" do
+    expect(subject.begin_date).to eq("20141201")
+    expect(subject.end_date).to eq("20141201")
+  end
+
+  it "returns relationships from dcas person" do
+    expect(subject.relationships.class).to eq(Hash)
   end
 end
