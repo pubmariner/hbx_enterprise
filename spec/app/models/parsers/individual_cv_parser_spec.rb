@@ -66,7 +66,7 @@ describe Parsers::IndividualCvParser do
   end
 
   it "returns email" do
-
+    expect(subject.email).to be_a_kind_of(Array)
   end
 
   it "returns begin and end dates from dcas_person" do
