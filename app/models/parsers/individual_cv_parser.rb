@@ -62,21 +62,19 @@ module Parsers
     end
 
     def subscriber?
-      is_subscriber = false
-      is_subscriber = @parser.is_subscriber if @parser.is_subscriber
+      @dcas_person.subscriber?
     end
 
     def is_primary_contact
-      primary_contact = false
-      primary_contact = @parser.is_primary_applicant if @parser.is_primary_applicant
+      @dcas_person.is_primary_contact
     end
 
     def begin_date
-      ""
+      @dcas_person.begin_date
     end
 
     def end_date
-      ""
+      @dcas_person.end_date
     end
 
     def person_id
