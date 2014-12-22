@@ -67,9 +67,9 @@ module Listeners
     # This method decided the source of persons information based of the key in properties
     def get_persons(properties, retrieve_demo, id_map)
       people = retrieve_demo.persons(id_map)
-      if properties.headers["originating_service"].eql? "curam"
-        people = people_from_glue(people, id_map)
-      end
+#      if properties.headers["originating_service"].eql? "curam"
+      people = people_from_glue(people, id_map)
+#      end
       people
     end
 
