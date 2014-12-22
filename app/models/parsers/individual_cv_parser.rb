@@ -82,7 +82,7 @@ module Parsers
     end
 
     def hbx_id
-      @id_mapper[person_id]
+      @dcas_person.hbx_id
     end
 
     def email
