@@ -5,8 +5,9 @@ module Parsers
 
     attr_reader :parser
 
-    def initialize(xml)
+    def initialize(xml, id_mapper)
       @parser = Parsers::Xml::Cv::IndividualParser.parse(xml)
+      @id_mapper = id_mapper
     end
 
     def address
@@ -55,24 +56,20 @@ module Parsers
       @parser.person_demographics.ssn
     end
 
-    def is_primary_contact
-      Maybe.new(@xml.at_xpath("ax2114:isPrimaryContact", namespaces)).text.downcase.value
-    end
-
     def birth_date
       @parser.person_demographics.birth_date
     end
 
     def subscriber?
-      "true" == is_primary_contact
+      @parser.is_subscriber
     end
 
     def begin_date
-      Maybe.new(@xml.at_xpath("ax2114:coverageStartDate", namespaces)).text.value
+      ""
     end
 
     def end_date
-      Maybe.new(@xml.at_xpath("ax2114:coverageEndDate", namespaces)).text.value
+      ""
     end
 
     def person_id
@@ -81,6 +78,12 @@ module Parsers
 
     def hbx_id
       @id_mapper[person_id]
+    end
+
+    def email
+      @parser.person.emails.map do |email|
+        email.email_address
+      end
     end
   end
 end
