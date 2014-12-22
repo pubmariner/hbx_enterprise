@@ -61,16 +61,15 @@ module Listeners
     # This method decided the source of persons information based of the key in properties
     def get_persons(properties, retrieve_demo, id_map)
       people = retrieve_demo.persons(id_map)
-        if properties.headers["originating_service"].eql? "curam"
-          people = people_from_glue(people, id_map)
-        end
+      if properties.headers["originating_service"].eql? "curam"
+        people = people_from_glue(people, id_map)
+      end
       people
     end
 
     def people_from_glue(people, id_map)
       response_people = []
       people.map do |person|
-
         people_params = {}
         people_params[:name_first] = person.given_name
         people_params[:name_last] = person.surname
@@ -82,6 +81,7 @@ module Listeners
         response_delivery_info, response_properties, person_cv = self.request(properties, "")
         response_people << person_cv_to_individual_parser(response_payload, id_map, person)
       end
+      response_people
     end
 
     def person_cv_to_individual_parser(person_cv, id_map, person)
