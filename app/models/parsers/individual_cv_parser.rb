@@ -13,23 +13,35 @@ module Parsers
 
     def address
       result = {}
-      result[:address_line_1] = @parser.person.addresses.first.address_line_1
-      result[:address_line_2] = @parser.person.addresses.first.address_line_2
-      result[:city] = @parser.person.addresses.first.location_city_name
-      result[:state] = @parser.person.addresses.first.location_state_code
-      result[:zip] = @parser.person.addresses.first.location_postal_code
+
+      @parser.person.addresses.map do |address|
+        if address.type.split("#").last.eql? "home"
+          result[:address_line_1] = address.address_line_1
+          result[:address_line_2] = address.address_line_2
+          result[:city] = address.location_city_name
+          result[:state] = address.location_state_code
+          result[:zip] = address.location_postal_code
+          result[:type] = address.type
+        end
+      end
+
       result
     end
 
     def phone
       result = {}
-      result[:country_code] = @parser.person.phones.first.country_code
-      result[:area_code] = @parser.person.phones.first.area_code
-      result[:extension] = @parser.person.phones.first.extension
-      result[:phone_number] = @parser.person.phones.first.phone_number
-      result[:full_phone_number] = @parser.person.phones.first.full_phone_number
-      result[:is_preferred] = @parser.person.phones.first.is_preferred
-      result[:type] = @parser.person.phones.first.type
+
+      @parser.person.phones.map do |phone|
+        if phone.type.split("#").last.eql? "home"
+          result[:country_code] = phone.country_code
+          result[:area_code] = phone.area_code
+          result[:extension] = phone.extension
+          result[:phone_number] = phone.phone_number
+          result[:full_phone_number] = phone.full_phone_number
+          result[:is_preferred] = phone.is_preferred
+          result[:type] = phone.type
+        end
+      end
       result
     end
 
