@@ -44,3 +44,5 @@ group :development do
   gem 'capistrano-scm-gitcopy'
   gem 'capistrano-bundler'
 end
+
+gem 'nokogiri-happymapper', :require => 'happymapper'
