@@ -5,9 +5,10 @@ module Parsers
 
     attr_reader :parser
 
-    def initialize(xml, id_mapper)
+    def initialize(xml, id_mapper, dcas_person)
       @parser = Parsers::Xml::Cv::IndividualParser.parse(xml)
       @id_mapper = id_mapper
+      @dcas_person = dcas_person
     end
 
     def address
@@ -61,7 +62,13 @@ module Parsers
     end
 
     def subscriber?
-      @parser.is_subscriber
+      is_subscriber = false
+      is_subscriber = @parser.is_subscriber if @parser.is_subscriber
+    end
+
+    def is_primary_contact
+      primary_contact = false
+      primary_contact = @parser.is_primary_applicant if @parser.is_primary_applicant
     end
 
     def begin_date
