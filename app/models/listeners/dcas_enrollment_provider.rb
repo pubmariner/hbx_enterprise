@@ -1,5 +1,8 @@
 module Listeners
   class DcasEnrollmentProvider < Amqp::Client
+
+    class PersonMatchError < StandardError; end
+
     def initialize(ch, q, dex, hbx_id_finder = Services::IdMapping, renderer = HbxEnterprise::App.prototype.helpers)
       super(ch, q)
       @default_exchange = dex
@@ -30,6 +33,9 @@ module Listeners
           response_cv = convert_to_cv(properties, retrieve_demographics)
           @channel.default_exchange.publish(response_cv, { :routing_key => reply_to, :headers => { :return_status => "200", :qualifying_reason_uri => retrieve_demographics.sep_reason } })
         end
+      rescue PersonMatchError => e
+        err_props = error_properties(reply_to, delivery_info, properties, e)
+        @channel.default_exchange.publish(e.payload, err_props)
       rescue ServiceErrors::Error => e
         err_props = error_properties(reply_to, delivery_info, properties, e)
         @channel.default_exchange.publish(e.payload, err_props)
@@ -40,8 +46,8 @@ module Listeners
     def convert_to_cv(properties, retrieve_demographics)
       enrollment_group_id = properties.headers["enrollment_group_id"]
       id_map = Services::IdMapping.from_person_ids(retrieve_demographics.person_ids)
-      #persons = get_persons(properties, retrieve_demographics, id_map) #TODO new workflow
-      persons = retrieve_demographics.persons(id_map) #TODO should go away
+      persons = get_persons(properties, retrieve_demographics, id_map) #TODO new workflow
+      # persons = retrieve_demographics.persons(id_map) #TODO should go away
       enroll_details = Services::EnrollmentDetails.new(properties.headers["enrollment_group_id"])
       employer = nil
       if enroll_details.is_shop?
@@ -79,13 +85,23 @@ module Listeners
         people_params[:email] = person.email
         properties = {routing_key:"person.match", headers:people_params}
         response_delivery_info, response_properties, person_cv = self.request(properties, "")
-        response_people << person_cv_to_individual_parser(response_payload, id_map, person)
+        response_people << person_cv_to_individual_parser(response_properties, response_payload, id_map, person)
       end
       response_people
     end
 
-    def person_cv_to_individual_parser(person_cv, id_map, person)
-      IndividualCvParser.new(person_cv, id_map, person)
+    def person_cv_to_individual_parser(response_properties, person_cv, id_map, person)
+      status = response_properties.headers["return_status"]
+      case status
+      when "200"
+        IndividualCvParser.new(person_cv, id_map, person)
+      when "404"
+        person
+      when "409"
+        raise PersonMatchError.new("Person match failure.")
+      else
+        raise "Unknown response: #{status}"
+      end
     end
 
     def self.queue_name
