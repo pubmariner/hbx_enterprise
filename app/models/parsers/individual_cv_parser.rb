@@ -23,6 +23,7 @@ module Parsers
           result[:state] = address.location_state_code
           result[:zip] = address.location_postal_code
           result[:type] = address.type
+          result[:location_state_code] = address.location_state_code
         end
       end
 
