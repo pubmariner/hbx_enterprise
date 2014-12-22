@@ -50,8 +50,9 @@ describe Parsers::IndividualCvParser do
     expect(subject.address[:address_line_1]).to eq("212 Nice Avenue NW")
     expect(subject.address[:address_line_2]).to eq("")
     expect(subject.address[:city]).to eq("Washington")
-    expect(subject.address[:state]).to eq("DC")
+    expect(subject.address[:state]).to eq("district_of_columbia")
     expect(subject.address[:zip]).to eq("20001")
+    expect(subject.address[:location_state_code]).to eq("DC")
   end
 
   it "parses phone number correctly" do
