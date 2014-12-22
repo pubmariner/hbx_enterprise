@@ -90,5 +90,9 @@ module Parsers
         email.email_address
       end
     end
+
+    def relationships
+      @dcas_person.relationships
+    end
   end
 end
