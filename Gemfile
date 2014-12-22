@@ -20,6 +20,7 @@ gem 'mongoid'
 # Test requirements
 gem 'rspec', :group => 'test'
 gem 'rack-test', :require => 'rack/test', :group => 'test'
+gem 'activesupport', '4.1.6'
 
 # Padrino Stable Gem
 gem 'padrino', '0.12.4'
