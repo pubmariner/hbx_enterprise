@@ -9,6 +9,7 @@ module Parsers
       @parser = Parsers::Xml::Cv::IndividualParser.parse(xml)
       @id_mapper = id_mapper
       @dcas_person = dcas_person
+      @premium_amount = {}
     end
 
     def address
