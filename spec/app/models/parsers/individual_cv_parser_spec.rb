@@ -13,7 +13,7 @@ describe Parsers::IndividualCvParser do
   end
 
   before(:all) do
-    @xml = File.read("/Users/CitadelFirm/Downloads/projects/hbx/hbx_enterprise/spec/data/parsers/individual_cv.xml")
+    @xml = File.read(File.join(HbxEnterprise::App.root, "..", "spec/data/parsers/individual_cv.xml"))
   end
 
 
