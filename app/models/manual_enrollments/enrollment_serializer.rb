@@ -9,30 +9,30 @@ module ManualEnrollments
     }
 
     def initialize
-      @policy_id_generator = IdGenerator.new(56500)
-      @person_id_generator = IdGenerator.new(10001600)  
+      @policy_id_generator = IdGenerator.new(70000)
+      @person_id_generator = IdGenerator.new(11200000)  
     end
 
-    def from_csv(file = "#{Padrino.root}/2015oe.csv")
+    def from_csv(input_file, output_file)
       count = 0
       publisher = ManualEnrollments::EnrollmentPublisher.new
-      CSV.open("#{Padrino.root}/individual_enrollments_prod_results.csv", "wb") do |csv|
-        CSV.foreach(file) do |row|
+      CSV.open(output_file, "wb") do |csv|
+        CSV.foreach(input_file) do |row|
           if row[2].blank? || ["Sponsor Name"].include?(row[2].strip)
             csv << row
             next
           end
           count += 1
           puts "processing.....#{count}"
-          @enrollment = EnrollmentRowParser.new(row)
+          @enrollment = ManualEnrollments::EnrollmentRowParser.new(row)
           @enrollment_plan = @enrollment.plan
           next if @enrollment.subscriber.address_1.blank?
           payload = generate_enrollment_cv
           response = publisher.publish(payload)
           return_status = response[-2][:headers]['return_status'] == '200' ? "success" : "failed"
           puts return_status.inspect
+          puts response[-1]
           csv << row + [return_status] + [response[-1]]
-          # break
         end
       end
     end
