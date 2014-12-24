@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<individual xmlns:imp1="http://openhbx.org/api/terms/1.0" xmlns="http://openhbx.org/api/terms/1.0">
+  <imp1:person>
+    <imp1:id>
+      <imp1:id>urn:openhbx:hbx:dc0:resources:v1:dcas:individual#156099</imp1:id>
+    </imp1:id>
+    <imp1:person_name>
+      <imp1:person_surname>Wine</imp1:person_surname>
+      <imp1:person_given_name>Yo</imp1:person_given_name>
+      <imp1:person_full_name>Yo Wine</imp1:person_full_name>
+    </imp1:person_name>
+    <imp1:addresses>
+      <imp1:address>
+        <imp1:type>urn:openhbx:terms:v1:address_type#home</imp1:type>
+        <imp1:address_line_1>212 Nice Avenue NW</imp1:address_line_1>
+        <imp1:address_line_2/>
+        <imp1:location_city_name>Washington</imp1:location_city_name>
+        <imp1:location_state>district_of_columbia</imp1:location_state>
+        <imp1:location_state_code>DC</imp1:location_state_code>
+        <imp1:location_postal_code>20001</imp1:location_postal_code>
+      </imp1:address>
+    </imp1:addresses>
+    <imp1:emails>
+      <imp1:email>
+        <imp1:type>urn:openhbx:terms:v1:email_type#home</imp1:type>
+        <imp1:email_address>bla@gmail.com</imp1:email_address>
+      </imp1:email>
+    </imp1:emails>
+    <imp1:phones>
+      <imp1:phone>
+        <imp1:type>urn:openhbx:terms:v1:phone_type#home</imp1:type>
+        <imp1:full_phone_number>919-919-9199225652</imp1:full_phone_number>
+        <imp1:is_preferred>true</imp1:is_preferred>
+      </imp1:phone>
+    </imp1:phones>
+  </imp1:person>
+  <imp1:person_demographics>
+    <imp1:ssn>886043803</imp1:ssn>
+    <imp1:sex>urn:openhbx:terms:v1:gender#male</imp1:sex>
+    <imp1:birth_date>19621130</imp1:birth_date>
+    <imp1:citizen_status>urn:openhbx:terms:v1:citizen_status#us_citizen</imp1:citizen_status>
+    <imp1:created_at>2014-12-08T10:29:21.000000</imp1:created_at>
+    <imp1:modified_at>2014-12-04T00:45:30.000000</imp1:modified_at>
+  </imp1:person_demographics>
+</individual>

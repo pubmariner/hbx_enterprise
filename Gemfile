@@ -12,6 +12,7 @@ source 'https://rubygems.org'
 
 # Project requirements
 gem 'rake'
+gem 'activesupport', '4.1.8'
 
 # Component requirements
 gem 'haml'
@@ -40,7 +41,9 @@ group :production do
 end
 
 group :development do
-  gem 'capistrano'
-  gem 'capistrano-scm-gitcopy'
+  gem 'capistrano', '3.2.1'
+  gem 'capistrano-scm-gitcopy', '0.0.7'
   gem 'capistrano-bundler'
 end
+
+gem 'nokogiri-happymapper', :require => 'happymapper'
