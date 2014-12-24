@@ -10,8 +10,8 @@ module ManualEnrollments
   class EnrollmentRowParser
      
     PLAN_FIEDLS = %W(name qhp_id csr_info csr_variant hios_id premium_total employer_contribution responsible_amount)
-    DEPENDENT_FIELDS = %W(relationship ssn dob gender premium first_name middle_name last_name email phone address_1 address_2 city state zip)
-    SUBSCRIBER_FIEDLS = %W(ssn dob gender premium first_name middle_name last_name email phone address_1 address_2 city state zip)
+    DEPENDENT_FIELDS = %W(ssn dob gender premium first_name middle_name last_name email phone address_1 address_2 city state zip relationship)
+    SUBSCRIBER_FIEDLS = %W(ssn dob gender premium first_name middle_name last_name email phone address_1 address_2 city state zip relationship)
 
     def initialize(row)
       @row = row
@@ -52,18 +52,18 @@ module ManualEnrollments
     end
 
     def subscriber
-      fields = @row[14..27]
+      fields = @row[14..28]
       return if fields.compact.empty?
       OpenStruct.new(build_fields_hash(fields, SUBSCRIBER_FIEDLS).merge({is_subscriber: true}))
     end
 
     def dependents
       individuals = [ ]
-      current = 28
-      8.times do |i|
+      current = 29
+      7.times do |i|
         fields = @row[current..(current + 14)]
         current += 15
-        next if (fields[5].blank? && fields[7].blank?)
+        next if (fields[4].blank? && fields[6].blank?)
         individuals << OpenStruct.new(build_fields_hash(fields, DEPENDENT_FIELDS).merge({is_subscriber: false}))
       end
       individuals

@@ -13,8 +13,7 @@ module ManualEnrollments
       @person_id_generator = IdGenerator.new(11200000)  
     end
 
-    def from_csv(input_file, output_file)
-      count = 0
+    def from_csv(input_file, output_file=nil)
       publisher = ManualEnrollments::EnrollmentPublisher.new
       CSV.open(output_file, "wb") do |csv|
         CSV.foreach(input_file) do |row|
@@ -22,16 +21,14 @@ module ManualEnrollments
             csv << row
             next
           end
-          count += 1
-          puts "processing.....#{count}"
           @enrollment = ManualEnrollments::EnrollmentRowParser.new(row)
           @enrollment_plan = @enrollment.plan
           next if @enrollment.subscriber.address_1.blank?
-          payload = generate_enrollment_cv
-          response = publisher.publish(payload)
+          enrollment_xml = generate_enrollment_cv
+          response = publisher.publish(enrollment_xml)
           return_status = response[-2][:headers]['return_status'] == '200' ? "success" : "failed"
-          puts return_status.inspect
-          puts response[-1]
+          # puts return_status.inspect
+          # puts response[-1]
           csv << row + [return_status] + [response[-1]]
         end
       end
@@ -219,7 +216,7 @@ module ManualEnrollments
     end
 
     def write_to_file(xml_string)
-      File.open("#{Padrino.root}/enrollments/enrollment_#{@policy_id_generator.current}.xml", 'w') do |file|
+      File.open("#{Padrino.root}/enrollments/enrollment_#{@enrollment.subscriber.first_name + @enrollment.subscriber.last_name}.xml", 'w') do |file|
         file.write xml_string
       end
     end
