@@ -47,20 +47,20 @@ module ManualEnrollments
     end
 
     def plan
-      fields = @row[6..13]
+      fields = @row[7..14]
       OpenStruct.new(build_fields_hash(fields, PLAN_FIEDLS))
     end
 
     def subscriber
-      fields = @row[14..28]
+      fields = @row[15..29]
       return if fields.compact.empty?
       OpenStruct.new(build_fields_hash(fields, SUBSCRIBER_FIEDLS).merge({is_subscriber: true}))
     end
 
     def dependents
       individuals = [ ]
-      current = 29
-      7.times do |i|
+      current = 30
+      8.times do |i|
         fields = @row[current..(current + 14)]
         current += 15
         next if (fields[4].blank? && fields[6].blank?)
