@@ -13,8 +13,26 @@ module ManualEnrollments
     DEPENDENT_FIELDS = %W(ssn dob gender premium first_name middle_name last_name email phone address_1 address_2 city state zip relationship)
     SUBSCRIBER_FIEDLS = %W(ssn dob gender premium first_name middle_name last_name email phone address_1 address_2 city state zip relationship)
 
+    attr_reader :errors
+
     def initialize(row)
       @row = row
+      @errors = []
+      @valid = true
+    end
+
+    def valid?
+      validate_ssns
+      @valid
+    end
+
+    def validate_ssns
+      ssns = enrollees.select{|x| !x.ssn.blank?}.map{|x| x.ssn}
+      duplicate_ssns = ssns.select { |e| ssns.count(e) > 1 }.uniq
+      if duplicate_ssns.any?
+        @valid = false
+        @errors << "People having duplicate ssns #{duplicate_ssns.join(',')}."
+      end
     end
 
     def type
