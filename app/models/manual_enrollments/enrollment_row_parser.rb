@@ -23,6 +23,7 @@ module ManualEnrollments
 
     def valid?
       validate_ssns
+      validate_relationships
       @valid
     end
 
@@ -31,7 +32,17 @@ module ManualEnrollments
       duplicate_ssns = ssns.select { |e| ssns.count(e) > 1 }.uniq
       if duplicate_ssns.any?
         @valid = false
-        @errors << "People having duplicate ssns #{duplicate_ssns.join(',')}."
+        @errors << "duplicate ssns #{duplicate_ssns.join(',')}."
+      end
+    end
+
+    def validate_relationships
+      if enrollees.detect{|x| x.relationship.blank? }
+        @valid = false
+        @errors << 'relationship empty'
+      elsif enrollees.detect{|x| !['self','spouse','child'].include?(x.relationship)}
+        @valid = false
+        @errors << 'invalid relationship'
       end
     end
 
