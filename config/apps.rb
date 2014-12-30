@@ -29,8 +29,13 @@ Padrino.configure_apps do
   # enable :sessions
   set :session_secret, '41d0197d1149f1c10c678f20bd1b5e47758ed1abcfac00e447c262b640b87ee1'
   set :protection, :except => :path_traversal
-  set :protect_from_csrf, true
+  set :protect_from_csrf, false
 end
 
 # Mounts the core application for this project
 Padrino.mount('HbxEnterprise::App', :app_file => Padrino.root('app/app.rb')).to('/')
+
+Padrino.before_load do
+  Padrino.dependency_paths << Padrino.root('lib/*.rb')
+end
+Padrino.load!
