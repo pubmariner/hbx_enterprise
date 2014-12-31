@@ -1,0 +1,117 @@
+<n1:enrollment xmlns:n1='http://openhbx.org/api/terms/1.0' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+               xsi:schemaLocation='http://openhbx.org/api/terms/1.0 policy.xsd'>
+  <n1:type>urn:openhbx:enrollment:v1:policies#initial_enrollment</n1:type>
+  <n1:market>shop</n1:market>
+  <n1:policy>
+    <n1:enrollees>
+      <n1:enrollee>
+        <n1:member>
+          <n1:id>
+            <n1:id>http://10.83.85.127/api/v2/people?hbx_id=117176</n1:id>
+            <n1:is_authoritative>true</n1:is_authoritative>
+            <n1:alias_ids>
+              <n1:alias_id>
+                <n1:id>117176</n1:id>
+              </n1:alias_id>
+            </n1:alias_ids>
+          </n1:id>
+
+          <n1:person>
+            <n1:id>
+              <n1:id>http://10.83.85.127/api/v2/people/53e68e79eb899ad9ca000050</n1:id>
+              <n1:is_authoritative>true</n1:is_authoritative>
+              <n1:alias_ids>
+                <n1:alias_id>
+                  <n1:id>117176</n1:id>
+                </n1:alias_id>
+              </n1:alias_ids>
+            </n1:id>
+
+            <n1:person_name>
+              <n1:person_surname>Ram</n1:person_surname>
+              <n1:person_given_name>Raghu</n1:person_given_name>
+              <n1:person_full_name>Raghu Ram</n1:person_full_name>
+
+            </n1:person_name>
+            <n1:addresses>
+              <n1:address>
+                <n1:type>urn:openhbx:terms:v1:address_type#home</n1:type>
+                <n1:address_line_1>0 Q ST NW</n1:address_line_1>
+                <n1:address_line_2>APT 6</n1:address_line_2>
+                <n1:location_city_name>WASHINGTON</n1:location_city_name>
+                <n1:location_state>urn:openhbx:terms:v1:us_state#district_of_columbia</n1:location_state>
+                <n1:location_postal_code>20001</n1:location_postal_code>
+                <n1:location_country_code>US</n1:location_country_code>
+              </n1:address>
+
+            </n1:addresses>
+            <n1:created_at>2014-08-09T21:11:21</n1:created_at>
+            <n1:modified_at>2014-12-21T21:07:49</n1:modified_at>
+
+
+          </n1:person>
+          <n1:person_demographics>
+            <n1:ssn>000000000</n1:ssn>
+            <n1:sex>urn:openhbx:terms:v1:gender#male</n1:sex>
+            <n1:birth_date>19730101</n1:birth_date>
+            <n1:is_incarcerated>false</n1:is_incarcerated>
+            <n1:citizen_status>urn:openhbx:terms:v1:citizen_status#us_citizen</n1:citizen_status>
+            <n1:is_state_resident>true</n1:is_state_resident>
+            <n1:created_at>2014-08-09T21:11:21</n1:created_at>
+            <n1:modified_at>2014-12-21T21:07:49</n1:modified_at>
+
+          </n1:person_demographics>
+
+          <n1:person_health>
+            <n1:is_tobacco_user>unknown</n1:is_tobacco_user>
+          </n1:person_health>
+          <n1:is_active>true</n1:is_active>
+          <n1:created_at>2014-08-09T21:11:21</n1:created_at>
+          <n1:modified_at>2014-12-21T21:07:49</n1:modified_at>
+
+        </n1:member>
+        <n1:is_subscriber>true</n1:is_subscriber>
+        <n1:benefit_status>urn:openhbx:terms:v1:benefit_status#active</n1:benefit_status>
+        <n1:benefit>
+          <n1:premium_amount>23.99</n1:premium_amount>
+          <n1:begin_date>20140101</n1:begin_date>
+        </n1:benefit>
+      </n1:enrollee>
+    </n1:enrollees>
+    <n1:enrollment>
+      <n1:plan>
+        <n1:id>
+          <n1:id>http://10.83.85.127/api/v2/plans/53e67210eb899a46030001d0</n1:id>
+        </n1:id>
+
+        <n1:coverage_type>urn:openhbx:terms:v1:qhp_benefit_coverage#dental</n1:coverage_type>
+        <n1:carrier>
+          <n1:id>
+            <n1:id>53e67210eb899a4603000010</n1:id>
+          </n1:id>
+
+          <n1:name>Delta Dental</n1:name>
+          <n1:is_active>true</n1:is_active>
+        </n1:carrier>
+        <n1:plan_year>2014</n1:plan_year>
+        <n1:name>DeltaCare USA Plan 70 for Children + Basic for Adults</n1:name>
+        <n1:is_dental_only>true</n1:is_dental_only>
+
+      </n1:plan>
+      <n1:individual_market>
+        <n1:is_carrier_to_bill>false</n1:is_carrier_to_bill>
+        <n1:allocated_aptc_amount>0.0</n1:allocated_aptc_amount>
+        <n1:elected_aptc_percent>0.0</n1:elected_aptc_percent>
+        <n1:applied_aptc_amount>0.0</n1:applied_aptc_amount>
+        <n1:other_payment_amount>0.0</n1:other_payment_amount>
+      </n1:individual_market>
+      <n1:premium_total_amount>23.99</n1:premium_total_amount>
+      <n1:total_responsible_amount>23.99</n1:total_responsible_amount>
+    </n1:enrollment>
+    <n1:policy_state>urn:openhbx:terms:v1:policy_state#submitted</n1:policy_state>
+    <n1:request_submitted_timestamp>2014-09-12T14:42:27+00:00</n1:request_submitted_timestamp>
+    <n1:is_active>true</n1:is_active>
+    <n1:created_at>2014-08-09T21:11:21</n1:created_at>
+    <n1:modified_at>2014-09-12T14:42:27</n1:modified_at>
+  </n1:policy>
+</n1:enrollment>
