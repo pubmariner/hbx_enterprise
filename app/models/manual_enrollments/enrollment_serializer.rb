@@ -9,26 +9,35 @@ module ManualEnrollments
     }
 
     def initialize
-      @policy_id_generator = IdGenerator.new(70000)
-      @person_id_generator = IdGenerator.new(11200000)  
+      @policy_id_generator = IdGenerator.new(182000)
+      @person_id_generator = IdGenerator.new(18710000)
     end
 
     def from_csv(input_file, output_file=nil)
       publisher = ManualEnrollments::EnrollmentPublisher.new
+      count = 0
       CSV.open(output_file, "wb") do |csv|
         CSV.foreach(input_file) do |row|
+          count += 1
+          puts "---processing #{count}"
           if row[2].blank? || ["Sponsor Name"].include?(row[2].strip)
             csv << row
             next
           end
           @enrollment = ManualEnrollments::EnrollmentRowParser.new(row)
           @enrollment_plan = @enrollment.plan
+
+          if !@enrollment.valid?
+            csv << row + ['Not Queued'] + @enrollment.errors
+            next
+          end
+
           next if @enrollment.subscriber.address_1.blank?
           enrollment_xml = generate_enrollment_cv
           response = publisher.publish(enrollment_xml)
           return_status = response[-2][:headers]['return_status'] == '200' ? "success" : "failed"
-          # puts return_status.inspect
-          # puts response[-1]
+          puts return_status.inspect
+          puts response[-1]
           csv << row + [return_status] + [response[-1]]
         end
       end
@@ -178,7 +187,6 @@ module ManualEnrollments
 
     def serialize_address(enrollee, xml)
       if enrollee.address_1.blank?
-        # puts "----------found match"
         enrollee = @enrollment.subscriber
       end
       xml.addresses do |xml|
@@ -188,7 +196,7 @@ module ManualEnrollments
           xml.address_line_2 enrollee.address_2 if !enrollee.address_2.blank?
           xml.location_city_name enrollee.city
           xml.location_state_code enrollee.state
-          xml.postal_code enrollee.zip
+          xml.postal_code format_zip(enrollee.zip.to_s)
         end
       end
     end
@@ -234,8 +242,14 @@ module ManualEnrollments
       ssn
     end
 
-    def prepend_zero(ssn)
-      '0' + ssn
+    def format_zip(zip)
+      zip.gsub!(/-/,'')
+      (5 - zip.size).times{ zip = prepend_zero(zip) }
+      zip
+    end
+
+    def prepend_zero(str)
+      '0' + str
     end
   end
 
