@@ -112,7 +112,7 @@
 	<xs:group name="ResourceTimestampGroup">
 		<xs:sequence>
 			<xs:element name="created_at" type="xs:dateTime"/>
-			<xs:element name="modified_at" type="xs:dateTime"/>
+			<xs:element name="modified_at" type="xs:dateTime" minOccurs="0"/>
 			<xs:element name="version" type="xs:integer" minOccurs="0"/>
 		</xs:sequence>
 	</xs:group>
