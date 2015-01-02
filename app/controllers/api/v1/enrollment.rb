@@ -1,11 +1,11 @@
 #This controller will process the incomming enrollment CV
-HbxEnterprise::App.controllers :enrollments, map: '/api/v1/enrollment' do
+HbxEnterprise::App.controllers :enrollments, map: '/api/v1' do
 
   #if invalid CV
   # Reject
   #else
   # Process
-  post '' do
+  post 'enrollments', :provides => :xml do
     content_type 'application/xml'
     xml = request.body.read
 
@@ -18,5 +18,11 @@ HbxEnterprise::App.controllers :enrollments, map: '/api/v1/enrollment' do
     else
       halt(422, enrollment_validator.errors.to_xml)
     end
+  end
+
+  get 'enrollments', :with => :id, :provides => :xml do
+    content_type 'application/xml'
+    sep = Services::SimpleEnrollmentProvider.new
+    sep.execute(params[:id])
   end
 end
