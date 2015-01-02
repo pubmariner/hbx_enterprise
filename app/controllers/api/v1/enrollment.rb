@@ -9,15 +9,14 @@ HbxEnterprise::App.controllers :enrollments, map: '/api/v1/enrollment' do
     content_type 'application/xml'
     xml = request.body.read
 
-    valid_xml = EnrollmentVerifier.is_valid_xml?(xml)
-    valid_root = EnrollmentVerifier.is_root_valid?(xml)
+    enrollment_validator = EnrollmentValidator.new(xml)
+    enrollment_validator.check_against_schema
 
-
-    halt(400, 'XML is not a valid cv') unless valid_xml
-    halt(400, 'The root element must be <enrollment>') unless valid_root
-
-
-    response.status = 200
-    body "<status>Success. XML saved.</status>"
+    if enrollment_validator.valid?
+      response.status = 200
+      body "<response><success>Success. XML accepted.</success></response>"
+    else
+      halt(422, enrollment_validator.errors.full_messages)
+    end
   end
 end
