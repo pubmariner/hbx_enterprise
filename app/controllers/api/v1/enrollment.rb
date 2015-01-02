@@ -14,7 +14,7 @@ HbxEnterprise::App.controllers :enrollments, map: '/api/v1' do
 
     if enrollment_validator.valid?
       status 202
-      body "<response><success>Success. XML accepted.</success></response>"
+      body ''
     else
       halt(422, enrollment_validator.errors.to_xml)
     end
