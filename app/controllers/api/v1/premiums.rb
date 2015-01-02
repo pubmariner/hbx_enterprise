@@ -5,7 +5,7 @@ HbxEnterprise::App.controllers :premiums, map: '/api/v1' do
   # Reject
   #else
   # Process
-  post '/premiums', :provieds => :xml do
+  post '/premiums', :provides => :xml do
     content_type 'application/xml'
     xml = request.body.read
   end
