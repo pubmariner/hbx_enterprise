@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe EnrollmentVerifier do
+describe EnrollmentValidator do
 
   before(:each) do
 
@@ -10,7 +10,8 @@ describe EnrollmentVerifier do
     it 'should test the xml against the schema' do
       @xml_path = File.join(PADRINO_ROOT, 'spec', 'data', 'lib', 'enrollment.xml')
       @xml = File.read(@xml_path)
-      expect(EnrollmentVerifier.is_valid_xml?(@xml)).to eq(true)
+      enrollment_verifier = EnrollmentValidator.new(@xml)
+      expect(enrollment_verifier.valid?).to eq(true)
     end
   end
 
@@ -18,7 +19,9 @@ describe EnrollmentVerifier do
     it 'should test the xml against the schema' do
       @xml_path = File.join(PADRINO_ROOT, 'spec', 'data', 'lib', 'invalid_enrollment.xml')
       @xml = File.read(@xml_path)
-      expect(EnrollmentVerifier.is_valid_xml?(@xml)).to eq(false)
+      @xml = File.read(@xml_path)
+      enrollment_verifier = EnrollmentValidator.new(@xml)
+      expect(enrollment_verifier.valid?).to eq(false)
     end
   end
 
