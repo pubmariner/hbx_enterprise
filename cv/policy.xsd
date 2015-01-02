@@ -382,15 +382,15 @@
 								<xs:complexType>
 									<xs:sequence>
 										<xs:element name="is_carrier_to_bill" type="xs:boolean"/>
-										<xs:element ref="allocated_aptc_amount"/>
-										<xs:element name="elected_aptc_percent" type="xs:float"/>
+										<xs:element ref="allocated_aptc_amount" minOccurs="0"/>
+										<xs:element name="elected_aptc_percent" type="xs:float" minOccurs="0"/>
 										<xs:element ref="applied_aptc_amount"/>
-										<xs:element name="other_payment_amount" type="CurrencyType"/>
+										<xs:element name="other_payment_amount" type="CurrencyType" minOccurs="0"/>
 									</xs:sequence>
 								</xs:complexType>
 							</xs:element>
 						</xs:choice>
-						<xs:element name="premium_total_amount"/>
+						<xs:element name="premium_total_amount" type="CurrencyType"/>
 						<xs:element name="total_responsible_amount" type="CurrencyType"/>
 					</xs:sequence>
 				</xs:complexType>
