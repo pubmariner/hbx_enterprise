@@ -13,6 +13,14 @@ HbxEnterprise::App.controllers :enrollments, map: '/api/v1' do
     enrollment_validator.check_against_schema
 
     if enrollment_validator.valid?
+      e_pub = Services::EventPublisher.new
+      e_pub.publish(
+        "enrollment.submitted",
+        {
+          :submitted_timestamp => Time.now.strftime("%Y%m%d%H%M%S")
+        },
+        xml
+      )
       status 202
       body ''
     else
