@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSpy v2014 rel. 2 (x64) (http://www.altova.com) by Dan Thomas (private) -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://openhbx.org/api/terms/1.0" targetNamespace="http://openhbx.org/api/terms/1.0" elementFormDefault="qualified">
-	<xs:include schemaLocation="cv/common.xsd"/>
-	<xs:include schemaLocation="cv/links.xsd"/>
-	<xs:include schemaLocation="cv/employer.xsd"/>
-	<xs:include schemaLocation="cv/plan.xsd"/>
-  <xs:include schemaLocation="cv/individual.xsd"/>
+	<xs:include schemaLocation="common.xsd"/>
+	<xs:include schemaLocation="links.xsd"/>
+	<xs:include schemaLocation="employer.xsd"/>
+	<xs:include schemaLocation="plan.xsd"/>
+  <xs:include schemaLocation="individual.xsd"/>
 	<xs:element name="allocated_aptc_amount" type="CurrencyType"/>
 	<xs:element name="applied_aptc_amount" type="CurrencyType"/>
 	<xs:element name="policy" type="PolicyType"/>

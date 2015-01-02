@@ -151,8 +151,8 @@
 			<xs:element name="address_line_2" type="xs:string" minOccurs="0"/>
 			<xs:element name="address_line_3" type="xs:string" minOccurs="0"/>
 			<xs:element name="location_city_name" type="xs:string"/>
-			<xs:element name="location_state" type="UsStateNameType"/>
-			<xs:element name="location_state_code" minOccurs="0">
+			<xs:element name="location_state" type="UsStateNameType" minOccurs="0"/>
+			<xs:element name="location_state_code" minOccurs="1">
 				<xs:simpleType>
 					<xs:restriction base="xs:string">
 						<xs:length value="2"/>
