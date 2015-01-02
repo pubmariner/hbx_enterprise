@@ -13,7 +13,7 @@ HbxEnterprise::App.controllers :enrollments, map: '/api/v1/enrollment' do
     enrollment_validator.check_against_schema
 
     if enrollment_validator.valid?
-      response.status = 200
+      status 202
       body "<response><success>Success. XML accepted.</success></response>"
     else
       halt(422, "<response><failure>#{enrollment_validator.errors.full_messages}</failure></response>")
