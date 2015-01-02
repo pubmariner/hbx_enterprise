@@ -16,7 +16,7 @@ module Services
         }
       }
       retrieve_demographics = Services::RetrieveDemographics.new(eg_id)
-      response_cv = @enrollment_provider.convert_to_cv(OpenStruct.new(enrollment_props), retrieve_demographics)
+      @enrollment_provider.construct_cv_object(OpenStruct.new(enrollment_props), retrieve_demographics)
     end
   end
 end

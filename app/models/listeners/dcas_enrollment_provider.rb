@@ -42,12 +42,12 @@ module Listeners
       end
       channel.acknowledge(delivery_info.delivery_tag, false)
     end
-    
-    def convert_to_cv(properties, retrieve_demographics)
+
+    def construct_cv_object(properties, retrieve_demographics)
       enrollment_group_id = properties.headers["enrollment_group_id"]
       id_map = Services::IdMapping.from_person_ids(retrieve_demographics.person_ids)
       persons = get_persons(properties, retrieve_demographics, id_map) #TODO new workflow
-#      persons = retrieve_demographics.persons(id_map) #TODO should go away
+      #      persons = retrieve_demographics.persons(id_map) #TODO should go away
       enroll_details = Services::EnrollmentDetails.new(properties.headers["enrollment_group_id"])
       employer = nil
       if enroll_details.is_shop?
@@ -61,15 +61,20 @@ module Listeners
         plan.employer = employer
         plan.assign_enrollees(persons, id_map)
       end
+      plans
+    end
+
+    def convert_to_cv(properties, retrieve_demographics)
+      plans = construct_cv_object(properties, retrieve_demographics)
       @renderer.partial("api/enrollment", {:engine => :haml, :locals => {:policies => plans}})
     end
 
     # This method decided the source of persons information based of the key in properties
     def get_persons(properties, retrieve_demo, id_map)
       people = retrieve_demo.persons(id_map)
-#      if properties.headers["originating_service"].eql? "curam"
+      #      if properties.headers["originating_service"].eql? "curam"
       people = people_from_glue(people, id_map)
-#      end
+      #      end
       people
     end
 

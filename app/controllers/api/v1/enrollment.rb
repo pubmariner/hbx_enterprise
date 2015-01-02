@@ -23,6 +23,6 @@ HbxEnterprise::App.controllers :enrollments, map: '/api/v1' do
   get 'enrollments', :with => :id, :provides => :xml do
     content_type 'application/xml'
     sep = Services::SimpleEnrollmentProvider.new
-    sep.execute(params[:id])
+    partial("api/enrollment", {:engine => :haml, :locals => {:policies => sep.execute(params[:id])}})
   end
 end
