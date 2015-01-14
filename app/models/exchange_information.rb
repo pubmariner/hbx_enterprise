@@ -12,7 +12,7 @@ class ExchangeInformation
     'amqp_uri',
     'hbx_id', 'environment', 'receiver_id',
     'osb_host', 'osb_username', 'osb_password', 'osb_nonce', 'osb_created',
-    'invalid_argument_queue', 'processing_failure_queue', 'event_exchange', 'request_exchange'
+    'invalid_argument_queue', 'processing_failure_queue', 'event_exchange', 'request_exchange', 'event_publish_exchange'
   ]
 
   attr_reader :config
@@ -43,7 +43,13 @@ class ExchangeInformation
     RUBYCODE
   end
 
+
   REQUIRED_KEYS.each do |k|
     define_key k
+  end
+
+  def self.queue_name_for(klass)
+    base_key = "#{self.hbx_id}.#{self.environment}.q.hbx_soa."
+    base_key + klass.name.to_s.split("::").last.underscore
   end
 end
