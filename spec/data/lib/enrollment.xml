@@ -44,7 +44,8 @@
                 <n1:address_line_2>APT 6</n1:address_line_2>
                 <n1:location_city_name>WASHINGTON</n1:location_city_name>
                 <n1:location_state>urn:openhbx:terms:v1:us_state#district_of_columbia</n1:location_state>
-                <n1:location_postal_code>20001</n1:location_postal_code>
+		<n1:location_state_code>DC</n1:location_state_code>
+                <n1:postal_code>20001</n1:postal_code>
                 <n1:location_country_code>US</n1:location_country_code>
               </n1:address>
 
