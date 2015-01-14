@@ -43,7 +43,13 @@ class ExchangeInformation
     RUBYCODE
   end
 
+
   REQUIRED_KEYS.each do |k|
     define_key k
+  end
+
+  def self.queue_name_for(klass)
+    base_key = "#{self.hbx_id}.#{self.environment}.q.hbx_soa."
+    base_key + klass.name.to_s.split("::").last.underscore
   end
 end
