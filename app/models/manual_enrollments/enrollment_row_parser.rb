@@ -28,7 +28,7 @@ module ManualEnrollments
     end
 
     def validate_ssns
-      ssns = enrollees.select{|x| !x.ssn.blank?}.map{|x| x.ssn}
+      ssns = enrollees.select{|x| !x.ssn.blank?}.map{|x| format_ssn(x.ssn)}
       duplicate_ssns = ssns.select { |e| ssns.count(e) > 1 }.uniq
       if duplicate_ssns.any?
         @valid = false
@@ -40,7 +40,7 @@ module ManualEnrollments
       if enrollees.detect{|x| x.relationship.blank? }
         @valid = false
         @errors << 'relationship empty'
-      elsif enrollees.detect{|x| !['self','spouse','child'].include?(x.relationship)}
+      elsif enrollees.detect{|x| !['self','spouse','child'].include?(x.relationship.downcase)}
         @valid = false
         @errors << 'invalid relationship'
       end
@@ -107,6 +107,16 @@ module ManualEnrollments
         counter += 1
         data
       end
+    end
+
+    def format_ssn(ssn)
+      ssn.gsub!(/-/,'')
+      (9 - ssn.size).times{ ssn = prepend_zero(ssn) }
+      ssn
+    end
+
+    def prepend_zero(str)
+      '0' + str
     end
   end
 end
