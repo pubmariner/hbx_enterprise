@@ -1,10 +1,5 @@
 module Listeners
   class EmployerDigestListener < Amqp::Client
-    def initialize(ch, q, dex)
-      super(ch, q)
-      @default_exchange = dex
-    end
-
     def on_message(delivery_info, properties, payload)
       failed = is_error?(delivery_info)
       # Only the error case will always have these result status and error_code
@@ -12,6 +7,15 @@ module Listeners
       # JSON of the failure message
       error_code = properties.headers["error_code"]
       # Payload is the original message
+      channel.ack(delivery_info.delivery_tag, false)
+      if no_messages_remaining?
+        throw :terminate, "NOW"
+      end
+    end
+
+    def no_messages_remaining?
+      count_q = channel.queue(self.class.queue_name, :durable => true)
+      count_q.status[:message_count] == 0
     end
 
     def is_error?(delivery_info)
@@ -29,8 +33,9 @@ module Listeners
       ch.prefetch(1)
       dex = ch.default_exchange
       q = ch.queue(queue_name, :durable => true)
-
-      self.new(ch, q, dex).subscribe(:block => true, :manual_ack => true)
+      client = self.new(ch, q)
+      return if client.no_messages_remaining?
+      client.subscribe(:block => true, :manual_ack => true)
     end
   end
 end
