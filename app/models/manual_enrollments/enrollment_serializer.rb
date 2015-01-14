@@ -9,8 +9,8 @@ module ManualEnrollments
     }
 
     def initialize
-      @policy_id_generator = IdGenerator.new(182000)
-      @person_id_generator = IdGenerator.new(18710000)
+      @policy_id_generator = IdGenerator.new('http://10.83.85.127:8080/sequences/policy_id')
+      @person_id_generator = IdGenerator.new('http://10.83.85.127:8080/sequences/member_id')
     end
 
     def from_csv(input_file, output_file=nil)
@@ -20,10 +20,12 @@ module ManualEnrollments
         CSV.foreach(input_file) do |row|
           count += 1
           puts "---processing #{count}"
+
           if row[2].blank? || ["Sponsor Name"].include?(row[2].strip)
             csv << row
             next
           end
+
           @enrollment = ManualEnrollments::EnrollmentRowParser.new(row)
           @enrollment_plan = @enrollment.plan
 
@@ -36,6 +38,7 @@ module ManualEnrollments
           enrollment_xml = generate_enrollment_cv
           response = publisher.publish(enrollment_xml)
           return_status = response[-2][:headers]['return_status'] == '200' ? "success" : "failed"
+
           puts return_status.inspect
           puts response[-1]
           csv << row + [return_status] + [response[-1]]
@@ -114,16 +117,20 @@ module ManualEnrollments
     def serialize_enrollees(enrollment, xml)
       xml.enrollees do |xml|
         enrollment.enrollees.each do |enrollee|
-          xml.enrollee do |xml|
-            serialize_member(enrollee, xml)
-            xml.is_subscriber enrollee.is_subscriber
-            xml.benefit do |xml|
-              xml.begin_date '20150101'
-              xml.premium_amount enrollee.premium.gsub(/\$/, '')
-            end
-          end
+           serialize_enrollee(enrollee, xml)
         end
       end
+    end
+
+    def serialize_enrollee(enrollee, xml)
+      xml.enrollee do |xml|
+        serialize_member(enrollee, xml)
+        xml.is_subscriber enrollee.is_subscriber
+        xml.benefit do |xml|
+          xml.begin_date '20150101'
+          xml.premium_amount enrollee.premium.gsub(/\$/, '')
+        end
+      end  
     end
 
     def serialize_member(enrollee, xml)
@@ -237,6 +244,7 @@ module ManualEnrollments
     private
 
     def format_ssn(ssn)
+      return nil if ssn.blank?
       ssn.gsub!(/-/,'')
       (9 - ssn.size).times{ ssn = prepend_zero(ssn) }
       ssn
@@ -256,12 +264,12 @@ module ManualEnrollments
   class IdGenerator
     attr_reader :current
 
-    def initialize(start)
-      @current = start
+    def initialize(url)
+      @url = url
     end
 
     def unique_identifier
-      @current += 1
+      @current = Net::HTTP.get_response(URI.parse(@url)).body.match(/\[(\d+)\]/)[1]
     end
   end
 end
