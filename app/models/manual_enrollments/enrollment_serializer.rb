@@ -13,7 +13,8 @@ module ManualEnrollments
       @person_id_generator = IdGenerator.new('http://10.83.85.127:8080/sequences/member_id')
     end
 
-    def from_csv(input_file, output_file=nil)
+    def from_csv(input_file, output_file=nil, market)
+      @market = market
       publisher = ManualEnrollments::EnrollmentPublisher.new
       count = 0
       CSV.open(output_file, "wb") do |csv|
@@ -50,7 +51,7 @@ module ManualEnrollments
       builder = Nokogiri::XML::Builder.new do |xml|
         xml.enrollment(CV_XMLNS) do |xml|
           xml.type 'renewal'
-          xml.market 'shop'
+          xml.market @market
           xml.policy do |xml|
             xml.id do |xml|
               xml.id @policy_id_generator.unique_identifier
@@ -61,8 +62,8 @@ module ManualEnrollments
           end
         end
       end
-      # write_to_file builder.to_xml(:indent => 2)
-      builder.to_xml(:indent => 2)
+      write_to_file builder.to_xml(:indent => 2)
+      # builder.to_xml(:indent => 2)
     end
 
     def serialize_broker(enrollment, xml)
@@ -91,7 +92,7 @@ module ManualEnrollments
         xml.plan_year '2015'
         xml.name plan.name
         xml.is_dental_only false
-        enrollment.market == 'shop' ? serialize_shop_market(enrollment, xml) : serialize_individual_market(enrollment, xml)
+        @market == 'shop' ? serialize_shop_market(enrollment, xml) : serialize_individual_market(enrollment, xml)
         xml.premium_total_amount plan.premium_total.gsub(/\$/, '').to_f.round(2)
         xml.total_responsible_amount plan.responsible_amount.gsub(/\$/, '').to_f.round(2)
       end
@@ -99,6 +100,8 @@ module ManualEnrollments
 
     def serialize_individual_market(enrollment, xml)
       xml.individual_market do |xml|
+        xml.is_carrier_to_bill true
+        xml.applied_aptc_amount enrollment.plan.employer_contribution.gsub(/\$/, '')
       end
     end
 
