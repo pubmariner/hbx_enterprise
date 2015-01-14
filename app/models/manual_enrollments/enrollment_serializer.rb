@@ -92,10 +92,11 @@ module ManualEnrollments
         xml.plan_year '2015'
         xml.name plan.name
         xml.is_dental_only false
-        @market == 'shop' ? serialize_shop_market(enrollment, xml) : serialize_individual_market(enrollment, xml)
-        xml.premium_total_amount plan.premium_total.gsub(/\$/, '').to_f.round(2)
-        xml.total_responsible_amount plan.responsible_amount.gsub(/\$/, '').to_f.round(2)
       end
+
+      @market == 'shop' ? serialize_shop_market(enrollment, xml) : serialize_individual_market(enrollment, xml)
+      xml.premium_total_amount plan.premium_total.gsub(/\$/, '').to_f.round(2)
+      xml.total_responsible_amount plan.responsible_amount.gsub(/\$/, '').to_f.round(2)
     end
 
     def serialize_individual_market(enrollment, xml)
