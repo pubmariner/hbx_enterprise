@@ -8,8 +8,8 @@ module Parsers
         tag 'enrollee'
         namespace 'cv'
 
-        element :begin_date, String, tag: "enrollee/cv:benefit/cv:begin_date"
-        element :premium_amount, String, tag: "enrollee/cv:benefit/cv:premium_amount"
+        element :begin_date, String, tag: "benefit/cv:begin_date"
+        element :premium_amount, String, tag: "benefit/cv:premium_amount"
 
         has_one :member, Parsers::Xml::Cv::IndividualParser, tag: "member"
       end

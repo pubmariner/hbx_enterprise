@@ -8,7 +8,7 @@ module Parsers
         tag 'enrollment'
         namespace 'cv'
 
-        has_many :enrollees, Parsers::Xml::Cv::EnrolleeParser, tag: "enrollees"
+        has_many :enrollees, Parsers::Xml::Cv::EnrolleeParser, tag: "enrollee"
         has_one :hbx_enrollment, Parsers::Xml::Cv::HbxEnrollmentParser, tag: "enrollment"
       end
     end
