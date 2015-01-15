@@ -3,10 +3,13 @@ module Parsers
     module Cv
       class EnrollmentParser
         include HappyMapper
+
+        register_namespace "cv", "http://openhbx.org/api/terms/1.0"
         tag 'enrollment'
+        namespace 'cv'
 
         has_many :enrollees, Parsers::Xml::Cv::EnrolleeParser, tag: "enrollees"
-        has_one :enrollment_plan, Parsers::Xml::Cv::EnrollmentPlanParser, tag: "plan"
+        has_one :hbx_enrollment, Parsers::Xml::Cv::HbxEnrollmentParser, tag: "enrollment"
       end
     end
   end

@@ -14,11 +14,6 @@ module Parsers
         element :plan_year, String, tag: "plan_year"
         element :name, String, tag: "name"
         element :is_dental_only, Boolean, tag: "is_dental_only"
-        element :premium_total_amount, String, tag: "premium_total_amount"
-        element :total_responsible_amount, String, tag: "total_responsible_amount"
-        
-        # <shop_market>
-        # <individual_market>
       end
     end
   end
