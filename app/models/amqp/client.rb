@@ -110,7 +110,7 @@ module Amqp
       new_headers = new_properties[:headers] || {}
       new_headers[:previous_routing_key] = delivery_info.routing_key
       new_properties[:routing_key] = error_routing_key
-
+      new_properties[:timestamp] = extract_timestamp(properties)
       if exception
         new_headers[:return_status] = exception.return_status
         new_headers[:error_message] = exception.message
