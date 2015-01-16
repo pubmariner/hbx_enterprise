@@ -14,8 +14,8 @@ describe Parsers::Xml::Cv::EnrolleeParser do
     Parsers::Xml::Cv::EnrollmentParser.parse(enrollment, :single => true)
   }
 
-  let(:enrollee) { subject.enrollees[0] }
-  let(:enrollee1) { subject.enrollees[1] }
+  let(:enrollee) { subject.policy.enrollees[0] }
+  let(:enrollee1) { subject.policy.enrollees[1] }
 
   it 'should return member' do 
     expect(enrollee).to_not be_nil

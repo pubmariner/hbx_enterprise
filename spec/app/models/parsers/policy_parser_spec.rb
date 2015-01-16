@@ -10,9 +10,15 @@ describe Parsers::Xml::Cv::EnrollmentParser do
     Parsers::Xml::Cv::EnrollmentParser.parse(enrollment, :single => true)
   }
 
+  let(:policy) { subject.policy }
+
+  it 'should return enrollees' do 
+    expect(policy.enrollees.size).to eq(3)
+    expect(policy.enrollees[0]).to be_a_kind_of(Parsers::Xml::Cv::EnrolleeParser)
+  end
 
   it 'should return hbx enrollment' do
-    expect(subject.policy).to_not be_nil
-    expect(subject.policy).to be_a_kind_of(Parsers::Xml::Cv::PolicyParser)
+    expect(policy.hbx_enrollment).to_not be_nil
+    expect(policy.hbx_enrollment).to be_a_kind_of(Parsers::Xml::Cv::HbxEnrollmentParser)
   end
 end

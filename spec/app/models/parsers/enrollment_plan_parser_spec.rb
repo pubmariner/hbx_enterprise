@@ -16,7 +16,7 @@ describe Parsers::Xml::Cv::EnrollmentPlanParser do
   let(:name) { "BlueChoice Advantage $1000" }
   let(:is_dental_only) { false }
 
-  let(:plan) { subject.hbx_enrollment.plan }
+  let(:plan) { subject.policy.hbx_enrollment.plan }
 
   it 'should return plan elements' do
     expect(plan.id).to eq(hios_id)
