@@ -125,7 +125,17 @@ module Amqp
       new_headers["x-redelivery-count"] = existing_retry_count + 1
       new_properties[:headers] = new_headers
       new_properties[:routing_key] = delivery_info.routing_key
+      new_properties[:timestamp] = extract_timestamp(properties)
       new_properties
+    end
+
+    def extract_timestamp(properties)
+      message_ts = properties.timestamp
+      if message_ts.blank?
+        (Time.now.to_f * 1000).round
+      else
+        (message_ts.to_f * 1000).round
+      end
     end
 
     def request(properties, payload, timeout = 15)
