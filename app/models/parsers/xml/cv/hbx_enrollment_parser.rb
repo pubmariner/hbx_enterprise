@@ -3,7 +3,10 @@ module Parsers
     module Cv
       class HbxEnrollmentParser
         include HappyMapper
+
+        register_namespace "cv", "http://openhbx.org/api/terms/1.0"
         tag 'enrollment'
+        namespace 'cv'
 
         element :premium_total_amount, String, tag: "premium_total_amount"
         element :total_responsible_amount, String, tag: "total_responsible_amount"

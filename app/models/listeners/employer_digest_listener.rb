@@ -15,6 +15,8 @@ module Listeners
       result_status = properties.headers["return_status"]
       # JSON of the failure message
       error_code = properties.headers["error_code"]
+      return_status = (result_status == '202') ? "Success" : "Failed"  
+      @csv << ManualEnrollments::EnrollmentDigest.build_csv(payload) + [return_status, error_code]
       # Payload is the original message
       channel.ack(delivery_info.delivery_tag, false)
       if no_messages_remaining?
@@ -42,7 +44,7 @@ module Listeners
       ch.prefetch(1)
       dex = ch.default_exchange
       q = ch.queue(queue_name, :durable => true)
-      CSV.open(OUTPUT_FILE_NAME) do |csv|
+      ManualEnrollments::EnrollmentDigest.with_csv_template do |csv|
         client = self.new(ch, q, csv)
         return if client.no_messages_remaining?
         client.subscribe(:block => true, :manual_ack => true)

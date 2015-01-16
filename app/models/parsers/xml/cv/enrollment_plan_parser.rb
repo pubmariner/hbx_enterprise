@@ -8,7 +8,7 @@ module Parsers
         tag 'plan'
         namespace 'cv'
 
-        element :id, String, tag: "id/cv:id"
+        element :hios_id, String, tag: "id/cv:id"
         element :coverage_type, String, tag: "coverage_type"
         element :plan_year, String, tag: "plan_year"
         element :plan_year, String, tag: "plan_year"
