@@ -13,8 +13,8 @@ describe Parsers::Xml::Cv::IndividualParser do
     Parsers::Xml::Cv::EnrollmentParser.parse(enrollment, :single => true)
   }
 
-  let(:individual1) { subject.enrollees[0].member }
-  let(:individual2) { subject.enrollees[1].member }
+  let(:individual1) { subject.policy.enrollees[0].member }
+  let(:individual2) { subject.policy.enrollees[1].member }
 
   it 'should have a plan and shop_market' do
     expect(individual1.person).to be_a_kind_of(Parsers::Xml::Cv::PersonParser)

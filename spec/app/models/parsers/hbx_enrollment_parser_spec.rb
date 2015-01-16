@@ -13,7 +13,7 @@ describe Parsers::Xml::Cv::HbxEnrollmentParser do
     Parsers::Xml::Cv::EnrollmentParser.parse(enrollment, :single => true)
   }
 
-  let(:hbx_enrollment) { subject.hbx_enrollment }
+  let(:hbx_enrollment) { subject.policy.hbx_enrollment }
 
   it 'should have a plan and shop_market' do
     expect(hbx_enrollment.plan).to be_a_kind_of(Parsers::Xml::Cv::EnrollmentPlanParser)

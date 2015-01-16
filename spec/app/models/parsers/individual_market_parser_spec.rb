@@ -13,7 +13,7 @@ describe Parsers::Xml::Cv::ShopMarketParser do
   let(:is_carrier_to_bill) { true }
   let(:applied_aptc_amount) { "54.98" }
 
-  let(:market) { subject.hbx_enrollment.individual_market }
+  let(:market) { subject.policy.hbx_enrollment.individual_market }
 
   it 'should return aptc amount' do
     expect(market.is_carrier_to_bill).to eq(is_carrier_to_bill)
