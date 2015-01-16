@@ -49,7 +49,7 @@ class ExchangeInformation
   end
 
   def self.queue_name_for(klass)
-    base_key = "#{self.hbx_id}.#{self.environment}.q.hbx_soa."
+    base_key = "#{self.hbx_id}.#{self.environment}.q.hbx_enterprise."
     base_key + klass.name.to_s.split("::").last.underscore
   end
 end
