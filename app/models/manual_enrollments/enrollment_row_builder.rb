@@ -11,8 +11,8 @@ module ManualEnrollments
       @data_set << 'New Enrollment'
     end
 
-    def append_market
-      @data_set << 'Shop'
+    def append_market(is_shop)
+      @data_set << (is_shop ? 'Shop' : 'IVL')
     end
 
     def append_employer(hbx_enrollment)
@@ -73,7 +73,6 @@ module ManualEnrollments
       @data_set << hbx_enrollment.total_responsible_amount
     end
 
-
     def append_demographics(enrollee)
       demographics = enrollee.member.person_demographics
       @data_set << demographics.ssn
@@ -124,7 +123,11 @@ module ManualEnrollments
     end
 
     def append_relationship(enrollee)
-      @data_set << strip_uri(enrollee.member.relationship_uri)
+      if enrollee.member.relationship_uri.blank?
+        @data_set << 'Self' 
+      else
+        @data_set << strip_uri(enrollee.member.relationship_uri)
+      end
     end
 
     def append_blank_enrollee

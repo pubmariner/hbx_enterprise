@@ -3,7 +3,7 @@ require 'csv'
 module ManualEnrollments
   class EnrollmentDigest
 
-    def self.build_csv(payload = nil)
+    def self.build_csv(payload, is_shop)
       # payload = File.read("#{Padrino.root.to_s}/spec/data/parsers/shop_enrollment.xml")
       enrollment = Parsers::Xml::Cv::EnrollmentParser.parse(payload)
       hbx_enrollment = enrollment.policy.hbx_enrollment
@@ -14,7 +14,7 @@ module ManualEnrollments
 
       builder = EnrollmentRowBuilder.new
       builder.append_enrollment_type
-      builder.append_market
+      builder.append_market(is_shop)
       builder.append_employer(hbx_enrollment)
       builder.append_broker(enrollment.policy.broker)
       builder.append_begin_date
