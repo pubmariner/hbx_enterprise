@@ -19,9 +19,6 @@ module Listeners
       @csv << ManualEnrollments::EnrollmentDigest.build_csv(payload) + [return_status, error_code]
       # Payload is the original message
       channel.ack(delivery_info.delivery_tag, false)
-      if no_messages_remaining?
-        throw :terminate, "NOW"
-      end
     end
 
     def no_messages_remaining?
@@ -44,9 +41,9 @@ module Listeners
       ch.prefetch(1)
       dex = ch.default_exchange
       q = ch.queue(queue_name, :durable => true)
+      trap(:SIGINT) { throw :terminate }
       ManualEnrollments::EnrollmentDigest.with_csv_template do |csv|
         client = self.new(ch, q, csv)
-        return if client.no_messages_remaining?
         client.subscribe(:block => true, :manual_ack => true)
       end
     end
