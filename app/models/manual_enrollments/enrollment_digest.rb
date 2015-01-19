@@ -6,9 +6,6 @@ module ManualEnrollments
     def self.build_csv(payload = nil)
       # payload = File.read("#{Padrino.root.to_s}/spec/data/parsers/shop_enrollment.xml")
       enrollment = Parsers::Xml::Cv::EnrollmentParser.parse(payload)
-
-      puts enrollment.inspect
-
       hbx_enrollment = enrollment.policy.hbx_enrollment
 
       if hbx_enrollment.blank?
@@ -40,7 +37,6 @@ module ManualEnrollments
       end
 
       (9 - enrollment.policy.enrollees.size).times { builder.append_blank_enrollee }
-
       builder.data_set
     end
 
