@@ -41,10 +41,12 @@ module Listeners
       ch.prefetch(1)
       dex = ch.default_exchange
       q = ch.queue(queue_name, :durable => true)
-      trap(:SIGINT) { throw :terminate }
+      trap("SIGINT") { throw :terminate }
       ManualEnrollments::EnrollmentDigest.with_csv_template do |csv|
         client = self.new(ch, q, csv)
-        client.subscribe(:block => true, :manual_ack => true)
+        catch(:terminate) do
+          client.subscribe(:block => true, :manual_ack => true)
+        end
       end
     end
   end
