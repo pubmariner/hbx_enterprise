@@ -12,6 +12,7 @@ module Listeners
 
     def on_message(delivery_info, properties, payload)
       failed = is_error?(delivery_info)
+      is_shop = is_shop?(delivery_info)
       # Only the error case will always have these result status and error_code
       result_status = properties.headers["return_status"]
       # JSON of the failure message
@@ -25,6 +26,10 @@ module Listeners
     def no_messages_remaining?
       count_q = channel.queue(self.class.queue_name, :durable => true)
       count_q.status[:message_count] == 0
+    end
+
+    def is_shop?(delivery_info)
+      delivery_info.routing_key =~ /employer_employee/
     end
 
     def is_error?(delivery_info)
