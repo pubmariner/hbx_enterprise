@@ -27,7 +27,6 @@ class SetupAmqpTasks
     qsl_q = queue(Listeners::QhpSelectedListener.queue_name)
     dep_q = queue(Listeners::DcasEnrollmentProvider.queue_name)
     ge_q = queue(Listeners::EmployerGroupXmlListener.queue_name)
-    ed_q = queue(Listeners::EmployerDigestListener.queue_name)
 
     emp_qhps = logging_queue(ec, "recording.ee_qhp_plan_selected")
     ind_qhps = logging_queue(ec, "recording.ind_qhp_plan_selected")
@@ -36,15 +35,19 @@ class SetupAmqpTasks
     event_pub_ex = exchange("fanout", ec.event_publish_exchange)
     direct_ex = exchange("direct", ec.request_exchange)
 
-    ed_q.bind(event_ex, :routing_key => "info.events.employer_employee.initial_enrollment")
-    ed_q.bind(event_ex, :routing_key => "error.events.employer_employee.initial_enrollment")
+    Listeners::EmployerDigestListener::DIGEST_TYPES.each do |d_type|
+      ed_q = queue(Listeners::EmployerDigestListener.queue_name_for(d_type))
+      Listeners::EmployerDigestListener.event_keys_for(d_type).each do |ek|
+        ed_q.bind(event_ex, :routing_key => ek) 
+      end
+    end
 
     ind_qhps.bind(event_ex, :routing_key => "individual.qhp_selected")
     emp_qhps.bind(event_ex, :routing_key => "employer_employee.qhp_selected")
     qsl_q.bind(event_ex, :routing_key => "*.qhp_selected")
     shop_oe_q.bind(event_ex, :routing_key => "enrollment.shop.renewal")
     shop_oe_q.bind(event_ex, :routing_key => "enrollment.shop.initial_enrollment")
-    
+
     dep_q.bind(direct_ex, :routing_key => "enrollment.get_by_id")
     ge_q.bind(direct_ex, :routing_key => "employer.get_by_feins")
 

@@ -47,8 +47,8 @@ Bluepill.application("hbx_enterprise", :log_file => BLUEPILL_LOG) do |app|
   app.uid = "nginx"
   app.gid = "nginx"
 
-#  define_worker(app, "qhp_selected_listener", BUS_DIRECTORY, "padrino r amqp/qhp_selected_listener.rb", true)
-#  define_worker(app, "qhp_selected_scaler", BUS_DIRECTORY, "padrino r amqp/qhp_selected_scaler.rb")
+  define_worker(app, "qhp_selected_listener", BUS_DIRECTORY, "padrino r amqp/qhp_selected_listener.rb", true)
+  define_worker(app, "qhp_selected_scaler", BUS_DIRECTORY, "padrino r amqp/qhp_selected_scaler.rb")
   define_worker(app, "dcas_enrollment_provider", BUS_DIRECTORY, "padrino r amqp/dcas_enrollment_provider.rb", true)
   define_worker(app, "dcas_enrollment_provider_scaler", BUS_DIRECTORY, "padrino r amqp/dcas_enrollment_provider_scaler.rb")
 end
