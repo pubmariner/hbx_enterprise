@@ -33,8 +33,8 @@ module ManualEnrollments
       end
     end
 
-    def append_begin_date
-      @data_set << '1/1/2015'
+    def append_begin_date(subscriber)
+      @data_set << format_date(subscriber.begin_date)
     end
 
     def append_plan_name(plan)
