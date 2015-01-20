@@ -71,6 +71,10 @@ module ManualEnrollments
       @row[5].to_s.strip.scrub_utf8
     end
 
+    def benefit_begin_date
+      @row[6].to_s.strip.scrub_utf8
+    end
+
     def enrollees
       [ subscriber ] + dependents
     end

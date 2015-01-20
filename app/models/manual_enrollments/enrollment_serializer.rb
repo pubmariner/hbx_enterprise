@@ -30,11 +30,15 @@ module ManualEnrollments
           @enrollment = ManualEnrollments::EnrollmentRowParser.new(row)
           @enrollment_plan = @enrollment.plan
 
+          # puts @enrollment.enrollees.inspect
+          # puts @enrollment.plan.inspect
+
           if !@enrollment.valid?
+            puts "--------------->>>>failed #{@enrollment.errors.inspect}"
             csv << row + ['Not Queued'] + @enrollment.errors
             next
           end
-
+ 
           next if @enrollment.subscriber.address_1.blank?
           enrollment_xml = generate_enrollment_cv
           response = publisher.publish(enrollment_xml)
@@ -62,13 +66,13 @@ module ManualEnrollments
           end
         end
       end
-      write_to_file builder.to_xml(:indent => 2)
-      # builder.to_xml(:indent => 2)
+      # write_to_file builder.to_xml(:indent => 2)
+      builder.to_xml(:indent => 2)
     end
 
     def serialize_broker(enrollment, xml)
       xml.broker do |xml|
-        if enrollment.market != 'shop'
+        if @market != 'shop'
           xml.id do |xml|
             xml.id enrollment.broker_npn
           end
@@ -110,7 +114,7 @@ module ManualEnrollments
       xml.shop_market do |xml|
         xml.employer_link do |xml|
           xml.id do |xml|
-            xml.id enrollment.fein
+            xml.id enrollment.fein.gsub("-",'')
           end
           xml.name enrollment.employer_name.camelcase
         end
@@ -131,7 +135,7 @@ module ManualEnrollments
         serialize_member(enrollee, xml)
         xml.is_subscriber enrollee.is_subscriber
         xml.benefit do |xml|
-          xml.begin_date '20150101'
+          xml.begin_date format_date(@enrollment.benefit_begin_date)
           xml.premium_amount enrollee.premium.gsub(/\$/, '')
         end
       end  
@@ -159,7 +163,7 @@ module ManualEnrollments
 
     def serialize_relationships(enrollee, xml)
       xml.person_relationships do |xml|
-        xml.relationship do |xml|
+        xml.person_relationship do |xml|
           xml.subject_individual do |xml|
             xml.id @person_id_generator.current
           end
