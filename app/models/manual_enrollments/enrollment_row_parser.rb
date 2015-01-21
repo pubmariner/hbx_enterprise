@@ -13,7 +13,7 @@ module ManualEnrollments
     DEPENDENT_FIELDS = %W(ssn dob gender premium first_name middle_name last_name email phone address_1 address_2 city state zip relationship)
     SUBSCRIBER_FIEDLS = %W(ssn dob gender premium first_name middle_name last_name email phone address_1 address_2 city state zip relationship)
 
-    attr_reader :errors
+    attr_reader :errors, :valid
 
     def initialize(row)
       @row = row
@@ -22,9 +22,19 @@ module ManualEnrollments
     end
 
     def valid?
+      validate_market
       validate_ssns
       validate_relationships
       @valid
+    end
+
+    def validate_market
+      market_types = ['shop', 'ivl', 'individual']
+
+      if !market_types.include?(market)
+        @valid = false
+        @errors << "Market type should be #{market_types.join(' or ')}."
+      end
     end
 
     def validate_ssns
@@ -51,8 +61,15 @@ module ManualEnrollments
     end
 
     def market
-      # @row[1].to_s.strip.scrub_utf8
-      'shop'
+      @row[1].to_s.strip.scrub_utf8.downcase
+    end
+
+    def market_type
+      individual_market? ? "Individual" : "Shop"
+    end
+
+    def individual_market?
+      ['ivl', 'individual'].include?(market)
     end
 
     def employer_name
