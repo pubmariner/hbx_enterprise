@@ -28,8 +28,8 @@ module ManualEnrollments
       if broker.nil?
         2.times { append_blank }
       else
-        @data_set << broker.broker_npn
         @data_set << broker.name
+        @data_set << broker.broker_npn
       end
     end
 

@@ -19,10 +19,11 @@ module Listeners
       error_code = properties.headers["error_code"]
       return_status = (result_status == '202') ? "Success" : "Failed"  
       error_index = 151
+      eg_uri = properties.headers["eg_uri"]
       begin 
         @csv << ManualEnrollments::EnrollmentDigest.build_csv(payload, is_shop) + [return_status, error_code]
       rescue
-        @csv << (([nil] * 150) + [error_code])
+        @csv << ([eg_uri] + ([nil] * 150) + [error_code])
       end
       # Payload is the original message
       channel.ack(delivery_info.delivery_tag, false)
