@@ -18,7 +18,12 @@ module Listeners
       # JSON of the failure message
       error_code = properties.headers["error_code"]
       return_status = (result_status == '202') ? "Success" : "Failed"  
-      @csv << ManualEnrollments::EnrollmentDigest.build_csv(payload, is_shop) + [return_status, error_code]
+      error_index = 151
+      begin 
+        @csv << ManualEnrollments::EnrollmentDigest.build_csv(payload, is_shop) + [return_status, error_code]
+      rescue
+        @csv << (([nil] * 150) + [error_code])
+      end
       # Payload is the original message
       channel.ack(delivery_info.delivery_tag, false)
     end
