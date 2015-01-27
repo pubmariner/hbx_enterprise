@@ -22,7 +22,7 @@ module ManualEnrollments
           count += 1
           puts "---processing #{count}"
 
-          if row[2].blank? || ["Sponsor Name"].include?(row[2].strip)
+          if ["Sponsor Name"].include?(row[2])
             csv << row
             next
           end
@@ -73,10 +73,12 @@ module ManualEnrollments
     def serialize_broker(enrollment, xml)
       xml.broker do |xml|
         if @market != 'shop'
-          xml.id do |xml|
-            xml.id enrollment.broker_npn
+          if !enrollment.broker_npn.blank?
+            xml.id do |xml|
+              xml.id enrollment.broker_npn
+            end
+            xml.name enrollment.broker
           end
-          xml.name enrollment.broker
         end
       end
     end

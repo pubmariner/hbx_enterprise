@@ -96,6 +96,14 @@ module ManualEnrollments
       [ subscriber ] + dependents
     end
 
+    def enrollment_group_id
+      @row[153]
+    end
+
+    def timestamp
+      @row[152]
+    end
+
     def plan
       fields = @row[7..14]
       OpenStruct.new(build_fields_hash(fields, PLAN_FIEDLS))
