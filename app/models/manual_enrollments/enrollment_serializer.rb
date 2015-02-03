@@ -78,7 +78,7 @@ module ManualEnrollments
       xml.broker do |xml|
         if enrollment.individual_market?
           xml.id do |xml|
-            xml.id enrollment.broker_npn
+            xml.id enrollment.broker_npn    
           end
           xml.name enrollment.broker
         end
