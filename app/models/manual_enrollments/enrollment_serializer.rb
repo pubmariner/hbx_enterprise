@@ -37,19 +37,23 @@ module ManualEnrollments
             csv << row
             next
           end
+
           @enrollment = ManualEnrollments::EnrollmentRowParser.new(row)
           @enrollment_plan = @enrollment.plan
           if @enrollment.valid?
-            next if @enrollment.subscriber.address_1.blank?
-            enrollment_xml = generate_enrollment_cv
-            response = publisher.publish(enrollment_xml)
-            return_status = response[-2][:headers]['return_status'] == '200' ? "success" : "failed"
-            puts return_status.inspect
-            puts response[-1]
-            csv << row + [return_status] + [response[-1]]
+            begin
+              next if @enrollment.subscriber.address_1.blank?
+              enrollment_xml = generate_enrollment_cv
+              response = publisher.publish(enrollment_xml)
+              return_status = response[-2][:headers]['return_status'] == '200' ? "success" : "failed"
+              puts return_status.inspect
+              puts response[-1]
+              csv << row + [return_status] + [response[-1]]
+            rescue Exception => msg
+              csv << row + ['failed'] + [msg]
+            end
           else
             csv << row + ['failed'] + @enrollment.errors
-            next
           end
         end
       end

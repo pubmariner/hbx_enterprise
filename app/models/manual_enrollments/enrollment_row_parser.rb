@@ -25,6 +25,7 @@ module ManualEnrollments
       validate_market
       validate_ssns
       validate_relationships
+      validate_dates
       @valid
     end
 
@@ -53,6 +54,22 @@ module ManualEnrollments
       elsif enrollees.detect{|x| !['self','spouse','child'].include?(x.relationship.downcase)}
         @valid = false
         @errors << 'invalid relationship'
+      end
+    end
+
+    def validate_dates
+      regex = /\d{1,2}\/\d{1,2}\/\d{4}/
+      if benefit_begin_date =~ regex
+        enrollees.each do |enrollee|
+          if enrollee.dob !~ regex
+            @valid = false
+            @errors << 'wrong date format'
+            break
+          end
+        end
+      else
+        @valid = false
+        @errors << 'wrong date format'
       end
     end
 

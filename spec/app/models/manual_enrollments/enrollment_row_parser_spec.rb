@@ -20,7 +20,7 @@ module ManualEnrollments
       expect(subject.individual_market?).to eq(true)
     end
 
-    context 'market validator' do
+    context 'market type validation' do
       context 'when market information missing' do 
         let(:enrollment) { ['renewal', '']}
 
@@ -43,7 +43,7 @@ module ManualEnrollments
       end
     end
 
-    context 'ssn validator' do
+    context 'ssn validation' do
       context 'when having duplicate ssns' do 
 
         let(:enrollees) { [subscriber, dependent1] }
@@ -51,9 +51,8 @@ module ManualEnrollments
 
         it 'should return false' do
           allow(subject).to receive(:enrollees).and_return(enrollees)
-          allow(subject).to receive(:validate_market).and_return(true)
-          allow(subject).to receive(:validate_relationships).and_return(true)
-          expect(subject.valid?).to eq(false)
+          subject.validate_ssns
+          expect(subject.valid).to eq(false)
           expect(subject.errors).to eq(['duplicate ssns 342323212.'])
         end
       end
@@ -64,8 +63,8 @@ module ManualEnrollments
         let(:dependent2) { double(ssn: nil) }
         it 'should return true' do
           allow(subject).to receive(:enrollees).and_return(enrollees)
-          allow(subject).to receive(:validate_relationships).and_return(true)
-          expect(subject.valid?).to eq(true)
+          subject.validate_ssns
+          expect(subject.valid).to eq(true)
         end
       end
 
@@ -74,20 +73,20 @@ module ManualEnrollments
         let(:dependent1) { double(ssn: '342323214') }
         it 'should return true' do
           allow(subject).to receive(:enrollees).and_return(enrollees)
-          allow(subject).to receive(:validate_relationships).and_return(true)
-          expect(subject.valid?).to eq(true)
+          subject.validate_ssns
+          expect(subject.valid).to eq(true)
         end
       end
     end
 
-    context 'relationship validator' do
+    context 'relationship validation' do
       context 'when relationship is empty' do
         let(:enrollees) { [subscriber] }
         let(:subscriber) { double(ssn: '342323212', relationship: nil) }
         it 'should return false' do
           allow(subject).to receive(:enrollees).and_return(enrollees)
-          allow(subject).to receive(:validate_ssns).and_return(true)
-          expect(subject.valid?).to eq(false)
+          subject.validate_relationships
+          expect(subject.valid).to eq(false)
           expect(subject.errors).to eq(['relationship empty'])
         end
       end
@@ -98,8 +97,8 @@ module ManualEnrollments
         let(:dependent1) { double(relationship: 'sibling') }
         it 'should return false' do
           allow(subject).to receive(:enrollees).and_return(enrollees)
-          allow(subject).to receive(:validate_ssns).and_return(true)
-          expect(subject.valid?).to eq(false)
+          subject.validate_relationships
+          expect(subject.valid).to eq(false)
           expect(subject.errors).to eq(['invalid relationship'])
         end
       end
@@ -110,8 +109,56 @@ module ManualEnrollments
         let(:dependent1) { double(relationship: 'child') }
         it 'should return true' do
           allow(subject).to receive(:enrollees).and_return(enrollees)
-          allow(subject).to receive(:validate_ssns).and_return(true)
-          expect(subject.valid?).to eq(true)
+          subject.validate_relationships
+          expect(subject.valid).to eq(true)
+          expect(subject.errors).to eq([])
+        end
+      end
+    end
+
+    context 'date format validation' do
+      context 'when benefit begin date is invalid i.e, 2 digit year format' do
+        let(:enrollees) { [subscriber] }
+        let(:subscriber) { double(ssn: '342323212', relationship: nil) }
+        let(:benefit_begin_date) { '8/8/91'}
+        it 'should return false' do
+          allow(subject).to receive(:enrollees).and_return(enrollees)
+          allow(subject).to receive(:benefit_begin_date).and_return(benefit_begin_date)
+
+          subject.validate_dates
+          expect(subject.valid).to eq(false)
+          expect(subject.errors).to eq(['wrong date format'])
+        end
+      end
+
+      context 'when dob is invalid format i.e, 2 digit year' do
+        let(:enrollees) { [subscriber, dependent1] }
+        let(:subscriber) { double(ssn: '342323212', relationship: 'self', dob: "12/02/1983") }
+        let(:dependent1) { double(relationship: 'sibling', dob: "01/02/78") }
+        let(:benefit_begin_date) { '08/08/2008'}
+
+        it 'should return false' do
+          allow(subject).to receive(:enrollees).and_return(enrollees)
+          allow(subject).to receive(:benefit_begin_date).and_return(benefit_begin_date)
+
+          subject.validate_dates     
+          expect(subject.valid).to eq(false)
+          expect(subject.errors).to eq(['wrong date format'])
+        end
+      end
+
+      context 'when dates are in correct format i.e, 4 digit year' do
+        let(:enrollees) { [subscriber, dependent1] }
+        let(:subscriber) { double(ssn: '342323212', relationship: 'self', dob: "12/02/1983") }
+        let(:dependent1) { double(relationship: 'child', dob: "01/02/2008") }
+        let(:benefit_begin_date) { '08/08/2008'}
+
+        it 'should return true' do
+          allow(subject).to receive(:enrollees).and_return(enrollees)
+          allow(subject).to receive(:benefit_begin_date).and_return(benefit_begin_date)
+
+          subject.validate_dates
+          expect(subject.valid).to eq(true)
           expect(subject.errors).to eq([])
         end
       end
