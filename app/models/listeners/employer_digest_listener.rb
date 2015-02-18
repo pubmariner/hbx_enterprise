@@ -53,6 +53,27 @@ module Listeners
       "error.events.#{digest_type}.initial_enrollment"]
     end
 
+    def self.run_until_empty(digest_type)
+      raise ArgumentError.new("Digest type must be: individual or employer_employee") unless DIGEST_TYPES.include?(digest_type)
+      conn = Bunny.new(ExchangeInformation.amqp_uri)
+      conn.start
+      ch = conn.create_channel
+      ch.prefetch(1)
+      dex = ch.default_exchange
+      q = ch.queue(queue_name_for(digest_type), :durable => true)
+      trap("SIGINT") { throw :terminate }
+      ManualEnrollments::EnrollmentDigest.with_csv_template do |csv|
+        client = self.new(ch, q, csv)
+        while (popped = q.pop(:manual_ack => true))
+          if (popped.all?(&:blank?))
+            break
+          end
+          delivery_info, properties, payload = popped
+          client.on_message(delivery_info, properties, payload)
+        end
+      end
+    end
+
     def self.run(digest_type)
       raise ArgumentError.new("Digest type must be: individual or employer_employee") unless DIGEST_TYPES.include?(digest_type)
       conn = Bunny.new(ExchangeInformation.amqp_uri)
