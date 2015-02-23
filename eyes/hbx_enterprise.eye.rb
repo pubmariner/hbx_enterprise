@@ -7,7 +7,7 @@ BLUEPILL_LOG = File.join(LOG_DIRECTORY, "eye_hbx_enterprise.log")
 Eye.config do
   logger BLUEPILL_LOG
 
-  mail :host => "smtp4.dc.gov", :port => 25, :from_mail => "no-reply@dchbx.info", :domain => "dchbx.info", :user => "no-reply@dchbx.info"
+  mail :host => "smtp4.dc.gov", :port => 25, :from_mail => "no-reply@dchbx.info"
   contact :tevans, :mail, 'trey.evans@dc.gov'
   contact :dthomas, :mail, 'dan.thomas@dc.gov'
 end
