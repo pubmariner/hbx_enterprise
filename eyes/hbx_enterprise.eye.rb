@@ -14,7 +14,10 @@ end
 
 def define_worker(worker_name, directory, worker_command, watch_kids = false)
   process(worker_name) do
-    notify :tevans, :dthomas
+    notify :tevans, :debug
+    notify :tevans, :info
+    notify :tevans, :error
+    notify :tevans, :fatal
     start_command worker_command
     stop_on_delete true
     stop_signals [:TERM, 10.seconds, :KILL]
