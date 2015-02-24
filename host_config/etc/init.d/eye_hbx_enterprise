@@ -19,7 +19,7 @@ APP_NAME=eye_hbx_enterprise
 APP_ROOT=/var/www/deployments/hbx_enterprise/current
 EYE_HOME=/var/www/deployments/hbx_enterprise/current
 EYE=$APP_ROOT/eyes/hbx_enterprise.eye.rb
-CMD="sudo -i -u $USER -- /bin/bash -c 'cd $APP_ROOT && leye --eyefile $EYE --eyehome $APP_ROOT/eye"
+CMD="sudo -i -u $USER -- /bin/bash -c 'cd $APP_ROOT && bundle exec leye --eyefile $EYE --eyehome $APP_ROOT/eye"
 
 case "$1" in
     start)
