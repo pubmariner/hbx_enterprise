@@ -34,11 +34,35 @@ end
 Eye.application 'eye_hbx_enterprise' do
     notify :tevans, :info
     notify :dthomas, :info
-#  uid "nginx"
-#  gid "nginx"
 
 #  define_worker(app, "qhp_selected_listener", BUS_DIRECTORY, "padrino r amqp/qhp_selected_listener.rb", true)
 #  define_worker(app, "qhp_selected_scaler", BUS_DIRECTORY, "padrino r amqp/qhp_selected_scaler.rb")
-  define_worker("dcas_enrollment_provider", BUS_DIRECTORY, "padrino r amqp/dcas_enrollment_provider.rb -e production", true)
-  define_worker("dcas_enrollment_provider_scaler", BUS_DIRECTORY, "padrino r amqp/dcas_enrollment_provider_scaler.rb -e production")
+  define_worker("dcas_enrollment_provider", BUS_DIRECTORY, "bundle exec padrino r amqp/dcas_enrollment_provider.rb -e production", true)
+  define_worker("dcas_enrollment_provider_scaler", BUS_DIRECTORY, "bundle exec padrino r amqp/dcas_enrollment_provider_scaler.rb -e production")
+
+  process("unicorn") do
+    working_dir BUS_DIRECTORY
+    pid_file "pids/unicorn.pid"
+    start_command "bundle exec unicorn -c #{BUS_DIRECTORY}/config/unicorn.rb -E production -D"
+    stdall "log/unicorn.log"
+
+    # stop signals:
+    #     # http://unicorn.bogomips.org/SIGNALS.html
+    stop_signals [:TERM, 10.seconds]
+    #
+    #             # soft restart
+    #    restart_command "kill -USR2 {PID}"
+    #
+    # check :cpu, :every => 30, :below => 80, :times => 3
+    # check :memory, :every => 30, :below => 150.megabytes, :times => [3,5]
+    #
+    start_timeout 100.seconds
+    restart_grace 30.seconds
+    #
+    monitor_children do
+      stop_command "kill -QUIT {PID}"
+      check :cpu, :every => 30, :below => 80, :times => 3
+      check :memory, :every => 30, :below => 150.megabytes, :times => [3,5]
+    end
+  end
 end
