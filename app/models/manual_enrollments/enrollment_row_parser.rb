@@ -48,7 +48,7 @@ module ManualEnrollments
     end
 
     def validate_relationships
-      if enrollees.detect{|x| x.relationship.blank? }
+      if enrollee = enrollees.detect{|x| x.relationship.blank? }
         @valid = false
         @errors << 'relationship empty'
       elsif enrollees.detect{|x| !['self','spouse','child'].include?(x.relationship.downcase)}
@@ -138,7 +138,8 @@ module ManualEnrollments
       8.times do |i|
         fields = @row[current..(current + 14)]
         current += 15
-        next if (fields[4].blank? && fields[6].blank?)
+        next if fields[0].blank? && fields[1].blank? && fields[4].blank? && fields[6].blank?
+        next unless fields[0..6].detect{|x| !x.blank? }
         individuals << OpenStruct.new(build_fields_hash(fields, DEPENDENT_FIELDS).merge({is_subscriber: false}))
       end
       individuals
