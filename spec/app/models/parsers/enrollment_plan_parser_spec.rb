@@ -19,7 +19,7 @@ describe Parsers::Xml::Cv::EnrollmentPlanParser do
   let(:plan) { subject.policy.hbx_enrollment.plan }
 
   it 'should return plan elements' do
-    expect(plan.id).to eq(hios_id)
+    expect(plan.hios_id).to eq(hios_id)
     expect(plan.coverage_type).to eq(coverage_type)
     expect(plan.plan_year).to eq(plan_year)
     expect(plan.name).to eq(name)
