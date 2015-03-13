@@ -25,14 +25,14 @@ XMLCODE
   end
 
   def self.run
-    dir_glob = Dir.glob(File.join(File.dirname(__FILE__), "switch_cvs", "to_split", "*.xml"))
+    dir_glob = Dir.glob(File.join(File.dirname(__FILE__), "system_cvs", "*.xml"))
     dir_glob.each do |f|
       bn = File.basename(f).split(".").first
       in_file = File.open(f)
       xml = Nokogiri::XML(in_file.read)
       nodes = create_nodes(xml)
       nodes.each_pair do |k, v|
-        o_file = File.join(File.dirname(__FILE__), "switch_cvs", "#{bn}_#{k}.xml")
+        o_file = File.join(File.dirname(__FILE__), "policy_cvs", "#{bn}_#{k}.xml")
         out_f = File.open(o_file, 'w')
         out_f.puts(v)
         out_f.close

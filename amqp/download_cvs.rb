@@ -4,7 +4,7 @@ class SaveShopOrdered
     r, w = IO.pipe
     @@pipe_r = r
     @@pipe_w = w
-      dir_glob = File.open("amqp/prod_errors/missing_enrolls.txt").read.split("\n")
+      dir_glob = File.open("amqp/enrollment_lists/system_enrollments.txt").read.split("\n")
       dir_glob.each do |f|
         @@pipe_w.puts(f)
       end
@@ -34,7 +34,7 @@ class SaveShopOrdered
         response_cv = dep.convert_to_cv(OpenStruct.new(enrollment_props), retrieve_demographics)
         file_name = ts_string + "_" + f
         f_open = File.open(
-          File.join(File.dirname(__FILE__), "switch_cvs", "#{file_name}.xml"),
+          File.join(File.dirname(__FILE__), "system_cvs", "#{file_name}.xml"),
           "w"
         )
         f_open.puts(response_cv)
