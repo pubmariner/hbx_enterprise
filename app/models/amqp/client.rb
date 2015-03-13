@@ -84,7 +84,8 @@ module Amqp
           $stderr.puts "=== Processing Failure ==="
           fail_with(e)
           begin
-            existing_retry_count = properties.headers["x-redelivery-count"].to_i
+            hs = properties.headers  || {}
+            existing_retry_count = hs["x-redelivery-count"].to_i
             if existing_retry_count > 5
               $stderr.puts "=== Redelivery Attempts Exceeded ==="
               $stderr.puts properties.to_hash.inspect
@@ -110,7 +111,7 @@ module Amqp
       new_headers = new_properties[:headers] || {}
       new_headers[:previous_routing_key] = delivery_info.routing_key
       new_properties[:routing_key] = error_routing_key
-
+      new_properties[:timestamp] = extract_timestamp(properties)
       if exception
         new_headers[:return_status] = exception.return_status
         new_headers[:error_message] = exception.message
@@ -125,7 +126,19 @@ module Amqp
       new_headers["x-redelivery-count"] = existing_retry_count + 1
       new_properties[:headers] = new_headers
       new_properties[:routing_key] = delivery_info.routing_key
+      new_properties[:timestamp] = extract_timestamp(properties)
       new_properties
+    end
+
+    def extract_timestamp(properties)
+      message_ts = properties.timestamp
+      if message_ts.blank?
+        Time.now.to_i
+      else
+        if message_ts.kind_of?(Time)
+          message_ts.to_i
+        end
+      end
     end
 
     def request(properties, payload, timeout = 15)

@@ -29,7 +29,7 @@ set :pty, true
 set :linked_files, %w{config/exchange.yml}
 
 # Default value for linked_dirs is []
-set :linked_dirs, %w{pids log}
+set :linked_dirs, %w{pids log eye}
 # set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
 
 # Default value for default_env is {}
@@ -45,8 +45,7 @@ namespace :deploy do
     on roles(:app), in: :sequence, wait: 5 do
       # Your restart mechanism here, for example:
       # execute :touch, release_path.join('tmp/restart.txt')
-      sudo "service unicorn_hbx_enterprise restart"
-      sudo "service bluepill_hbx_enterprise restart"
+      sudo "service eye_hbx_enterprise restart"
     end
   end
 

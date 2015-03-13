@@ -14,6 +14,7 @@ module Parsers
         element :location_state, String, tag: "location_state"
         element :location_city_name, String, tag: "location_city_name"
         element :location_state_code, String, tag: "location_state_code"
+        element :postal_code, String, tag: "postal_code"
         element :location_postal_code, String, tag: "location_postal_code"
         element :location_postal_extension_code, String, tag: "location_postal_extension_code"
         element :location_country_name, String, tag: "location_country_name"

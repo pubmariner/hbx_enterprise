@@ -11,12 +11,6 @@ GEM
       thread_safe (~> 0.1)
       tzinfo (~> 1.1)
     amq-protocol (1.9.2)
-    blue-daemons (1.1.11)
-    bluepill (0.0.68)
-      activesupport (>= 3, < 5)
-      blue-daemons (~> 1.1.11)
-      i18n (~> 0.5)
-      state_machine (~> 1.1)
     bson (2.3.0)
     builder (3.2.2)
     bunny (1.6.3)
@@ -30,9 +24,20 @@ GEM
       sshkit (~> 1.2)
     capistrano-scm-gitcopy (0.0.7)
       capistrano (~> 3.0)
+    celluloid (0.15.2)
+      timers (~> 1.1.0)
+    celluloid-io (0.15.0)
+      celluloid (>= 0.15.0)
+      nio4r (>= 0.5.0)
     colorize (0.7.5)
     connection_pool (2.1.0)
     diff-lcs (1.2.5)
+    eye (0.6.4)
+      celluloid (~> 0.15.0)
+      celluloid-io (~> 0.15.0)
+      sigar (~> 0.7.2)
+      state_machine
+      thor
     forkr (0.1.5)
     haml (4.0.6)
       tilt
@@ -61,6 +66,7 @@ GEM
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
     net-ssh (2.9.1)
+    nio4r (1.1.0)
     nokogiri (1.6.5)
       mini_portile (~> 0.6.0)
     nokogiri-happymapper (0.5.9)
@@ -121,6 +127,7 @@ GEM
     rspec-mocks (3.1.3)
       rspec-support (~> 3.1.0)
     rspec-support (3.1.2)
+    sigar (0.7.3)
     sinatra (1.4.5)
       rack (~> 1.4)
       rack-protection (~> 1.4)
@@ -133,6 +140,7 @@ GEM
     thor (0.19.1)
     thread_safe (0.3.4)
     tilt (1.4.1)
+    timers (1.1.0)
     treetop (1.4.15)
       polyglot
       polyglot (>= 0.3.1)
@@ -150,11 +158,11 @@ PLATFORMS
 
 DEPENDENCIES
   activesupport (= 4.1.8)
-  bluepill (= 0.0.68)
   bunny
   capistrano (= 3.2.1)
   capistrano-bundler
   capistrano-scm-gitcopy (= 0.0.7)
+  eye
   forkr (= 0.1.5)
   haml
   mongoid

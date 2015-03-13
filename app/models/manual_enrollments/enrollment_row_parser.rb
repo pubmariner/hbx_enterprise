@@ -13,7 +13,7 @@ module ManualEnrollments
     DEPENDENT_FIELDS = %W(ssn dob gender premium first_name middle_name last_name email phone address_1 address_2 city state zip relationship)
     SUBSCRIBER_FIEDLS = %W(ssn dob gender premium first_name middle_name last_name email phone address_1 address_2 city state zip relationship)
 
-    attr_reader :errors
+    attr_reader :errors, :valid
 
     def initialize(row)
       @row = row
@@ -22,9 +22,20 @@ module ManualEnrollments
     end
 
     def valid?
+      validate_market
       validate_ssns
       validate_relationships
+      validate_dates
       @valid
+    end
+
+    def validate_market
+      market_types = ['shop', 'ivl', 'individual']
+
+      if !market_types.include?(market)
+        @valid = false
+        @errors << "Market type should be #{market_types.join(' or ')}."
+      end
     end
 
     def validate_ssns
@@ -46,13 +57,36 @@ module ManualEnrollments
       end
     end
 
+    def validate_dates
+      regex = /\d{1,2}\/\d{1,2}\/\d{4}/
+      if benefit_begin_date =~ regex
+        enrollees.each do |enrollee|
+          if enrollee.dob !~ regex
+            @valid = false
+            @errors << 'wrong date format'
+            break
+          end
+        end
+      else
+        @valid = false
+        @errors << 'wrong date format'
+      end
+    end
+
     def type
       @row[0].to_s.strip.scrub_utf8
     end
 
     def market
-      # @row[1].to_s.strip.scrub_utf8
-      'shop'
+      @row[1].to_s.strip.scrub_utf8.downcase
+    end
+
+    def market_type
+      individual_market? ? "Individual" : "Shop"
+    end
+
+    def individual_market?
+      ['ivl', 'individual'].include?(market)
     end
 
     def employer_name
@@ -71,8 +105,20 @@ module ManualEnrollments
       @row[5].to_s.strip.scrub_utf8
     end
 
+    def benefit_begin_date
+      @row[6].to_s.strip.scrub_utf8
+    end
+
     def enrollees
       [ subscriber ] + dependents
+    end
+
+    def enrollment_group_id
+      @row[153]
+    end
+
+    def timestamp
+      @row[152]
     end
 
     def plan

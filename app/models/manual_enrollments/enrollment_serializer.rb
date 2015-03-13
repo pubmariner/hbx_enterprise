@@ -8,17 +8,30 @@ module ManualEnrollments
       "xmlns:xsi" => "http://www.w3.org/2001/XMLSchema-instance"
     }
 
+    def self.process_csv(file)
+      obj = self.new
+      obj.from_csv(file)
+    end
+
     def initialize
       @policy_id_generator = IdGenerator.new('http://10.83.85.127:8080/sequences/policy_id')
       @person_id_generator = IdGenerator.new('http://10.83.85.127:8080/sequences/member_id')
     end
 
-    def from_csv(input_file, output_file=nil, market)
-      @market = market
+    def get_output_filename(input_file)
+      extn = File.extname(input_file)
+      raise "CSV file expected!!" if extn != '.csv'
+
+      file_name = File.basename(input_file, extn)
+      output_file = file_name + '_results.csv'
+    end
+
+    def from_csv(input_file)
+      output_file = get_output_filename(input_file)
       publisher = ManualEnrollments::EnrollmentPublisher.new
       count = 0
-      CSV.open(output_file, "wb") do |csv|
-        CSV.foreach(input_file) do |row|
+      CSV.open("#{Padrino.root}/#{output_file}", "wb") do |csv|
+        CSV.foreach("#{Padrino.root}/#{input_file}") do |row|
           count += 1
           puts "---processing #{count}"
 
@@ -29,10 +42,20 @@ module ManualEnrollments
 
           @enrollment = ManualEnrollments::EnrollmentRowParser.new(row)
           @enrollment_plan = @enrollment.plan
-
-          if !@enrollment.valid?
-            csv << row + ['Not Queued'] + @enrollment.errors
-            next
+          if @enrollment.valid?
+            begin
+              next if @enrollment.subscriber.address_1.blank?
+              enrollment_xml = generate_enrollment_cv
+              response = publisher.publish(enrollment_xml)
+              return_status = response[-2][:headers]['return_status'] == '200' ? "success" : "failed"
+              puts return_status.inspect
+              puts response[-1]
+              csv << row + [return_status] + [response[-1]]
+            rescue Exception => msg
+              csv << row + ['failed'] + [msg]
+            end
+          else
+            csv << row + ['failed'] + @enrollment.errors
           end
 
           next if @enrollment.subscriber.address_1.blank?
@@ -51,7 +74,7 @@ module ManualEnrollments
       builder = Nokogiri::XML::Builder.new do |xml|
         xml.enrollment(CV_XMLNS) do |xml|
           xml.type 'renewal'
-          xml.market @market
+          xml.market @enrollment.market_type
           xml.policy do |xml|
             xml.id do |xml|
               xml.id @policy_id_generator.unique_identifier
@@ -68,9 +91,9 @@ module ManualEnrollments
 
     def serialize_broker(enrollment, xml)
       xml.broker do |xml|
-        if enrollment.market != 'shop'
+        if enrollment.individual_market?
           xml.id do |xml|
-            xml.id enrollment.broker_npn
+            xml.id enrollment.broker_npn    
           end
           xml.name enrollment.broker
         end
@@ -92,10 +115,14 @@ module ManualEnrollments
         xml.plan_year '2015'
         xml.name plan.name
         xml.is_dental_only false
-        @market == 'shop' ? serialize_shop_market(enrollment, xml) : serialize_individual_market(enrollment, xml)
+        (@enrollment.market_type) == 'shop' ? serialize_shop_market(enrollment, xml) : serialize_individual_market(enrollment, xml)
         xml.premium_total_amount plan.premium_total.gsub(/\$/, '').to_f.round(2)
         xml.total_responsible_amount plan.responsible_amount.gsub(/\$/, '').to_f.round(2)
       end
+
+      enrollment.individual_market? ? serialize_individual_market(enrollment, xml) : serialize_shop_market(enrollment, xml) 
+      xml.premium_total_amount format_amt(plan.premium_total)
+      xml.total_responsible_amount format_amt(plan.responsible_amount)
     end
 
     def serialize_individual_market(enrollment, xml)
@@ -109,11 +136,11 @@ module ManualEnrollments
       xml.shop_market do |xml|
         xml.employer_link do |xml|
           xml.id do |xml|
-            xml.id enrollment.fein
+            xml.id enrollment.fein.gsub("-",'')
           end
           xml.name enrollment.employer_name.camelcase
         end
-        xml.total_employer_responsible_amount enrollment.plan.employer_contribution.gsub(/\$/, '')
+        xml.total_employer_responsible_amount format_amt(enrollment.plan.employer_contribution)
       end
     end
 
@@ -130,8 +157,8 @@ module ManualEnrollments
         serialize_member(enrollee, xml)
         xml.is_subscriber enrollee.is_subscriber
         xml.benefit do |xml|
-          xml.begin_date '20150101'
-          xml.premium_amount enrollee.premium.gsub(/\$/, '')
+          xml.begin_date format_date(@enrollment.benefit_begin_date)
+          xml.premium_amount format_amt(enrollee.premium)
         end
       end  
     end
@@ -158,7 +185,7 @@ module ManualEnrollments
 
     def serialize_relationships(enrollee, xml)
       xml.person_relationships do |xml|
-        xml.relationship do |xml|
+        xml.person_relationship do |xml|
           xml.subject_individual do |xml|
             xml.id @person_id_generator.current
           end
@@ -261,6 +288,10 @@ module ManualEnrollments
 
     def prepend_zero(str)
       '0' + str
+    end
+
+    def format_amt(amt)
+      amt.gsub(/(\$|\,)/, '').to_f.round(2)
     end
   end
 

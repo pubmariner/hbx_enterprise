@@ -2,7 +2,7 @@ module ManualEnrollments
   class EnrollmentPublisher
 
     def initialize
-      conn = Bunny.new('amqp://guest:guest@10.83.85.127:5672')
+      conn = Bunny.new(ExchangeInformation.amqp_uri)
       conn.start
 
       @ch = conn.create_channel
