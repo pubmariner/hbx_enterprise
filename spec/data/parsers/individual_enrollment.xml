@@ -18,14 +18,14 @@
               <id>18762120</id>
             </id>
             <person_name>
-              <person_surname>Ushakova</person_surname>
+              <person_surname>Josh</person_surname>
               <person_given_name>Natalia</person_given_name>
             </person_name>
             <addresses>
               <address>
                 <type>urn:openhbx:terms:v1:address_type#home</type>
-                <address_line_1>825 H St NE</address_line_1>
-                <address_line_2>Apt 316</address_line_2>
+                <address_line_1>8025 E St NE</address_line_1>
+                <address_line_2>Apt 216</address_line_2>
                 <location_city_name>Washington</location_city_name>
                 <location_state_code>DC</location_state_code>
                 <postal_code>20002</postal_code>
@@ -34,7 +34,7 @@
             <emails>
               <email>
                 <type>urn:openhbx:terms:v1:email_type#home</type>
-                <email_address>ddnd@mail.iu</email_address>
+                <email_address>joesh@mail.iu</email_address>
               </email>
             </emails>
             <phones>
@@ -45,7 +45,7 @@
             </phones>
           </person>
           <person_relationships>
-            <relationship>
+            <person_relationship>
               <subject_individual>
                 <id>18762120</id>
               </subject_individual>
@@ -53,12 +53,12 @@
               <object_individual>
                 <id>18762120</id>
               </object_individual>
-            </relationship>
+            </person_relationship>
           </person_relationships>
           <person_demographics>
             <ssn>000000000</ssn>
             <sex>urn:openhbx:terms:v1:gender#female</sex>
-            <birth_date>19650830</birth_date>
+            <birth_date>19050830</birth_date>
           </person_demographics>
         </member>
         <is_subscriber>true</is_subscriber>

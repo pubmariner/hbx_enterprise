@@ -24,7 +24,7 @@
             <addresses>
               <address>
                 <type>urn:openhbx:terms:v1:address_type#home</type>
-                <address_line_1>532 H Street</address_line_1>
+                <address_line_1>5320 H Street</address_line_1>
                 <location_city_name>Washington DC</location_city_name>
                 <location_state_code>DC</location_state_code>
                 <postal_code>20002</postal_code>
@@ -33,13 +33,13 @@
             <emails>
               <email>
                 <type>urn:openhbx:terms:v1:email_type#home</type>
-                <email_address>joe_blake@dc.gov</email_address>
+                <email_address>blake@dc.gov</email_address>
               </email>
             </emails>
             <phones/>
           </person>
           <person_relationships>
-            <relationship>
+            <person_relationship>
               <subject_individual>
                 <id>18762338</id>
               </subject_individual>
@@ -47,12 +47,12 @@
               <object_individual>
                 <id>18762338</id>
               </object_individual>
-            </relationship>
+            </person_relationship>
           </person_relationships>
           <person_demographics>
             <ssn>100000000</ssn>
             <sex>urn:openhbx:terms:v1:gender#male</sex>
-            <birth_date>19880515</birth_date>
+            <birth_date>19080515</birth_date>
           </person_demographics>
         </member>
         <is_subscriber>true</is_subscriber>
@@ -71,13 +71,13 @@
               <id>18762339</id>
             </id>
             <person_name>
-              <person_surname>Sara</person_surname>
+              <person_surname>Joe</person_surname>
               <person_given_name>Blake</person_given_name>
             </person_name>
             <addresses>
               <address>
                 <type>urn:openhbx:terms:v1:address_type#home</type>
-                <address_line_1>532 H Street</address_line_1>
+                <address_line_1>5320 H Street</address_line_1>
                 <location_city_name>Washington DC</location_city_name>
                 <location_state_code>DC</location_state_code>
                 <postal_code>20002</postal_code>
@@ -87,7 +87,7 @@
             <phones/>
           </person>
           <person_relationships>
-            <relationship>
+            <person_relationship>
               <subject_individual>
                 <id>18762339</id>
               </subject_individual>
@@ -95,12 +95,12 @@
               <object_individual>
                 <id>18762338</id>
               </object_individual>
-            </relationship>
+            </person_relationship>
           </person_relationships>
           <person_demographics>
             <ssn>100000000</ssn>
             <sex>urn:openhbx:terms:v1:gender#female</sex>
-            <birth_date>20110213</birth_date>
+            <birth_date>20010213</birth_date>
           </person_demographics>
         </member>
         <is_subscriber>false</is_subscriber>
@@ -119,13 +119,13 @@
               <id>18762340</id>
             </id>
             <person_name>
-              <person_surname>Farnsworth</person_surname>
-              <person_given_name>David</person_given_name>
+              <person_surname>Joe</person_surname>
+              <person_given_name>Black</person_given_name>
             </person_name>
             <addresses>
               <address>
                 <type>urn:openhbx:terms:v1:address_type#home</type>
-                <address_line_1>532 H Street</address_line_1>
+                <address_line_1>5320 H Street</address_line_1>
                 <location_city_name>Washington DC</location_city_name>
                 <location_state_code>DC</location_state_code>
                 <postal_code>20002</postal_code>
@@ -135,7 +135,7 @@
             <phones/>
           </person>
           <person_relationships>
-            <relationship>
+            <person_relationship>
               <subject_individual>
                 <id>18762340</id>
               </subject_individual>
@@ -143,12 +143,12 @@
               <object_individual>
                 <id>18762338</id>
               </object_individual>
-            </relationship>
+            </person_relationship>
           </person_relationships>
           <person_demographics>
             <ssn>100000000</ssn>
             <sex>urn:openhbx:terms:v1:gender#male</sex>
-            <birth_date>20120921</birth_date>
+            <birth_date>20020921</birth_date>
           </person_demographics>
         </member>
         <is_subscriber>false</is_subscriber>
