@@ -8,8 +8,7 @@ class RepubCv
     ex = ch.topic(ExchangeInformation.event_exchange, {:durable => true})
     rk = "enrollment.submitted"
     dir_glob.each do |f|
-      st, eg_id, kind = File.basename(f).split(".").first.split("_")
-      if kind == "D"
+        st, eg_id, kind = File.basename(f).split(".").first.split("_")
         in_file = File.open(f)
         payload = in_file.read
         ex.publish(payload, {
@@ -19,7 +18,6 @@ class RepubCv
             :submitted_timestamp => st
           }
         })
-      end
     end
   end
 

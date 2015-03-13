@@ -4,14 +4,15 @@ class SaveShopOrdered
     r, w = IO.pipe
     @@pipe_r = r
     @@pipe_w = w
-    dir_glob = File.open("amqp/prod_errors/missing_enrolls.txt").read.split("\n")
-    dir_glob.each do |f|
-      @@pipe_w.puts(f)
-    end
+      dir_glob = File.open("amqp/prod_errors/missing_enrolls.txt").read.split("\n")
+      dir_glob.each do |f|
+        @@pipe_w.puts(f)
+      end
+      puts "FINISHED PIPING"
   end
 
   def self.run
-    @@pipe_w.close
+#    @@pipe_w.close
     conn = Bunny.new(ExchangeInformation.amqp_uri)
     conn.start
     ch = conn.create_channel
@@ -20,8 +21,9 @@ class SaveShopOrdered
     # dir_glob = File.open("amqp/prod_errors/missing_enrolls.txt").read.split("\n")
     while(l = @@pipe_r.gets)
       begin
+        #    f = l.strip
         ts_string,f = l.strip.split("_")
-#        ts_string = Time.now.strftime("%Y%m%d%H%M%S")
+        #        ts_string = Time.now.strftime("%Y%m%d%H%M%S")
         enrollment_props = {
           :headers => {
             "enrollment_group_id" => f,

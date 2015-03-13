@@ -4,7 +4,7 @@ class TryCreate
     conn = Bunny.new(ExchangeInformation.amqp_uri)
     conn.start
     ch = conn.create_channel
-    rk = "dc0.preprod.glue.enrollment_creator"
+    rk = "dc0.prod.glue.enrollment_creator"
     dir_glob = Dir.glob(File.join(File.dirname(__FILE__), "switch_cvs", "*.xml"))
     out_file_base = File.join(File.dirname(__FILE__), "switch_fails")
     dir_glob.each do |f|
@@ -18,8 +18,8 @@ class TryCreate
           :qualifying_reason_uri => "urn:dc0:terms:v1:qualifying_life_event#initial_enrollment"
         }
       }
-      req = Amqp::Requestor.default
-      di, r_props, r_body = req.request(request_props, en_data)
+      req = Amqp::Requestor.new(conn)
+      di, r_props, r_body = req.request(request_props, en_data, 90)
       r_status = r_props.headers["return_status"]
       case r_status
       when "200"
