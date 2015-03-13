@@ -15,7 +15,7 @@ module ManualEnrollments
         :headers => {
           qualifying_reason_uri: 'urn:dc0:terms:v1:qualifying_life_event#open_enrollment'
         }}
-      @requestor.request(properties, payload)
+      @requestor.request(properties, payload, 60)
     end
   end
 end

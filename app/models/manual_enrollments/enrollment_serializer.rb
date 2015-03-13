@@ -14,8 +14,8 @@ module ManualEnrollments
     end
 
     def initialize
-      @policy_id_generator = IdGenerator.new('http://10.83.85.127:8080/sequences/policy_id')
-      @person_id_generator = IdGenerator.new('http://10.83.85.127:8080/sequences/member_id')
+      @policy_id_generator = IdGenerator.new('http://10.87.84.135:8080/sequences/policy_id')
+      @person_id_generator = IdGenerator.new('http://10.87.84.135:8080/sequences/member_id')
     end
 
     def get_output_filename(input_file)
@@ -23,7 +23,7 @@ module ManualEnrollments
       raise "CSV file expected!!" if extn != '.csv'
 
       file_name = File.basename(input_file, extn)
-      output_file = file_name + '_results.csv'
+      output_file = file_name + ' processed.csv'
     end
 
     def from_csv(input_file)
@@ -33,17 +33,18 @@ module ManualEnrollments
       CSV.open("#{Padrino.root}/#{output_file}", "wb") do |csv|
         CSV.foreach("#{Padrino.root}/#{input_file}") do |row|
           count += 1
-          puts "---processing #{count}"
 
-          if row[2].blank? || ["Sponsor Name"].include?(row[2].strip)
+          if row[2].blank? || ["Sponsor Name", "Employer Name"].include?(row[2].strip)
             csv << row
             next
           end
 
           @enrollment = ManualEnrollments::EnrollmentRowParser.new(row)
           @enrollment_plan = @enrollment.plan
+
+          puts count.inspect
+
           if @enrollment.valid?
-            begin
               next if @enrollment.subscriber.address_1.blank?
               enrollment_xml = generate_enrollment_cv
               response = publisher.publish(enrollment_xml)
@@ -51,9 +52,6 @@ module ManualEnrollments
               puts return_status.inspect
               puts response[-1]
               csv << row + [return_status] + [response[-1]]
-            rescue Exception => msg
-              csv << row + ['failed'] + [msg]
-            end
           else
             csv << row + ['failed'] + @enrollment.errors
           end
@@ -73,7 +71,7 @@ module ManualEnrollments
     def generate_enrollment_cv
       builder = Nokogiri::XML::Builder.new do |xml|
         xml.enrollment(CV_XMLNS) do |xml|
-          xml.type 'renewal'
+          xml.type @enrollment.type
           xml.market @enrollment.market_type
           xml.policy do |xml|
             xml.id do |xml|
