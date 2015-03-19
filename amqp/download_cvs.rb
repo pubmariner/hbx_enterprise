@@ -1,25 +1,29 @@
+require 'socket'
+
 class SaveShopOrdered
 
   def self.fill_pipe
-    r, w = IO.pipe
+    r, w = UNIXSocket.pair
     @@pipe_r = r
     @@pipe_w = w
       dir_glob = File.open("amqp/enrollment_lists/system_enrollments.txt").read.split("\n")
       dir_glob.each do |f|
-        @@pipe_w.puts(f)
+        @@pipe_w.send(f, 0)
       end
       puts "FINISHED PIPING"
   end
 
   def self.run
-#    @@pipe_w.close
     conn = Bunny.new(ExchangeInformation.amqp_uri)
     conn.start
     ch = conn.create_channel
     rch = conn.create_channel
     dep = Listeners::DcasEnrollmentProvider.new(ch, nil, ch.default_exchange)
     # dir_glob = File.open("amqp/prod_errors/missing_enrolls.txt").read.split("\n")
-    while(l = @@pipe_r.gets)
+    loop do
+      begin
+      l, *others = @@pipe_r.recv_nonblock(200)
+      raise StopIteration.new if l.blank?
       begin
         #    f = l.strip
         ts_string,f = l.strip.split("_")
@@ -44,10 +48,13 @@ class SaveShopOrdered
         puts e.inspect
         #        puts e.backtrace[0..30].join("\n")
       end
+      rescue IO::WaitReadable
+        raise StopIteration.new
+      end
     end
   end
 end
 
 SaveShopOrdered.fill_pipe
 # SaveShopOrdered.run
-Forkr.new(SaveShopOrdered, 10).run
+ForkedPool.new(SaveShopOrdered, 10).run
