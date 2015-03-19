@@ -83,8 +83,8 @@ module ManualEnrollments
           end
         end
       end
-      write_to_file builder.to_xml(:indent => 2)
-      # builder.to_xml(:indent => 2)
+      # write_to_file builder.to_xml(:indent => 2)
+      builder.to_xml(:indent => 2)
     end
 
     def serialize_broker(enrollment, xml)
