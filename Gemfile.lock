@@ -38,7 +38,7 @@ GEM
       sigar (~> 0.7.2)
       state_machine
       thor
-    forkr (0.1.5)
+    forkr (0.1.7)
     haml (4.0.6)
       tilt
     http_router (0.11.1)
@@ -163,7 +163,7 @@ DEPENDENCIES
   capistrano-bundler
   capistrano-scm-gitcopy (= 0.0.7)
   eye
-  forkr (= 0.1.5)
+  forkr (= 0.1.7)
   haml
   mongoid
   nokogiri
