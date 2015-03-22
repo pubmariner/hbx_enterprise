@@ -123,6 +123,7 @@ module Listeners
       q = ch.queue(queue_name, :durable => true)
 
       self.new(ch, q, dex).subscribe(:block => true, :manual_ack => true)
+      conn.close
     end
   end
 end
