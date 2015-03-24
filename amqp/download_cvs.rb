@@ -3,7 +3,7 @@ require 'socket'
 class SaveShopOrdered
 
   def self.fill_pipe
-    r, w = UNIXSocket.pair
+    r, w = UNIXSocket.pair(:DGRAM)
     @@pipe_r = r
     @@pipe_w = w
       dir_glob = File.open("amqp/enrollment_lists/system_enrollments.txt").read.split("\n")
