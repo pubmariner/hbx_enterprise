@@ -9,10 +9,9 @@ end
 module ManualEnrollments
   class EnrollmentRowParser
      
-    PLAN_FIEDLS = %W(name qhp_id csr_info csr_variant hios_id premium_total employer_contribution responsible_amount)
-    DEPENDENT_FIELDS = %W(ssn dob gender premium first_name middle_name last_name email phone address_1 address_2 city state zip relationship)
-    SUBSCRIBER_FIEDLS = %W(ssn dob gender premium first_name middle_name last_name email phone address_1 address_2 city state zip relationship)
-
+    PLAN_FIELDS = %W(name qhp_id csr_info csr_variant hios_id premium_total employer_contribution responsible_amount)
+    ENROLLEE_FIELDS = %W(ssn dob gender premium first_name middle_name last_name email phone address_1 address_2 city state zip relationship)
+    
     attr_reader :errors, :valid
 
     def initialize(row)
@@ -109,10 +108,6 @@ module ManualEnrollments
       @row[6].to_s.strip.scrub_utf8
     end
 
-    def enrollees
-      [ subscriber ] + dependents
-    end
-
     def enrollment_group_id
       @row[153]
     end
@@ -123,26 +118,41 @@ module ManualEnrollments
 
     def plan
       fields = @row[7..14]
-      OpenStruct.new(build_fields_hash(fields, PLAN_FIEDLS))
+      OpenStruct.new(build_fields_hash(fields, PLAN_FIELDS))
     end
 
     def subscriber
-      fields = @row[15..29]
-      return if fields.compact.empty?
-      OpenStruct.new(build_fields_hash(fields, SUBSCRIBER_FIEDLS).merge({is_subscriber: true}))
+      enrollees.first
     end
 
-    def dependents
-      individuals = [ ]
-      current = 30
-      8.times do |i|
-        fields = @row[current..(current + 14)]
-        current += 15
-        next if fields[0].blank? && fields[1].blank? && fields[4].blank? && fields[6].blank?
-        next unless fields[0..6].detect{|x| !x.blank? }
-        individuals << OpenStruct.new(build_fields_hash(fields, DEPENDENT_FIELDS).merge({is_subscriber: false}))
+    def enrollees
+      pos = 15
+      members = []
+      9.times do |i|
+        elements = @row[pos..(pos + 14)]
+        pos += 15
+        if [0, 1, 4, 6].detect{|index| !elements[index].blank?}
+          members << OpenStruct.new(build_fields_hash(fields, ENROLLEE_FIELDS))
+        end
       end
-      individuals
+      sort_enrollees_by_rel(members)
+    end
+
+    def sort_enrollees_by_rel(enrollees)
+      relationships = ['self', 'spouse', 'child']
+
+      enrollees.select{ |enrollee|
+        relationships.include?(relationship(enrollee))
+      }.sort_by{ |enrollee|
+          relationships.index(relationship(enrollee))
+      } + enrollees.reject{ |enrollee|
+        relationships.include?(relationship(enrollee))
+      }
+    end
+
+    def relationship(enrollee)
+      return if enrollee.relationship.blank?
+      enrollee.relationship.downcase
     end
 
     private
