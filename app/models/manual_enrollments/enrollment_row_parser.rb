@@ -24,7 +24,8 @@ module ManualEnrollments
       validate_market
       validate_ssns
       validate_relationships
-      validate_dates
+      validate_benefit_begin
+      validate_dob
       @valid
     end
 
@@ -47,28 +48,30 @@ module ManualEnrollments
     end
 
     def validate_relationships
-      if enrollee = enrollees.detect{|x| x.relationship.blank? }
+      valid_relations = ['self','spouse','child']
+
+      if enrollees.detect{|x| x.relationship.blank? || !valid_relations.include?(x.relationship.downcase) }
         @valid = false
-        @errors << 'relationship empty'
-      elsif enrollees.detect{|x| !['self','spouse','child'].include?(x.relationship.downcase)}
-        @valid = false
-        @errors << 'invalid relationship'
+        @errors << 'relationship is empty or wrong'
       end
     end
 
-    def validate_dates
+    def validate_benefit_begin
       regex = /\d{1,2}\/\d{1,2}\/\d{4}/
-      if benefit_begin_date =~ regex
-        enrollees.each do |enrollee|
-          if enrollee.dob !~ regex
-            @valid = false
-            @errors << 'wrong date format'
-            break
-          end
-        end
-      else
+      if benefit_begin_date !~ regex
         @valid = false
-        @errors << 'wrong date format'
+        @errors << 'wrong benefit begin date'
+      end
+    end
+
+    def validate_dob
+      regex = /\d{1,2}\/\d{1,2}\/\d{4}/
+      enrollees.each do |enrollee|
+        if enrollee.dob !~ regex
+          @valid = false
+          @errors << 'wrong DOB format'
+          break
+        end
       end
     end
 

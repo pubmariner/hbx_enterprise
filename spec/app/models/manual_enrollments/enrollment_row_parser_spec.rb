@@ -87,7 +87,7 @@ module ManualEnrollments
           allow(subject).to receive(:enrollees).and_return(enrollees)
           subject.validate_relationships
           expect(subject.valid).to eq(false)
-          expect(subject.errors).to eq(['relationship empty'])
+          expect(subject.errors).to eq(['relationship is empty or wrong'])
         end
       end
 
@@ -99,7 +99,7 @@ module ManualEnrollments
           allow(subject).to receive(:enrollees).and_return(enrollees)
           subject.validate_relationships
           expect(subject.valid).to eq(false)
-          expect(subject.errors).to eq(['invalid relationship'])
+          expect(subject.errors).to eq(['relationship is empty or wrong'])
         end
       end
 
@@ -125,9 +125,9 @@ module ManualEnrollments
           allow(subject).to receive(:enrollees).and_return(enrollees)
           allow(subject).to receive(:benefit_begin_date).and_return(benefit_begin_date)
 
-          subject.validate_dates
+          subject.validate_benefit_begin
           expect(subject.valid).to eq(false)
-          expect(subject.errors).to eq(['wrong date format'])
+          expect(subject.errors).to eq(['wrong benefit begin date'])
         end
       end
 
@@ -135,15 +135,13 @@ module ManualEnrollments
         let(:enrollees) { [subscriber, dependent1] }
         let(:subscriber) { double(ssn: '342323212', relationship: 'self', dob: "12/02/1983") }
         let(:dependent1) { double(relationship: 'sibling', dob: "01/02/78") }
-        let(:benefit_begin_date) { '08/08/2008'}
 
         it 'should return false' do
           allow(subject).to receive(:enrollees).and_return(enrollees)
-          allow(subject).to receive(:benefit_begin_date).and_return(benefit_begin_date)
 
-          subject.validate_dates     
+          subject.validate_dob     
           expect(subject.valid).to eq(false)
-          expect(subject.errors).to eq(['wrong date format'])
+          expect(subject.errors).to eq(['wrong DOB format'])
         end
       end
 
@@ -156,8 +154,8 @@ module ManualEnrollments
         it 'should return true' do
           allow(subject).to receive(:enrollees).and_return(enrollees)
           allow(subject).to receive(:benefit_begin_date).and_return(benefit_begin_date)
-
-          subject.validate_dates
+          subject.validate_benefit_begin
+          subject.validate_dob
           expect(subject.valid).to eq(true)
           expect(subject.errors).to eq([])
         end
