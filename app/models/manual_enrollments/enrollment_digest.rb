@@ -28,17 +28,7 @@ module ManualEnrollments
       builder.append_premium(hbx_enrollment)
       builder.append_aptc(hbx_enrollment)
       builder.append_responsible_amount(hbx_enrollment)
-      enrollment.policy.enrollees.each do |enrollee|
-        builder.append_demographics(enrollee)
-        builder.append_enrollee_preimum(enrollee)
-        builder.append_names(enrollee)
-        builder.append_email(enrollee)
-        builder.append_phone(enrollee)
-        builder.append_address(enrollee)
-        builder.append_relationship(enrollee)
-      end
-
-      (9 - enrollment.policy.enrollees.size).times { builder.append_blank_enrollee }
+      builder.append_enrollees(enrollment.policy)
       builder.data_set
     end
 
