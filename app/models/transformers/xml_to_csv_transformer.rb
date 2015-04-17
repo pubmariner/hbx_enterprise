@@ -8,5 +8,9 @@ module Transformers
     def transform
 
     end
+
+    def transform_single_policy(xml)
+
+    end
   end
 end
