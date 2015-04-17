@@ -26,6 +26,7 @@ module ManualEnrollments
       validate_relationships
       validate_benefit_begin
       validate_dob
+      validate_address
       @valid
     end
 
@@ -81,6 +82,13 @@ module ManualEnrollments
       if enrollees.detect { |enrollee| enrollee.dob !~ regex }
         @valid = false
         @errors << 'wrong DOB format'        
+      end
+    end
+
+    def validate_address
+      if subscriber.address_1.blank?
+        @valid = false
+        @errors << 'address of the subscriber missing'   
       end
     end
 
