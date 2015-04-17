@@ -34,7 +34,8 @@ module ManualEnrollments
       end
     end
 
-    def append_begin_date(subscriber)
+    def append_begin_date(policy)
+      subscriber = sort_enrollees_by_rel(policy.enrollees).first
       @data_set << format_date(subscriber.begin_date)
     end
 

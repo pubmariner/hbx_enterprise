@@ -26,6 +26,7 @@ module ManualEnrollments
       validate_relationships
       validate_benefit_begin
       validate_dob
+      validate_address
       @valid
     end
 
@@ -84,6 +85,13 @@ module ManualEnrollments
       end
     end
 
+    def validate_address
+      if subscriber.address_1.blank?
+        @valid = false
+        @errors << 'address of the subscriber missing'   
+      end
+    end
+
     def type
       @row[0].to_s.strip.scrub_utf8
     end
@@ -119,14 +127,6 @@ module ManualEnrollments
     def benefit_begin_date
       @row[6].to_s.strip.scrub_utf8
     end
-
-    # def enrollment_group_id
-    #   @row[153]
-    # end
-
-    # def timestamp
-    #   @row[152]
-    # end
 
     def plan
       fields = @row[7..14]
