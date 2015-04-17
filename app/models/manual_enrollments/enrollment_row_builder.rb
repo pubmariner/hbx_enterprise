@@ -2,6 +2,7 @@ module ManualEnrollments
   class EnrollmentRowBuilder
 
     attr_accessor :data_set
+    MAX_ENROLLEES = 9
 
     def initialize
       @data_set = []
@@ -123,15 +124,41 @@ module ManualEnrollments
     end
 
     def append_relationship(enrollee)
-      if enrollee.member.relationship_uri.blank?
-        @data_set << 'Self' 
-      else
-        @data_set << strip_uri(enrollee.member.relationship_uri)
-      end
+      @data_set << relationship(enrollee)
     end
 
     def append_blank_enrollee
       15.times { append_blank }
+    end
+
+    def append_enrollees(policy)
+      sort_enrollees_by_rel(policy.enrollees).each do |enrollee|
+        append_demographics(enrollee)
+        append_enrollee_preimum(enrollee)
+        append_names(enrollee)
+        append_email(enrollee)
+        append_phone(enrollee)
+        append_address(enrollee)
+        append_relationship(enrollee)
+      end
+
+      (MAX_ENROLLEES - policy.enrollees.size).times { append_blank_enrollee } 
+    end
+
+    def sort_enrollees_by_rel(enrollees)
+      relationships = ['self', 'spouse', 'child']
+
+      enrollees.select{ |enrollee|
+        relationships.include?(relationship(enrollee))
+      }.sort_by{ |enrollee|
+          relationships.index(relationship(enrollee))
+      } + enrollees.reject{ |enrollee|
+        relationships.include?(relationship(enrollee))
+      }
+    end
+
+    def relationship(enrollee)
+      strip_uri(enrollee.member.relationship_uri).downcase
     end
 
     private
@@ -146,7 +173,9 @@ module ManualEnrollments
     end
 
     def strip_uri(text)
-      return nil if text.nil?
+      if text.nil?
+        return text.to_s
+      end
       text.split('#')[1]
     end
   end

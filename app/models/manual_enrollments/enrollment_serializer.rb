@@ -153,7 +153,7 @@ module ManualEnrollments
     def serialize_enrollee(enrollee, xml)
       xml.enrollee do |xml|
         serialize_member(enrollee, xml)
-        xml.is_subscriber enrollee.is_subscriber
+        xml.is_subscriber (enrollee.relationship.downcase == 'self')
         xml.benefit do |xml|
           xml.begin_date format_date(@enrollment.benefit_begin_date)
           xml.premium_amount format_amt(enrollee.premium)
@@ -187,7 +187,7 @@ module ManualEnrollments
           xml.subject_individual do |xml|
             xml.id @person_id_generator.current
           end
-          xml.relationship_uri 'urn:openhbx:terms:v1:individual_relationship#' + (enrollee.is_subscriber ? 'self' : enrollee.relationship).downcase
+          xml.relationship_uri 'urn:openhbx:terms:v1:individual_relationship#' + enrollee.relationship.downcase
           xml.object_individual do |xml|
             xml.id @subscriber_id
           end
@@ -205,7 +205,7 @@ module ManualEnrollments
 
     def serialize_person_id(enrollee, xml, id)
       xml.id do |xml|
-        if enrollee.is_subscriber
+        if enrollee.relationship.downcase == 'self'
           @subscriber_id = id
         end
         xml.id id
