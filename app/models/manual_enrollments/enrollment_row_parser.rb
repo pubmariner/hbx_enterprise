@@ -120,14 +120,6 @@ module ManualEnrollments
       @row[6].to_s.strip.scrub_utf8
     end
 
-    # def enrollment_group_id
-    #   @row[153]
-    # end
-
-    # def timestamp
-    #   @row[152]
-    # end
-
     def plan
       fields = @row[7..14]
       OpenStruct.new(build_fields_hash(fields, PLAN_FIELDS))

@@ -12,14 +12,12 @@ module ManualEnrollments
         raise "Missing enrollment details"
       end
 
-      subscriber = enrollment.policy.enrollees[0]
-
       builder = EnrollmentRowBuilder.new
       builder.append_enrollment_type
       builder.append_market(is_shop)
       builder.append_employer(hbx_enrollment)
       builder.append_broker(enrollment.policy.broker)
-      builder.append_begin_date(subscriber)
+      builder.append_begin_date(enrollment.policy)
       builder.append_plan_name(hbx_enrollment.plan)
       builder.append_qhp_id
       builder.append_csr_info

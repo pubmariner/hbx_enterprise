@@ -8,11 +8,6 @@ module ManualEnrollments
       "xmlns:xsi" => "http://www.w3.org/2001/XMLSchema-instance"
     }
 
-    def self.process_csv(file)
-      obj = self.new
-      obj.from_csv(file)
-    end
-
     def initialize
       @policy_id_generator = IdGenerator.new('http://10.87.84.135:8080/sequences/policy_id')
       @person_id_generator = IdGenerator.new('http://10.87.84.135:8080/sequences/member_id')
@@ -24,6 +19,11 @@ module ManualEnrollments
 
       file_name = File.basename(input_file, extn)
       output_file = file_name + ' processed.csv'
+    end
+
+    def self.process_csv(file)
+      obj = self.new
+      obj.from_csv(file)
     end
 
     def from_csv(input_file)
@@ -53,6 +53,7 @@ module ManualEnrollments
               puts response[-1]
               csv << row + [return_status] + [response[-1]]
           else
+            puts 'failed# {@enrollment.errors}'
             csv << row + ['failed'] + @enrollment.errors
           end
         end
