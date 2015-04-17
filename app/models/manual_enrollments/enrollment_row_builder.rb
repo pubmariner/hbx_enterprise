@@ -181,6 +181,9 @@ module ManualEnrollments
     end
 
     def relationship(enrollee)
+      if enrollee.member.relationship_uri.blank? && enrollee.is_subscriber == "true"
+        return 'self'
+      end
       strip_uri(enrollee.member.relationship_uri).downcase
     end
 
@@ -196,7 +199,7 @@ module ManualEnrollments
     end
 
     def strip_uri(text)
-      if text.nil?
+      if text.blank?
         return text.to_s
       end
       text.split('#')[1]
