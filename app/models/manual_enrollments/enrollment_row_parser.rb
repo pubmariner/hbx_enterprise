@@ -54,6 +54,18 @@ module ManualEnrollments
         @valid = false
         @errors << 'relationship is empty or wrong'
       end
+
+      relationships = enrollees.map{|enrollee| enrollee.relationship.to_s.downcase}
+
+      if ['self', 'spouse'].detect{|rel| relationships.count(rel) > 1}
+        @valid = false
+        @errors << 'more than one subscriber/spouse'
+      end
+
+      if relationships.count('self').zero?
+        @valid = false
+        @errors << 'no enrollee with relationship as self'
+      end
     end
 
     def validate_benefit_begin
@@ -66,12 +78,9 @@ module ManualEnrollments
 
     def validate_dob
       regex = /\d{1,2}\/\d{1,2}\/\d{4}/
-      enrollees.each do |enrollee|
-        if enrollee.dob !~ regex
-          @valid = false
-          @errors << 'wrong DOB format'
-          break
-        end
+      if enrollees.detect { |enrollee| enrollee.dob !~ regex }
+        @valid = false
+        @errors << 'wrong DOB format'        
       end
     end
 
@@ -111,13 +120,13 @@ module ManualEnrollments
       @row[6].to_s.strip.scrub_utf8
     end
 
-    def enrollment_group_id
-      @row[153]
-    end
+    # def enrollment_group_id
+    #   @row[153]
+    # end
 
-    def timestamp
-      @row[152]
-    end
+    # def timestamp
+    #   @row[152]
+    # end
 
     def plan
       fields = @row[7..14]
@@ -153,11 +162,6 @@ module ManualEnrollments
       }
     end
 
-    def relationship(enrollee)
-      return if enrollee.relationship.blank?
-      enrollee.relationship.downcase
-    end
-
     private
 
     def build_fields_hash(fields, columns)
@@ -167,6 +171,11 @@ module ManualEnrollments
         counter += 1
         data
       end
+    end
+
+    def relationship(enrollee)
+      return if enrollee.relationship.blank?
+      enrollee.relationship.downcase
     end
 
     def format_ssn(ssn)

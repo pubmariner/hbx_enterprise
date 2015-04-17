@@ -80,22 +80,23 @@ module ManualEnrollments
     end
 
     context 'relationship validation' do
+
       context 'when relationship is empty' do
         let(:enrollees) { [subscriber] }
-        let(:subscriber) { double(ssn: '342323212', relationship: nil) }
-        it 'should return false' do
+        let(:subscriber) { double(relationship: nil) }
+        it 'should error out' do
           allow(subject).to receive(:enrollees).and_return(enrollees)
           subject.validate_relationships
           expect(subject.valid).to eq(false)
-          expect(subject.errors).to eq(['relationship is empty or wrong'])
+          expect(subject.errors).to include('relationship is empty or wrong')
         end
       end
 
       context 'when relationship not one of self, spouse, child' do
         let(:enrollees) { [subscriber, dependent1] }
-        let(:subscriber) { double(ssn: '342323212', relationship: 'self') }
+        let(:subscriber) { double(relationship: 'self') }
         let(:dependent1) { double(relationship: 'sibling') }
-        it 'should return false' do
+        it 'should error out' do
           allow(subject).to receive(:enrollees).and_return(enrollees)
           subject.validate_relationships
           expect(subject.valid).to eq(false)
@@ -103,11 +104,37 @@ module ManualEnrollments
         end
       end
 
-      context 'when relationship is child' do
+      context 'when subscriber missing' do
+        let(:enrollees) { [ spouse ] }
+        let(:spouse) { double(relationship: 'spouse') }
+
+        it 'should error out' do
+          allow(subject).to receive(:enrollees).and_return(enrollees)
+          subject.validate_relationships
+          expect(subject.valid).to eq(false)
+          expect(subject.errors).to eq(['no enrollee with relationship as self'])
+        end
+      end
+
+      context 'when more than one subscriber/spouse present' do
+        let(:enrollees) { [ subscriber, spouse, spouse_dup] }
+        let(:subscriber) { double(relationship: 'self') }
+        let(:spouse) { double(relationship: 'spouse') }
+        let(:spouse_dup) { double(relationship: 'spouse') }
+
+        it 'should error out' do
+          allow(subject).to receive(:enrollees).and_return(enrollees)
+          subject.validate_relationships
+          expect(subject.valid).to eq(false)
+          expect(subject.errors).to eq(['more than one subscriber/spouse'])
+        end
+      end
+
+      context 'when relationships are correct' do
         let(:enrollees) { [subscriber, dependent1] }
-        let(:subscriber) { double(ssn: '342323212', relationship: 'self') }
+        let(:subscriber) { double(relationship: 'self') }
         let(:dependent1) { double(relationship: 'child') }
-        it 'should return true' do
+        it 'should pass validation' do
           allow(subject).to receive(:enrollees).and_return(enrollees)
           subject.validate_relationships
           expect(subject.valid).to eq(true)
@@ -158,6 +185,45 @@ module ManualEnrollments
           subject.validate_dob
           expect(subject.valid).to eq(true)
           expect(subject.errors).to eq([])
+        end
+      end
+    end
+
+
+    context '#sort_enrollees_by_rel' do
+
+      let(:spouse) { double(relationship: 'spouse') }
+      let(:child1) { double(relationship: 'child') }
+      let(:child2) { double(relationship: 'child') }
+      let(:sibling) { double(relationship: 'sibling') }
+      let(:subscriber) { double(relationship: "self") }
+      let(:no_rel) { double(relationship: nil) }
+
+      context 'when dependent, spouse not sorted properly' do
+        let(:enrollees) { [spouse, child1, subscriber] }
+        it 'should return them in correct order with subscriber first' do
+          expect(subject.sort_enrollees_by_rel(enrollees)).to eq([subscriber, spouse, child1])
+        end
+      end
+
+      context 'when relationship is not child, spouse, self' do
+        let(:enrollees) { [child1, sibling, spouse, child2, subscriber] }
+        it 'should sort enrollees by putting unknown relationships at the end' do
+          expect(subject.sort_enrollees_by_rel(enrollees)).to eq([subscriber, spouse, child2, child1, sibling])
+        end
+      end
+
+      context 'when relationship empty' do
+        let(:enrollees) { [sibling, no_rel, child1, spouse, subscriber] }
+        it 'should sort enrollees by putting empty relationship at the end' do
+          expect(subject.sort_enrollees_by_rel(enrollees)).to eq([subscriber, spouse, child1, sibling, no_rel])
+        end
+      end
+
+      context 'when enrollees in the correct order' do 
+        let(:enrollees) { [subscriber, spouse, child1]}
+        it 'should return them as is' do 
+          expect(subject.sort_enrollees_by_rel(enrollees)).to eq(enrollees)
         end
       end
     end
