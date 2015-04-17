@@ -144,7 +144,7 @@ module ManualEnrollments
         elements = @row[pos..(pos + 14)]
         pos += 15
         if [0, 1, 4, 6].detect{|index| !elements[index].blank?}
-          members << OpenStruct.new(build_fields_hash(fields, ENROLLEE_FIELDS))
+          members << OpenStruct.new(build_fields_hash(elements, ENROLLEE_FIELDS))
         end
       end
       sort_enrollees_by_rel(members)
