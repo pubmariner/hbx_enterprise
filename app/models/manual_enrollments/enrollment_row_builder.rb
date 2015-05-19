@@ -2,17 +2,39 @@ module ManualEnrollments
   class EnrollmentRowBuilder
 
     attr_accessor :data_set
+    MAX_ENROLLEES = 9
 
-    def initialize
+    def initialize(enrollment, is_shop)
       @data_set = []
+      @enrollment = enrollment
+      @is_shop = is_shop
+    end
+
+    def to_csv
+      hbx_enrollment = @enrollment.policy.hbx_enrollment
+      append_enrollment_type
+      append_market
+      append_employer(hbx_enrollment)
+      append_broker
+      append_begin_date
+      append_plan_name(hbx_enrollment.plan)
+      append_qhp_id
+      append_csr_info
+      append_csr_varient
+      append_plan_hios(hbx_enrollment.plan)
+      append_premium(hbx_enrollment)
+      append_aptc(hbx_enrollment)
+      append_responsible_amount(hbx_enrollment)
+      append_enrollees
+      @data_set
     end
 
     def append_enrollment_type
       @data_set << 'New Enrollment'
     end
 
-    def append_market(is_shop)
-      @data_set << (is_shop ? 'Shop' : 'IVL')
+    def append_market
+      @data_set << (@is_shop ? 'Shop' : 'IVL')
     end
 
     def append_employer(hbx_enrollment)
@@ -24,7 +46,8 @@ module ManualEnrollments
       end
     end
 
-    def append_broker(broker)
+    def append_broker
+      broker = @enrollment.policy.broker
       if broker.nil?
         2.times { append_blank }
       else
@@ -33,7 +56,8 @@ module ManualEnrollments
       end
     end
 
-    def append_begin_date(subscriber)
+    def append_begin_date
+      subscriber = sort_enrollees_by_rel(@enrollment.policy.enrollees).first
       @data_set << format_date(subscriber.begin_date)
     end
 
@@ -123,15 +147,44 @@ module ManualEnrollments
     end
 
     def append_relationship(enrollee)
-      if enrollee.member.relationship_uri.blank?
-        @data_set << 'Self' 
-      else
-        @data_set << strip_uri(enrollee.member.relationship_uri)
-      end
+      @data_set << relationship(enrollee)
     end
 
     def append_blank_enrollee
       15.times { append_blank }
+    end
+
+    def append_enrollees
+      sort_enrollees_by_rel(@enrollment.policy.enrollees).each do |enrollee|
+        append_demographics(enrollee)
+        append_enrollee_preimum(enrollee)
+        append_names(enrollee)
+        append_email(enrollee)
+        append_phone(enrollee)
+        append_address(enrollee)
+        append_relationship(enrollee)
+      end
+
+      (MAX_ENROLLEES - @enrollment.policy.enrollees.size).times { append_blank_enrollee } 
+    end
+
+    def sort_enrollees_by_rel(enrollees)
+      relationships = ['self', 'spouse', 'child']
+
+      enrollees.select{ |enrollee|
+        relationships.include?(relationship(enrollee))
+      }.sort_by{ |enrollee|
+          relationships.index(relationship(enrollee))
+      } + enrollees.reject{ |enrollee|
+        relationships.include?(relationship(enrollee))
+      }
+    end
+
+    def relationship(enrollee)
+      if enrollee.member.relationship_uri.blank? && enrollee.is_subscriber == "true"
+        return 'self'
+      end
+      strip_uri(enrollee.member.relationship_uri).downcase
     end
 
     private
@@ -146,7 +199,9 @@ module ManualEnrollments
     end
 
     def strip_uri(text)
-      return nil if text.nil?
+      if text.blank?
+        return text.to_s
+      end
       text.split('#')[1]
     end
   end

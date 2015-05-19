@@ -10,6 +10,7 @@ module Parsers
 
         element :begin_date, String, tag: "benefit/cv:begin_date"
         element :premium_amount, String, tag: "benefit/cv:premium_amount"
+        element :is_subscriber, String, tag: "is_subscriber"
 
         has_one :member, Parsers::Xml::Cv::IndividualParser, tag: "member"
       end

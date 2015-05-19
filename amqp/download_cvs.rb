@@ -1,19 +1,51 @@
-require 'socket'
+require 'drb'
+require 'thread'
 
 class SaveShopOrdered
 
+  class BacklogArray
+    def initialize
+      @mutex = Mutex.new
+      @backlog = []
+    end
+
+    def put(item)
+      @backlog << item
+    end
+
+    def pop
+      value = @mutex.synchronize do
+        @backlog.pop
+      end
+      if value.nil?
+        Thread.new { 
+          sleep(5)
+          DRb.stop_service
+        }
+      end
+      value
+    end
+  end
+
   def self.fill_pipe
-    r, w = UNIXSocket.pair
-    @@pipe_r = r
-    @@pipe_w = w
       dir_glob = File.open("amqp/enrollment_lists/system_enrollments.txt").read.split("\n")
+      bl_array = BacklogArray.new
       dir_glob.each do |f|
-        @@pipe_w.send(f, 0)
+        bl_array.put f
       end
       puts "FINISHED PIPING"
+      bl_array
   end
 
   def self.run
+    DRb.start_service
+    server = nil
+    begin
+    server = DRbObject.new_with_uri('druby://localhost:9001')
+    rescue
+      DRb.stop_service
+      return 0
+    end
     conn = Bunny.new(ExchangeInformation.amqp_uri)
     conn.start
     ch = conn.create_channel
@@ -22,12 +54,9 @@ class SaveShopOrdered
     # dir_glob = File.open("amqp/prod_errors/missing_enrolls.txt").read.split("\n")
     loop do
       begin
-      l, *others = @@pipe_r.recv_nonblock(200)
-      raise StopIteration.new if l.blank?
-      begin
-        #    f = l.strip
+        l = server.pop
+        raise StopIteration.new if l.blank?
         ts_string,f = l.strip.split("_")
-        #        ts_string = Time.now.strftime("%Y%m%d%H%M%S")
         enrollment_props = {
           :headers => {
             "enrollment_group_id" => f,
@@ -47,14 +76,17 @@ class SaveShopOrdered
         puts f 
         puts e.inspect
         #        puts e.backtrace[0..30].join("\n")
-      end
-      rescue IO::WaitReadable
+        DRb.stop_service
+        conn.close
         raise StopIteration.new
       end
     end
+    DRb.stop_service
+    conn.close
   end
 end
 
-SaveShopOrdered.fill_pipe
-# SaveShopOrdered.run
+master_proc = $$
+server = SaveShopOrdered.fill_pipe
+DRb.start_service('druby://localhost:9001', server)
 ForkedPool.new(SaveShopOrdered, 10).run
