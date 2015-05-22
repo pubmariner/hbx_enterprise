@@ -143,6 +143,7 @@ module ManualEnrollments
       9.times do |i|
         elements = @row[pos..(pos + 14)]
         pos += 15
+        next if elements.blank?
         if [0, 1, 4, 6].detect{|index| !elements[index].blank?}
           members << OpenStruct.new(build_fields_hash(elements, ENROLLEE_FIELDS))
         end
