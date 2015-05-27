@@ -48,7 +48,7 @@ module ManualEnrollments
             puts response[-1]
             csv << row + [return_status] + [response[-1]]
           else
-            puts 'failed# {enrollment.errors}'
+            puts "failed #{enrollment.errors}"
             csv << row + ['failed'] + enrollment.errors
           end
         end
