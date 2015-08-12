@@ -43,7 +43,6 @@ class ExchangeInformation
     RUBYCODE
   end
 
-
   REQUIRED_KEYS.each do |k|
     define_key k
   end
@@ -51,5 +50,19 @@ class ExchangeInformation
   def self.queue_name_for(klass)
     base_key = "#{self.hbx_id}.#{self.environment}.q.hbx_enterprise."
     base_key + klass.name.to_s.split("::").last.underscore
+  end
+
+  def self.use_soap_security?
+    self.instance.use_soap_security?
+  end
+
+  def use_soap_security?
+    @use_soap_security ||= extract_soap_security_setting
+  end
+
+  def extract_soap_security_setting
+    config_val = config["use_soap_security"]
+    return true if config_val.nil?
+    !(config_val.to_s.downcase == "false")
   end
 end
