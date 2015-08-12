@@ -4,6 +4,17 @@ module Proxies
       :soap => "http://schemas.xmlsoap.org/soap/envelope/"
     } 
 
+    def invoke(payload)
+      code, body = request(payload)
+      if code == 200
+        validator = VocabularyValidator.new(body)
+        if !validator.valid?
+          return [406, validator]
+        end
+      end
+      [code, body]
+    end
+
     def request(payload, timeout = 3)
       uri = URI.parse(endpoint)
       req = Net::HTTP::Post.new(uri.request_uri, initheader = {'Content-Type' =>'text/xml'})
@@ -13,7 +24,7 @@ module Proxies
       requestor.read_timeout = timeout
       response = nil
       begin
-       response = requestor.request(req)
+        response = requestor.request(req)
       rescue Net::ReadTimeout => rt
         return [503, nil]
       rescue Net::OpenTimeout => ot
@@ -24,7 +35,7 @@ module Proxies
         return [500, se]
       end
       if is_ok_response?(response)
-        return [response.code.to_i, rinse(response.body)]
+        return [200, rinse(response.body)]
       end
       [response.code.to_i, response.body]
     end
@@ -71,9 +82,9 @@ module Proxies
       body = <<-SOAPREQUEST
 <?xml version="1.0" encoding="UTF-8"?>
 <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
-#{authorization_header}
+      #{authorization_header}
 <soap:Body>
-#{payload_body}
+      #{payload_body}
 </soap:Body>
 </soap:Envelope>
       SOAPREQUEST
