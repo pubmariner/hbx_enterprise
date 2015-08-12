@@ -1,3 +1,5 @@
+require 'active_model'
+
 class DocumentValidator
   include ActiveModel::Validations
 

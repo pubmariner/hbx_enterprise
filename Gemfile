@@ -13,6 +13,7 @@ source 'https://rubygems.org'
 # Project requirements
 gem 'rake'
 gem 'activesupport', '4.1.8'
+gem 'activemodel', '4.1.8'
 
 # Component requirements
 gem 'haml'

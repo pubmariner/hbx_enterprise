@@ -1,6 +1,9 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    activemodel (4.1.8)
+      activesupport (= 4.1.8)
+      builder (~> 3.1)
     activesupport (4.1.8)
       i18n (~> 0.6, >= 0.6.9)
       json (~> 1.7, >= 1.7.7)
@@ -8,6 +11,7 @@ GEM
       thread_safe (~> 0.1)
       tzinfo (~> 1.1)
     amq-protocol (1.9.2)
+    builder (3.2.2)
     bunny (1.6.3)
       amq-protocol (>= 1.9.2)
     capistrano (3.2.1)
@@ -140,6 +144,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  activemodel (= 4.1.8)
   activesupport (= 4.1.8)
   bunny
   capistrano (= 3.2.1)
