@@ -16,7 +16,6 @@ gem 'activesupport', '4.1.8'
 
 # Component requirements
 gem 'haml'
-gem 'mongoid'
 
 # Test requirements
 gem 'rspec', :group => 'test'
