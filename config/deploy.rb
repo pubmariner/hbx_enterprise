@@ -2,7 +2,7 @@
 lock '3.2.1'
 
 set :application, 'hbx_enterprise'
-set :repo_url, 'git@dchbx.info:repos/hbx_enterprise.git'
+set :repo_url, 'git@github.com:dchbx/hbx_enterprise.git'
 
 # Default branch is :master
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }.call
@@ -11,7 +11,7 @@ set :repo_url, 'git@dchbx.info:repos/hbx_enterprise.git'
 set :deploy_to, '/var/www/deployments/hbx_enterprise'
 
 # Default value for :scm is :git
-set :scm, :gitcopy
+# set :scm, :git
 
 # Default value for :format is :pretty
 # set :format, :pretty
@@ -45,7 +45,7 @@ namespace :deploy do
     on roles(:app), in: :sequence, wait: 5 do
       # Your restart mechanism here, for example:
       # execute :touch, release_path.join('tmp/restart.txt')
-      sudo "service eye_hbx_enterprise restart"
+      sudo "service eye_rails reload"
     end
   end
 
