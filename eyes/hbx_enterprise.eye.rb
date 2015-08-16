@@ -35,8 +35,8 @@ Eye.application 'eye_hbx_enterprise' do
     notify :tevans, :info
     notify :dthomas, :info
 
-#  define_worker(app, "qhp_selected_listener", BUS_DIRECTORY, "padrino r amqp/qhp_selected_listener.rb", true)
-#  define_worker(app, "qhp_selected_scaler", BUS_DIRECTORY, "padrino r amqp/qhp_selected_scaler.rb")
+  define_worker("interactive_verification_start_listener", BUS_DIRECTORY, "bundle exec padrino r amqp/interactive_verification_start_listener.rb -e production", true)
+  define_worker("interactive_verification_question_response_listener", BUS_DIRECTORY, "bundle exec padrino r amqp/interactive_verification_question_response_listener.rb -e production", true)
   define_worker("dcas_enrollment_provider", BUS_DIRECTORY, "bundle exec padrino r amqp/dcas_enrollment_provider.rb -e production", true)
   define_worker("dcas_enrollment_provider_scaler", BUS_DIRECTORY, "bundle exec padrino r amqp/dcas_enrollment_provider_scaler.rb -e production")
 

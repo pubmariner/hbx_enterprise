@@ -79,16 +79,16 @@ module Proxies
     end
 
     def lather(payload_body)
+      embedded_payload = payload_body.respond_to?(:canonicalize) ? payload_body.canonicalize : Nokogiri::XML(payload_body).canonicalize
       body = <<-SOAPREQUEST
 <?xml version="1.0" encoding="UTF-8"?>
 <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       #{authorization_header}
 <soap:Body>
-      #{payload_body}
+      #{embedded_payload}
 </soap:Body>
 </soap:Envelope>
       SOAPREQUEST
-      puts body
       body
     end
 
