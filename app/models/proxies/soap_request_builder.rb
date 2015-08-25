@@ -4,7 +4,7 @@ module Proxies
       :soap => "http://schemas.xmlsoap.org/soap/envelope/"
     } 
 
-    def invoke(payload)
+    def invoke(payload, timeout = 3)
       code, body = request(payload)
       if code == 200
         validator = VocabularyValidator.new(body)
