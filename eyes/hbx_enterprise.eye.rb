@@ -39,6 +39,8 @@ Eye.application 'eye_hbx_enterprise' do
   define_worker("interactive_verification_question_response_listener", BUS_DIRECTORY, "bundle exec padrino r amqp/interactive_verification_question_response_listener.rb -e production", true)
   define_worker("interactive_verification_override_listener", BUS_DIRECTORY, "bundle exec padrino r amqp/interactive_verification_override_listener.rb -e production", true)
   define_worker("ssa_verification_listener", BUS_DIRECTORY, "bundle exec padrino r amqp/ssa_verification_listener.rb -e production", true)
+  define_worker("vlp_verification_listener", BUS_DIRECTORY, "bundle exec padrino r amqp/vlp_verification_listener.rb -e production", true)
+  define_worker("residency_verification_listener", BUS_DIRECTORY, "bundle exec padrino r amqp/residency_verification_listener.rb -e production", true)
   define_worker("dcas_enrollment_provider", BUS_DIRECTORY, "bundle exec padrino r amqp/dcas_enrollment_provider.rb -e production", true)
   define_worker("dcas_enrollment_provider_scaler", BUS_DIRECTORY, "bundle exec padrino r amqp/dcas_enrollment_provider_scaler.rb -e production")
 
