@@ -5,7 +5,7 @@ module Listeners
     def on_message(delivery_info, properties, payload)
       session_start_service = get_service
       reply_to = properties.reply_to
-      code, body = session_start_service.invoke(payload)
+      code, body = session_start_service.invoke(payload, 5)
       case code.to_s
       when "406"
         # Invalid server response - send an event
