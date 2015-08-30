@@ -19,7 +19,6 @@ module Proxies
       uri = URI.parse(endpoint)
       req = Net::HTTP::Post.new(uri.request_uri, initheader = {'Content-Type' =>'text/xml'})
       soap_body = lather(payload)
-      puts soap_body
       req.body = soap_body
       requestor = Net::HTTP.new(uri.host, uri.port)
       requestor.use_ssl = (uri.scheme == "https")
