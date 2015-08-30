@@ -18,8 +18,11 @@ module Proxies
     def request(payload, timeout = 3)
       uri = URI.parse(endpoint)
       req = Net::HTTP::Post.new(uri.request_uri, initheader = {'Content-Type' =>'text/xml'})
-      req.body = lather(payload)
+      soap_body = lather(payload)
+      puts soap_body
+      req.body = soap_body
       requestor = Net::HTTP.new(uri.host, uri.port)
+      requestor.use_ssl = (uri.scheme == "https")
       requestor.open_timeout = 3
       requestor.read_timeout = timeout
       response = nil
