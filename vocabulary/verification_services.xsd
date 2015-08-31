@@ -257,19 +257,19 @@
 
 	<xs:complexType name="LawfulPresenceDocumentResultsType">
 		<xs:sequence>
-			<xs:element name="document_I20" type="DocumentResultType" minOccurs="0"/>
-			<xs:element name="document_I94" type="DocumentResultType" minOccurs="0"/>
 			<xs:element name="document_I327" type="DocumentResultType" minOccurs="0"/>
-			<xs:element name="document_I551" type="DocumentResultType" minOccurs="0"/>
 			<xs:element name="document_I571" type="DocumentResultType" minOccurs="0"/>
-			<xs:element name="document_I766" type="DocumentResultType" minOccurs="0"/>
 			<xs:element name="document_cert_of_citizenship" type="DocumentResultType" minOccurs="0"/>
 			<xs:element name="document_cert_of_naturalization" type="DocumentResultType" minOccurs="0"/>
-			<xs:element name="document_DS2019" type="DocumentResultType" minOccurs="0"/>
-			<xs:element name="document_foreign_passport" type="DocumentResultType" minOccurs="0"/>
-			<xs:element name="document_foreign_passport_I94" type="DocumentResultType" minOccurs="0"/>
-			<xs:element name="document_mac_read_I551" type="DocumentResultType" minOccurs="0"/>
 			<xs:element name="document_temp_I551" type="DocumentResultType" minOccurs="0"/>
+			<xs:element name="document_I94" type="DocumentResultType" minOccurs="0"/>
+			<xs:element name="document_I20" type="DocumentResultType" minOccurs="0"/>
+			<xs:element name="document_DS2019" type="DocumentResultType" minOccurs="0"/>
+			<xs:element name="document_I551" type="DocumentResultType" minOccurs="0"/>
+			<xs:element name="document_I766" type="DocumentResultType" minOccurs="0"/>
+			<xs:element name="document_mac_read_I551" type="DocumentResultType" minOccurs="0"/>
+			<xs:element name="document_foreign_passport_I94" type="DocumentResultType" minOccurs="0"/>
+			<xs:element name="document_foreign_passport" type="DocumentResultType" minOccurs="0"/>
 			<xs:element name="document_other_case_1" type="DocumentResultType" minOccurs="0"/>
 			<xs:element name="document_other_case_2" type="DocumentResultType" minOccurs="0"/>
 		</xs:sequence>
