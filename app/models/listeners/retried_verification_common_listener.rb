@@ -35,7 +35,8 @@ module Listeners
         requeue(delivery_info)
       when "200"
         # Everything is cool - just respond
-        send_response("200", individual_id, retry_deadline, body) 
+        send_response("200", individual_id, retry_deadline, body)
+        channel.ack(delivery_info.delivery_tag,true)
       else
         # Some weirdness here - send event
         service_failure_event(
