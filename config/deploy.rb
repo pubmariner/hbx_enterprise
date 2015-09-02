@@ -2,7 +2,7 @@
 lock '3.2.1'
 
 set :application, 'hbx_enterprise'
-set :repo_url, 'git@github.com:dchbx/hbx_enterprise.git'
+set :repo_url, 'https://github.com/dchbx/hbx_enterprise.git'
 
 # Default branch is :master
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }.call
