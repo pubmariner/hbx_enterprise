@@ -6,7 +6,7 @@ module Proxies
       code, body = super(create_body(data), timeout)
       case code.to_s
       when "200"
-        [extract_response_code(body), nil]
+        extract_response_code(body)
       else
         [code, body]
       end
@@ -59,9 +59,9 @@ module Proxies
       code_string = response_code.content.split("#").last
       case code_string
       when "SUCCESS"
-        ["201", nil]
+        ["201", ""]
       else
-        ["500", body]
+        ["500", (body || "")]
       end
     end
   end
