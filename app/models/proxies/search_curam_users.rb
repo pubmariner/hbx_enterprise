@@ -8,6 +8,7 @@ module Proxies
       when "200"
         [extract_response_code(body), nil]
       else
+        puts body
         ["503", nil]
       end
     end
@@ -16,7 +17,8 @@ module Proxies
       "/EnrollApp/SSO/BusinessService/LookUpUserInCuramPS"
     end
 
-    def create_body(data)
+    def create_body(data_hash)
+      data = data_hash.stringify_keys
       f_name = data["first_name"]
       l_name = data["last_name"]
       dob = data["dob"]

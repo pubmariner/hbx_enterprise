@@ -8,7 +8,7 @@ module Proxies
       when "200"
         [extract_response_code(body), nil]
       else
-        ["503", nil]
+        [code, body]
       end
     end
 
@@ -23,7 +23,8 @@ module Proxies
       "individual" => INDIVIDUAL_ROLE_URI
     }
 
-    def create_body(data)
+    def create_body(r_data)
+      data = r_data.stringify_keys
       first_name = data["first_name"]
       last_name = data["last_name"]
       email = data["email"]
@@ -58,9 +59,9 @@ module Proxies
       code_string = response_code.content.split("#").last
       case code_string
       when "SUCCESS"
-        "201"
+        ["201", nil]
       else
-        "503"
+        [code, body]
       end
     end
   end
