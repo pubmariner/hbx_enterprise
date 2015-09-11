@@ -6,7 +6,6 @@ module Listeners
       reply_to = properties.reply_to
       headers = (properties.headers || {})
       code, body = Proxies::OimAccountCreation.new.request(headers.stringify_keys, 10)
-      if "201" != code.to_s
       case code.to_s
       when "201"
         # ALL GOOD
