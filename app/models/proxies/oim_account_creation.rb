@@ -61,7 +61,7 @@ module Proxies
       when "SUCCESS"
         ["201", nil]
       else
-        [code, body]
+        ["500", body]
       end
     end
   end
