@@ -2,8 +2,8 @@ module Proxies
   class SearchCuramUsers < ::Proxies::SoapRequestBuilder
     LOOKUP_REQUEST_NS = "http://xmlns.oracle.com/dcas/esb/useridentitymanage/service/xsd/v1"
     
-    def request(data)
-      code, body = super(create_body(data))
+    def request(data, timeout = 5)
+      code, body = super(create_body(data), timeout)
       case code.to_s
       when "200"
         [extract_response_code(body), nil]
