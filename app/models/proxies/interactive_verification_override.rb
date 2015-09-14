@@ -1,7 +1,7 @@
 module Proxies
   class InteractiveVerificationOverride < ::Proxies::SoapRequestBuilder
-    def service_location
-      "/EnrollAppRIDPFarscmpService/BusinessService/EnrollAppRIDPFarscmpPS"
+    def endpoint
+      ExchangeInformation.fars_url
     end
   end
 end

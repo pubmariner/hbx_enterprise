@@ -13,8 +13,8 @@ module Proxies
       end
     end
 
-    def service_location
-      "/EnrollApp/SSO/BusinessService/LookUpUserInCuramPS"
+    def endpoint
+      ExchangeInformation.account_search_url
     end
 
     def create_body(data_hash)

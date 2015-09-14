@@ -1,7 +1,7 @@
 module Proxies
   class SsaRequest < ::Proxies::SoapRequestBuilder
-    def service_location
-      "/EnrollApp/SSA/ProxyService/EnrollAppSSAFedPS"
+    def endpoint
+      ExchangeInformation.ssa_url
     end
   end
 end

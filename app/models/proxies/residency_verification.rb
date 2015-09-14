@@ -1,7 +1,7 @@
 module Proxies
   class ResidencyVerification < ::Proxies::SoapRequestBuilder
-    def service_location
-      "/LocalHub/VerificationService"
+    def endpoint
+      ExchangeInformation.residency_url
     end
   end
 end

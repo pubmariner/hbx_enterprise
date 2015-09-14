@@ -12,8 +12,8 @@ module Proxies
       end
     end
 
-    def service_location
-      "/EnrollApp/SSO/ProxyService/UserIdentityManagePS"
+    def endpoint
+      ExchangeInformation.account_creation_url
     end
 
     INDIVIDUAL_ROLE_URI = "urn:dclink:terms:v1:create_update_user_role#Individual"

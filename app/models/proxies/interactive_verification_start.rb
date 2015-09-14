@@ -1,7 +1,7 @@
 module Proxies
   class InteractiveVerificationStart < ::Proxies::SoapRequestBuilder
-    def service_location
-      "/EnrollApp/RIDP/ProxyService/EnrollAppFedRIDPPS"
+    def endpoint
+      ExchangeInformation.ridp_url
     end
   end
 end

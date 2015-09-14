@@ -1,7 +1,7 @@
 module Proxies
   class VlpRequest < ::Proxies::SoapRequestBuilder
-    def service_location
-      "/EnrollApp/VLP/ProxyService/EnrollAppFedVLPPS"
+    def endpoint
+      ExchangeInformation.vlp_url
     end
   end
 end

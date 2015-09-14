@@ -12,7 +12,9 @@ class ExchangeInformation
     'amqp_uri',
     'hbx_id', 'environment', 'receiver_id',
     'osb_host', 'osb_username', 'osb_password', 'osb_nonce', 'osb_created',
-    'invalid_argument_queue', 'processing_failure_queue', 'event_exchange', 'request_exchange', 'event_publish_exchange'
+    'invalid_argument_queue', 'processing_failure_queue', 'event_exchange', 'request_exchange', 'event_publish_exchange',
+    'vlp_url', 'ssa_url', 'account_search_url', 'fars_url', 'ridp_url', 'account_creation_url', 'residency_url',
+    'case_query_url'
   ]
 
   attr_reader :config
