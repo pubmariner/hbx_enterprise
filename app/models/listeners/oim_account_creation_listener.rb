@@ -9,12 +9,14 @@ module Listeners
       when "201"
         # ALL GOOD
         send_response(code.to_s, headers, body)
+        channel.acknowledge(delivery_info.delivery_tag, false)
       when "503"
-        log_failure("error.events.account_management.oim_creation_timeout",code, body)
+        log_failure("error.events.account_management.oim_creation_timeout",code, headers, body)
+        channel.nack(delivery_info.delivery_tag,false, true)
       else
-        log_failure("error.events.account_management.oim_creation_failure",code, body)
+        log_failure("error.events.account_management.oim_creation_failure",code, headers, body)
+        channel.acknowledge(delivery_info.delivery_tag, false)
       end
-      channel.acknowledge(delivery_info.delivery_tag, false)
     end
 
     def self.queue_name
@@ -22,14 +24,14 @@ module Listeners
       "#{ec.hbx_id}.#{ec.environment}.q.hbx_enterprise.oim_account_creation"
     end
 
-    def log_failure(key, code, body)
+    def log_failure(key, code, headers, body)
       ex = channel.fanout(ExchangeInformation.event_publish_exchange, {:durable => true})
       response_properties = {
         :timestamp => Time.now.to_i,
         :routing_key => key,
-        :headers => {
+        :headers => headers.merge({
           :return_status => code
-        }
+        })
       }
       ex.publish(body, response_properties)
     end
