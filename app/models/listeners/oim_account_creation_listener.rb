@@ -3,18 +3,17 @@ require 'json'
 module Listeners
   class OimAccountCreationListener < Amqp::Client
     def on_message(delivery_info, properties, payload)
-      reply_to = properties.reply_to
       headers = (properties.headers || {})
       code, body = Proxies::OimAccountCreation.new.request(headers.stringify_keys, 10)
       case code.to_s
       when "201"
         # ALL GOOD
+        send_response(code.to_s, headers, body)
       when "503"
-        log_failure("error.events.account_creation.oim_creation_timeout",code, body)
+        log_failure("error.events.account_management.oim_creation_timeout",code, body)
       else
-        log_failure("error.events.account_creation.oim_creation_failure",code, body)
+        log_failure("error.events.account_management.oim_creation_failure",code, body)
       end
-      send_response(reply_to, code.to_s)
       channel.acknowledge(delivery_info.delivery_tag, false)
     end
 
@@ -35,14 +34,16 @@ module Listeners
       ex.publish(body, response_properties)
     end
 
-    def send_response(reply_to, status)
+    def send_response(status, headers, body)
+      ex = channel.fanout(ExchangeInformation.event_publish_exchange, {:durable => true})
       response_properties = {
-        :routing_key => reply_to,
-        :headers => {
-          :return_status => status
-        }
+        :timestamp => Time.now.to_i,
+        :routing_key => "info.events.account_management.oim_creation_success",
+        :headers => headers.merge({
+          :return_status => code
+        })
       }
-      channel.default_exchange.publish("", response_properties)
+      ex.publish(body, response_properties)
     end
 
     def self.run
