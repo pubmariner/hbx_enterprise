@@ -19,11 +19,13 @@ module Proxies
 
     def create_body(r_data)
       data = r_data.stringify_keys
+      user_name = data["legacy_username"]
       email = data["email"]
       system_flag = data["flag"] 
       builder = Nokogiri::XML::Builder.new do |xml|
         xml["acn"].update_user_profile_request("xmlns:acn" => ACCOUNT_NS) do |xml|
           xml["acn"].update_user_properties do |xml|
+            xml["acn"].user_name(user_name)
             xml["acn"].email(email)
             xml["acn"].system_flag(system_flag)
           end
