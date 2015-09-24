@@ -25,7 +25,8 @@ module Listeners
     end
 
     def log_failure(key, code, headers, body)
-      ex = channel.fanout(ExchangeInformation.event_publish_exchange, {:durable => true})
+      r_channel = connection.create_channel
+      ex = r_channel.fanout(ExchangeInformation.event_publish_exchange, {:durable => true})
       response_properties = {
         :timestamp => Time.now.to_i,
         :routing_key => key,
@@ -34,10 +35,12 @@ module Listeners
         })
       }
       ex.publish(body, response_properties)
+      r_channel.close
     end
 
     def send_response(status, headers, body)
-      ex = channel.fanout(ExchangeInformation.event_publish_exchange, {:durable => true})
+      r_channel = connection.create_channel
+      ex = r_channel.fanout(ExchangeInformation.event_publish_exchange, {:durable => true})
       response_properties = {
         :timestamp => Time.now.to_i,
         :routing_key => "info.events.account_management.oim_navigation_update_success",
@@ -46,6 +49,7 @@ module Listeners
         })
       }
       ex.publish(body, response_properties)
+      r_channel = connection.create_channel
     end
 
     def self.run
