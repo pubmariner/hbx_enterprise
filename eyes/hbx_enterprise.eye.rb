@@ -36,6 +36,7 @@ Eye.application 'eye_hbx_enterprise' do
     notify :dthomas, :info
 
   define_worker("curam_application_completed_listener", BUS_DIRECTORY, "bundle exec padrino r amqp/curam_application_completed_listener.rb -e production", true)
+  define_worker("oim_navigation_update_listener", BUS_DIRECTORY, "bundle exec padrino r amqp/oim_navigation_update_listener.rb -e production", true)
   define_worker("oim_account_creation_listener", BUS_DIRECTORY, "bundle exec padrino r amqp/oim_account_creation_listener.rb -e production", true)
   define_worker("curam_account_lookup_listener", BUS_DIRECTORY, "bundle exec padrino r amqp/curam_account_lookup_listener.rb -e production", true)
   define_worker("interactive_verification_start_listener", BUS_DIRECTORY, "bundle exec padrino r amqp/interactive_verification_start_listener.rb -e production", true)
