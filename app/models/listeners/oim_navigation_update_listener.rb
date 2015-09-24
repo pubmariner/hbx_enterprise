@@ -45,7 +45,7 @@ module Listeners
         :timestamp => Time.now.to_i,
         :routing_key => "info.events.account_management.oim_navigation_update_success",
         :headers => headers.merge({
-          :return_status => code
+          :return_status => status
         })
       }
       ex.publish(body, response_properties)
