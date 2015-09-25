@@ -2,7 +2,7 @@ module Services
   class EventPublisher
     def initialize
       ec = ExchangeInformation
-      @conn = Bunny.new(ExchangeInformation.amqp_uri)
+      @conn = Bunny.new(ExchangeInformation.amqp_uri, :heartbeat => 15)
       @conn.start
       @chan = @conn.create_channel
       @event_exchange = @chan.topic(ec.event_exchange, {:durable => true})

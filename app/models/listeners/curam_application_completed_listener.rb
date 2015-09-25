@@ -105,11 +105,11 @@ module Listeners
 
     def self.queue_options
       ec = ExchangeInformation
-      {:durable => true, :arguments => {"x-dead-letter-exchange" => "#{ec.hbx_id}.#{ec.environment}.e.fanout.delayed_event_retry"}}
+      {:durable => true}
     end
 
     def self.run
-      conn = Bunny.new(ExchangeInformation.amqp_uri)
+      conn = Bunny.new(ExchangeInformation.amqp_uri, :heartbeat => 15)
       conn.start
       ch = conn.create_channel
       ch.prefetch(1)

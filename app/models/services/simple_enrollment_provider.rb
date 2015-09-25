@@ -1,7 +1,7 @@
 module Services
   class SimpleEnrollmentProvider
     def initialize
-      @conn = Bunny.new(ExchangeInformation.amqp_uri)
+      @conn = Bunny.new(ExchangeInformation.amqp_uri, :heartbeat => 15)
       @conn.start
       @chan = @conn.create_channel
       @enrollment_provider = Listeners::DcasEnrollmentProvider.new(@chan, nil, @chan.default_exchange)
