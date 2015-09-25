@@ -1,0 +1,28 @@
+!!! XML
+%employer
+  %name= @cv_hash[:name]
+  %fein= @cv_hash[:fein]
+  %employer_exchange_id= @cv_hash[:id]
+  %open_enrollment_start= @cv_hash[:employer_profile][:plan_years].first[:open_enrollment_start]
+  %open_enrollment_end= @cv_hash[:employer_profile][:plan_years].first[:open_enrollment_end]
+  %plan_year_start= @cv_hash[:employer_profile][:plan_years].first[:plan_year_start]
+  %plan_year_end= @cv_hash[:employer_profile][:plan_years].first[:plan_year_end] if @cv_hash[:employer_profile][:plan_years].first[:plan_year_end]
+  %plans
+    - if @cv_hash[:employer_profile][:plan_years].first[:elected_plans]
+      - @cv_hash[:employer_profile][:plan_years].first[:elected_plans].each do |plan|
+        %plan
+          %qhp_id= plan[:id]
+          %plan_exchange_id= plan[:id]
+          %carrier_id= plan[:carrier][:id]
+          %carrier_name= plan[:carrier][:name]
+          %plan_name= plan[:name]
+          %coverage_type= plan[:coverage_type]
+  %vcard
+    %n
+      %surname
+      %given
+      %prefix
+      %suffix
+  %exchange_id
+  %exchange_status= 'active'
+  %exchange_version= "1"
