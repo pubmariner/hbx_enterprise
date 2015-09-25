@@ -105,7 +105,7 @@ module Listeners
 
     def self.queue_options
       ec = ExchangeInformation
-      {:durable => true, :arguments => {"x-dead-letter-exchange" => "#{ec.hbx_id}.#{ec.environment}.e.fanout.delayed_event_retry"}}
+      {:durable => true}
     end
 
     def self.run
