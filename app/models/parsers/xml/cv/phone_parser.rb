@@ -19,8 +19,16 @@ module Parsers
         def request_hash
           {
               phone_type: type.split("#").last,
-              phone_number: full_phone_number
+              phone_number: full_phone_number,
+              area_code:area_code,
+              extension:extension,
+              is_preferred:is_preferred,
+              country_code:country_code
           }
+        end
+
+        def to_hash
+          request_hash
         end
       end
     end
