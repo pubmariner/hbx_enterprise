@@ -42,7 +42,7 @@ module Listeners
     end
 
     def requeue(delivery_info)
-      channel.nack(delivery_info.delivery_tag,false, false)
+      channel.nack(delivery_info.delivery_tag,false, true)
     end
 
     def service_failure_event(failure_key, return_status, body)
