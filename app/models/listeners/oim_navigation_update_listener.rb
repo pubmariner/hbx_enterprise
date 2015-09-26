@@ -53,7 +53,7 @@ module Listeners
     end
 
     def self.run
-      conn = Bunny.new(ExchangeInformation.amqp_uri, :heartbeat => true)
+      conn = Bunny.new(ExchangeInformation.amqp_uri, :heartbeat => 15)
       conn.start
       ch = conn.create_channel
       ch.prefetch(1)
