@@ -29,14 +29,18 @@ module Parsers
               address_2: address_line_2,
               city: location_city_name,
               state: location_state_code,
-              zip: location_postal_code,
+              zip: location_postal_code
           }
 
           response
         end
 
         def to_hash
-          response = {}
+          response = {
+              postal_code: postal_code,
+              country_name: location_country_name,
+              country_code: location_country_code,
+          }
           response.merge(request_hash)
         end
       end
