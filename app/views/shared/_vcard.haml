@@ -1,0 +1,28 @@
+%vcard
+  %fn= person[:name_full]
+  %n
+    %surname= person[:name_last]
+    %given= person[:name_first]
+  %org= organization[:name]
+  - person[:addresses].each do |address|
+    %adr
+      %parameters
+        %type
+          %text= address[:address_type]
+      %street= address[:address_1]
+      %locality= address[:city]
+      %region= address[:state]
+      %code= address[:postal_code]
+      %country= address[:country_name]
+  - person[:phones].each do |phone|
+    %tel
+      %parameters
+        %type
+          %text= phone[:phone_type]
+      %uri= phone[:phone_number]
+  - person[:emails].each do |email|
+    %email
+      %parameters
+        %type
+          %text= email[:email_type]
+      %text= email[:email_address]
