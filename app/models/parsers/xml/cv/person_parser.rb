@@ -78,7 +78,10 @@ module Parsers
           {
               id: id,
               name_first: name_first,
-              name_last: name_last
+              name_last: name_last,
+              addresses: addresses.map(&:to_hash),
+              emails: emails.map(&:to_hash),
+              phones: phones.map(&:to_hash)
           }
         end
 

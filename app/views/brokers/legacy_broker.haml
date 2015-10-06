@@ -1,0 +1,13 @@
+!!! XML
+%brokers{:'xmlns:ns1'=>"http://dchbx.dc.gov/broker", :xmlns=>"http://dchbx.dc.gov/broker"}
+  - individual[:broker_roles].each do |broker_role|
+    %broker
+      %npn= broker_role[:npn]
+      %license
+        %license_number= broker_role[:broker_agency][:npn]
+        %state= "DC"
+        %effective_date
+      = partial "shared/vcard", :locals =>{:person => individual[:person], :organization => individual[:broker_roles].first[:broker_agency]}
+      %exchange_id= broker_role[:npn]
+      %exchange_status= "ACTIVE"
+      %exchange_version= "1"
