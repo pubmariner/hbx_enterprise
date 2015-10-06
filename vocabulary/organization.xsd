@@ -215,7 +215,7 @@
 
 	<xs:complexType name="BrokerAgencyProfileType">
 		<xs:sequence>
-			<xs:element name="npn" type="NpnIdType"/>
+			<xs:element name="npn" type="NpnIdType" minOccurs="0"/>
 			<xs:element name="primary_broker" type="BrokerType"/>
 			<xs:element name="brokers" type="BrokerAgencyBrokersListType" />
 			<xs:element name="tpa" type="TpaType" minOccurs="0"/>
