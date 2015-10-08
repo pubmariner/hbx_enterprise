@@ -24,7 +24,8 @@ module Listeners
       "#{ec.hbx_id}.#{ec.environment}.q.hbx_enterprise.oim_navigation_update"
     end
 
-    def log_failure(key, code, headers, body)
+    def log_failure(key, code, headers, r_body)
+      body = (r_body.nil? ? "" : r_body)
       r_channel = connection.create_channel
       ex = r_channel.fanout(ExchangeInformation.event_publish_exchange, {:durable => true})
       response_properties = {
@@ -38,7 +39,8 @@ module Listeners
       r_channel.close
     end
 
-    def send_response(status, headers, body)
+    def send_response(status, headers, r_body)
+      body = (r_body.nil? ? "" : r_body)
       r_channel = connection.create_channel
       ex = r_channel.fanout(ExchangeInformation.event_publish_exchange, {:durable => true})
       response_properties = {
