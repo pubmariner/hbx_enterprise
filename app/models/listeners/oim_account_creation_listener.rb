@@ -34,12 +34,11 @@ module Listeners
           :return_status => code
         })
       }
-      ex.publish(body || "", response_properties)
+      ex.publish(body.to_s, response_properties)
       r_channel.close
     end
 
     def send_response(status, headers, r_body)
-      body = (r_body.nil? ? "" : r_body)
       r_channel = connection.create_channel
       ex = r_channel.fanout(ExchangeInformation.event_publish_exchange, {:durable => true})
       response_properties = {
@@ -49,7 +48,7 @@ module Listeners
           :return_status => status
         })
       }
-      ex.publish(body, response_properties)
+      ex.publish(body.to_s, response_properties)
       r_channel.close
     end
 

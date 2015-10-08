@@ -55,7 +55,7 @@ module Listeners
           :return_status => return_status.to_s
         }
       }
-      ex.publish(body || "", event_properties)
+      ex.publish(body.to_s, event_properties)
     end
 
     def send_response(status, body)
@@ -67,7 +67,7 @@ module Listeners
         }
       }
       ex = channel.fanout(ExchangeInformation.event_publish_exchange, {:durable => true})
-      ex.publish(body || "", response_properties)
+      ex.publish(body.to_s, response_properties)
     end
 
     INTEGRATION_NS="http://CRMIntegrationACAPi/terms/1.0"
