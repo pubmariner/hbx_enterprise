@@ -16,11 +16,20 @@ module Proxies
       ExchangeInformation.account_creation_url
     end
 
-    INDIVIDUAL_ROLE_URI = "urn:dclink:terms:v1:create_update_user_role#Individual"
+    INDIVIDUAL_ROLE_URI = "urn:dclink:terms:v1:create_update_user_role#Broker"
+    BROKER_ROLE_URI = "urn:dclink:terms:v1:create_update_user_role#Individual"
+    EMPLOYER_ROLE_URI = "urn:dclink:terms:v1:create_update_user_role#Employer"
+    EMPLOYEE_ROLE_URI = "urn:dclink:terms:v1:create_update_user_role#Employee"
+    ASSISTER_ROLE_URI = "urn:dclink:terms:v1:create_update_user_role#Assister"
+    CAC_ROLE_URI = "urn:dclink:terms:v1:create_update_user_role#CAC"
 
     USER_ROLE_MAPPING = {
-      "broker" => "urn:dclink:terms:v1:create_update_user_role#Broker",
-      "individual" => INDIVIDUAL_ROLE_URI
+      "broker" => BROKER_ROLE_URI,
+      "individual" => INDIVIDUAL_ROLE_URI,
+      "employer" => EMPLOYER_ROLE_URI,
+      "employee" => EMPLOYEE_ROLE_URI,
+      "assister" => ASSISTER_ROLE_URI,
+      "cac" => CAC_ROLE_URI
     }
 
     def create_body(r_data)
