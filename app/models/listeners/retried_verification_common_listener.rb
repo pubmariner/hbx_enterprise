@@ -54,7 +54,7 @@ module Listeners
     end
 
     def requeue(delivery_info)
-      sleep 2
+      sleep 10
       channel.nack(delivery_info.delivery_tag,false, true)
     end
 
