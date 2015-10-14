@@ -15,7 +15,7 @@ module Listeners
           JSON.dump({
             :original_request => payload,
             :service_response => (body.document.nil? ? "" : body.document.canonicalize),
-            :validation_errors => body.errors
+            :validation_errors => body.errors.full_messages
           })
         )
         send_response(reply_to, "503", "")
