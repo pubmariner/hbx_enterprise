@@ -125,6 +125,13 @@
 			<xs:element name="citizen_status"/>
 			<xs:element name="tax_filing_status"/>
 			<xs:element name="tax_filing_together"/>
+                        <xs:element name="tax_dependents">
+                                <xs:complexType>
+                                        <xs:sequence>
+                                                <xs:element name="tax_dependent" minOccurs="0"/>
+                                        </xs:sequence>
+                                </xs:complexType>
+                        </xs:element>
 			<xs:element name="incarceration_status"/>
 			<xs:element name="household_size"/>
 			<xs:element name="incomes">
