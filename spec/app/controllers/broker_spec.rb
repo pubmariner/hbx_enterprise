@@ -11,9 +11,9 @@ describe "controllers/broker" do
       expect(last_response.body).to include("<npn>1212127</npn>")
       expect(last_response.body).to include("<license_number>1212124</license_number>")
       expect(last_response.body).to include("<exchange_id>1212127</exchange_id>")
-      expect(last_response.body).to include("<street>609 H St, NE</street>")
-      expect(last_response.body).to include("<uri>1876665434</uri>")
-      expect(last_response.body).to include("<text>dude@dc.gov</text>")
+      expect(last_response.body).to include("<xc:street>609 H St, NE</xc:street>")
+      expect(last_response.body).to include("<xc:uri>1876665434</xc:uri>")
+      expect(last_response.body).to include("<xc:text>dude@dc.gov</xc:text>")
     end
   end
 end
