@@ -1,28 +1,28 @@
-%vcard
-  %fn= person[:name_full]
-  %n
-    %surname= person[:name_last]
-    %given= person[:name_first]
-  %org= organization[:name]
+%xc:vcard
+  %xc:fn= person[:name_full]
+  %xc:n
+    %xc:surname= person[:name_last]
+    %xc:given= person[:name_first]
+  %xc:org= organization[:name]
   - person[:addresses].each do |address|
-    %adr
-      %parameters
-        %type
-          %text= address[:address_type]
-      %street= address[:address_1]
-      %locality= address[:city]
-      %region= address[:state]
-      %code= address[:postal_code]
-      %country= address[:country_name]
+    %xc:adr
+      %xc:parameters
+        %xc:type
+          %xc:text= address[:address_type]
+      %xc:street= address[:address_1]
+      %xc:locality= address[:city]
+      %xc:region= address[:state]
+      %xc:code= address[:postal_code]
+      %xc:country= address[:country_name]
   - person[:phones].each do |phone|
-    %tel
-      %parameters
-        %type
-          %text= phone[:phone_type]
-      %uri= phone[:phone_number]
+    %xc:tel
+      %xc:parameters
+        %xc:type
+          %xc:text= phone[:phone_type]
+      %xc:uri= phone[:phone_number]
   - person[:emails].each do |email|
-    %email
-      %parameters
-        %type
-          %text= email[:email_type]
-      %text= email[:email_address]
+    %xc:email
+      %xc:parameters
+        %xc:type
+          %xc:text= email[:email_type]
+      %xc:text= email[:email_address]

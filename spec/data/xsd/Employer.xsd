@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2013 rel. 2 sp2 (http://www.altova.com) by Dan Thomas (DC Department of Human Services DCAS Project) -->
+<xs:schema xmlns="http://dchealthlink.com/vocabulary/20131030/employer" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xc="urn:ietf:params:xml:ns:vcard-4.0" targetNamespace="http://dchealthlink.com/vocabulary/20131030/employer" elementFormDefault="qualified">
+	<xs:import namespace="urn:ietf:params:xml:ns:vcard-4.0" schemaLocation="Xcard.xsd"/>
+	<xs:element name="employers">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="employer" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="employer">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="name"/>
+				<xs:element ref="fein"/>
+				<xs:element ref="employer_exchange_id"/>
+				<xs:element ref="sic_code" minOccurs="0"/>
+				<xs:element ref="fte_count"/>
+				<xs:element ref="pte_count"/>
+				<xs:element ref="broker" minOccurs="0"/>
+				<xs:element ref="open_enrollment_start"/>
+				<xs:element ref="open_enrollment_end"/>
+				<xs:element ref="plan_year_start"/>
+				<xs:element ref="plan_year_end" minOccurs="0"/>
+				<xs:element ref="continuation_coverage_type" minOccurs="0"/>
+				<xs:element ref="plans"/>
+				<xs:element ref="xc:vcard" minOccurs="1" maxOccurs="unbounded"/>
+				<xs:element ref="notes" minOccurs="0"/>
+				<xs:element ref="exchange_id"/>
+				<xs:element ref="exchange_status"/>
+				<xs:element ref="exchange_version"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="plans">
+		<xs:annotation>
+			<xs:documentation>Employer-selected coverage</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="plan" minOccurs="1" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="plan">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="qhp_id"/>
+				<xs:element ref="plan_exchange_id"/>
+				<xs:element ref="policy_number" minOccurs="0"/>
+				<xs:element ref="group_id" minOccurs="0"/>
+				<xs:element ref="carrier_id"/>
+				<xs:element ref="carrier_name"/>
+				<xs:element ref="plan_name"/>
+				<xs:element ref="coverage_type"/>
+				<xs:element ref="original_effective_date"/>
+				<xs:element ref="renewal_effective_date" minOccurs="0"/>
+				<xs:element ref="out_of_state_flag" minOccurs="0"/>
+				<xs:element ref="metal_level_code" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="broker">
+		<xs:annotation>
+			<xs:documentation>Employer-designated broker identifier</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="npn_id"/>
+				<xs:element ref="tpa_ga_fein" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="open_enrollment_start" type="xs:date">
+		<xs:annotation>
+			<xs:documentation>Open Enrollment Period Start Date</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="open_enrollment_end" type="xs:date">
+		<xs:annotation>
+			<xs:documentation>Open Enrollment Period End Date</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="plan_year_start" type="xs:date">
+		<xs:annotation>
+			<xs:documentation>Employer plan year start date</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="plan_year_end" type="xs:date">
+		<xs:annotation>
+			<xs:documentation>Employer plan year end date</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="fte_count" type="xs:int">
+		<xs:annotation>
+			<xs:documentation>Number of full time employees</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="pte_count" type="xs:int">
+		<xs:annotation>
+			<xs:documentation>Number of part time employees</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="employer_exchange_id" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>Exchange-assigned employer ID</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="qhp_id" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>HIOS Plan ID Component + subcomponent</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="plan_exchange_id" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>Exchange-assigned plan ID</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="policy_number" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>Carrier-assigned policy number</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="group_id" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>Carrier-assigned Employer Group Identifier</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="carrier_id" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>Exchange-assigned carrier identifier</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="name" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>Employer Name</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="carrier_name" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>Carrier Name</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="coverage_type" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>Health or Dental coverage</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="continuation_coverage_type" type="xs:string"/>
+	<xs:element name="plan_name" type="xs:string"/>
+	<xs:element name="probationary_period_in_days" type="xs:int"/>
+	<xs:element name="original_effective_date" type="xs:date">
+		<xs:annotation>
+			<xs:documentation>Effective date coverage begins</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="renewal_effective_date" type="xs:date"/>
+	<xs:element name="out_of_state_flag" type="xs:int"/>
+	<xs:element name="fein" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>Federal Employer Identification Number</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="sic_code" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>Standard Industrial Classification Code</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="npn_id" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>Broker National Producer Number (Broker ID)</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="tpa_ga_fein" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>Third Party or General Agent Federal Employment Identification Number</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="metal_level_code" type="xs:string"/>
+	<xs:element name="notes" type="xs:string"/>
+	<xs:simpleType name="status">
+		<xs:annotation>
+			<xs:documentation>Employer status on the DCHBX</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="active"/>
+			<xs:enumeration value="inactive"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="exchange_id" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>DCHBX Identifier</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="exchange_version" default="1" nillable="false">
+		<xs:annotation>
+			<xs:documentation>Version number of this record</xs:documentation>
+		</xs:annotation>
+		<xs:simpleType>
+			<xs:restriction base="xs:int"/>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="exchange_status" type="status">
+		<xs:annotation>
+			<xs:documentation>Employer status on the DCHBX</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+</xs:schema>

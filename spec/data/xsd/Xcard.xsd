@@ -1,0 +1,163 @@
+<xs:schema targetNamespace="urn:ietf:params:xml:ns:vcard-4.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xc="urn:ietf:params:xml:ns:vcard-4.0">
+   <xs:element name="vcard">
+      <xs:annotation>
+         <xs:documentation>Contact information</xs:documentation>
+      </xs:annotation>
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element ref="xc:fn" minOccurs="0"/>
+            <xs:element ref="xc:n"/>
+            <xs:element ref="xc:org" minOccurs="0"/>
+            <xs:element ref="xc:title" minOccurs="0"/>
+            <xs:element ref="xc:adr" maxOccurs="unbounded"/>
+            <xs:element ref="xc:tel" maxOccurs="unbounded"/>
+            <xs:element ref="xc:email" minOccurs="0"/>
+            <xs:element ref="xc:url" minOccurs="0"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="url">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element ref="xc:parameters"/>
+            <xs:element ref="xc:uri"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="uri" type="xs:anyURI"/>
+   <xs:element name="type">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element ref="xc:text" maxOccurs="unbounded"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="title">
+      <xs:annotation>
+         <xs:documentation>Job Title</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+         <xs:restriction base="xs:string">
+            <xs:enumeration value="Managing Partner"/>
+         </xs:restriction>
+      </xs:simpleType>
+   </xs:element>
+   <xs:element name="text" type="xs:string"/>
+   <xs:element name="tel">
+      <xs:annotation>
+         <xs:documentation>Telephone</xs:documentation>
+      </xs:annotation>
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element ref="xc:parameters"/>
+            <xs:element ref="xc:uri"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="surname" type="xs:string">
+      <xs:annotation>
+         <xs:documentation>Last name</xs:documentation>
+      </xs:annotation>
+   </xs:element>
+   <xs:element name="suffix" type="xs:string"/>
+   <xs:element name="street" type="xs:string">
+      <xs:annotation>
+         <xs:documentation>Street address</xs:documentation>
+      </xs:annotation>
+   </xs:element>
+   <xs:element name="region" type="xs:string">
+      <xs:annotation>
+         <xs:documentation>State</xs:documentation>
+      </xs:annotation>
+   </xs:element>
+   <xs:element name="prefix" type="xs:string"/>
+   <xs:element name="pobox" type="xs:string">
+      <xs:annotation>
+         <xs:documentation>Post Office Box number</xs:documentation>
+      </xs:annotation>
+   </xs:element>
+   <xs:element name="parameters">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element ref="xc:type"/>
+            <xs:element ref="xc:label" minOccurs="0"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="org" type="xs:string">
+      <xs:annotation>
+         <xs:documentation>Organization name</xs:documentation>
+      </xs:annotation>
+   </xs:element>
+   <xs:element name="n">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element ref="xc:surname"/>
+            <xs:element ref="xc:given"/>
+            <xs:element ref="xc:additional" minOccurs="0"/>
+            <xs:element ref="xc:prefix" minOccurs="0"/>
+            <xs:element ref="xc:suffix" minOccurs="0"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="locality" type="xs:string">
+      <xs:annotation>
+         <xs:documentation>City</xs:documentation>
+      </xs:annotation>
+   </xs:element>
+   <xs:element name="label">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element ref="xc:text" minOccurs="0"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="given" type="xs:string">
+      <xs:annotation>
+         <xs:documentation>First name</xs:documentation>
+      </xs:annotation>
+   </xs:element>
+   <xs:element name="fn" type="xs:string">
+      <xs:annotation>
+         <xs:documentation>Full name</xs:documentation>
+      </xs:annotation>
+   </xs:element>
+   <xs:element name="ext">
+      <xs:complexType/>
+   </xs:element>
+   <xs:element name="email">
+      <xs:annotation>
+         <xs:documentation>Email address</xs:documentation>
+      </xs:annotation>
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element ref="xc:parameters"/>
+            <xs:element ref="xc:text"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="country" type="xs:string" default="USA"/>
+   <xs:element name="code">
+      <xs:annotation>
+         <xs:documentation>Zip code</xs:documentation>
+      </xs:annotation>
+   </xs:element>
+   <xs:element name="adr">
+      <xs:annotation>
+         <xs:documentation>Address label</xs:documentation>
+      </xs:annotation>
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element ref="xc:parameters"/>
+            <xs:element ref="xc:pobox" minOccurs="0"/>
+            <xs:element ref="xc:ext" minOccurs="0"/>
+            <xs:element ref="xc:street" maxOccurs="unbounded"/>
+            <xs:element ref="xc:locality"/>
+            <xs:element ref="xc:region"/>
+            <xs:element ref="xc:code"/>
+            <xs:element ref="xc:country" minOccurs="0"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="additional" type="xs:string"/>
+</xs:schema>
