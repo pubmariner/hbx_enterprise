@@ -16,8 +16,8 @@ module Proxies
       ExchangeInformation.account_creation_url
     end
 
-    INDIVIDUAL_ROLE_URI = "urn:dclink:terms:v1:create_update_user_role#Broker"
-    BROKER_ROLE_URI = "urn:dclink:terms:v1:create_update_user_role#Individual"
+    INDIVIDUAL_ROLE_URI = "urn:dclink:terms:v1:create_update_user_role#Individual"
+    BROKER_ROLE_URI = "urn:dclink:terms:v1:create_update_user_role#Broker"
     EMPLOYER_ROLE_URI = "urn:dclink:terms:v1:create_update_user_role#Employer"
     EMPLOYEE_ROLE_URI = "urn:dclink:terms:v1:create_update_user_role#Employee"
     ASSISTER_ROLE_URI = "urn:dclink:terms:v1:create_update_user_role#Assister"

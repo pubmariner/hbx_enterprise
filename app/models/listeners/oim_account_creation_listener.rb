@@ -34,7 +34,7 @@ module Listeners
           :return_status => code
         })
       }
-      ex.publish(body.to_s, response_properties)
+      ex.publish(body.to_s || "", response_properties)
       r_channel.close
     end
 
@@ -48,7 +48,7 @@ module Listeners
           :return_status => status
         })
       }
-      ex.publish(body.to_s, response_properties)
+      ex.publish(body.to_s || "", response_properties)
       r_channel.close
     end
 
