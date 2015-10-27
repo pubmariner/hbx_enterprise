@@ -7,9 +7,9 @@ BLUEPILL_LOG = File.join(LOG_DIRECTORY, "eye_hbx_enterprise.log")
 Eye.config do
   logger BLUEPILL_LOG
 
-  mail :host => "smtp4.dc.gov", :port => 25, :from_mail => "no-reply@dchbx.info"
+  mail :host => "<%= email_host %>", :port => <% email_port || 25 %>, :from_mail => "<%= from_address || "no-reply@dchbx.info" %>"
   contact :tevans, :mail, 'trey.evans@dc.gov'
-  contact :dthomas, :mail, 'dan.thomas@dc.gov'
+  contact :admin, :mail, '<%= admin_email %>'
 end
 
 def define_worker(worker_name, directory, worker_command, watch_kids = false)
@@ -33,7 +33,7 @@ end
 
 Eye.application 'eye_hbx_enterprise' do
     notify :tevans, :info
-    notify :dthomas, :info
+    notify :admin, :info
 
   define_worker("curam_application_completed_listener", BUS_DIRECTORY, "bundle exec padrino r amqp/curam_application_completed_listener.rb -e production", true)
   define_worker("oim_navigation_update_listener", BUS_DIRECTORY, "bundle exec padrino r amqp/oim_navigation_update_listener.rb -e production", true)
@@ -45,8 +45,8 @@ Eye.application 'eye_hbx_enterprise' do
   define_worker("ssa_verification_listener", BUS_DIRECTORY, "bundle exec padrino r amqp/ssa_verification_listener.rb -e production", true)
   define_worker("vlp_verification_listener", BUS_DIRECTORY, "bundle exec padrino r amqp/vlp_verification_listener.rb -e production", true)
   define_worker("residency_verification_listener", BUS_DIRECTORY, "bundle exec padrino r amqp/residency_verification_listener.rb -e production", true)
-  define_worker("dcas_enrollment_provider", BUS_DIRECTORY, "bundle exec padrino r amqp/dcas_enrollment_provider.rb -e production", true)
-  define_worker("dcas_enrollment_provider_scaler", BUS_DIRECTORY, "bundle exec padrino r amqp/dcas_enrollment_provider_scaler.rb -e production")
+#  define_worker("dcas_enrollment_provider", BUS_DIRECTORY, "bundle exec padrino r amqp/dcas_enrollment_provider.rb -e production", true)
+#  define_worker("dcas_enrollment_provider_scaler", BUS_DIRECTORY, "bundle exec padrino r amqp/dcas_enrollment_provider_scaler.rb -e production")
 
   process("unicorn") do
     working_dir BUS_DIRECTORY
