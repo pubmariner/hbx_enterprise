@@ -26,7 +26,7 @@ set :bundle_path, nil
 set :pty, true
 
 # Default value for :linked_files is []
-set :linked_files, %w{config/exchange.yml}
+set :linked_files, %w{config/exchange.yml eyes/hbx_enterprise.eye.rb}
 
 # Default value for linked_dirs is []
 set :linked_dirs, %w{pids log eye}
