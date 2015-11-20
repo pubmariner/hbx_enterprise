@@ -1,0 +1,25 @@
+%xc:vcard{:'xmlns:xc'=>"urn:ietf:params:xml:ns:vcard-4.0"}
+  %xc:fn= ""
+  %xc:n
+    %xc:surname= ""
+    %xc:given= ""
+  %xc:org= organization[:name]
+  - address = primary_office_location(organization[:office_locations])[:address]
+  %xc:adr
+    %xc:parameters
+      %xc:type
+        %xc:text= address[:address_type]
+    %xc:street= address[:address_1]
+    - if address[:address_2].present?
+      %xc:street= address[:address_2]
+    %xc:street= address[:address_2]
+    %xc:locality= address[:city]
+    %xc:region= address[:state]
+    %xc:code= address[:postal_code]
+  - phone = primary_office_location(organization[:office_locations])[:phone]
+  - if (phone.present?) && (phone[:phone_number].gsub(/[^0-9]/,'').length == 10)
+    %xc:tel
+      %xc:parameters
+        %xc:type
+          %xc:text= phone[:phone_type]
+      %xc:uri= "tel:+1-" + phone[:phone_number].gsub(/[^0-9]/,'').insert(-5, '-').insert(-9, '-')

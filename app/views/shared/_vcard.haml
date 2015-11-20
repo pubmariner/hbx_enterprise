@@ -1,25 +1,51 @@
-%xc:vcard
-  %xc:fn= person[:name_full]
+%xc:vcard{:'xmlns:xc'=>"urn:ietf:params:xml:ns:vcard-4.0"}
+  %xc:fn= person[:name_full].present? ? person[:name_full] : person[:name_last] + " " + person[:name_first]
   %xc:n
     %xc:surname= person[:name_last]
     %xc:given= person[:name_first]
   %xc:org= organization[:name]
-  - person[:addresses].each do |address|
+  - if person[:addresses].present?
+    - person[:addresses].each do |address|
+      %xc:adr
+        %xc:parameters
+          %xc:type
+            %xc:text= address[:address_type]
+        %xc:street= address[:address_1]
+        - if address[:address_2].present?
+          %xc:street= address[:address_2]
+        %xc:street= address[:address_2]
+        %xc:locality= address[:city]
+        %xc:region= address[:state]
+        %xc:code= address[:postal_code]
+  - else
+    - address = primary_office_location(organization[:office_locations])[:address]
     %xc:adr
       %xc:parameters
         %xc:type
           %xc:text= address[:address_type]
       %xc:street= address[:address_1]
+      - if address[:address_2].present?
+        %xc:street= address[:address_2]
       %xc:locality= address[:city]
       %xc:region= address[:state]
       %xc:code= address[:postal_code]
-      %xc:country= address[:country_name]
-  - person[:phones].each do |phone|
-    %xc:tel
-      %xc:parameters
-        %xc:type
-          %xc:text= phone[:phone_type]
-      %xc:uri= phone[:phone_number]
+  - if person[:phones].present?
+    - person[:phones].each do |phone|
+      - if (!phone[:phone_number].present?) || (phone.gsub(/[^0-9]/,'').length != 10)
+        - next
+      %xc:tel
+        %xc:parameters
+          %xc:type
+            %xc:text= phone[:phone_type]
+        %xc:uri= "tel:+1-" + phone[:phone_number].gsub(/[^0-9]/,'').insert(-5, '-').insert(-9, '-')
+  - else
+    - phone = primary_office_location(organization[:office_locations])[:phone]
+    - if (phone.present?) && (phone[:phone_number].gsub(/[^0-9]/,'').length == 10)
+      %xc:tel
+        %xc:parameters
+          %xc:type
+            %xc:text= phone[:phone_type]
+        %xc:uri= "tel:+1-" + phone[:phone_number].gsub(/[^0-9]/,'').insert(-5, '-').insert(-9, '-')
   - person[:emails].each do |email|
     %xc:email
       %xc:parameters

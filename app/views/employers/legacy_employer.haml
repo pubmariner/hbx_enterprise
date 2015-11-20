@@ -1,27 +1,35 @@
-!!! XML
-%employer{:'xmlns:ns1'=>"http://dchealthlink.com/vocabulary/20131030/employer", :xmlns=>"http://dchealthlink.com/vocabulary/20131030/employer", :'xmlns:xc'=>"urn:ietf:params:xml:ns:vcard-4.0"}
-  %name= @cv_hash[:name]
-  %fein= @cv_hash[:fein]
-  %employer_exchange_id= @cv_hash[:id]
-  %fte_count="0"
-  %pte_count="0"
-  %open_enrollment_start= hiphen_saperated_date(@cv_hash[:employer_profile][:plan_years].first[:open_enrollment_start])
-  %open_enrollment_end= hiphen_saperated_date(@cv_hash[:employer_profile][:plan_years].first[:open_enrollment_end])
-  %plan_year_start= hiphen_saperated_date(@cv_hash[:employer_profile][:plan_years].first[:plan_year_start])
-  %plan_year_end= hiphen_saperated_date(@cv_hash[:employer_profile][:plan_years].first[:plan_year_end]) if @cv_hash[:employer_profile][:plan_years].first[:plan_year_end]
-  %plans
-    - if @cv_hash[:employer_profile][:plan_years].first[:elected_plans]
-      - @cv_hash[:employer_profile][:plan_years].first[:elected_plans].each do |plan|
+- plan_year = plan_year_for_year(@cv_hash[:employer_profile][:plan_years], '2015')
+- if plan_year.nil?
+  - return ""
+<?xml version='1.0' encoding='utf-8' ?>
+%employers{ :'xmlns:xsd'=> "http://www.w3.org/2001/XMLSchema", :'xmlns:xsi'=>"http://www.w3.org/2001/XMLSchema-instance", :'xmlns:ns1'=>"http://dchealthlink.com/vocabulary/20131030/employer", :xmlns=>"http://dchealthlink.com/vocabulary/20131030/employer"}
+  %employer
+    %name= @cv_hash[:name]
+    %fein= @cv_hash[:fein]
+    %employer_exchange_id= @cv_hash[:id]
+    %fte_count= @cv_hash[:employer_profile][:plan_years].last[:fte_count]
+    %pte_count= @cv_hash[:employer_profile][:plan_years].last[:pte_count]
+    %broker
+      %npn_id= @cv_hash[:employer_profile][:writing_agent][:npn] if @cv_hash[:employer_profile][:writing_agent]
+    %open_enrollment_start= hiphen_saperated_date(plan_year[:open_enrollment_start])
+    %open_enrollment_end= hiphen_saperated_date(plan_year[:open_enrollment_end])
+    %plan_year_start= hiphen_saperated_date(plan_year[:plan_year_start])
+    %plan_year_end= hiphen_saperated_date(plan_year[:plan_year_end]) if plan_year[:plan_year_end]
+    %plans
+      - plan_year[:elected_plans].select do |plan| plan[:carrier][:name] == @carrier end.each do |plan|
         %plan
           %qhp_id= plan[:id]
-          %plan_exchange_id= plan[:id]
+          %plan_exchange_id= plan_exchange_id(plan[:id], plan[:active_year])
           %carrier_id= plan[:carrier][:id]
           %carrier_name= plan[:carrier][:name]
           %plan_name= plan[:name]
           %coverage_type= plan[:coverage_type]
-          %original_effective_date= hiphen_saperated_date(@cv_hash[:employer_profile][:plan_years].first[:open_enrollment_start])
-  - @cv_hash[:contacts].each do |person|
-    = partial "shared/vcard", :locals =>{:person => person, :organization => @cv_hash}
-  %exchange_id
-  %exchange_status= 'active'
-  %exchange_version= "1"
+          %original_effective_date= hiphen_saperated_date(plan_year[:plan_year_start])
+    - if @cv_hash[:contacts].present?
+      - @cv_hash[:contacts].each do |person|
+        = partial "shared/vcard", :locals =>{:person => person, :organization => @cv_hash}
+    - else
+      = partial "shared/vcard2", :locals =>{:organization => @cv_hash}
+    %exchange_id= @cv_hash[:id]
+    %exchange_status= 'active'
+    %exchange_version= "2"
