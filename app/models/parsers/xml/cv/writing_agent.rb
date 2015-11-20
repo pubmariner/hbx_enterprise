@@ -1,20 +1,18 @@
 module Parsers
   module Xml
     module Cv
-      class BrokerParser
+      class WritingAgent
         include HappyMapper
 
         register_namespace "cv", "http://openhbx.org/api/terms/1.0"
-        tag 'broker'
+        tag 'writing_agent'
         namespace 'cv'
 
-        element :broker_npn, String, tag: "id/cv:id"        
-        element :name, String, tag: "name"
+        element :npn, String, tag: "npn"
 
         def to_hash
           {
-              npn: broker_npn,
-              name: name
+              npn: npn,
           }
         end
       end
