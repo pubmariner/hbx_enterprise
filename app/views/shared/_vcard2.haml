@@ -12,7 +12,6 @@
     %xc:street= address[:address_1]
     - if address[:address_2].present?
       %xc:street= address[:address_2]
-    %xc:street= address[:address_2]
     %xc:locality= address[:city]
     %xc:region= address[:state]
     %xc:code= address[:postal_code]
@@ -23,3 +22,9 @@
         %xc:type
           %xc:text= phone[:phone_type]
       %xc:uri= "tel:+1-" + phone[:phone_number].gsub(/[^0-9]/,'').insert(-5, '-').insert(-9, '-')
+  - else
+    %xc:tel
+    %xc:parameters
+      %xc:type
+        %xc:text= phone[:phone_type]
+    %xc:uri= "tel:+1-" + "000-000-0000"
