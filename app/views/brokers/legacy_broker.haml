@@ -1,13 +1,56 @@
-!!! XML
+<?xml version='1.0' encoding='utf-8' ?>
 %brokers{:'xmlns:ns1'=>"http://dchbx.dc.gov/broker", :xmlns=>"http://dchbx.dc.gov/broker"}
   - individual[:broker_roles].each do |broker_role|
-    %broker
-      %npn= broker_role[:npn]
-      %license
-        %license_number= broker_role[:broker_agency][:npn]
-        %state= "DC"
-        %effective_date
-      = partial "shared/vcard", :locals =>{:person => individual[:person], :organization => individual[:broker_roles].first[:broker_agency]}
-      %exchange_id= broker_role[:npn]
-      %exchange_status= "ACTIVE"
-      %exchange_version= "1"
+    %n1:broker
+      %n1:npn= broker_role[:npn]
+      %n1:license
+        %n1:license_number= broker_role[:npn]
+        %n1:state= "DC"
+        %n1:effective_date
+      %n1:vcard
+        %n1:fn= individual[:person][:name_full].present? ? individual[:person][:name_full] : individual[:person][:name_first] + " " + individual[:person][:name_last]
+        %n1:n
+          %n1:surname= individual[:person][:name_last]
+          %n1:given= individual[:person][:name_first]
+        %n1:org= broker_role[:broker_agency][:display_name]
+        - if individual[:person][:addresses].present?
+          - individual[:person][:addresses].each do |address|
+            %n1:adr
+              %n1:parameters
+                %n1:type
+                  %n1:text= address[:address_type]
+              %n1:street= address[:address_1]
+              - if address[:address_2].present?
+                %n1:street= address[:address_2]
+              %n1:locality= address[:city]
+              %n1:region= address[:state]
+              %n1:code= address[:postal_code]
+      - if individual[:person][:phones].present?
+        - individual[:person][:phones].each do |phone|
+          - if (phone[:phone_number].present?) && (phone[:phone_number].gsub(/[^0-9]/,'').length == 10)
+            %n1:tel
+              %n1:parameters
+                %n1:type
+                  %n1:text= phone[:phone_type]
+              %n1:uri= "tel:+1-" + phone[:phone_number].gsub(/[^0-9]/,'').insert(-5, '-').insert(-9, '-')
+          - else
+            %n1:tel
+              %n1:parameters
+                %n1:type
+                  %n1:text= phone[:phone_type]
+              %n1:uri= "tel:+1-" + "000-000-0000"
+      - else
+        %n1:tel
+          %n1:parameters
+            %n1:type
+              %n1:text= 'work'
+          %n1:uri= "tel:+1-" + "000-000-0000"
+      - individual[:person][:emails].each do |email|
+        %n1:email
+          %n1:parameters
+            %n1:type
+              %n1:text= email[:email_type]
+          %n1:text= email[:email_address]
+      %n1:exchange_id= broker_role[:npn]
+      %n1:exchange_status= "ACTIVE"
+      %n1:exchange_version= "1"
