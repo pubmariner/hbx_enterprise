@@ -9,7 +9,7 @@ module Parsers::Xml::Cv
     element :name, String, :tag => 'name'
     element :fein, String, :tag => 'fein'
     element :npn, String, :tag => 'npn'
-    element :display_name, String, :tag => 'display_name'
+    element :display_name, String, :tag => 'name'
 
     def to_hash
       {
