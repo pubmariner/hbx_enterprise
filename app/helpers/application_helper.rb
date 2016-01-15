@@ -10,9 +10,10 @@ HbxEnterprise::App.helpers do
     end
   end
 
-  def plan_year_for_year(plan_years, year)
+  def plan_year_for_year(plan_years, year, day, month)
     plan_years.detect do |plan_year|
-      Date.strptime(plan_year[:plan_year_start], "%Y%m%d").year.to_s == year
+      date = Date.strptime(plan_year[:plan_year_start], "%Y%m%d")
+      (date.year.to_s == year) && (date.day.to_i == day.to_i) && (date.month.to_i == month.to_i)
     end
   end
 

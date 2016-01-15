@@ -1,64 +1,63 @@
-%xc:vcard{:'xmlns:xc'=>"urn:ietf:params:xml:ns:vcard-4.0"}
-  %xc:fn= person[:name_full].present? ? person[:name_full] : person[:name_last] + " " + person[:name_first]
-  %xc:n
-    %xc:surname= person[:name_last]
-    %xc:given= person[:name_first]
-  %xc:org= organization[:name]
+%ns2:vcard{:'xmlns:ns2'=>"urn:ietf:params:xml:ns:vcard-4.0"}
+  %ns2:fn= person[:name_full].present? ? person[:name_full] : person[:name_first] + " " + person[:name_last]
+  %ns2:n
+    %ns2:surname= person[:name_last]
+    %ns2:given= person[:name_first]
+  %ns2:org= organization[:name]
   - if person[:addresses].present?
     - person[:addresses].each do |address|
-      %xc:adr
-        %xc:parameters
-          %xc:type
-            %xc:text= address[:address_type]
-        %xc:street= address[:address_1]
+      next if address[:type] != 'work'
+      %ns2:adr
+        %ns2:parameters
+          %ns2:type
+            %ns2:text= address[:address_type]
+        %ns2:street= address[:address_1]
         - if address[:address_2].present?
-          %xc:street= address[:address_2]
-        %xc:locality= address[:city]
-        %xc:region= address[:state]
-        %xc:code= address[:postal_code]
+          %ns2:street= address[:address_2]
+        %ns2:locality= address[:city]
+        %ns2:region= address[:state]
+        %ns2:code= address[:postal_code]
   - else
     - address = primary_office_location(organization[:office_locations])[:address]
-    %xc:adr
-      %xc:parameters
-        %xc:type
-          %xc:text= address[:address_type]
-      %xc:street= address[:address_1]
+    %ns2:adr
+      %ns2:parameters
+        %ns2:type
+          %ns2:text= address[:address_type]
+      %ns2:street= address[:address_1]
       - if address[:address_2].present?
-        %xc:street= address[:address_2]
-      %xc:locality= address[:city]
-      %xc:region= address[:state]
-      %xc:code= address[:postal_code]
+        %ns2:street= address[:address_2]
+      %ns2:locality= address[:city]
+      %ns2:region= address[:state]
+      %ns2:code= address[:postal_code]
   - if person[:phones].present?
     - person[:phones].each do |phone|
-      - if (!phone[:phone_number].present?) || (phone[:phone_number].gsub(/[^0-9]/,'').length != 10)
-        %xc:tel
-        %xc:parameters
-          %xc:type
-            %xc:text= phone[:phone_type]
-        %xc:uri= "tel:+1-" + "000-000-0000"
+      - if (phone[:phone_number].present?) && (phone[:phone_number].gsub(/[^0-9]/,'').length == 10)
+        - phone_number = phone[:phone_number]
+      - elsif (phone[:phone_number].present?) && (phone[:phone_number].gsub(/[^0-9]/,'').length > 10)
+        - phone_number = phone[:phone_number][0..9]
       - else
-        %xc:tel
-          %xc:parameters
-            %xc:type
-              %xc:text= phone[:phone_type]
-          %xc:uri= "tel:+1-" + phone[:phone_number].gsub(/[^0-9]/,'').insert(-5, '-').insert(-9, '-')
+        - phone_number = "0000000000"
+      %ns2:tel
+        %ns2:parameters
+          %ns2:type
+            %ns2:text= phone[:phone_type]
+        %ns2:uri= "tel:+1-" + phone_number.gsub(/[^0-9]/,'').insert(-5, '-').insert(-9, '-')
   - else
     - phone = primary_office_location(organization[:office_locations])[:phone]
-    - if (phone.present?) && (phone[:phone_number].gsub(/[^0-9]/,'').length == 10)
-      %xc:tel
-        %xc:parameters
-          %xc:type
-            %xc:text= phone[:phone_type]
-        %xc:uri= "tel:+1-" + phone[:phone_number].gsub(/[^0-9]/,'').insert(-5, '-').insert(-9, '-')
+    - if (phone[:phone_number].present?) && (phone[:phone_number].gsub(/[^0-9]/,'').length == 10)
+      - phone_number = phone[:phone_number]
+    - elsif (phone[:phone_number].present?) && (phone[:phone_number].gsub(/[^0-9]/,'').length > 10)
+      - phone_number = phone[:phone_number][0..9]
     - else
-      %xc:tel
-      %xc:parameters
-        %xc:type
-          %xc:text= phone[:phone_type]
-      %xc:uri= "tel:+1-" + "000-000-0000"
+      - phone_number = "0000000000"
+    %ns2:tel
+      %ns2:parameters
+        %ns2:type
+          %ns2:text= phone[:phone_type]
+      %ns2:uri= "tel:+1-" + phone_number.gsub(/[^0-9]/,'').insert(-5, '-').insert(-9, '-')
   - person[:emails].each do |email|
-    %xc:email
-      %xc:parameters
-        %xc:type
-          %xc:text= email[:email_type]
-      %xc:text= email[:email_address]
+    %ns2:email
+      %ns2:parameters
+        %ns2:type
+          %ns2:text= email[:email_type]
+      %ns2:text= email[:email_address]
