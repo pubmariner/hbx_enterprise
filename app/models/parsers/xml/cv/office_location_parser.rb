@@ -10,17 +10,18 @@ module Parsers
 
         element :id, String, tag: "id/cv:id"
         element :primary, String, tag: "primary"
-        element :address, Parsers::Xml::Cv::AddressParser, tag: "address"
-        element :phone, Parsers::Xml::Cv::PhoneParser, tag: "phone"
+        has_one :address, Parsers::Xml::Cv::AddressParser, tag: "address"
+        has_one :phone, Parsers::Xml::Cv::PhoneParser, tag: "phone"
 
 
         def to_hash
-          {
+          response = {
               id: id.split("#").last,
               primary: primary,
-              address: address.to_hash,
-              phone: phone.to_hash
+              address: address.to_hash
           }
+          response[:phone] = phone.to_hash if phone
+          response
         end
       end
     end
