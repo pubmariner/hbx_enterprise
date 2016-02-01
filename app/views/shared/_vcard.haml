@@ -16,7 +16,7 @@
           %ns2:street= address[:address_2]
         %ns2:locality= address[:city]
         %ns2:region= address[:state]
-        %ns2:code= address[:postal_code]
+        %ns2:code{:'xsi:type'=>"xsd:string"}= address[:postal_code]
   - else
     - address = primary_office_location(organization[:office_locations])[:address]
     %ns2:adr
@@ -28,7 +28,7 @@
         %ns2:street= address[:address_2]
       %ns2:locality= address[:city]
       %ns2:region= address[:state]
-      %ns2:code= address[:postal_code]
+      %ns2:code{:'xsi:type'=>"xsd:string"}= address[:postal_code]
   - if person[:phones].present?
     - person[:phones].each do |phone|
       - if (phone[:phone_number].present?) && (phone[:phone_number].gsub(/[^0-9]/,'').length == 10)
