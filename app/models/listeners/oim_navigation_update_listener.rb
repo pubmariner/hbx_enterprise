@@ -49,7 +49,7 @@ module Listeners
         })
       }
       ex.publish(body.to_s, response_properties)
-      r_channel = connection.create_channel
+      r_channel.close
     end
 
     def self.run
