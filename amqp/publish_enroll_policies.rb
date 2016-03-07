@@ -3,7 +3,7 @@ require 'csv'
 class RepubCv
 
   def self.run
-    conn = Bunny.new(ExchangeInformation.amqp_uri)
+    conn = Bunny.new(ExchangeInformation.amqp_uri, :heartbeat => 5)
     conn.start
     ch = conn.create_channel
     ch.confirm_select
