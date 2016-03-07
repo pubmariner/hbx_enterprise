@@ -4,8 +4,8 @@ module ManualEnrollments
   class EnrollmentSerializer
 
     def initialize
-      @policy_id_generator = IdGenerator.new('http://10.87.84.135:8080/sequences/policy_id')
-      @person_id_generator = IdGenerator.new('http://10.87.84.135:8080/sequences/member_id')
+      @policy_id_generator = IdGenerator.new('http://soa-prod.dchbx.org:8444/sequences/policy_id')
+      @person_id_generator = IdGenerator.new('http://soa-prod.dchbx.org:8444/sequences/member_id')
     end
 
     def get_output_filename(input_file)
