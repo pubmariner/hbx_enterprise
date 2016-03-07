@@ -1,7 +1,31 @@
 module OpenhbxWorkflow
   class Coordination
-    def initialize(implementor)
-      @implementation = implementor
+    include Singleton
+
+    cattr_accessor :implementer
+
+    def initialize
+      @implementation = self.class.implementer
+    end
+
+    def self.generate_batch_name
+      self.instance.generate_batch_name
+    end
+
+    def self.store_batch_entry(coord_kind, batch_name, index, batch_size, key_list, data)
+      self.instance.store_batch_entry(coord_kind, batch_name, index, batch_size, key_list, data)
+    end
+
+    def self.batch_records(batch_name)
+      self.instance.batch_records(batch_name)
+    end
+
+    def self.batch_complete?(batch_name)
+      self.instance.batch_complete?(batch_name)
+    end
+
+    def self.clear_batch(batch_name)
+      self.instance.clear_batch(batch_name)
     end
 
     def store_batch_entry(coord_kind, batch_name, index, batch_size, key_list, data)
