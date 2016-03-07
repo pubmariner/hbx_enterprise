@@ -146,20 +146,20 @@ PLATFORMS
 DEPENDENCIES
   activemodel (= 4.1.8)
   activesupport (= 4.1.8)
-  bunny
+  bunny (= 1.6.3)
   capistrano (= 3.2.1)
   capistrano-bundler
   capistrano-scm-gitcopy (= 0.0.7)
-  eye
+  eye (= 0.6.4)
   forkr (= 0.1.7)
-  haml
-  nokogiri
-  nokogiri-happymapper
+  haml (= 4.0.6)
+  nokogiri (= 1.6.5)
+  nokogiri-happymapper (= 0.5.9)
   padrino (= 0.12.4)
   rack-test
   rake
   rspec
-  unicorn
+  unicorn (= 4.8.3)
 
 BUNDLED WITH
    1.10.6

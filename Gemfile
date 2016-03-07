@@ -16,7 +16,7 @@ gem 'activesupport', '4.1.8'
 gem 'activemodel', '4.1.8'
 
 # Component requirements
-gem 'haml'
+gem 'haml', '4.0.6'
 
 # Test requirements
 gem 'rspec', :group => 'test'
@@ -24,8 +24,8 @@ gem 'rack-test', :require => 'rack/test', :group => 'test'
 
 # Padrino Stable Gem
 gem 'padrino', '0.12.4'
-gem 'bunny'
-gem 'nokogiri'
+gem 'bunny', '1.6.3'
+gem 'nokogiri', '1.6.5'
 gem 'forkr', '0.1.7'
 
 # Or Padrino Edge
@@ -36,9 +36,9 @@ gem 'forkr', '0.1.7'
 #   gem 'padrino-' + g, '0.12.4'
 # end
 group :production do
-  gem 'unicorn'
+  gem 'unicorn', '4.8.3'
 #  gem 'bluepill', '0.0.68'
-  gem 'eye'
+  gem 'eye', '0.6.4'
 end
 
 group :development do
@@ -47,4 +47,4 @@ group :development do
   gem 'capistrano-bundler'
 end
 
-gem 'nokogiri-happymapper', :require => 'happymapper'
+gem 'nokogiri-happymapper', '0.5.9', :require => 'happymapper'
