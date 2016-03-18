@@ -3,16 +3,16 @@ require "spec_helper"
 module ManualEnrollments
   describe EnrollmentRowBuilder do
 
-    subject { EnrollmentRowBuilder.new }
+    subject { EnrollmentRowBuilder.new(nil, false) }
 
     context '#sort_enrollees_by_rel' do
 
-      let(:spouse) { double(member: double(relationship_uri: "urn:openhbx:terms:v1:individual_relationship#Spouse")) }
-      let(:child) { double(member: double(relationship_uri: "urn:openhbx:terms:v1:individual_relationship#Child")) }
-      let(:son) { double(member: double(relationship_uri: "urn:openhbx:terms:v1:individual_relationship#Son")) }
-      let(:dependent) { double(member: double(relationship_uri: "urn:openhbx:terms:v1:individual_relationship#Dependent")) }
-      let(:subscriber) { double(member: double(relationship_uri: "urn:openhbx:terms:v1:individual_relationship#Self")) }
-      let(:no_rel) { double(member: double(relationship_uri: nil)) }
+      let(:spouse) { double(member: double(relationship_uri: "urn:openhbx:terms:v1:individual_relationship#Spouse", is_subscriber: false)) }
+      let(:child) { double(member: double(relationship_uri: "urn:openhbx:terms:v1:individual_relationship#Child", is_subscriber: false)) }
+      let(:son) { double(member: double(relationship_uri: "urn:openhbx:terms:v1:individual_relationship#Son"), is_subscriber:false) }
+      let(:dependent) { double(member: double(relationship_uri: "urn:openhbx:terms:v1:individual_relationship#Dependent"), is_subscriber:false) }
+      let(:subscriber) { double(member: double(relationship_uri: "urn:openhbx:terms:v1:individual_relationship#Self"), is_subscriber: true) }
+      let(:no_rel) { double(member: double(relationship_uri: nil), is_subscriber: false) }
 
       context 'when dependent, spouse not sorted properly' do
         let(:enrollees) { [spouse, child, subscriber] }
