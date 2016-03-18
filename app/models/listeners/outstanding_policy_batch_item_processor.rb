@@ -19,7 +19,7 @@ module Listeners
           policy_id: b_info.policy_id,
           processed: true,
           body: policy_body
-        })
+        }))
         report_result("completed", "200", b_info, policy_body) 
         channel.ack(delivery_info.delivery_tag,false)
       end
