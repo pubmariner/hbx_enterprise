@@ -47,7 +47,7 @@ module Listeners
 
     def self.queue_name
       ec = ExchangeInformation
-      "#{ec.hbx_id}.#{ec.environment}.q.hbx_enterprise.outstanding_policies_listener"
+      "#{ec.hbx_id}.#{ec.environment}.q.hbx_enterprise.outstanding_policies_batch_process_listener"
     end
 
     def self.run
