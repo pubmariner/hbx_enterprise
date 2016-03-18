@@ -1,20 +1,26 @@
 module Listeners
   class DailyEnrollmentStatusBatcher < Amqp::Client
     def on_message(delivery_info, properties, payload)
+      query_name = ""
       requestor = ::Amqp::Requestor.new(connection)
       existing_ids_properties = {
         :routing_key => "glue.policy_id_list"
       }
       eid_di, eid_props, eid_payload = requestor.request(
         existing_ids_properties,
-        ""
+        "",
+        15
       )
       query_request_props = {
-        :routing_key => "enroll.policy_query"
+        :routing_key => "enroll.policy_query",
+        :headers => {
+          :query_name => query_name
+        }
       }
       qr_di, qr_props, qr_payload = requestor.request(
         query_request_props,
-        eid_payload
+        eid_payload,
+        15
       )
       p_id_list = JSON.load(qr_payload)
       batch_size = p_id_list.length
