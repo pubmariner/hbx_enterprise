@@ -1,5 +1,5 @@
 module Listeners
-  class DailyEnrollmentStatusBatcher < Amqp::Client
+  class DailyEnrollmentRequestBatcher < Amqp::Client
     def on_message(delivery_info, properties, payload)
       headers = (properties.headers || {})
       query_name = headers["query_criteria_name"]
