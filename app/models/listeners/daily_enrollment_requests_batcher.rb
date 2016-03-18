@@ -1,7 +1,8 @@
 module Listeners
   class DailyEnrollmentStatusBatcher < Amqp::Client
     def on_message(delivery_info, properties, payload)
-      query_name = ""
+      headers = (properties.headers || {})
+      query_name = headers["query_criteria_name"]
       requestor = ::Amqp::Requestor.new(connection)
       existing_ids_properties = {
         :routing_key => "glue.policy_id_list"
@@ -12,9 +13,9 @@ module Listeners
         15
       )
       query_request_props = {
-        :routing_key => "enroll.policy_query",
+        :routing_key => "policy.query_by_named_criteria",
         :headers => {
-          :query_name => query_name
+          :query_critera_name => query_name
         }
       }
       qr_di, qr_props, qr_payload = requestor.request(
@@ -46,7 +47,7 @@ module Listeners
 
     def self.queue_name
       ec = ExchangeInformation
-      "#{ec.hbx_id}.#{ec.environment}.q.hbx_enterprise.outstanding_enrollment_batcher"
+      "#{ec.hbx_id}.#{ec.environment}.q.hbx_enterprise.outstanding_policies_listener"
     end
 
     def self.run
