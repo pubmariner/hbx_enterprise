@@ -20,4 +20,11 @@ HbxEnterprise::App.helpers do
   def plan_exchange_id(hios_id, active_year)
     active_year + "" + hios_id.gsub(/[^0-9]/, '')
   end
+
+  def latest_plan_year(plan_years)
+    return plan_years.first if plan_years.length == 1
+    plan_years.sort_by do |plan_year|
+      Date.strptime(plan_year[:plan_year_start], "%Y%m%d")
+    end.last
+  end
 end
