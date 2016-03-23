@@ -151,6 +151,11 @@ module ManualEnrollments
       sort_enrollees_by_rel(members)
     end
 
+    def dependents
+      sub, *deps = enrollees
+      @dependents ||= deps
+    end
+
     def sort_enrollees_by_rel(enrollees)
       relationships = ['self', 'spouse', 'child']
 

@@ -2,7 +2,7 @@ module ManualEnrollments
   class EnrollmentPublisher
 
     def initialize
-      conn = Bunny.new(ExchangeInformation.amqp_uri)
+      conn = Bunny.new(ExchangeInformation.amqp_uri, :heartbeat => 5)
       conn.start
 
       @ch = conn.create_channel
