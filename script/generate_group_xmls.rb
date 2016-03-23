@@ -1,3 +1,24 @@
+# How to Generate Group XMLs?
+# Set the 'dir_path' below and in app/controllers/employer.rb
+# The group xmls will be generated here. 1 xml file per carrier.
+# Set the 'exchange_version' number in app/views/employers/legacy_employer.haml
+# exchange_version "1" for new employers, next highest integer for renewing employers
+#
+# run the padrino server 'padrino s -p 3004'
+# run the script 'ruby script/generate_group_xmls.rb'
+#
+# Groups xmls will be generated in dir_path. e.g. CareFirst.xml, Aetna.xml
+# Each group xml file is expected to have only one global <employers><employers> wrapping tag.
+#
+# Delete the extra <employers><employers> tags
+#
+# e.g. I usually replace all occurrences on
+# </employers>
+# <?xml version='1.0' encoding='utf-8' ?>
+# <employers xmlns:ns1='http://dchealthlink.com/vocabulary/20131030/employer' xmlns:xsd='http://www.w3.org/2001/XMLSchema' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns='http://dchealthlink.com/vocabulary/20131030/employer'>
+# with empty string
+# This leaves only the wrapping <employers><employers> tags
+
 require 'net/http'
 require 'pry'
 
