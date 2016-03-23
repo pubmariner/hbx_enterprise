@@ -12,7 +12,7 @@
 #
 # Delete the extra <employers><employers> tags
 #
-# e.g. I usually replace all occurrences on
+# e.g. I usually use a Sublime Text to replace all occurrences on
 # </employers>
 # <?xml version='1.0' encoding='utf-8' ?>
 # <employers xmlns:ns1='http://dchealthlink.com/vocabulary/20131030/employer' xmlns:xsd='http://www.w3.org/2001/XMLSchema' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns='http://dchealthlink.com/vocabulary/20131030/employer'>
