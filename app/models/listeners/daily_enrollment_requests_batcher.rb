@@ -3,6 +3,7 @@ module Listeners
     def on_message(delivery_info, properties, payload)
       headers = (properties.headers || {})
       query_name = headers["query_criteria_name"]
+      should_publish_policies = (headers["publish"].to_s.downcase == "true")
       requestor = ::Amqp::Requestor.new(connection)
       existing_ids_properties = {
         :routing_key => "glue.policy_id_list"
@@ -34,6 +35,7 @@ module Listeners
             :timestamp => Time.now.to_i,
             :app_id => "hbx_enterprise",
             :headers => {
+              :publish => should_publish_policies,
               :batch_name => new_batch_name.to_s,
               :index => idx,
               :batch_size => batch_size,
