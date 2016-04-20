@@ -17,18 +17,19 @@
         %ns2:locality= address[:city]
         %ns2:region= address[:state]
         %ns2:code{:'xsi:type'=>"xsd:string"}= address[:postal_code]
-  - else
-    - address = primary_office_location(organization[:office_locations])[:address]
-    %ns2:adr
-      %ns2:parameters
-        %ns2:type
-          %ns2:text= address[:address_type]
-      %ns2:street= address[:address_1]
-      - if address[:address_2].present?
-        %ns2:street= address[:address_2]
-      %ns2:locality= address[:city]
-      %ns2:region= address[:state]
-      %ns2:code{:'xsi:type'=>"xsd:string"}= address[:postal_code]
+  - if organization[:office_locations].present?
+    - organization[:office_locations].each do |office_location|
+      - address = office_location[:address]
+      %ns2:adr
+        %ns2:parameters
+          %ns2:type
+            %ns2:text= address[:address_type]
+        %ns2:street= address[:address_1]
+        - if address[:address_2].present?
+          %ns2:street= address[:address_2]
+        %ns2:locality= address[:city]
+        %ns2:region= address[:state]
+        %ns2:code{:'xsi:type'=>"xsd:string"}= address[:postal_code]
   - if person[:phones].present?
     - person[:phones].each do |phone|
       - if (phone[:phone_number].present?) && (phone[:phone_number].gsub(/[^0-9]/,'').length == 10)
