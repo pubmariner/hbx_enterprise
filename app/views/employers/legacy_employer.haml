@@ -27,9 +27,10 @@
           %ns1:coverage_type= plan[:coverage_type]
           %ns1:original_effective_date= hiphen_saperated_date(plan_year[:plan_year_start])
     - if @cv_hash[:contacts].present?
-      = partial "shared/vcard", :locals =>{:person => @cv_hash[:contacts].first, :organization => @cv_hash}
+      - @cv_hash[:contacts].each do |person|
+        = partial "shared/vcard", :locals =>{:person => person, :organization => @cv_hash}
     - else
       = partial "shared/vcard2", :locals =>{:organization => @cv_hash}
     %ns1:exchange_id= @cv_hash[:id]
     %ns1:exchange_status= 'active'
-    %ns1:exchange_version= "10"
+    %ns1:exchange_version= "2"
