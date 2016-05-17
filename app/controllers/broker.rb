@@ -5,5 +5,6 @@ class HbxEnterprise::App
     file_path = ""
     broker_xml = render "brokers/legacy_broker", :locals =>{ :individual=> @cv_hash }
     File.open(file_path, 'a') { |file| file.write(broker_xml) }
+    render nothing: true
   end
 end
