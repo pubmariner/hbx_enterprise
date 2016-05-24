@@ -5,6 +5,7 @@ module Listeners
 
     def on_message(delivery_info, properties, payload)
       headers = (properties.headers || {})
+      should_publish = (headers["publish"].to_s.downcase == "true")
       b_info = BatchItemInfo.new(
         headers["batch_name"],
         headers["index"],
@@ -13,7 +14,7 @@ module Listeners
       )
       sc = create_failure_handler(delivery_info, b_info)
       sc.and_then do |args|
-        policy_body = request_policy_body(b_info.policy_id)
+        policy_body = request_policy_body(b_info.policy_id, should_publish)
         create_policy_in_glue(b_info.policy_id, policy_body)
         store_batch_item(b_info, JSON.dump({
           policy_id: b_info.policy_id,
@@ -48,7 +49,7 @@ module Listeners
       end
     end
 
-    def request_policy_body(policy_id)
+    def request_policy_body(policy_id, should_publish)
       requestor = Amqp::Requestor.new(connection)
       request_properties = {
         :routing_key => "resource.policy",
@@ -58,18 +59,19 @@ module Listeners
       }
       begin
         di, r_props, r_body = requestor.request(request_properties, "")
-        extract_payload(policy_id, r_props, r_body)
+        extract_policy_payload(policy_id, r_props, r_body, should_publish)
       rescue Timeout::Error => e
         throw :processing_failure, ItemProcessingFailure.new(true, "503", "Timeout retrieving policy.", nil)
       end
     end
 
-    def extract_policy_payload(policy_id, r_props, r_body)
+    def extract_policy_payload(policy_id, r_props, r_body, should_publish)
       headers = r_props.headers || {}
       return_status = headers["return_status"]
       case return_status.to_s
       when "200"
         elig_reason = headers["eligibility_event_kind"]
+        check_should_publish(policy_id, r_body, should_publish)
         check_elig_reason(policy_id, elig_reason, r_body)
       when "503"
         throw :processing_failure, ItemProcessingFailure.new(true, "503", "Timeout retrieving policy.", nil)
@@ -77,6 +79,12 @@ module Listeners
         throw :processing_failure, ItemProcessingFailure.new(false, "404", "No such policy.", batch_body_for(policy_id, false, "not found",nil)) 
       else
         throw :processing_failure, ItemProcessingFailure.new(false, "500", "Server error", batch_body_for(policy_id, false, "Server error", ""))
+      end
+    end
+
+    def check_should_publish(policy_id, r_body, should_publish)
+      unless should_publish
+        throw :processing_failure, ItemProcessingFailure.new(false, "302", "Batch marked do not publish.", batch_body_for(policy_id, false, "This batch is not marked for publishing.", r_body))
       end
     end
 
