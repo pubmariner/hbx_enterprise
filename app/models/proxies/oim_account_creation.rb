@@ -42,6 +42,8 @@ module Proxies
       password = data["password"]
       system_flag = data["system_flag"]
       account_role = data["account_role"]
+      user_name = data["username"]
+      user_name ||= data["email"]
       account_role_key = account_role.blank? ? "individual" : account_role
       user_role = USER_ROLE_MAPPING.fetch(account_role_key, INDIVIDUAL_ROLE_URI)
       system_flag_value = system_flag.blank? ? "1" : system_flag
@@ -51,10 +53,12 @@ module Proxies
             xml["acn"].user_role(user_role)
             xml["acn"].first_name(first_name)
             xml["acn"].last_name(last_name)
-            xml["acn"].user_name(email)
+            xml["acn"].user_name(user_name)
             xml["acn"].Password(password)
             xml["acn"].system_flag(system_flag_value)
-            xml["acn"].email(email)
+            if !email.blank?
+              xml["acn"].email(email)
+            end
           end
         end
       end
