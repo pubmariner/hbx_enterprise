@@ -27,11 +27,14 @@ class RepubCv
           if "200" != return_code
             puts f.to_s
             puts payload.to_s
+            STDOUT.flush
             puts "==========="
             error_body = JSON.load(payload)
             err_string = ""
             err_string << flatten_to_list("", error_body).join("\n")
             csv << [File.basename(f).gsub(/\.xml\Z/, ""), err_string]
+          else
+            STDERR.puts(f.to_s)
           end
         rescue => e
           puts f
