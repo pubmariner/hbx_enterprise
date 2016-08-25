@@ -48,6 +48,7 @@ group :development do
   gem 'capistrano', '3.2.1'
   gem 'capistrano-scm-gitcopy', '0.0.7'
   gem 'capistrano-bundler'
+  gem 'ruby-progressbar'
 end
 
 gem 'nokogiri-happymapper', '0.5.9', :require => 'happymapper'
