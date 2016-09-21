@@ -18,12 +18,10 @@ HbxEnterprise::App.controllers :enrollments, map: '/api/v1' do
     request_hash = Parsers::Xml::Cv::EmployerRequestParser.parse(request_xml)
     ssn = request_hash[:request][:parameters][:ssn] || ""
     dob = request_hash[:request][:parameters][:dob] || ""
-    first_name = request_hash[:request][:parameters][:first_name] || ""
-    last_name = request_hash[:request][:parameters][:last_name] || ""
 
     request_properties = {
         :routing_key => "#{ExchangeInformation.hbx_id}.#{ExchangeInformation.environment}.q.enroll.census_employee_listener",
-        :headers => { ssn:ssn, dob:dob, first_name:first_name, last_name:last_name}
+        :headers => { ssn:ssn, dob:dob }
     }
 
     Amqp::Requestor.new(conn).request(request_properties, request_xml, 180) #returns [delivery_info, properties, payload]
