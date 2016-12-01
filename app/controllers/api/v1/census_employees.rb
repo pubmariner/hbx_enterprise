@@ -15,7 +15,7 @@ HbxEnterprise::App.controllers :enrollments, map: '/api/v1' do
     conn = Bunny.new(ExchangeInformation.amqp_uri, :heartbeat => 5)
     conn.start
 
-    request_hash = Parsers::Xml::Cv::EmployerRequestParser.parse(request_xml)
+    request_hash = Parsers::Xml::Cv::EmployerRequestParser.parse(request_xml).to_hash
     ssn = request_hash[:request][:parameters][:ssn] || ""
     dob = request_hash[:request][:parameters][:dob] || ""
 
