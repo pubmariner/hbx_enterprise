@@ -20,7 +20,7 @@ HbxEnterprise::App.controllers :enrollments, map: '/api/v1' do
     dob = request_hash[:request][:parameters][:dob] || ""
 
     request_properties = {
-        :routing_key => "#{ExchangeInformation.hbx_id}.#{ExchangeInformation.environment}.q.enroll.census_employee_listener",
+        :routing_key => "resource.census_employee",
         :headers => { ssn:ssn, dob:dob }
     }
 
