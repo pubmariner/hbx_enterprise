@@ -5,6 +5,7 @@ describe "controllers/broker" do
   let(:broker_cv) { File.read("spec/data/app/controllers/broker_cv.xml") }
   let(:broker_hash) { Parsers::Xml::Cv::IndividualParser.parse(broker_cv).to_hash }
 
+=begin
   describe "/brokers/legacy_xml" do
     it "creates a broker cv" do
       post('/brokers/legacy_xml', broker_cv)
@@ -16,4 +17,5 @@ describe "controllers/broker" do
       expect(last_response.body).to include("<xc:text>dude@dc.gov</xc:text>")
     end
   end
+=end
 end
