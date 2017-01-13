@@ -48,7 +48,6 @@ XMLCODE
     @carrier_output.each_pair do |k, v|
        v << XML_TRAILER
        yield [k, v]
-       File.open("/Users/saidineshmekala/IDEACREW/hbx_enterprise/script/" + k+"_#{Time.now}" + ".xml", 'a') { |file| file.write(v.string) }
     end
   end
 
