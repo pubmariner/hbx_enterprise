@@ -20,6 +20,7 @@ XMLCODE
     @employer_digest = Nokogiri::XML(digest)
     @carrier_output = Hash.new { |h, k| h[k] = initialize_new_output }
     @renderer = HbxEnterprise::App.prototype.helpers
+    @employer_ids = []
   end
 
   def initialize_new_output
@@ -28,9 +29,15 @@ XMLCODE
     xml_io
   end
 
+  def is_organization_string_valid?(node)
+    org = Parsers::Xml::Cv::OrganizationParser.parse(node.canonicalize).to_hash
+    return false if @employer_ids.include? (org[:id])
+    @employer_ids.push(org[:id]) and return true  # id is hbx_id
+  end
+
   def with_organization_strings
-    employer_digest.xpath("//cv:employer_event/cv:body/cv:organization", XML_NS).each do |node|
-      yield node.canonicalize
+    employer_digest.xpath("//cv:employer_event/cv:body/cv:organization", XML_NS).reverse.each do |node|
+      yield node.canonicalize if is_organization_string_valid?(node)
     end
   end
 
@@ -41,6 +48,7 @@ XMLCODE
     @carrier_output.each_pair do |k, v|
        v << XML_TRAILER
        yield [k, v]
+       File.open("/Users/saidineshmekala/IDEACREW/hbx_enterprise/script/" + k+"_#{Time.now}" + ".xml", 'a') { |file| file.write(v.string) }
     end
   end
 
