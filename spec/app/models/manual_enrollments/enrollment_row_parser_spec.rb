@@ -209,14 +209,14 @@ module ManualEnrollments
       context 'when relationship is not child, spouse, self' do
         let(:enrollees) { [child1, sibling, spouse, child2, subscriber] }
         it 'should sort enrollees by putting unknown relationships at the end' do
-          expect(subject.sort_enrollees_by_rel(enrollees)).to eq([subscriber, spouse, child2, child1, sibling])
+          expect(subject.sort_enrollees_by_rel(enrollees).last).to eq(sibling)
         end
       end
 
       context 'when relationship empty' do
         let(:enrollees) { [sibling, no_rel, child1, spouse, subscriber] }
         it 'should sort enrollees by putting empty relationship at the end' do
-          expect(subject.sort_enrollees_by_rel(enrollees)).to eq([subscriber, spouse, child1, sibling, no_rel])
+          expect(subject.sort_enrollees_by_rel(enrollees).last).to eq(no_rel)
         end
       end
 
