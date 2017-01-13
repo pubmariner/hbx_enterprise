@@ -1,7 +1,7 @@
 module Proxies
   class EmployerXmlDropRequest < ::Proxies::SoapRequestBuilder
-    def service_location
-      "/soa-infra/services/EDI/GroupXMLV2CarrCmpService/groupxmlv2carrabcsimpl_client_ep"
+    def endpoint
+      ExchangeInformation.employer_xml_drop_url
     end
   end
 end
