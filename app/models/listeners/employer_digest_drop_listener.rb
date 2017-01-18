@@ -114,7 +114,7 @@ module Listeners
       dex = ch.default_exchange
       q = ch.queue(queue_name, :durable => true)
 
-      self.new(ch, q).subscribe(:block => true, :manual_ack => true)
+      self.new(ch, q).subscribe(:block => true, :manual_ack => true, :ack => true)
     end
   end
 end
