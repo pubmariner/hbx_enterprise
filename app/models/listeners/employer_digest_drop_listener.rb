@@ -22,7 +22,7 @@ module Listeners
           :return_status => code
         })
       }
-      broadcaster.broadcast(respone_properties, body.to_s)
+      broadcaster.broadcast(response_properties, body.to_s)
     end
 
     def carrier_abbrev_for(long_carrier_name)
