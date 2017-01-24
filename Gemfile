@@ -51,4 +51,8 @@ group :development do
   gem 'ruby-progressbar'
 end
 
+group :test do
+ gem "rspec_junit_formatter", "0.2.3"
+end
+
 gem 'nokogiri-happymapper', '0.5.9', :require => 'happymapper'

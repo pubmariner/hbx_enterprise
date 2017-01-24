@@ -15,7 +15,7 @@ module Parsers
         def to_hash
           {
               name: name,
-              reference_plan: reference_plan.to_hash,
+#              reference_plan: reference_plan.to_hash,
               relationship_benefits:relationship_benefits.map(&:to_hash)
           }
         end
