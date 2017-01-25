@@ -43,7 +43,7 @@ module Proxies
       password = data["password"]
       system_flag = data["system_flag"]
       account_role = data["account_role"]
-      user_name = data["username"]
+      user_name = data["username"].try(:downcase)
       user_name ||= data["email"]
       account_role_key = account_role.blank? ? "individual" : account_role
       # user_role = USER_ROLE_MAPPING.fetch(account_role_key, INDIVIDUAL_ROLE_URI)
