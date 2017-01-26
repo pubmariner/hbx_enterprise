@@ -63,7 +63,7 @@ module Proxies
     end
 
     def make_forge_rock_create_request(data)
-      config = YAML.load_file("#{Rails.root}/config/forgerock.yml")
+      config = YAML.load_file("#{Padrino.root}/config/forgerock.yml")
 
       headers = {
         'Content-Type' => 'application/json',
