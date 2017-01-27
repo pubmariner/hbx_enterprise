@@ -1,6 +1,6 @@
 module Proxies
   class IamAccountCreation < ::Proxies::SoapRequestBuilder
-    require 'httparty'
+    require 'faraday'
 
     def request(data, timeout = 5)
       response = create_body(data)
@@ -53,7 +53,7 @@ module Proxies
         mail: email.present? ? email.downcase : "",
         givenName: first_name,
         sn: last_name,
-        userName: user_name,
+        userName: user_name.try(:downcase),
         password: password,
         userType: account_role_key.downcase,
         statusFlag: system_flag
@@ -71,27 +71,14 @@ module Proxies
         'X-OpenIDM-Password' => config["forgerock"]["password"],
       }
 
-      response = HTTParty.post(
-        config["forgerock"]["url"],
-        :query => {"action" => "post"},
-        :body => data.to_json,
-        :headers => headers
-      )
-      response
+      response = Faraday.post do |request|
+        request.url config['forgerock']['url']
+        request.headers = headers
+        request.body = data.to_json
+      end
+
+      response.body
     end
 
-    # def extract_response_code(data)
-      # xml = Nokogiri::XML(body)
-      # response_code = xml.at_xpath("//lrn:response_code", :lrn => LOOKUP_RESPONSE_NS)
-      # return "503" if response_code.blank?
-      # code_string = response_code.content.split("#").last
-      # code_string = "SUCCESS"
-      # case code_string
-      # when "SUCCESS"
-      # ["201", data]
-      # else
-        # ["500", (body || "")]
-      # end
-    # end
   end
 end
