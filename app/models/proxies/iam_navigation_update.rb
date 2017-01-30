@@ -4,12 +4,12 @@ module Proxies
 
     def request(data, timeout = 5)
       response = create_body(data)
-      code = response.has_key?("code") ? response["code"] : "200"
+      code = response.status
       case code.to_s
       when "200" # when success
-        ["201", response]
+        ["201", response.body]
       else # when error
-        [code, response]
+        [code, response.body]
       end
     end
 
@@ -54,7 +54,7 @@ module Proxies
         request.body = data.to_json
       end
 
-      response.body
+      response
     end
 
     LOOKUP_RESPONSE_NS = "http://xmlns.oracle.com/dcas/esb/useridentitymanage/service/xsd/v1"
