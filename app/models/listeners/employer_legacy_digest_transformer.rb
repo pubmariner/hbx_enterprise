@@ -60,12 +60,12 @@ module Listeners
 
     def self.queue_name
       ec = ExchangeInformation
-      "#{ec.hbx_id}.#{ec.environment}.q.hbx_enterprise.legacy_employer_digest_transformer"
+      "#{ec.hbx_id}.#{ec.environment}.q.hbx_enterprise.employer_legacy_digest_transformer"
     end
 
     def self.create_queue(chan)
       ec = ExchangeInformation
-      q = ch.queue(queue_name, :durable => true)
+      q = chan.queue(queue_name, :durable => true)
       event_exchange = chan.topic(ec.event_exchange, {:durable => true})
       q.bind(event_exchange, {:routing_key => "info.events.trading_partner.employer_digest.published"})
       q
