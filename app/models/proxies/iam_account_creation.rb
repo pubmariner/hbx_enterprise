@@ -55,7 +55,7 @@ module Proxies
         sn: last_name,
         userName: user_name.try(:downcase),
         password: password,
-        userType: account_role_key.downcase,
+        userType: account_role_key.downcase.gsub("_", ""),
         statusFlag: system_flag
       }
 
