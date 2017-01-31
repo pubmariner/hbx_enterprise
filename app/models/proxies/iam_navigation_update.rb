@@ -35,6 +35,8 @@ module Proxies
     end
 
     def make_forge_rock_update_request(data, user_name)
+      config = YAML.load_file("#{Padrino.root}/config/forgerock.yml")
+
       query_params = {
         "_action" => "patch",
         "_queryId" => "for-userName",
