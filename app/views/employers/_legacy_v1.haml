@@ -1,4 +1,4 @@
-%ns1:employer{ :'xmlns:ns1'=>"http://dchealthlink.com/vocabulary/20131030/employer" }
+%ns1:employer
   %ns1:name= cv_hash[:dba].present? ? cv_hash[:dba] : cv_hash[:name]
   %ns1:fein= cv_hash[:fein]
   %ns1:employer_exchange_id= cv_hash[:id]
@@ -29,4 +29,4 @@
     = partial "shared/vcard2", :locals =>{:organization => cv_hash}
   %ns1:exchange_id= cv_hash[:id]
   %ns1:exchange_status= 'active'
-  %ns1:exchange_version= "2"
+  %ns1:exchange_version= "#{Date.today.yday}"
