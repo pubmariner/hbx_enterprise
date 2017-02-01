@@ -3,7 +3,7 @@ module Proxies
     def request(carrier_profile_name, data)
       current_time = Time.now.utc
       time_string = current_time.strftime("%Y%m%d%H%M%S") + current_time.usec.to_s[0..2]
-      f_path = base_path + carrier_profile_name + "_" + time_string + ".xml"
+      f_path = base_path + "EmployerData_" + time_string + "_"+ carrier_profile_name + ".xml"
       begin
         upload_file(data, f_path)
         ["200", nil]
