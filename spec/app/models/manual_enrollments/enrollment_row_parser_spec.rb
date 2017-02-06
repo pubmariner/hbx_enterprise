@@ -24,7 +24,7 @@ module ManualEnrollments
       context 'when market information missing' do 
         let(:enrollment) { ['renewal', '']}
 
-        it 'should return error' do 
+        it 'returns error' do 
           subject.validate_market
           expect(subject.valid).to eq(false)
           expect(subject.errors).to eq(["Market type should be shop or ivl or individual."])

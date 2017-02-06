@@ -38,6 +38,8 @@ GEM
       state_machine
       thor
     forkr (1.0.2)
+    faraday (0.11.0)
+      multipart-post (>= 1.2, < 3)
     haml (4.0.6)
       tilt
     http_router (0.11.1)
@@ -60,12 +62,13 @@ GEM
       mongo (~> 2.1)
       origin (~> 2.2)
       tzinfo (>= 0.3.37)
+    multipart-post (2.0.0)
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
     net-sftp (2.1.2)
       net-ssh (>= 2.6.5)
     net-ssh (2.9.1)
-    nio4r (1.1.0)
+    nio4r (2.0.0)
     nokogiri (1.6.5)
       mini_portile (~> 0.6.0)
     nokogiri-happymapper (0.5.9)
@@ -167,6 +170,7 @@ DEPENDENCIES
   capistrano-scm-gitcopy (= 0.0.7)
   eye (= 0.6.4)
   forkr (= 1.0.2)
+  faraday (= 0.11.0)
   haml (= 4.0.6)
   mongoid (= 5.1.1)
   net-sftp (= 2.1.2)
@@ -182,4 +186,4 @@ DEPENDENCIES
   unicorn (= 4.8.3)
 
 BUNDLED WITH
-   1.10.6
+   1.14.3
