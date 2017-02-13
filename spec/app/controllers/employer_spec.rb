@@ -8,6 +8,7 @@ describe "controllers/broker" do
   let(:employer_cv) { File.read("spec/data/app/controllers/employer_cv.xml") }
   let(:employer_hash) { Parsers::Xml::Cv::EmployerProfileParser.parse(employer_cv).to_hash }
 
+=begin
   describe "/employers/legacy_xml" do
     it "creates a employer legacy xml" do
       post('/employers/legacy_xml', employer_cv)
@@ -17,4 +18,5 @@ describe "controllers/broker" do
       expect(xsd.validate(doc).length).to eq(0)
     end
   end
+=end
 end
