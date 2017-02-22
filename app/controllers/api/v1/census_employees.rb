@@ -8,6 +8,10 @@ HbxEnterprise::App.controllers :enrollments, map: '/api/v1' do
     delivery_info, properties, payload = process_request(request_xml)
     status properties[:headers][:return_status]
     body payload
+    logger.write "delivery_info= #{delivery_info}"
+    logger.write "properties= #{properties}"
+    logger.write "payload= #{request_xml}"
+    puts "properties= #{properties}"
   end
 
   private
