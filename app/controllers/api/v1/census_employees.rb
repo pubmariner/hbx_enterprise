@@ -7,9 +7,6 @@ class HbxEnterprise::App
     delivery_info, properties, payload = process_request(request_xml)
     status properties[:headers][:return_status]
     body payload
-    logger.write "delivery_info= #{delivery_info}"
-    logger.write "properties= #{properties}"
-    logger.write "payload= #{payload}"
   end
 
   private
