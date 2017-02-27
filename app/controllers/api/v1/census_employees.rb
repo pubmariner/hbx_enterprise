@@ -1,17 +1,19 @@
-#This controller will process the incomming enrollment CV
-HbxEnterprise::App.controllers :enrollments, map: '/api/v1' do
+class HbxEnterprise::App
 
-  post 'census_employees', :provides => :xml do
+  post '/api/v1/census_employees', :provides => :xml do
     content_type 'application/xml'
     request_xml = request.body.read
 
     delivery_info, properties, payload = process_request(request_xml)
     status properties[:headers][:return_status]
     body payload
+    logger.write "delivery_info= #{delivery_info}"
+    logger.write "properties= #{properties}"
+    logger.write "payload= #{payload}"
   end
 
   private
-  define_method :process_request do |request_xml|
+  def process_request(request_xml)
     conn = Bunny.new(ExchangeInformation.amqp_uri, :heartbeat => 5)
     conn.start
 
