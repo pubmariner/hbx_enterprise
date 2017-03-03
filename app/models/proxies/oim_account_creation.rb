@@ -23,6 +23,7 @@ module Proxies
     EMPLOYEE_ROLE_URI = "urn:dclink:terms:v1:create_update_user_role#Employee"
     ASSISTER_ROLE_URI = "urn:dclink:terms:v1:create_update_user_role#Assister"
     CAC_ROLE_URI = "urn:dclink:terms:v1:create_update_user_role#CAC"
+    RESIDENT_ROLE_URI = "urn:dclink:terms:v1:create_update_user_role#Resident"
 
     USER_ROLE_MAPPING = {
       "broker" => BROKER_ROLE_URI,
@@ -31,7 +32,8 @@ module Proxies
       "employer" => EMPLOYER_ROLE_URI,
       "employee" => EMPLOYEE_ROLE_URI,
       "assister" => ASSISTER_ROLE_URI,
-      "cac" => CAC_ROLE_URI
+      "cac" => CAC_ROLE_URI,
+      "resident" => RESIDENT_ROLE_URI
     }
 
     def create_body(r_data)
