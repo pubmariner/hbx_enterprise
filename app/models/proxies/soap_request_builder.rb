@@ -2,7 +2,9 @@ module Proxies
   class SoapRequestBuilder
     SOAP_NAMESPACES = {
       :soap => "http://schemas.xmlsoap.org/soap/envelope/"
-    } 
+    }
+  
+    require 'net/http' 
 
     def invoke(payload, timeout = 3)
       code, body = request(payload)
