@@ -142,7 +142,7 @@ module Amqp
     end
 
     def with_confirmed_channel
-      chan = @connection.create_channel
+      chan = connection.create_channel
       begin
         chan.confirm_select
         yield chan

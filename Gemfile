@@ -30,7 +30,9 @@ gem 'rack-test', :require => 'rack/test', :group => 'test'
 gem 'padrino', '0.12.4'
 gem 'bunny', '1.6.3'
 gem 'nokogiri', '1.6.5'
-gem 'forkr', '0.1.7'
+gem 'forkr', '1.0.2'
+gem 'net-ssh', '2.9.1'
+gem 'net-sftp', '2.1.2'
 
 # Or Padrino Edge
 # gem 'padrino', :github => 'padrino/padrino-framework'
@@ -39,6 +41,7 @@ gem 'forkr', '0.1.7'
 # %w(core support gen helpers cache mailer admin).each do |g|
 #   gem 'padrino-' + g, '0.12.4'
 # end
+
 group :production do
   gem 'unicorn', '4.8.3'
 #  gem 'bluepill', '0.0.68'
@@ -49,6 +52,10 @@ group :development do
   gem 'capistrano', '3.2.1'
   gem 'capistrano-scm-gitcopy', '0.0.7'
   gem 'capistrano-bundler'
+end
+
+group :test do
+ gem "rspec_junit_formatter", "0.2.3"
 end
 
 gem 'nokogiri-happymapper', '0.5.9', :require => 'happymapper'
