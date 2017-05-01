@@ -4,12 +4,12 @@
 	<xs:include schemaLocation="common.xsd"/>
 	<xs:include schemaLocation="organization.xsd"/>
 	<xs:include schemaLocation="plan.xsd"/>
-			<xs:complexType name="AffectedMemberType">
+	<xs:complexType name="AffectedMemberType">
 		<xs:sequence>
 			<xs:element name="member_before_changes" type="PersonType"/>
 		</xs:sequence>
 	</xs:complexType>
-<xs:element name="affected_members_deprecated">
+	<xs:element name="affected_members_deprecated">
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element name="affected_member" type="ApplicantLinkType"/>
@@ -1101,6 +1101,7 @@
 			<xs:element name="birth_date" type="SimpleDateType"/>
 			<xs:element name="death_date" type="SimpleDateType" minOccurs="0"/>
 			<xs:element name="is_incarcerated" type="xs:boolean" minOccurs="0"/>
+			<xs:element name="is_handicapped" type="xs:boolean" minOccurs="0"/>
 			<xs:element name="language_code" type="LanguageNameType" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>Preferred language</xs:documentation>
@@ -1503,9 +1504,9 @@
 			<xs:enumeration value="urn:openhbx:terms:v1:individual_deduction#moving_expenses"/>
 			<xs:enumeration value="urn:openhbx:terms:v1:individual_deduction#health_savings_account"/>
 			<xs:enumeration value="urn:openhbx:terms:v1:individual_deduction#reservists_performing_artists_and_fee_basis_government_official_expenses"/>
-                        <xs:enumeration value="urn:openhbx:terms:v1:individual_deduction#tuition_and_fees"/>
-                        <xs:enumeration value="urn:openhbx:terms:v1:individual_deduction#ira_deduction"/>
-                        <xs:enumeration value="urn:openhbx:terms:v1:individual_deduction#student_loan_interest_deduction"/>
+			<xs:enumeration value="urn:openhbx:terms:v1:individual_deduction#tuition_and_fees"/>
+			<xs:enumeration value="urn:openhbx:terms:v1:individual_deduction#ira_deduction"/>
+			<xs:enumeration value="urn:openhbx:terms:v1:individual_deduction#student_loan_interest_deduction"/>
                         <xs:enumeration value="urn:openhbx:terms:v1:individual_deduction#retro_deduction"/>
 		</xs:restriction>
 	</xs:simpleType>
@@ -1549,16 +1550,16 @@
 			<xs:enumeration value="urn:openhbx:terms:v1:income#rental_and_royalty"/>
 			<xs:enumeration value="urn:openhbx:terms:v1:income#scholorship_payments"/>
 			<xs:enumeration value="urn:openhbx:terms:v1:income#social_security_benefit"/>
-                        <xs:enumeration value="urn:openhbx:terms:v1:income#social_security_disability_income"/>
-                        <xs:enumeration value="urn:openhbx:terms:v1:income#social_security_retirement"/>
+			<xs:enumeration value="urn:openhbx:terms:v1:income#social_security_disability_income"/>
+			<xs:enumeration value="urn:openhbx:terms:v1:income#social_security_retirement"/>
 			<xs:enumeration value="urn:openhbx:terms:v1:income#supplemental_security_income"/>
 			<xs:enumeration value="urn:openhbx:terms:v1:income#tax_exempt_interest"/>
 			<xs:enumeration value="urn:openhbx:terms:v1:income#unemployment_insurance"/>
 			<xs:enumeration value="urn:openhbx:terms:v1:income#wages_and_salaries"/>
 			<xs:enumeration value="urn:openhbx:terms:v1:income#income_from_irs"/>
-                        <xs:enumeration value="urn:openhbx:terms:v1:income#title_monthly"/>
-                        <xs:enumeration value="urn:openhbx:terms:v1:income#title_yearly"/>
-                        <xs:enumeration value="urn:openhbx:terms:v1:income#strike_benefits"/>
+			<xs:enumeration value="urn:openhbx:terms:v1:income#title_monthly"/>
+			<xs:enumeration value="urn:openhbx:terms:v1:income#title_yearly"/>
+			<xs:enumeration value="urn:openhbx:terms:v1:income#strike_benefits"/>
                         <xs:enumeration value="urn:openhbx:terms:v1:income#retro_income"/>
 		</xs:restriction>
 	</xs:simpleType>
@@ -1792,7 +1793,7 @@
 					<xs:documentation>Exceptional circumstance for start or end of service with AmeriCorps State and National, VISTA, or NCCC service</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
-			<xs:enumeration value="urn:cms:terms:v1:qualifying_life_event#exceptional_circumstances"/>
+			<xs:enumeration value="urn:dc0:terms:v1:qualifying_life_event#exceptional_circumstances"/>
 			<xs:enumeration value="urn:dc0:terms:v1:qualifying_life_event#medical_coverage_order">
 				<xs:annotation>
 					<xs:documentation>Mandated medical coverage order</xs:documentation>
