@@ -1506,6 +1506,7 @@
                         <xs:enumeration value="urn:openhbx:terms:v1:individual_deduction#tuition_and_fees"/>
                         <xs:enumeration value="urn:openhbx:terms:v1:individual_deduction#ira_deduction"/>
                         <xs:enumeration value="urn:openhbx:terms:v1:individual_deduction#student_loan_interest_deduction"/>
+                        <xs:enumeration value="urn:openhbx:terms:v1:individual_deduction#retro_deduction"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="IndividualEventNameType">
@@ -1558,6 +1559,7 @@
                         <xs:enumeration value="urn:openhbx:terms:v1:income#title_monthly"/>
                         <xs:enumeration value="urn:openhbx:terms:v1:income#title_yearly"/>
                         <xs:enumeration value="urn:openhbx:terms:v1:income#strike_benefits"/>
+                        <xs:enumeration value="urn:openhbx:terms:v1:income#retro_income"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="IndividualRequestNameType">
