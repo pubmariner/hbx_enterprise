@@ -31,7 +31,7 @@ module Proxies
           #send_request 4 times for customer enrollment data, payment history, statement summary, pdf's for customer
           req1 = nfp_send_request_enrollment_data(hbx_id)
           req2 = nfp_send_request_payment_history(hbx_id)
-          req3 = nfp_send_request_payment_history(hbx_id)
+          req3 = nfp_send_request_statement_summary(hbx_id)
           req4 = nfp_send_request_pdf(hbx_id)
         end
       end
