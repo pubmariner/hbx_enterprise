@@ -14,11 +14,11 @@ module Listeners
     end
 
     def response_key
-      "info.events.nfp.nfp_payment_history_response"
+      "info.events.employer.nfp_payment_history_response"
     end
 
     def routing_key
-      "info.events.nfp.nfp_payment_history_request"
+      "info.events.employer.nfp_payment_history_request"
     end
 
     def self.run
