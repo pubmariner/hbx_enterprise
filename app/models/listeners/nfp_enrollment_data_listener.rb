@@ -14,11 +14,11 @@ module Listeners
     end
 
     def response_key
-      "info.events.nfp.nfp_enrollment_data_response"
+      "info.events.employer.nfp_enrollment_data_response"
     end
 
     def routing_key
-      "info.events.nfp.nfp_enrollment_data_request"
+      "info.events.employer.nfp_enrollment_data_request"
     end
 
     def self.run
