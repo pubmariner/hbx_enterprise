@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- edited with XMLSpy v2014 rel. 2 (x64) (http://www.altova.com) by Dan Thomas (private) -->
+<!-- edited with XMLSpy v2016 (x64) (http://www.altova.com) by Dan Thomas (Private) -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://openhbx.org/api/terms/1.0" targetNamespace="http://openhbx.org/api/terms/1.0" elementFormDefault="qualified">
 	<xs:include schemaLocation="common.xsd"/>
 	<xs:element name="enrollees">
@@ -12,6 +12,43 @@
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
+	<xs:complexType name="GeneralAgencyLinkType">
+		<xs:annotation>
+			<xs:documentation>Reference to a General Agency instance</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="id" type="IdentifierType">
+				<xs:annotation>
+					<xs:documentation>General Agency NPN and HBX-assigned IDs when known</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="name" type="nonEmptyString">
+				<xs:annotation>
+					<xs:documentation>Organization formal name in free-form text</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="dba" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Doing Business As in free-form text</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="display_name" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Organization name as presesnted in UI</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="npn" type="NpnIdType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>General Agency's National Producer Number</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="fein" type="FederalTaxIdType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Federal Employer Identifier Number</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
 	<xs:complexType name="BrokerLinkType">
 		<xs:annotation>
 			<xs:documentation>Reference to a Broker instance</xs:documentation>
@@ -78,11 +115,17 @@
 			<xs:element name="id" type="IdentifierType"/>
 			<xs:element name="name" type="nonEmptyString"/>
 			<xs:element name="dba" minOccurs="0"/>
+			<xs:element name="fein" type="FederalTaxIdType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Federal Employer Identifier Number</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="EnrolleeBenefitType">
 		<xs:sequence>
 			<xs:element name="premium_amount" type="CurrencyType"/>
+			<xs:element name="eligibility_begin_date" type="SimpleDateType" minOccurs="0"/>
 			<xs:element name="begin_date" type="SimpleDateType"/>
 			<xs:element name="end_date" type="SimpleDateType" minOccurs="0"/>
 			<xs:element name="carrier_assigned_policy_id" type="xs:string" minOccurs="0"/>
@@ -105,7 +148,7 @@
 			<xs:group ref="ResourceTimestampGroup"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="PlanLinkType">
+	<xs:group name="PlanCommonElementsGroup">
 		<xs:sequence>
 			<xs:element name="id" type="IdentifierType">
 				<xs:annotation>
@@ -120,6 +163,11 @@
 			<xs:element name="active_year" type="PlanActiveYearType"/>
 			<xs:element name="is_dental_only" type="xs:boolean"/>
 			<xs:element name="carrier" type="CarrierLinkType"/>
+		</xs:sequence>
+	</xs:group>
+	<xs:complexType name="PlanLinkType">
+		<xs:sequence>
+			<xs:group ref="PlanCommonElementsGroup"/>
 			<xs:element name="metal_level" type="PlanMetalLevelNameType"/>
 			<xs:element name="coverage_type" type="QhpBenefitCoverageNameType"/>
 			<xs:element name="ehb_percent" minOccurs="0">
@@ -187,7 +235,6 @@
 			<xs:enumeration value="urn:openhbx:terms:v1:policy_state#hbx_terminated"/>
 		</xs:restriction>
 	</xs:simpleType>
-
 	<xs:complexType name="BrokerAgencyLinkType">
 		<xs:annotation>
 			<xs:documentation>An organization specializing in advice about and sale of insurance products to businesses and consumers</xs:documentation>
@@ -204,9 +251,28 @@
 					<xs:documentation>Organization name as presesnted in UI</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="fein" type="FederalTaxIdType" minOccurs="0"/>
-			<xs:element name="npn" type="NpnIdType" minOccurs="0"/>
+			<xs:element name="fein" type="FederalTaxIdType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Federal Employer Identifier Number</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="npn" type="NpnIdType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Broker's National Producer Number</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="office_locations" type="OfficeLocationListType" minOccurs="0"/>
 			<xs:group ref="ResourceTimestampGroup" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="BenefitGroupLinkType">
+		<xs:annotation>
+			<xs:documentation>A reference to a named benefit group.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="id" type="IdentifierType"/>
+			<xs:element name="name" type="xs:string"/>
+			<xs:element name="employer" type="EmployerLinkType" />
 		</xs:sequence>
 	</xs:complexType>
 </xs:schema>

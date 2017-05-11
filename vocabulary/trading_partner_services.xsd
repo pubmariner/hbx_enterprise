@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://openhbx.org/api/terms/1.0" targetNamespace="http://openhbx.org/api/terms/1.0" elementFormDefault="qualified">
+	<xs:include schemaLocation="policy.xsd"/>
+
+	<xs:complexType name="PreviousIndividualInformationType">
+		<xs:sequence>
+			<xs:element name="name_prefix" type="xs:string" minOccurs="0"/>
+			<xs:element name="name_first" type="xs:string"/>
+			<xs:element name="name_middle" type="xs:string" minOccurs="0"/>
+			<xs:element name="name_last" type="xs:string"/>
+			<xs:element name="name_suffix" type="xs:string" minOccurs="0"/>
+			<xs:element name="name_full" type="xs:string" minOccurs="0"/>
+			<xs:element name="gender" type="GenderNameType" minOccurs="0"/>
+			<xs:element name="dob" type="SimpleDateType" minOccurs="0"/>
+			<xs:element name="ssn" type="FederalTaxIdType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:simpleType name="CoverageActionNameType">
+		<xs:restriction base="xs:anyURI">
+			<xs:enumeration value="urn:openhbx:events:v1:coverage#create"/>
+			<xs:enumeration value="urn:openhbx:events:v1:coverage#add"/>
+			<xs:enumeration value="urn:openhbx:events:v1:coverage#cancel"/>
+			<xs:enumeration value="urn:openhbx:events:v1:coverage#terminate"/>
+			<xs:enumeration value="urn:openhbx:events:v1:coverage#effectuate"/>
+			<xs:enumeration value="urn:openhbx:events:v1:coverage#update"/>
+			<xs:enumeration value="urn:openhbx:events:v1:coverage#plan_change"/>
+			<xs:enumeration value="urn:openhbx:events:v1:coverage#reinstate"/>
+			<xs:enumeration value="urn:openhbx:events:v1:coverage#audit"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="CoverageActionReasonNameType">
+		<xs:restriction base="xs:anyURI">
+			<xs:enumeration value="urn:openhbx:events:v1:coverage_action_reason#qualifying_event">
+				<xs:annotation>
+					<xs:documentation>
+						The reason for the coverage change is a qualifying event, such as a SEP.
+						This reason is specified by the enrollment itself.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="urn:openhbx:events:v1:coverage_action_reason#identifying_information_changed"/>
+			<xs:enumeration value="urn:openhbx:events:v1:coverage_action_reason#coverage_declined"/>
+			<xs:enumeration value="urn:openhbx:events:v1:coverage_action_reason#voluntary_withdrawl"/>
+			<xs:enumeration value="urn:openhbx:events:v1:coverage_action_reason#death"/>
+			<xs:enumeration value="urn:openhbx:events:v1:coverage_action_reason#non_payment"/>
+			<xs:enumeration value="urn:openhbx:events:v1:coverage_action_reason#location_change"/>
+			<xs:enumeration value="urn:openhbx:events:v1:coverage_action_reason#notification"/>
+			<xs:enumeration value="urn:openhbx:events:v1:coverage_action_reason#other">
+				<xs:annotation>
+					<xs:documentation>A reason which falls under no other category.</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="AffectedIndividualType">
+		<xs:sequence>
+			<xs:element name="individual_id" type="xs:anyURI"/>
+			<xs:element name="previous_individual_information" type="PreviousIndividualInformationType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="AffectedIndividualListType">
+		<xs:sequence>
+			<xs:element name="affected_individual" type="AffectedIndividualType" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="TradingPartnerCoverageEventContextType">
+		<xs:annotation>
+			<xs:documentation>Describes the context in which this coverage change will take place.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="transaction_id" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Transaction Identifier. Establishes transaction ordering. Used in X12 as the BGN02.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="effective_date" type="SimpleDateType">
+				<xs:annotation>
+					<xs:documentation>Date on when the transaction should be considered effective.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="trading_partner_id" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Trading partner for which this event is intended.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="marketplace_type" type="AcaMarketPlaceNameType"/>
+			<xs:element name="coverage_action" type="CoverageActionNameType">
+				<xs:annotation>
+					<xs:documentation>Which action is to be taken on the specified coverage?</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="coverage_action_reason" type="CoverageActionReasonNameType">
+				<xs:annotation>
+					<xs:documentation>Which action is to be taken on the specified coverage?</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="affected_individuals" type="AffectedIndividualListType">
+				<xs:annotation>
+					<xs:documentation>Describes which individuals in the enrollment are affected by the coverage change.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="TradingPartnerCoverageEventType">
+		<xs:sequence>
+			<xs:element name="event_context" type="TradingPartnerCoverageEventContextType"/>
+			<xs:element name="policy" type="PolicyType"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="trading_partner_coverage_event" type="TradingPartnerCoverageEventType"/>
+</xs:schema>

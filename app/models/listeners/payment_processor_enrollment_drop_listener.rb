@@ -33,7 +33,7 @@ module Listeners
                      r_code,
                      headers,
                      {
-                       policy_xml: policy_xml,
+                       policy_xml: enrollment_xml,
                        service_response: r_payload
                      }.to_json)
         throw :terminate, :failed
