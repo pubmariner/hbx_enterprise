@@ -18,8 +18,7 @@ class ExchangeInformation
     'employer_xml_drop_url', 'legacy_employer_xml_drop_url',
     'pp_sftp_host', 'pp_sftp_username', 'pp_sftp_password',
     'pp_sftp_employer_digest_path',
-    'pp_sftp_enrollment_path',
-    'legacy_group_files'
+    'pp_sftp_enrollment_path'
   ]
 
   attr_reader :config
@@ -36,7 +35,7 @@ class ExchangeInformation
   end
 
    def provide_legacy_employer_group_files?
-    @drop_legacy_group_files ||= (legacy_group_files.to_s == "true")
+    @drop_legacy_group_files ||= (drop_legacy_group_files.to_s == "true")
   end
 
   def ensure_configuration_values(conf)
@@ -65,13 +64,6 @@ class ExchangeInformation
   def self.queue_name_for(klass)
     base_key = "#{self.hbx_id}.#{self.environment}.q.hbx_enterprise."
     base_key + klass.name.to_s.split("::").last.underscore
-  end
-
-  def 
-  
-  end
-
-    
   end
 
   def self.use_soap_security?
