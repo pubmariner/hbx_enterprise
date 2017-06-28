@@ -3,7 +3,7 @@ module Listeners
   class NfpIntegrationListener < Amqp::Client
     def on_message(delivery_info, properties, payload)
       headers = (properties.headers || {})
-      code, body = Proxies::OimAccountCreation.new.request(headers.stringify_keys, 10)
+      code, body = Proxies::NfpSoapRequest.new.request(headers.stringify_keys, 10)
       case code.to_s
       when "201"
         # ALL GOOD
