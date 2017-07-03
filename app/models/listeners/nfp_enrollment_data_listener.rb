@@ -58,7 +58,7 @@ module Listeners
       ex = r_channel.fanout(ExchangeInformation.event_publish_exchange, {:durable => true})
       response_properties = {
         :timestamp => Time.now.to_i,
-        :routing_key => "info.events.employer.nfp_enrollment_data_request_success",
+        :routing_key => "info.events.employer.nfp_enrollment_data_success",
         :headers => headers.merge({
           :return_status => status
         })
