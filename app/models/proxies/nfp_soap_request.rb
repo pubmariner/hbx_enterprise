@@ -29,10 +29,10 @@ module Proxies
         token = doc.xpath("//s:Header").text
         if token.present?
           #send_request 4 times for customer enrollment data, payment history, statement summary, pdf's for customer
-          req1 = nfp_send_request_enrollment_data(hbx_id)
-          req2 = nfp_send_request_payment_history(hbx_id)
-          req4 = nfp_send_request_pdf(hbx_id)
-          # only return result from send_request_statement_summary for now 
+          # req1 = nfp_send_request_enrollment_data(hbx_id)
+          # req2 = nfp_send_request_payment_history(hbx_id)
+          #req4 = nfp_send_request_pdf(hbx_id)
+          # only return result from send_request_statement_summary for now
           req3 = nfp_send_request_statement_summary(hbx_id)
         end
       end
