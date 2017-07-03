@@ -3,8 +3,10 @@ module Listeners
 
     def on_message(delivery_info, properties, payload)
       headers = (properties.headers || {})
-      code, body = Proxies::NfpSoapRequest.new.request(headers.stringify_keys, 10)
-      case code.to_s
+      hbx_id = headers.stringify_keys['employer_id']
+      resp = Proxies::NfpSoapRequest.new.request(headers.stringify_keys, 10)
+      status = resp.code.to_i
+      case status.to_s
       when "201"
         # ALL GOOD
         send_response(code.to_s, headers, body)
