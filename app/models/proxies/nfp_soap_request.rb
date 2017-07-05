@@ -23,8 +23,8 @@ module Proxies
               XMLCODE
 
       resp = http.post(path, data, { 'Content-Type' => 'text/xml; charset=utf-8', 'SOAPAction' => 'http://www.nfp.com/schemas/hbcore/IPremiumBillingIntegrationServices/AuthenticateUser' })
-      status = resp.code.to_i
-      if resp.code.to_i == 200
+      status = resp.status
+      if status.to_i == 200
         doc = Nokogiri::XML(resp.body)
         token = doc.xpath("//AuthToken").text
         puts token
