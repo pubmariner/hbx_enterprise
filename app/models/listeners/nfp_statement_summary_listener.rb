@@ -4,7 +4,7 @@ module Listeners
     def on_message(delivery_info, properties, payload)
       headers = (properties.headers || {})
       hbx_id = headers.stringify_keys['employer_id']
-      resp = Proxies::NfpSoapRequest.new.request(headers.stringify_keys, 10)
+      resp = Proxies::NfpSoapRequest.new.request(hbx_id, 10)
       status = resp.code.to_i
       case status.to_s
       when "201"
