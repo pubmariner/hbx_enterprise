@@ -1,5 +1,5 @@
 module Proxies
-  class NfpSoapRequest < ::Proxies::SoapRequestBuilder
+  class NfpSoapRequest
     def self.request(en_id)
       self.new.request(en_id)
     end
@@ -25,15 +25,16 @@ module Proxies
       resp = http.post(path, data, { 'Content-Type' => 'text/xml; charset=utf-8', 'SOAPAction' => 'http://www.nfp.com/schemas/hbcore/IPremiumBillingIntegrationServices/AuthenticateUser' })
       status = resp.code.to_i
       if resp.code.to_i == 200
-        doc = Nokogiri::XML::parse(resp.body)
-        token = doc.xpath("//s:Header").text
+        doc = Nokogiri::XML(resp.body)
+        token = doc.xpath("//AuthToken").text
+        puts token
         if token.present?
           #send_request 4 times for customer enrollment data, payment history, statement summary, pdf's for customer
           # req1 = nfp_send_request_enrollment_data(hbx_id)
           # req2 = nfp_send_request_payment_history(hbx_id)
           #req4 = nfp_send_request_pdf(hbx_id)
           # only return result from send_request_statement_summary for now
-          req3 = nfp_send_request_statement_summary(hbx_id)
+          req3 = nfp_send_request_statement_summary(hbx_id, token)
         end
       end
     end
@@ -76,7 +77,7 @@ module Proxies
       req = http.post(path, data, { 'Content-Type' => 'text/xml; charset=utf-8', 'SOAPAction' => 'http://www.nfp.com/schemas/hbcore/IPremiumBillingIntegrationServices/GetCustomersPaymentHistory' })
     end
 
-    def nfp_send_request_statement_summary(hbx_id)
+    def nfp_send_request_statement_summary(hbx_id, token)
       data = <<-XMLCODE
             <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:hbc="http://www.nfp.com/schemas/hbcore">
             <soapenv:Header>
