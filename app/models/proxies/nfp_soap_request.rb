@@ -1,48 +1,18 @@
 module Proxies
-  class NfpSoapRequest < ::Proxies::SoapRequestBuilder
-    def request(data, timeout = 5)
-      code, body = super(create_body(data), timeout)
-      case code.to_s
-      when "200"
-        extract_response_code(body)
-      else
-        [code, body]
-      end
+  class NfpSoapRequest
+
+    include NfpIntegration::SoapServices::Base
+
+      # # Change below to Pre Prod 10.0.3.51
+      # NFP_URL = "http://localhost:9000/cpbservices/PremiumBillingIntegrationServices.svc"
+    NFP_URL = "10.0.3.51"
+    NFP_USER_ID = "testuser" #TEST ONLY
+    NFP_PASS = "M0rph!us007" #TEST ONLY
+
+    def initialize(customer_id)
+      @customer_id = customer_id
+      token
     end
-
-    #def initialize(hbx_id)
-    #  uri = URI('http://10.0.3.51')
-    #  http = Net::HTTP.new(uri.host)
-    #  path = '/cpbservices/PremiumBillingIntegrationServices.svc'
-    #  data = <<-XMLCODE
-    #            <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
-    #            <soap:Body>
-    #            <m:AuthenticationReq xmlns:m="http://www.nfp.com/schemas/hbcore">
-    #                <m:UserName>testuser</m:UserName>
-    #                <m:Password>M0rph!us007</m:Password>
-    #                <m:SubscriptionId>NFP will allocate to DC</m:SubscriptionId>
-    #                <m:ExchangeId>NFP will allocate to DC</m:ExchangeId>
-    #            </m:AuthenticationReq>
-    #            </soap:Body>
-    #            </soap:Envelope>
-    #          XMLCODE
-
-    #  resp = http.post(path, data, { 'Content-Type' => 'text/xml; charset=utf-8', 'SOAPAction' => 'http://www.nfp.com/schemas/hbcore/IPremiumBillingIntegrationServices/AuthenticateUser' })
-    #  status = resp.status
-    #  if status.to_i == 200
-    #    doc = Nokogiri::XML(resp.body)
-    #    token = doc.xpath("//AuthToken").text
-    #    puts token
-    #    if token.present?
-          #send_request 4 times for customer enrollment data, payment history, statement summary, pdf's for customer
-          # req1 = nfp_send_request_enrollment_data(hbx_id)
-          # req2 = nfp_send_request_payment_history(hbx_id)
-          #req4 = nfp_send_request_pdf(hbx_id)
-          # only return result from send_request_statement_summary for now
-    #        req3 = nfp_send_request_statement_summary(hbx_id, token)
-#        end
-#      end
-#    end
 
     def nfp_send_request_enrollment_data(hbx_id)
       data = <<-XMLCODE
@@ -82,22 +52,15 @@ module Proxies
       req = http.post(path, data, { 'Content-Type' => 'text/xml; charset=utf-8', 'SOAPAction' => 'http://www.nfp.com/schemas/hbcore/IPremiumBillingIntegrationServices/GetCustomersPaymentHistory' })
     end
 
-    def nfp_send_request_statement_summary(hbx_id, token)
-      data = <<-XMLCODE
-            <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:hbc="http://www.nfp.com/schemas/hbcore">
-            <soapenv:Header>
-               <hbc:AuthToken>#{token}</hbc:AuthToken>
-            </soapenv:Header>
-            <soapenv:Body>
-              <hbc:StatementSummaryReq>
-                 <!--Optional:-->
-                 <hbc:CustomerCode>#{hbx_id}</hbc:CustomerCode>
-              </hbc:StatementSummaryReq>
-            </soapenv:Body>
-            </soapenv:Envelope>
-         XMLCODE
+    def nfp_send_request_statement_summary
+      return nil if @token.blank?
 
-      req = http.post(path, data, { 'Content-Type' => 'text/xml; charset=utf-8', 'SOAPAction' => 'http://www.nfp.com/schemas/hbcore/IPremiumBillingIntegrationServices/GetCustomerStatementSummary' })
+      uri, request = build_request(NfpStatementSummary.new, {:token => token, :customer_id => @customer_id})
+      response = Net::HTTP.start(uri.hostname, uri.port, request_options(uri)) do |http|
+        http.request(request)
+      end
+
+      return parse_response(response)
     end
 
     def nfp_send_request_pdf(hbx_id)
@@ -116,5 +79,57 @@ module Proxies
 
       req = http.post(path, data, { 'Content-Type' => 'text/xml; charset=utf-8', 'SOAPAction' => 'http://www.nfp.com/schemas/hbcore/IPremiumBillingIntegrationServices/GeStatementPDFForCustomer' })
     end
+
+    private
+
+      def build_request(soap_object, parms = {})
+
+        uri = URI.parse(NFP_URL)
+        request = Net::HTTP::Post.new(uri)
+        request.content_type = "text/xml;charset=UTF-8"
+        request["Soapaction"] = soap_object.soap_action
+        request.body = soap_object.body % parms
+
+
+        return uri, request
+
+      end
+
+      def request_options(uri)
+        {
+          use_ssl: uri.scheme == "https",
+        }
+      end
+
+      def parse_response(response)
+        if response.code == "200"
+          doc = Nokogiri::XML(response.body)
+          return response.code, doc.remove_namespaces!
+        end
+        nil
+      end
+
+      def token
+
+        return @token if defined? @token
+
+        return nil if NFP_PASS == nil || NFP_USER_ID == nil
+
+        uri, request = build_request(NfpAuthenticateUser.new, {:user => NFP_USER_ID, :password => NFP_PASS})
+
+        response = Net::HTTP.start(uri.hostname, uri.port, request_options(uri)) do |http|
+          http.request(request)
+        end
+
+        puts response.code
+        puts response.body
+
+        doc = Nokogiri::XML(response.body)
+        doc.remove_namespaces!
+
+        puts get_element_text(doc.xpath("//AuthToken"))
+        @token_status = get_element_text(doc.xpath("//Success")) == "true" ? true : false
+        @token = get_element_text(doc.xpath("//AuthToken"))
+      end
   end
 end
