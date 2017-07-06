@@ -2,6 +2,12 @@ module Listeners
   class NfpStatementSummaryListener < Amqp::Client
 
     def on_message(delivery_info, properties, payload)
+      puts ("delivery info:")
+      puts (delivery_info)
+      puts ("properties:")
+      puts (properties)
+      puts ("payload:")
+      puts (payload)
       headers = (properties.headers || {})
       hbx_id = headers.stringify_keys['employer_id']
       nfp_client = Proxies::NfpSoapRequest.new(hbx_id)
