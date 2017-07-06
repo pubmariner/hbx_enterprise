@@ -5,7 +5,7 @@ module Proxies
 
       # # Change below to Pre Prod 10.0.3.51
       # NFP_URL = "http://localhost:9000/cpbservices/PremiumBillingIntegrationServices.svc"
-    NFP_URL = "10.0.3.51"
+    NFP_URL = "http://10.0.3.51/cpbservices/PremiumBillingIntegrationServices.svc"
     NFP_USER_ID = "testuser" #TEST ONLY
     NFP_PASS = "M0rph!us007" #TEST ONLY
 
