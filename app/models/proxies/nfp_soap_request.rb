@@ -1,7 +1,7 @@
 module Proxies
   class NfpSoapRequest
 
-    include NfpIntegration::SoapServices::Base
+    include Proxies::NfpSoapRequestBase
 
       # # Change below to Pre Prod 10.0.3.51
       # NFP_URL = "http://localhost:9000/cpbservices/PremiumBillingIntegrationServices.svc"
