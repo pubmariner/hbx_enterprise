@@ -4,9 +4,10 @@ module Listeners
     def on_message(delivery_info, properties, payload)
       headers = (properties.headers || {})
       hbx_id = headers.stringify_keys['employer_id']
-      code, body = Proxies::NfpSoapRequest.new.request(headers.stringify_keys, 10)
+      nfp_client = Proxies::NfpSoapRequest.new(hbx_id)
+      code, body = nfp_client.nfp_send_request_statement_summary
       case code.to_s
-      when "201"
+      when "200"
         # ALL GOOD
         send_response(code.to_s, headers, body)
         channel.acknowledge(delivery_info.delivery_tag, false)
