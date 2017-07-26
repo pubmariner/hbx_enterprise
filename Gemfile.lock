@@ -1,3 +1,11 @@
+GIT
+  remote: https://github.com/dchbx/nfp_integration.git
+  revision: 3cee6fe7e6ac3584ab42e14051417e4e45e436c1
+  branch: master
+  specs:
+    nfp_integration (0.0.1)
+      nokogiri (~> 1.6)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -175,6 +183,7 @@ DEPENDENCIES
   mongoid (= 5.1.1)
   net-sftp (= 2.1.2)
   net-ssh (= 2.9.1)
+  nfp_integration!
   nokogiri (= 1.6.5)
   nokogiri-happymapper (= 0.5.9)
   origin (= 2.2.0)
@@ -186,4 +195,4 @@ DEPENDENCIES
   unicorn (= 4.8.3)
 
 BUNDLED WITH
-   1.14.3
+   1.14.6
