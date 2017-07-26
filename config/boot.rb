@@ -41,6 +41,11 @@ end
 # Add your after (RE)load hooks here
 #
 Padrino.after_load do
+  NfpIntegration.configure do |config|
+    config.url = "http://nfp-wsdl.priv.dchbx.org/cpbservices/PremiumBillingIntegrationServices.svc"
+    config.user_id = "testuser"
+    config.password = "M0rph!us007"
+  end
 end
 
 Padrino.load!
