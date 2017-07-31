@@ -14,7 +14,8 @@ module Listeners
       statement_summary = nfp.statement_summary
       code = statement_summary ? "200" : "500"
       #nfp_client = Proxies::NfpSoapRequest.new(hbx_id)
-      code, body = nfp_client.nfp_send_request_statement_summary
+      body = statement_summary
+      #code, body = nfp_client.nfp_send_request_statement_summary
       case code
       when "200"
         # ALL GOOD
