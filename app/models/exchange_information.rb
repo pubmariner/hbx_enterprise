@@ -35,7 +35,7 @@ class ExchangeInformation
   end
 
    def provide_legacy_employer_group_files?
-    @drop_legacy_group_files ||= (drop_legacy_group_files.to_s == "true")
+    @drop_legacy_group_files ||= (config["drop_legacy_group_files"].to_s == "true")
   end
 
   def ensure_configuration_values(conf)
