@@ -1,17 +1,6 @@
 module Listeners
   class EmployerLegacyDigestTransformer < Amqp::Client
-    CARRIER_NAME_MAP = {
-      "aetna" => "AHI",
-      "bestlife" => "BLHI",
-      "delta dental" => "DDPA",
-      "dominion" => "DMND",
-      "dentegra" => "DTGA",
-      "guardian" => "GARD",
-      "carefirst" => "GHMSI",
-      "kaiser" => "KFMASI",
-      "metlife" => "META",
-      "united health care" => "UHIC"
-    }
+    CARRIER_NAME_MAP = ExchangeInformation.legacy_carrier_mappings
 
     def log_response(key, code, headers, body)
       broadcaster = Amqp::EventBroadcaster.new(connection)
