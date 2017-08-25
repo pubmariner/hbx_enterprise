@@ -11,21 +11,16 @@ module Listeners
       headers = (properties.headers || {})
       hbx_id = headers.stringify_keys['employer_id']
       nfp = NfpIntegration::SoapServices::Nfp.new(hbx_id)
-      statement_summary = nfp.statement_summary
-      parsed_statement_summary = nfp.parse_statement_summary(statement_summary)
-      code = statement_summary ? "200" : "500"
-      #nfp_client = Proxies::NfpSoapRequest.new(hbx_id)
-      body = statement_summary
-      #code, body = nfp_client.nfp_send_request_statement_summary
+      parsed_statement_summary = nfp.nfp.parse_current_statement
+      code = parsed_statement_summary ? "200" : "500"
+
+      body = parsed_statement_summary
+
       case code
-      when "200"
-        # ALL GOOD
+      when "200" # ALL GOOD
         send_response(code, headers, parsed_statement_summary)
         channel.acknowledge(delivery_info.delivery_tag, false)
-      # when "503"
-      #   log_failure("error.events.employer.nfp_statement_summary_request_timeout",code, headers, body)
-      #   channel.nack(delivery_info.delivery_tag,false, true)
-      else
+      else # SOMETHING NOT RIGHT
         log_failure("error.events.employer.nfp_statement_summary_request_failure",code, headers, body)
         channel.acknowledge(delivery_info.delivery_tag, false)
       end
