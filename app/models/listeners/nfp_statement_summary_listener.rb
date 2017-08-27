@@ -10,8 +10,8 @@ module Listeners
       puts (payload)
       headers = (properties.headers || {})
       hbx_id = headers.stringify_keys['employer_id']
-      nfp = NfpIntegration::SoapServices::Nfp.new(hbx_id)
-      parsed_statement_summary = nfp.nfp.parse_current_statement
+      nfp = NfpIntegration::SoapServices::Nfp.new("1052210")
+      parsed_statement_summary = nfp.parse_current_statement
       code = parsed_statement_summary ? "200" : "500"
 
       body = parsed_statement_summary
