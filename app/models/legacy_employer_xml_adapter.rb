@@ -24,8 +24,8 @@ XMLCODE
   end
 
   def initialize_new_output
-    xml_io = StringIO.new
-    xml_io << XML_HEADER
+    xml_io = Tempfile.new("hbx_enterprise_legacy_employer_group_file")
+    xml_io.write(XML_HEADER)
     xml_io
   end
 
@@ -46,8 +46,10 @@ XMLCODE
       render_v1_xml_for(organization_string)
     end
     @carrier_output.each_pair do |k, v|
-       v << XML_TRAILER
-       yield [k, v]
+       v.write(XML_TRAILER)
+       yield [k, v.rewind.read]
+       v.close
+       v.unlink
     end
   end
 
@@ -65,6 +67,7 @@ XMLCODE
         @carrier = carrier
         group_xml = @renderer.partial "employers/legacy_v1", :locals => { :plan_year => @plan_year, :cv_hash => @cv_hash, :carrier => carrier}, :engine => :haml
         @carrier_output[@carrier].write(group_xml)
+        group_xml = nil
       end
     end
   end
