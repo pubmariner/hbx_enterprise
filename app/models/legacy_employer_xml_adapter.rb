@@ -29,21 +29,49 @@ XMLCODE
     xml_io
   end
 
-  def is_organization_string_valid?(node)
-    org = Parsers::Xml::Cv::OrganizationParser.parse(node.canonicalize).to_hash
-    return false if @employer_ids.include? (org[:id])
-    @employer_ids.push(org[:id]) and return true  # id is hbx_id
+  def parse_org(node, employer_digest)
+    employer_id = node.at_xpath("cv:id/cv:id", XML_NS).content.strip
+    return nil if @employer_ids.include?(employer_id)
+    # Canonicalization is very expensive, better to hack it with adding the namespace
+    namespaces = {}
+    node.namespace_scopes.each do |ns_scope|
+      node.add_namespace_definition(ns_scope.prefix, ns_scope.href)
+    end
+    # We have to write back out to XML because happymapper doesn't do
+    # the right thing without full canonicalization, or at least a trick
+    # that makes it seem like we did canonicalization
+    org = Parsers::Xml::Cv::OrganizationParser.parse(node.to_xml(:indent => 0)).to_hash
+    @employer_ids.push(employer_id)
+    org
   end
 
   def with_organization_strings
     employer_digest.xpath("//cv:employer_event/cv:body/cv:organization", XML_NS).reverse.each do |node|
-      yield node.canonicalize if is_organization_string_valid?(node)
+      parsed_org = parse_org(node, employer_digest)
+      yield parsed_org if parsed_org
     end
   end
 
   def create_output
-    with_organization_strings do |organization_string|
-      render_v1_xml_for(organization_string)
+    # V1 doesn't care about stuff that happened forever ago, strip it
+    @employer_digest.xpath("//cv:plan_year", XML_NS).each do |node|
+      plan_year_end_node = node.at_xpath("cv:plan_year_end", XML_NS)
+      if plan_year_end_node
+        plan_year_end_date = Date.strptime(plan_year_end_node.content.strip,"%Y%m%d") rescue nil
+        if plan_year_end_date
+          # Give it 3 extra days just for buffer/timezones, etc.
+          if plan_year_end_date < (Date.today - 3.days)
+            node.remove
+          end
+        else
+          node.remove
+        end
+      else
+        node.remove
+      end
+    end
+    with_organization_strings do |parsed_org|
+      render_v1_xml_for(parsed_org)
     end
     @carrier_output.each_pair do |k, v|
        v.write(XML_TRAILER)
@@ -56,12 +84,12 @@ XMLCODE
 
   protected
 
-  def render_v1_xml_for(organization_string)
-    @cv_hash = Parsers::Xml::Cv::OrganizationParser.parse(organization_string).to_hash
-
+  def render_v1_xml_for(parsed_org)
+    @cv_hash = parsed_org
     @plan_year = latest_plan_year(@cv_hash[:employer_profile][:plan_years])
-
-    @carriers = @plan_year[:elected_plans].map do |plan| plan[:carrier][:name] end.uniq
+    @carriers = @plan_year[:elected_plans].map do |plan|
+      plan[:carrier][:name]
+    end.uniq
 
     if @plan_year
       @carriers.each do |carrier|
