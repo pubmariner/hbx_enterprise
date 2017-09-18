@@ -29,13 +29,13 @@ module Listeners
 
     def publish_v1_xml(delivery_info, headers, digest_xml)
       adapter = LegacyEmployerXmlAdapter.new(digest_xml)
-      with_confirmed_channel do |chan|
-        ex = chan.fanout(ExchangeInformation.event_publish_exchange, :durable => true)
-        adapter.create_output do |output|
+      adapter.create_output do |output|
+        with_confirmed_channel do |chan|
+          ex = chan.fanout(ExchangeInformation.event_publish_exchange, :durable => true)
           c_name, xml_io = output
           publish_single_legacy_xml(ex, headers, carrier_abbrev_for(c_name), xml_io.read)
-        end
-      end 
+        end 
+      end
       # GC hint
       adapter = nil
       channel.acknowledge(delivery_info.delivery_tag, false)
