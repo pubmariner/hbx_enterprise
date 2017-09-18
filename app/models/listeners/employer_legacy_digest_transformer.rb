@@ -33,7 +33,7 @@ module Listeners
         ex = chan.fanout(ExchangeInformation.event_publish_exchange, :durable => true)
         adapter.create_output do |output|
           c_name, xml_io = output
-          publish_single_legacy_xml(ex, headers, carrier_abbrev_for(c_name), xml_io.string)
+          publish_single_legacy_xml(ex, headers, carrier_abbrev_for(c_name), xml_io.read)
         end
       end 
       # GC hint

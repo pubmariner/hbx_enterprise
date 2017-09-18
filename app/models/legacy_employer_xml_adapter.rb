@@ -47,7 +47,8 @@ XMLCODE
     end
     @carrier_output.each_pair do |k, v|
        v.write(XML_TRAILER)
-       yield [k, v.rewind.read]
+       v.rewind
+       yield [k, v]
        v.close
        v.unlink
     end
