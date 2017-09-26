@@ -8,8 +8,9 @@ module Listeners
       headers_hash = headers.stringify_keys
       individual_id = headers["individual_id"]
       retry_deadline = headers["retry_deadline"] || "0"
+      correlation_id = properties.correlation_id
       if Time.now.to_i > retry_deadline.to_i
-        send_response("503", individual_id, retry_deadline, "TIMEOUT LIMIT EXCEEDED") 
+        send_response("503", individual_id, retry_deadline, correlation_id, "TIMEOUT LIMIT EXCEEDED") 
         channel.acknowledge(delivery_info.delivery_tag, false)
         return
       end
@@ -22,6 +23,7 @@ module Listeners
           "406",
           individual_id,
           retry_deadline,
+          correlation_id,
           JSON.dump({
             :original_request => payload,
             :service_response => (body.document.nil? ? "" : body.document.canonicalize),
@@ -31,11 +33,11 @@ module Listeners
         requeue(delivery_info)
       when "503"
         # We got a timeout - send an event
-        service_failure_event("service_timeout", "503", individual_id, retry_deadline, payload)
+        service_failure_event("service_timeout", "503", individual_id, retry_deadline, correlation_id, payload)
         requeue(delivery_info)
       when "200"
         # Everything is cool - just respond
-        send_response("200", individual_id, retry_deadline, body)
+        send_response("200", individual_id, retry_deadline, correlation_id, body)
         channel.ack(delivery_info.delivery_tag,true)
       else
         # Some weirdness here - send event
@@ -44,6 +46,7 @@ module Listeners
           code,
           individual_id,
           retry_deadline,
+          correlation_id,
           JSON.dump({
             :original_request => payload,
             :service_response => body.to_s
@@ -58,12 +61,13 @@ module Listeners
       channel.nack(delivery_info.delivery_tag,false, true)
     end
 
-    def service_failure_event(failure_key, return_status, individual_id, retry_deadline, body)
+    def service_failure_event(failure_key, return_status, individual_id, retry_deadline, correlation_id, body)
       ex = channel.fanout(ExchangeInformation.event_publish_exchange, {:durable => true})
       event_key = "error.events.#{service_failure_tag}.#{failure_key}"
       event_properties = {
         :timestamp => Time.now.to_i,
         :routing_key => event_key,
+        :correlation_id => correlation_id,
         :headers => {
           :individual_id => individual_id,
           :retry_deadline => retry_deadline,
@@ -73,10 +77,11 @@ module Listeners
       ex.publish(body, event_properties)
     end
 
-    def send_response(status, individual_id, retry_deadline, body)
+    def send_response(status, individual_id, retry_deadline, correlation_id, body)
       response_properties = {
         :timestamp => Time.now.to_i,
         :routing_key => response_key,
+        :correlation_id => correlation_id,
         :headers => {
           :individual_id => individual_id,
           :retry_deadline => retry_deadline,
