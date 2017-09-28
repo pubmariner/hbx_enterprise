@@ -43,7 +43,7 @@ gem 'net-sftp', '2.1.2'
 # end
 
 # nfp gem for parsing and integration
-gem 'nfp_integration', git:  "https://github.com/dchbx/nfp_integration.git", :tag => '0.0.9'
+gem 'nfp_integration', git:  "https://github.com/dchbx/nfp_integration.git", :tag => '0.0.10'
 
 
 group :production do

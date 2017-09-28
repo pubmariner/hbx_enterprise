@@ -1,9 +1,9 @@
 GIT
   remote: https://github.com/dchbx/nfp_integration.git
-  revision: cf01832a60d69ad4be4575025cd40643526354e9
-  tag: 0.0.7
+  revision: b966d308afc8341ab959c9ee528f421727ce304f
+  tag: 0.0.10
   specs:
-    nfp_integration (0.0.7)
+    nfp_integration (0.0.10)
       nokogiri (~> 1.6)
 
 GEM
