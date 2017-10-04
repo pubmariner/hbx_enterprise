@@ -13,6 +13,7 @@ module Parsers
         has_many :benefit_groups, Parsers::Xml::Cv::BenefitGroupParser, tag: "benefit_group"
         has_one :writing_agent, Parsers::Xml::Cv::WritingAgent, tag: "brokers/cv:broker_account/cv:writing_agent"
         has_one :broker_agency, Parsers::Xml::Cv::BrokerAgency, tag: "brokers/cv:broker_account/cv:broker_agency"
+        has_many :brokers, Parsers::Xml::Cv::BrokerAccountParser, tag: "broker_account"
 
 
         def to_hash
@@ -22,6 +23,7 @@ module Parsers
               benefit_groups: benefit_groups.map(&:to_hash)
           }
 
+          response[:broker_account] = brokers.map(&:to_hash) if brokers
           response[:writing_agent] = writing_agent.to_hash if writing_agent
           response[:broker_agency] = broker_agency.to_hash if broker_agency
           response
