@@ -12,6 +12,8 @@
     - if @cv_hash[:employer_profile][:writing_agent].present?
       %ns1:broker
         %ns1:npn_id= @cv_hash[:employer_profile][:writing_agent][:npn] if @cv_hash[:employer_profile][:writing_agent]
+        %ns1:assignment_start_on= hiphen_saperated_date(@cv_hash[:employer_profile][:start_on]) if @cv_hash[:employer_profile][:writing_agent][:start_on]
+        %ns1:assignment_end_on= hiphen_saperated_date(@cv_hash[:employer_profile][:end_on]) if @cv_hash[:employer_profile][:writing_agent][:end_on]
     %ns1:open_enrollment_start= hiphen_saperated_date(plan_year[:open_enrollment_start])
     %ns1:open_enrollment_end= hiphen_saperated_date(plan_year[:open_enrollment_end])
     %ns1:plan_year_start= hiphen_saperated_date(plan_year[:plan_year_start])
