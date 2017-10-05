@@ -79,7 +79,83 @@
   <is_active>true</is_active>
   <employer_profile>
     <business_entity_kind>urn:openhbx:terms:v1:employers#c_corporation</business_entity_kind>
-    <brokers></brokers>
+    <brokers>
+      <broker_account>
+        <broker_agency>
+          <id>
+            <id>cd5ac88aae2148078e64c959db69e840</id>
+          </id>
+          <name>The Capital</name>
+          <display_name></display_name>
+          <fein>1000000502</fein>
+          <npn></npn>
+        </broker_agency>
+        <writing_agent>
+          <id>
+            <id>86783b7a3b3248d89284c199c47c416e</id>
+          </id>
+          <person>
+            <id>
+              <id>86783b7a3b3248d89284c199c47c416e</id>
+            </id>
+            <person_name>
+              <person_surname>broker_surname</person_surname>
+              <person_given_name>broker_first_name</person_given_name>
+              <person_full_name>broker_first_name broker_surname</person_full_name>
+            </person_name>
+
+            <emails>
+              <email>
+                <type>urn:openhbx:terms:v1:email_type#work</type>
+                <email_address>testbroker@gmail.com</email_address>
+              </email>
+
+            </emails>
+            <phones>
+              <phone>
+                <type>urn:openhbx:terms:v1:phone_type#fax</type>
+                <area_code>123</area_code>
+                <phone_number>4567890</phone_number>
+                <full_phone_number>1234567890</full_phone_number>
+                <is_preferred>false</is_preferred>
+              </phone>
+              <phone>
+                <type>urn:openhbx:terms:v1:phone_type#mobile</type>
+                <area_code>123</area_code>
+                <phone_number>4567890</phone_number>
+                <full_phone_number>1234567890</full_phone_number>
+                <is_preferred>false</is_preferred>
+              </phone>
+              <phone>
+                <type>urn:openhbx:terms:v1:phone_type#work</type>
+                <area_code>345</area_code>
+                <phone_number>1234567</phone_number>
+                <full_phone_number>3451234567</full_phone_number>
+                <is_preferred>false</is_preferred>
+              </phone>
+
+            </phones>
+          </person>
+          <npn>100000</npn>
+        </writing_agent>
+        <start_on>20160801</start_on>
+        <ga_assignments>
+          <ga_assignment>
+            <general_agency>
+              <id>
+                <id>1059999</id>
+              </id>
+              <name>Alan c</name>
+              <dba>test_dba</dba>
+              <fein>334444444</fein>
+            </general_agency>
+            <start_on>20160801</start_on>
+          </ga_assignment>
+
+        </ga_assignments>
+      </broker_account>
+
+    </brokers>
     <plan_years>
       <plan_year>
         <plan_year_start>20150201</plan_year_start>
