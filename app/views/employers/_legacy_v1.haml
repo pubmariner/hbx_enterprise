@@ -1,0 +1,34 @@
+%ns1:employer
+  %ns1:name= cv_hash[:dba].present? ? cv_hash[:dba] : cv_hash[:name]
+  %ns1:fein= cv_hash[:fein]
+  %ns1:employer_exchange_id= cv_hash[:id]
+  %ns1:fte_count= cv_hash[:employer_profile][:plan_years].last[:fte_count]
+  %ns1:pte_count= cv_hash[:employer_profile][:plan_years].last[:pte_count]
+  - active_broker = @cv_hash[:employer_profile][:broker_account].select{|account| account[:end_on].nil?}.first
+  - if  active_broker.present?
+    %ns1:broker
+      %ns1:npn_id= active_broker[:npn]
+      %ns1:assignment_start_on= hiphen_saperated_date(active_broker[:start_on])
+  %ns1:open_enrollment_start= hiphen_saperated_date(plan_year[:open_enrollment_start])
+  %ns1:open_enrollment_end= hiphen_saperated_date(plan_year[:open_enrollment_end])
+  %ns1:plan_year_start= hiphen_saperated_date(plan_year[:plan_year_start])
+  %ns1:plan_year_end= hiphen_saperated_date(plan_year[:plan_year_end]) if plan_year[:plan_year_end]
+  %ns1:plans
+    - elected_plans = plan_year[:elected_plans].select { |plan| plan[:carrier][:name] == carrier }.uniq
+    - elected_plans.each do |plan|
+      %ns1:plan
+        %ns1:qhp_id= plan[:id]
+        %ns1:plan_exchange_id= plan_exchange_id(plan[:id], plan[:active_year])
+        %ns1:carrier_id= plan[:carrier][:id]
+        %ns1:carrier_name= plan[:carrier][:name]
+        %ns1:plan_name= plan[:name]
+        %ns1:coverage_type= plan[:coverage_type]
+        %ns1:original_effective_date= hiphen_saperated_date(plan_year[:plan_year_start])
+  - if cv_hash[:contacts].present?
+    - cv_hash[:contacts].each do |person|
+      = partial "shared/vcard", :locals =>{:person => person, :organization => cv_hash}
+  - else
+    = partial "shared/vcard2", :locals =>{:organization => cv_hash}
+  %ns1:exchange_id= cv_hash[:id]
+  %ns1:exchange_status= 'active'
+  %ns1:exchange_version= "#{Date.today.yday}"

@@ -33,22 +33,24 @@ module Amqp
     end
 
     def publish_processing_failed(delivery_info, properties, payload, err)
+      safe_payload = payload.blank? ? nil : payload.to_s.encode('UTF-8', undef: :replace, replace: '')
       error_message = {
         :error => {
           :message => err.message,
           :inspected => err.inspect,
           :backtrace => err.backtrace.join("\n")
         },
-        :original_payload => payload
+        :original_payload => safe_payload
       }
       @channel.default_exchange.publish(JSON.dump(error_message), error_properties(@processing_failed_queue, delivery_info, properties))
       channel.acknowledge(delivery_info.delivery_tag, false)
     end
 
     def publish_argument_errors(delivery_info, properties, payload)
+      safe_payload = payload.blank? ? nil : payload.to_s.encode('UTF-8', undef: :replace, replace: '')
       error_message = {
         :errors => @argument_errors,
-        :original_payload => payload
+        :original_payload => safe_payload
       }
       @channel.default_exchange.publish(error_message.to_json, error_properties(@bad_argument_queue, delivery_info, properties))
       channel.acknowledge(delivery_info.delivery_tag, false)
@@ -142,7 +144,7 @@ module Amqp
     end
 
     def with_confirmed_channel
-      chan = @connection.create_channel
+      chan = connection.create_channel
       begin
         chan.confirm_select
         yield chan

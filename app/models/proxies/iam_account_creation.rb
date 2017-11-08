@@ -1,14 +1,15 @@
 module Proxies
-  class OimAccountCreation < ::Proxies::SoapRequestBuilder
-    ACCOUNT_NS = "http://xmlns.oracle.com/dcas/esb/useridentitymanage/service/xsd/v1"
+  class IamAccountCreation < ::Proxies::SoapRequestBuilder
+    require 'faraday'
 
     def request(data, timeout = 5)
-      code, body = super(create_body(data), timeout)
+      response = create_body(data)
+      code = response.status
       case code.to_s
-      when "200"
-        extract_response_code(body)
-      else
-        [code, body]
+      when "200" # when success
+        ["201", response.body]
+      else # when error
+        [code, response.body]
       end
     end
 
@@ -44,42 +45,42 @@ module Proxies
       password = data["password"]
       system_flag = data["system_flag"]
       account_role = data["account_role"]
-      user_name = data["username"]
+      user_name = data["username"].try(:downcase)
       user_name ||= data["email"]
       account_role_key = account_role.blank? ? "individual" : account_role
-      user_role = USER_ROLE_MAPPING.fetch(account_role_key, INDIVIDUAL_ROLE_URI)
+      # user_role = USER_ROLE_MAPPING.fetch(account_role_key, INDIVIDUAL_ROLE_URI)
       system_flag_value = system_flag.blank? ? "1" : system_flag
-      builder = Nokogiri::XML::Builder.new do |xml|
-        xml["acn"].create_user_request("xmlns:acn" => ACCOUNT_NS) do |xml|
-          xml["acn"].create_user_properties do |xml|
-            xml["acn"].user_role(user_role)
-            xml["acn"].first_name(first_name)
-            xml["acn"].last_name(last_name)
-            xml["acn"].user_name(user_name)
-            xml["acn"].Password(password)
-            xml["acn"].system_flag(system_flag_value)
-            if !email.blank?
-              xml["acn"].email(email)
-            end
-          end
-        end
-      end
-      builder.to_xml
+
+      request_data = {
+        mail: email.present? ? email.downcase : "",
+        givenName: first_name,
+        sn: last_name,
+        userName: user_name.try(:downcase),
+        password: password,
+        userType: account_role_key.downcase.gsub("_", ""),
+        statusFlag: system_flag
+      }
+
+      make_forge_rock_create_request(request_data)
     end
 
-    LOOKUP_RESPONSE_NS = "http://xmlns.oracle.com/dcas/esb/useridentitymanage/service/xsd/v1"
+    def make_forge_rock_create_request(data)
+      config = YAML.load_file("#{Padrino.root}/config/forgerock.yml")
 
-    def extract_response_code(body)
-      xml = Nokogiri::XML(body)
-      response_code = xml.at_xpath("//lrn:response_code", :lrn => LOOKUP_RESPONSE_NS)
-      return "503" if response_code.blank?
-      code_string = response_code.content.split("#").last
-      case code_string
-      when "SUCCESS"
-        ["201", ""]
-      else
-        ["500", (body || "")]
+      headers = {
+        'Content-Type' => 'application/json',
+        'X-OpenIDM-Username' => config["forgerock"]["username"],
+        'X-OpenIDM-Password' => config["forgerock"]["password"],
+      }
+
+      response = Faraday.post do |request|
+        request.url config['forgerock']['url']
+        request.headers = headers
+        request.body = data.to_json
       end
+
+      response
     end
+
   end
 end
