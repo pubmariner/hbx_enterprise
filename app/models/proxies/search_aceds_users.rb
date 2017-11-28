@@ -45,6 +45,8 @@ module Proxies
       case response_code
       when /REFER TO WORKER/
         "404"
+      when /NO MATCH FOUND/
+        "404"
       when /EXACT MATCH/
         "302"
       else
