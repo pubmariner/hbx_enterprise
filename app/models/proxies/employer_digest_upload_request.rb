@@ -39,7 +39,7 @@ module Proxies
         return [500, se]
       end
       if is_ok_response?(response)
-        return [200, rinse(response.body)]
+        return [200, response.body]
       end
       [response.code.to_i, response.body]
     end
