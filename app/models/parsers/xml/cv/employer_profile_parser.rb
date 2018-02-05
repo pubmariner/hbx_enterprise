@@ -20,7 +20,8 @@ module Parsers
           response = {
               business_entity_kind: business_entity_kind.split("#").last,
               plan_years: plan_years.map(&:to_hash),
-              benefit_groups: benefit_groups.map(&:to_hash)
+              benefit_groups: benefit_groups.map(&:to_hash),
+              broker_account: []
           }
 
           response[:broker_account] = brokers.map(&:to_hash) if brokers
