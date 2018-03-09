@@ -19,9 +19,7 @@ class ExchangeInformation
     'pp_sftp_host', 'pp_sftp_username', 'pp_sftp_password',
     'pp_sftp_employer_digest_path',
     'pp_sftp_enrollment_path',
-    'legacy_carrier_mappings',
-    'b2b_integration_api_key',
-    'employer_xml_post_url'
+    'legacy_carrier_mappings'
   ]
 
   attr_reader :config

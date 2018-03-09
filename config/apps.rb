@@ -37,6 +37,5 @@ Padrino.mount('HbxEnterprise::App', :app_file => Padrino.root('app/app.rb')).to(
 
 Padrino.before_load do
   Padrino.dependency_paths << Padrino.root('lib/*.rb')
-  Padrino.dependency_paths << Padrino.root('app/models/*.rb')
 end
 Padrino.load!
