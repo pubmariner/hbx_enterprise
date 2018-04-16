@@ -4,7 +4,7 @@
   %ns1:employer_exchange_id= cv_hash[:id]
   %ns1:fte_count= cv_hash[:employer_profile][:plan_years].last[:fte_count]
   %ns1:pte_count= cv_hash[:employer_profile][:plan_years].last[:pte_count]
-  - active_broker = @cv_hash[:employer_profile][:broker_account].select{|account| account[:end_on].nil?}.first
+  - active_broker = cv_hash[:employer_profile][:broker_account].select{|account| account[:end_on].nil?}.first
   - if  active_broker.present?
     %ns1:broker
       %ns1:npn_id= active_broker[:npn]

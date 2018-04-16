@@ -25,8 +25,8 @@ module Listeners
                      r_code,
                      headers,
                      {
-                       digest_xml: digest_xml,
-                       service_response: r_payload
+                       digest_xml: digest_xml.encode('UTF-8', undef: :replace, replace: ''),
+                       service_response: r_payload.encode('UTF-8', undef: :replace, replace: '')
                      }.to_json)
         channel.acknowledge(delivery_info.delivery_tag, false)
       when "503"
@@ -38,8 +38,8 @@ module Listeners
                      r_code,
                      headers,
                      {
-                       digest_xml: digest_xml,
-                       service_response: r_payload
+                       digest_xml: digest_xml.encode('UTF-8', undef: :replace, replace: ''),
+                       service_response: r_payload.encode('UTF-8', undef: :replace, replace: '')
                      }.to_json)
         channel.acknowledge(delivery_info.delivery_tag, false)
       end
