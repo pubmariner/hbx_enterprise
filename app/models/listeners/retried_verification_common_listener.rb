@@ -23,8 +23,8 @@ module Listeners
           individual_id,
           retry_deadline,
           JSON.dump({
-            :original_request => payload,
-            :service_response => (body.document.nil? ? "" : body.document.canonicalize),
+            :original_request => payload.encode('UTF-8', undef: :replace, replace: ''),
+            :service_response => (body.document.nil? ? "" : body.document.canonicalize).encode('UTF-8', undef: :replace, replace: ''),
             :validation_errors => body.errors.full_messages
           })
         )
@@ -45,8 +45,8 @@ module Listeners
           individual_id,
           retry_deadline,
           JSON.dump({
-            :original_request => payload,
-            :service_response => body.to_s
+            :original_request => payload.encode('UTF-8', undef: :replace, replace: ''),
+            :service_response => body.to_s.encode('UTF-8', undef: :replace, replace: '')
           })
         )
         requeue(delivery_info)
