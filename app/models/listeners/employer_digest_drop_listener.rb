@@ -16,7 +16,7 @@ module Listeners
       digest_xml = payload
       headers = properties.headers || {}
       v2_proxy = ::Proxies::EmployerXmlDropRequest.new
-      r_code, r_payload = v2_proxy.request(payload, 45)
+      r_code, r_payload = v2_proxy.request(payload, 180)
       case r_code.to_s
       when "200"
         # ALL GOOD
