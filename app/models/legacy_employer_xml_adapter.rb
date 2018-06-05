@@ -73,7 +73,6 @@ XMLCODE
     with_organization_strings do |parsed_org|
       render_v1_xml_for(parsed_org)
     end
-    binding.pry
     @carrier_output.each_pair do |k, v|
        v.write(XML_TRAILER)
        v.rewind
