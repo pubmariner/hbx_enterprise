@@ -59,6 +59,14 @@ group :development do
   gem 'ruby-progressbar'
 end
 
+group :development, :test do
+  gem 'byebug', '8.2.2'
+  gem 'pry'
+  gem 'pry-byebug'
+  gem 'pry-remote'
+  gem 'pry-stack_explorer'
+end
+
 group :test do
  gem "rspec_junit_formatter", "0.2.3"
 end
