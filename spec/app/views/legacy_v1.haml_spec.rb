@@ -41,4 +41,22 @@ describe "app/views/employers/legacy_v1.haml" do
       expect(doc.to_s).to include("<ns1:exchange_status>active</ns1:exchange_status>")
     end
   end
+
+  describe "render template with terminated plan year cv" do
+
+    let!(:cv_hash) { Parsers::Xml::Cv::OrganizationParser.parse(employer_cv2).to_hash }
+    let!(:update_hash) {  cv_hash[:employer_profile][:plan_years][0][:plan_year_end]= "20160130" }
+    let!(:plan_year) { HbxEnterprise::App.prototype.helpers.latest_plan_year(cv_hash[:employer_profile][:plan_years]) }
+    let!(:rendered) { HbxEnterprise::App.prototype.helpers.partial("employers/legacy_v1", {:engine => :haml, :locals => {cv_hash: cv_hash, plan_year: plan_year, carrier: "CareFirst"}}) }
+    let!(:doc) {Nokogiri::XML(rendered)}
+
+    it "template should have start date & end date " do
+      expect(doc.to_s).to include("<ns1:plan_year_start>2015-02-01</ns1:plan_year_start>")
+      expect(doc.to_s).to include("<ns1:plan_year_end>2016-01-30</ns1:plan_year_end>")
+    end
+
+    it "template exchange_status need to be inactive" do
+      expect(doc.to_s).to include("<ns1:exchange_status>inactive</ns1:exchange_status>")
+    end
+  end
 end
