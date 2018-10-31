@@ -34,5 +34,6 @@
     - else
       = partial "shared/vcard2", :locals =>{:organization => @cv_hash}
     %ns1:exchange_id= @cv_hash[:id]
-    %ns1:exchange_status= hiphen_saperated_date(plan_year[:plan_year_start]) == hiphen_saperated_date(plan_year[:plan_year_end]) ? 'inactive' : 'active'
+    - status = ((hiphen_saperated_date(plan_year[:plan_year_start]) == hiphen_saperated_date(plan_year[:plan_year_end])) || (hiphen_saperated_date(plan_year[:plan_year_end]).to_date < hiphen_saperated_date(plan_year[:plan_year_start]).to_date + 1.year - 1.day))
+    %ns1:exchange_status= status ? 'inactive' : 'active'
     %ns1:exchange_version= "2"
