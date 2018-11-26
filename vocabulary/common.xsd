@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- edited with XMLSpy v2014 rel. 2 (x64) (http://www.altova.com) by Dan Thomas (private) -->
+<!-- edited with XMLSpy v2016 (x64) (http://www.altova.com) by Dan Thomas (Private) -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://openhbx.org/api/terms/1.0" xmlns:altova="http://www.altova.com/xml-schema-extensions" targetNamespace="http://openhbx.org/api/terms/1.0" elementFormDefault="qualified" version="1.0">
 	<xs:complexType name="AddressListType">
 		<xs:sequence>
 			<xs:element name="address" type="AddressType" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
-	
 	<xs:simpleType name="nonEmptyString">
 		<xs:restriction base="xs:string">
 			<xs:minLength value="1"/>
 		</xs:restriction>
 	</xs:simpleType>
-	
 	<xs:element name="addresses" type="AddressListType">
 		<xs:annotation>
 			<xs:documentation>Collection of places where an individual or organization is situated</xs:documentation>
@@ -61,6 +59,9 @@
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="contacts">
+		<xs:annotation>
+			<xs:documentation>Collection of official representatives and communication channels</xs:documentation>
+		</xs:annotation>
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element name="contact" type="ContactType" maxOccurs="unbounded"/>
@@ -130,23 +131,22 @@
 			<xs:element name="version" type="xs:integer" minOccurs="0"/>
 		</xs:sequence>
 	</xs:group>
-        <xs:group name="CommentedActiveResourceGroup">
-                <xs:sequence>
-                        <xs:element name="is_active" type="xs:boolean" minOccurs="0">
-                                <xs:annotation>
-                                        <xs:documentation>Indicates this resource is operative on the HBX</xs:documentation>
-                                </xs:annotation>
-                        </xs:element>
-                        <xs:element ref="comments" minOccurs="0"/>
-                </xs:sequence>
-        </xs:group>
-
-        <xs:group name="SubmittedCommentedActiveResourceGroup">
-                <xs:sequence>
-                        <xs:element name="submitted_at" type="xs:dateTime"/>
-                        <xs:group ref="CommentedActiveResourceGroup"/>
-                </xs:sequence>
-        </xs:group>
+	<xs:group name="CommentedActiveResourceGroup">
+		<xs:sequence>
+			<xs:element name="is_active" type="xs:boolean" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Indicates this resource is operative on the HBX</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element ref="comments" minOccurs="0"/>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="SubmittedCommentedActiveResourceGroup">
+		<xs:sequence>
+			<xs:element name="submitted_at" type="xs:dateTime" minOccurs="0"/>
+			<xs:group ref="CommentedActiveResourceGroup"/>
+		</xs:sequence>
+	</xs:group>
 	<xs:group name="ServiceEndpointGroup">
 		<xs:annotation>
 			<xs:documentation>Identifier pair for a single Exchange resource in both enterprise URI and local service form</xs:documentation>
@@ -164,7 +164,6 @@
 			</xs:element>
 		</xs:sequence>
 	</xs:group>
-	
 	<xs:simpleType name="AddressKindType">
 		<xs:restriction base="xs:anyURI">
 			<xs:enumeration value="urn:openhbx:terms:v1:address_type#home"/>
@@ -172,8 +171,10 @@
 			<xs:enumeration value="urn:openhbx:terms:v1:address_type#work"/>
 		</xs:restriction>
 	</xs:simpleType>
-	
 	<xs:simpleType name="LocationStateCodeType">
+		<xs:annotation>
+			<xs:documentation>US Postal 2-Letter State Code</xs:documentation>
+		</xs:annotation>
 		<xs:restriction base="xs:string">
 			<xs:length value="2"/>
 		</xs:restriction>
@@ -189,7 +190,7 @@
 			<xs:element name="address_line_3" type="xs:string" minOccurs="0"/>
 			<xs:element name="location_city_name" type="xs:string"/>
 			<xs:element name="location_state" type="UsStateNameType" minOccurs="0"/>
-			<xs:element name="location_state_code" minOccurs="1" type="LocationStateCodeType"/>
+			<xs:element name="location_state_code" type="LocationStateCodeType" minOccurs="1"/>
 			<xs:element name="postal_code" type="xs:integer"/>
 			<xs:element name="location_postal_extension_code" type="xs:integer" minOccurs="0"/>
 			<xs:element name="location_country_name" type="xs:string" minOccurs="0"/>
@@ -257,12 +258,21 @@
 	</xs:complexType>
 	<xs:complexType name="DateRangeType">
 		<xs:annotation>
-			<xs:documentation>Time period expressed to precision of one day</xs:documentation>
+			<xs:documentation>Date period expressed to precision of one day</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
 			<xs:element name="begin_date" type="SimpleDateType"/>
 			<xs:element name="end_date" type="SimpleDateType" minOccurs="0"/>
 			<xs:element name="number_of_days" type="xs:integer" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="DateTimeRangeType">
+		<xs:annotation>
+			<xs:documentation>DateTime period</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="begin_datetime" type="xs:dateTime"/>
+			<xs:element name="end_datetime" type="xs:dateTime"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="EmailType">
@@ -381,18 +391,7 @@
 			<xs:restriction base="PersonType">
 				<xs:sequence>
 					<xs:element name="id" type="IdentifierType"/>
-					<xs:element name="person_name">
-						<xs:complexType>
-							<xs:complexContent>
-								<xs:restriction base="PersonNameType">
-									<xs:sequence>
-										<xs:element name="person_surname" type="nonEmptyString"/>
-										<xs:element name="person_given_name" type="nonEmptyString"/>
-									</xs:sequence>
-								</xs:restriction>
-							</xs:complexContent>
-						</xs:complexType>
-					</xs:element>
+					<xs:element name="person_name" type="PersonNameType"/>
 				</xs:sequence>
 			</xs:restriction>
 		</xs:complexContent>
@@ -510,7 +509,7 @@
 			<xs:documentation>Base type to publish resource events to message systems</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="event_name" type="xs:anyURI">
+			<xs:element name="event_name" type="xs:anyURI" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>Uniform Resource Name (URN) for this event, e.g.; urn:openhbx:events:v1:individual#added</xs:documentation>
 				</xs:annotation>
@@ -520,7 +519,7 @@
 					<xs:documentation>URN for the regulatory or policy basis enabling this change </xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element ref="resource_instance_uri" maxOccurs="unbounded">
+			<xs:element ref="resource_instance_uri" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>URN(s) for the resource instance that is subject of this event</xs:documentation>
 				</xs:annotation>
@@ -530,20 +529,21 @@
 					<xs:documentation>URN(s) for other resource instances assocated with this event</xs:documentation>
 				</xs:annotation>
 			</xs:element>
+			<xs:element name="header" type="EnvelopeHeaderType" minOccurs="0"/>
 			<xs:element name="body" type="ServiceBodyType" minOccurs="0"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="ServiceHeaderType">
+	<xs:complexType name="EnvelopeHeaderType">
 		<xs:annotation>
-			<xs:documentation>Base type of header component properties for SOA service call or response</xs:documentation>
+			<xs:documentation>Base type of header component properties for all messages.</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="hbx_id" type="xs:string">
+			<xs:element name="hbx_id" type="xs:string" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>CMS-assigned Health Benefit Exchange identifier, e.g. DC0</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="submitted_timestamp" type="xs:dateTime">
+			<xs:element name="submitted_timestamp" type="xs:dateTime" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>UTC date and time when event occured</xs:documentation>
 				</xs:annotation>
@@ -583,17 +583,73 @@
 					<xs:documentation>Attribute to associate the current message with previous message ID or application-specifc ID</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="application_header_properties" minOccurs="0">
+			<xs:element name="application_header_properties" type="xs:anyType" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>Application-specific header key/value pairs</xs:documentation>
 				</xs:annotation>
-				<xs:complexType>
-					<xs:sequence>
-						<xs:any namespace="##any" processContents="lax" minOccurs="0"/>
-					</xs:sequence>
-				</xs:complexType>
 			</xs:element>
 		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ServiceHeaderType">
+		<xs:annotation>
+			<xs:documentation>Base type of header component properties for SOA service call or response</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:restriction base="EnvelopeHeaderType">
+				<xs:sequence>
+					<xs:element name="hbx_id" type="xs:string">
+						<xs:annotation>
+							<xs:documentation>CMS-assigned Health Benefit Exchange identifier, e.g. DC0</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="submitted_timestamp" type="xs:dateTime">
+						<xs:annotation>
+							<xs:documentation>UTC date and time when event occured</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="authorization" type="xs:string" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>Authentication/authorization credentials</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="status" type="ServiceStatusType" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>Indicate success or failure of a request to a service</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="message_id" type="xs:string" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>Value that uniqely identifies message</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="originating_service" type="xs:anyURI" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>The urn of the requesting service</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="reply_to" type="xs:anyURI" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>Designates the consumer service endpoint where to transmit response</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="fault_to" type="xs:anyURI" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>Endpoint to transmit unrecoverable error</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="correlation_id" type="xs:string" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>Attribute to associate the current message with previous message ID or application-specifc ID</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="application_header_properties" type="xs:anyType" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>Application-specific header key/value pairs</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="ServiceMetadataType">
 		<xs:annotation>
@@ -774,6 +830,7 @@
 		<xs:restriction base="xs:anyURI">
 			<xs:enumeration value="urn:openhbx:terms:v1:aca_marketplace#individual"/>
 			<xs:enumeration value="urn:openhbx:terms:v1:aca_marketplace#shop"/>
+			<xs:enumeration value="urn:openhbx:terms:v1:aca_marketplace#coverall"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="CalendarYearType">
@@ -1802,18 +1859,46 @@
 	</xs:simpleType>
 	<xs:simpleType name="SimpleDateType">
 		<xs:annotation>
-			<xs:documentation>A simple date format: CCYYMMDD, e.g. 20140601</xs:documentation>
+			<xs:documentation>A simple date format: CCYYMMDD. Matches: YYYYMMDD (20140601)</xs:documentation>
+			<xs:appinfo>
+				<altova:exampleValues>
+					<altova:example value="20140601"/>
+				</altova:exampleValues>
+			</xs:appinfo>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
 			<xs:pattern value="([1-9][0-9]{3})(0[1-9]|1[0-2])(0[1-9]|[12][0-9]|3[01])"/>
 		</xs:restriction>
 	</xs:simpleType>
+	<xs:simpleType name="SocialSecurityNumberType">
+		<xs:annotation>
+			<xs:documentation>US Social Security number. Matches: 314-46-0753, 314460753</xs:documentation>
+			<xs:appinfo>
+				<altova:exampleValues>
+					<altova:example value="314-46-0753"/>
+					<altova:example value="314460753"/>
+				</altova:exampleValues>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="\d{9}"/>
+			<xs:pattern value="\d{3}-\d{2}-\d{4}"/>
+		</xs:restriction>
+	</xs:simpleType>
 	<xs:simpleType name="TelephoneNumberType">
 		<xs:annotation>
-			<xs:documentation>US Telephone number format. Matches: (999)999-9999, 9999999999, 999-999-9999</xs:documentation>
+			<xs:documentation>US Telephone number format. Matches: 5551212, 5551212, 202-555-1212</xs:documentation>
+			<xs:appinfo>
+				<altova:exampleValues>
+					<altova:example value="5551212"/>
+					<altova:example value="2025551212"/>
+					<altova:example value="202-555-1212"/>
+				</altova:exampleValues>
+			</xs:appinfo>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
 			<xs:pattern value="\d{7,11}"/>
+			<xs:pattern value="\d{3}-\d{3}-\d{4}"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="UsStateNameType">
@@ -1887,17 +1972,39 @@
 			<xs:enumeration value="urn:openhbx:terms:v1:plan_metal_level#dental"/>
 		</xs:restriction>
 	</xs:simpleType>
-	
 	<xs:element name="enrollment_group_uri" type="xs:anyURI" substitutionGroup="extended_resource_instance_uri">
 		<xs:annotation>
 			<xs:documentation>Dereferenceable identifier for enrollment group instance, e.g. http://dchealthlink.com/api/services/enrollment_group/_id</xs:documentation>
 		</xs:annotation>
 	</xs:element>
-
 	<xs:simpleType name="PlanActiveYearType">
-           <xs:restriction base="xs:nonNegativeInteger">
-		   <xs:minInclusive value="2012"/>
-	   </xs:restriction>
+		<xs:restriction base="xs:nonNegativeInteger">
+			<xs:minInclusive value="2012"/>
+		</xs:restriction>
 	</xs:simpleType>
-
+	<xs:complexType name="OfficeLocationType">
+		<xs:annotation>
+			<xs:documentation>An office location of an organization.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="id" type="IdentifierType" minOccurs="0"/>
+			<xs:element name="name" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>An optional reference for this office location</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="primary" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>Is this the home office for the organization?</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="address" type="AddressType" minOccurs="0"/>
+			<xs:element name="phone" type="PhoneType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="OfficeLocationListType">
+		<xs:sequence>
+			<xs:element name="office_location" type="OfficeLocationType" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
 </xs:schema>

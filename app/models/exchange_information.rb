@@ -14,7 +14,12 @@ class ExchangeInformation
     'osb_host', 'osb_username', 'osb_password', 'osb_nonce', 'osb_created',
     'invalid_argument_queue', 'processing_failure_queue', 'event_exchange', 'request_exchange', 'event_publish_exchange',
     'vlp_url', 'ssa_url', 'account_search_url', 'fars_url', 'ridp_url', 'account_creation_url', 'residency_url',
-    'case_query_url'
+    'case_query_url',
+    'employer_xml_drop_url', 'legacy_employer_xml_drop_url',
+    'pp_sftp_host', 'pp_sftp_username', 'pp_sftp_password',
+    'pp_sftp_employer_digest_path',
+    'pp_sftp_enrollment_path',
+    'legacy_carrier_mappings'
   ]
 
   attr_reader :config
@@ -24,6 +29,14 @@ class ExchangeInformation
   def initialize
     @config = YAML.load_file(File.join(HbxEnterprise::App.root,'..','config', 'exchange.yml'))
     ensure_configuration_values(@config)
+  end
+
+  def self.provide_legacy_employer_group_files?
+    self.instance.provide_legacy_employer_group_files?
+  end
+
+   def provide_legacy_employer_group_files?
+    @drop_legacy_group_files ||= (config["drop_legacy_group_files"].to_s == "true")
   end
 
   def ensure_configuration_values(conf)
