@@ -7,7 +7,7 @@ module Proxies
     require 'net/http' 
 
     def invoke(payload, timeout = 3)
-      code, body = request(payload)
+      code, body = request(payload, timeout)
       if code == 200
         validator = VocabularyValidator.new(body)
         if !validator.valid?
