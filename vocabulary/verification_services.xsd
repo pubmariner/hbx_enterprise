@@ -361,6 +361,14 @@
 		</xs:restriction>
 	</xs:simpleType>
 
+	<xs:simpleType name="QualifiedNonCitizenCodeType">
+		<xs:annotation>
+			<xs:documentation>FDSH Provided Qualified Non-Citizen Code.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+		</xs:restriction>
+	</xs:simpleType>
+
 	<xs:complexType name="LawfulPresenceResponseType">
 		<xs:sequence>
 			<xs:element name="case_number" type="xs:string"/>
@@ -381,6 +389,7 @@
 							<xs:element name="legal_status" type="LawfulPresencePresenceCodeType"/>
 							<xs:element name="employment_authorized" type="LawfulPresenceEmploymentAuthorizedCodeType"/>
 							<xs:element name="document_results" type="LawfulPresenceDocumentResultsType"/>
+							<xs:element name="qualified_non_citizen_code" type="QualifiedNonCitizenCodeType" minOccurs="0"/>
 						</xs:sequence>
 					</xs:complexType>
 				</xs:element>
@@ -517,10 +526,10 @@
 
 	<xs:complexType name="VerifiedFamilyType">
 		<xs:annotation>
-			<xs:documentation>Describes a family unit.</xs:documentation>                               
-		</xs:annotation>                    
-		<xs:sequence>                                                                                       
-			<xs:element name="id" type="IdentifierType"/>               
+			<xs:documentation>Describes a family unit.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="id" type="IdentifierType"/>
 			<xs:element name="family_members" type="VerifiedFamilyMembersListType"/>
 			<xs:group ref="FamilySharedElementsGroup"/>
 		</xs:sequence>
