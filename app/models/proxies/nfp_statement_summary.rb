@@ -10,6 +10,7 @@ module Proxies
         <soapenv:Body>
           <hbc:StatementSummaryReq>
             <hbc:CustomerCode>%{customer_id}</hbc:CustomerCode>
+            <hbc:PaymentCode>All</hbc:PaymentCode>
           </hbc:StatementSummaryReq>
         </soapenv:Body>
       </soapenv:Envelope>
