@@ -50,7 +50,7 @@ module Proxies
             </soapenv:Envelope>
          XMLCODE
 
-      req = http.post(path, data, { 'Content-Type' => 'text/xml; charset=utf-8', 'SOAPAction' => 'http://www.nfp.com/schemas/hbcore/IPremiumBillingIntegrationServices/GetCustomersPaymentHistory' })
+      req = http.post(path, data, { 'Content-Type' => 'text/xml; charset=utf-8', 'SOAPAction' => 'http://www.nfp.com/schemas/hbcore/IPremiumBillingIntegrationServices/GetCustomerPaymentHistory' })
     end
 
     def nfp_send_request_statement_summary
