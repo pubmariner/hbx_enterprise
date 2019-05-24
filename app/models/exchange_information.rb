@@ -19,7 +19,8 @@ class ExchangeInformation
     'pp_sftp_host', 'pp_sftp_username', 'pp_sftp_password',
     'pp_sftp_employer_digest_path',
     'pp_sftp_enrollment_path',
-    'legacy_carrier_mappings'
+    'legacy_carrier_mappings',
+    'nfp_integration_url', 'nfp_integration_user_id', 'nfp_integration_password'
   ]
 
   attr_reader :config

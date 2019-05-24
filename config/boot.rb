@@ -42,9 +42,9 @@ end
 #
 Padrino.after_load do
   NfpIntegration.configure do |config|
-    config.url = "https://nfp-wsdl.priv.dchbx.org/cpbservices/PremiumBillingIntegrationServices.svc"
-    config.user_id = "testuser"
-    config.password = "M0rph!us007"
+    config.url = ExchangeInformation.nfp_integration_url
+    config.user_id = ExchangeInformation.nfp_integration_user_id
+    config.password = ExchangeInformation.nfp_integration_password
   end
 end
 
