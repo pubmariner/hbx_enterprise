@@ -42,6 +42,10 @@ gem 'net-sftp', '2.1.2'
 #   gem 'padrino-' + g, '0.12.4'
 # end
 
+# nfp gem for parsing and integration
+gem 'nfp_integration', git:  "https://github.com/dchbx/nfp_integration.git", :tag => '0.0.11'
+
+
 group :production do
   gem 'unicorn', '4.8.3'
 #  gem 'bluepill', '0.0.68'

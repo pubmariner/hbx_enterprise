@@ -41,6 +41,11 @@ end
 # Add your after (RE)load hooks here
 #
 Padrino.after_load do
+  NfpIntegration.configure do |config|
+    config.url = ExchangeInformation.nfp_integration_url
+    config.user_id = ExchangeInformation.nfp_integration_user_id
+    config.password = ExchangeInformation.nfp_integration_password
+  end
 end
 
 Padrino.load!
