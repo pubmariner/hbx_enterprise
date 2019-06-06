@@ -450,7 +450,7 @@
 					<xs:element name="response_text" type="xs:string" minOccurs="0"/>
 				</xs:sequence>
 			</xs:choice>
-			<xs:element name="raw_response" type="xs:string">
+			<xs:element name="raw_response" type="xs:string" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>Raw response payload from federal hub.</xs:documentation>
           			</xs:annotation>
