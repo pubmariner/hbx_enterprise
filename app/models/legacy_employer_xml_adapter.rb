@@ -40,7 +40,7 @@ XMLCODE
     # We have to write back out to XML because happymapper doesn't do
     # the right thing without full canonicalization, or at least a trick
     # that makes it seem like we did canonicalization
-    org = Parsers::Xml::Cv::OrganizationParser.parse(node.to_xml(:indent => 0)).to_hash
+    org = Parsers::Xml::Cv::OrganizationParser.parse(node.canonicalize).to_hash
     @employer_ids.push(employer_id)
     org
   end
@@ -87,11 +87,11 @@ XMLCODE
   def render_v1_xml_for(parsed_org)
     @cv_hash = parsed_org
     @plan_year = latest_plan_year(@cv_hash[:employer_profile][:plan_years])
-    @carriers = @plan_year[:elected_plans].map do |plan|
-      plan[:carrier][:name]
-    end.uniq
 
     if @plan_year
+      @carriers = @plan_year[:elected_plans].map do |plan|
+        plan[:carrier][:name]
+      end.uniq
       @carriers.each do |carrier|
         @carrier = carrier
         group_xml = @renderer.partial "employers/legacy_v1", :locals => { :plan_year => @plan_year, :cv_hash => @cv_hash, :carrier => carrier}, :engine => :haml
