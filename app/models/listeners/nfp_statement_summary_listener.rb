@@ -11,7 +11,7 @@ module Listeners
       headers = (properties.headers || {})
       hbx_id = headers.stringify_keys['employer_id']
       nfp = NfpIntegration::SoapServices::Nfp.new(hbx_id)
-      parsed_statement_summary = nfp.parse_current_statement
+      parsed_statement_summary = nfp.parse_current_statement.to_json
       code = parsed_statement_summary ? "200" : "500"
 
       body = parsed_statement_summary
