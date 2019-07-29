@@ -40,7 +40,7 @@ module Listeners
         return_code = prop.headers["return_status"]
         if "200" != return_code.to_s
           error_body = JSON.load(payload)
-          err_string = ""
+          err_string = String.new
           err_string << flatten_to_list("", error_body).join("\n")
           throw :processing_failure, ItemProcessingFailure.new(false, return_code, "Publishing failure.", batch_body_for(policy_id, false, err_string, policy_body))
         end
