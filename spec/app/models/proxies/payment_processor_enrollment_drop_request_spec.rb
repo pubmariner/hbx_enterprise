@@ -41,6 +41,11 @@ RSpec.describe Proxies::PaymentProcessorEnrollmentDropRequest do
     it "returns success and the file path" do
       expect(subject.request(payload)).to eq ["200", upload_location]
     end
+
+    it "uploads the file as a StringIO" do
+      expect(sftp_instance).to receive(:upload!).with(iod_payload, upload_location)
+      subject.request(payload)
+    end
   end
 
 end
