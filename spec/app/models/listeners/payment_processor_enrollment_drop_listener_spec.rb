@@ -2,65 +2,116 @@ require 'spec_helper'
 
 describe Listeners::PaymentProcessorEnrollmentDropListener do
   let(:queue) { double }
-  let(:connection) { double(:create_channel => reply_channel) }
-  let(:reply_exchange) { double }
-  let(:reply_channel) do
-    double(
-      :close => true,
-      :confirm_select => true,
-      :default_exchange => reply_exchange,
-      :wait_for_confirms => true
+  let(:connection) { double }
+  let(:channel) { double(:connection => connection) }
+  let(:delivery_info) { double(:delivery_tag => delivery_tag) }
+  let(:properties) { double(:headers => headers) }
+  let(:headers) do
+    { :submitted_timestamp => submitted_timestamp }
+  end
+  let(:submitted_timestamp) { double }
+  let(:location) { "/fake_location/file" }
+  let(:payload) { "" }
+  let(:current_time) { Time.now }
+  let(:delivery_tag) { double }
+
+  let(:event_broadcaster) do
+    instance_double(
+      Amqp::EventBroadcaster
     )
   end
-  let(:connection) { double(:create_channel => reply_channel) }
-  let(:channel) { double(:connection => connection) }
-  let(:reply_exchange) { double }
-  let(:event_exchange) { double }
-  let(:payload) { double }
-  let(:delivery_info) { double(:delivery_tag => "") }
-  let(:properties) { double }
-  let(:expected_payload) { "" }
-  let(:event_name) { "" }
-  let(:expected_properties) { 
-    { :routing_key => routing_key, :headers => headers }
-  }
-  let(:headers) { 
-    { :event_name => event_uri, :hbx_id => "DC0", :submitted_timestamp => timestamp, :originating_service => "Curam",
-      :authorization => "", :individual_url => hbx_member_id }
-  }
-  let(:individual_uri) { double }
-  let(:event_parser) { double }
-  let(:timestamp) { double }
-  let(:hbx_member_id) { double }
-  let(:parsed_event) { double(:event_type => event_type, :event_uri => event_uri, :routing_key => routing_key, :timestamp => timestamp, :person_id => person_id) }  #
-  let(:location) { "/fake_location/file" }
-  let(:body) { double }
-  # Fake class from app/models/amqp/event_broadcaster.rb line 12
-  let(:outex_double) do
-    class Outex
-      def publish(payload, props)
-        true
-      end
-    end
-    Outex.new
+
+  let(:proxy) do
+    instance_double(Proxies::PaymentProcessorEnrollmentDropRequest)
   end
 
   subject { Listeners::PaymentProcessorEnrollmentDropListener.new(channel, queue) }
 
-  before do
-    allow(reply_channel).to receive(:fanout).with(
-      ExchangeInformation.event_publish_exchange,
-      :durable => true
-    ).and_return(outex_double)
+  before(:each) do
+    allow(Proxies::PaymentProcessorEnrollmentDropRequest).to receive(:new).and_return(proxy)
+    allow(Amqp::EventBroadcaster).to receive(:new).with(connection).and_return(event_broadcaster)
   end
 
-  describe "#send_uploaded_notification" do
-    let(:event_type) { "PERSON_UPDATE" }
-    let(:event_uri) { "urn:openhbx:requests:v1:individual#update" }
-    let(:routing_key) { "individual.update" }
+  describe "which uploads successfully" do
+    before :each do
+      allow(proxy).to receive(:request).with(payload).and_return(["200", location])
+      allow(Time).to receive(:now).and_return(current_time)
+      allow(event_broadcaster).to receive(:broadcast).with(
+        shared_log_properties.merge({
+          :routing_key => "info.application.hbx_enterprise.payment_processor_enrollment_drop_listener.policy_uploaded",
+        }),
+        payload
+      )
+      allow(event_broadcaster).to receive(:broadcast).with(
+        shared_log_properties.merge({
+          :routing_key => "info.application.hbx_enterprise.payment_processor_enrollment_drop_listener.service_response",
+        }),
+        {
+          policy_xml: payload,
+          service_response: location
+        }.to_json
+      )
+      allow(event_broadcaster).to receive(:broadcast).with(
+        expected_broadcast_properties,
+        payload
+      )
+      allow(channel).to receive(:acknowledge).with(delivery_tag, false)
+    end
 
-    it "should successfully send the uploaded notification" do
-      expect(subject.send_uploaded_notification(headers, location, body)).to eq(true)
+    let(:shared_log_properties) do
+      {
+        :timestamp => current_time.to_i,
+        :headers => headers.merge({
+          :return_status => "200"
+        })
+      }
+    end
+
+    let(:expected_broadcast_properties) do
+      {
+        :timestamp => current_time.to_i,
+        :routing_key => "info.events.payment_processor_transaction.transmitted",
+        :headers => headers.merge({
+          :return_status => "200",
+          :upload_location => location
+        })
+      }
+    end
+
+    it "acks the message" do
+      expect(channel).to receive(:acknowledge).with(delivery_tag, false)
+      subject.on_message(delivery_info, properties, payload)
+    end
+
+    it "logs successful processing" do
+      expect(event_broadcaster).to receive(:broadcast).with(
+        shared_log_properties.merge({
+          :routing_key => "info.application.hbx_enterprise.payment_processor_enrollment_drop_listener.policy_uploaded",
+        }),
+        payload
+      )
+      subject.on_message(delivery_info, properties, payload)
+    end
+
+    it "logs the service response" do
+      expect(event_broadcaster).to receive(:broadcast).with(
+        shared_log_properties.merge({
+          :routing_key => "info.application.hbx_enterprise.payment_processor_enrollment_drop_listener.service_response",
+        }),
+        {
+          policy_xml: payload,
+          service_response: location
+        }.to_json
+      )
+      subject.on_message(delivery_info, properties, payload)
+    end
+
+    it "sends the uploaded notification" do
+      expect(event_broadcaster).to receive(:broadcast).with(
+        expected_broadcast_properties,
+        payload
+      )
+      subject.on_message(delivery_info, properties, payload)
     end
   end
 end
