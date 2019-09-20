@@ -10,7 +10,7 @@ module Proxies
       begin
         f_path = resolve_path(data)
         upload_file(data, f_path)
-        ["200", nil]
+        ["200",  f_path]
       rescue Exception => e
         $stderr.puts e.message
         $stderr.puts e.inspect

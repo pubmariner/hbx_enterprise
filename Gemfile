@@ -17,9 +17,6 @@ gem 'activemodel', '4.1.8'
 gem 'faraday', '0.11.0'
 
 # Component requirements
-gem 'mongoid', '5.1.1'
-gem 'bson', '4.0.4'
-gem 'origin', '2.2.0'
 gem 'haml', '4.0.6'
 
 # Test requirements
@@ -33,6 +30,7 @@ gem 'nokogiri', '1.6.5'
 gem 'forkr', '1.0.2'
 gem 'net-ssh', '2.9.1'
 gem 'net-sftp', '2.1.2'
+gem 'json', '~> 1.8.5'
 
 # Or Padrino Edge
 # gem 'padrino', :github => 'padrino/padrino-framework'
